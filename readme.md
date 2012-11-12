@@ -20,6 +20,15 @@ You can either create a bundle directory called `administrator` and manually cop
 php artisan bundle:install administrator
 </pre>
 
+Then add this to your `bundles.php` array:
+
+<pre>
+'administrator' => array(
+	'handles' => 'admin', //this determines what URI this bundle will use
+	'auto' => true,
+),
+</pre>
+
 Once the bundle is installed, create a new config file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created. If you prefer to keep your bundle config inside the bundle, you can just change the bundle's config directly. However, moving this to the application config helps avoid issues when you are updating the bundle.
 
 ### Config
