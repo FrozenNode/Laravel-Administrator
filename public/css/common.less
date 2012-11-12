@@ -1,0 +1,199 @@
+/* fonts */
+@verdana {
+	font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+@arial {
+	font-family:Arial, Helvetica, sans-serif;
+}
+@centuryGothic {
+	font-family:'century gothic',verdana,arial,helvetica,sans-serif;
+}
+
+
+/**
+ * 
+ * HTML ELEMENTS
+ * 
+ */
+
+
+/* You can put your HTML reset declarations in here if you like */
+
+
+/**
+ * 
+ * BORDER RADIUS
+ * 
+ */
+@borderRadius (@radius: 5px) {
+	-moz-border-radius:@radius;
+	border-radius:@radius;
+	-webkit-border-radius:@radius;
+	background-clip:padding-box;
+}
+@borderRadiusLeft (@radius: 5px) {
+	-moz-border-top-left-radius:@radius;
+	border-top-left-radius:@radius;
+	-webkit-border-top-left-radius:@radius;
+	-moz-border-bottom-left-radius:@radius;
+	border-bottom-left-radius:@radius;
+	-webkit-border-bottom-left-radius:@radius;
+	background-clip:padding-box;
+}
+@borderRadiusRight (@radius: 5px) {
+	-moz-border-top-right-radius:@radius;
+	border-top-right-radius:@radius;
+	-webkit-border-top-right-radius:@radius;
+	-moz-border-bottom-right-radius:@radius;
+	border-bottom-right-radius:@radius;
+	-webkit-border-bottom-right-radius:@radius;
+	background-clip:padding-box;
+}
+@borderRadiusTop (@radius: 5px) {
+	-moz-border-top-right-radius:@radius;
+	border-top-right-radius:@radius;
+	-webkit-border-top-right-radius:@radius;
+	-moz-border-top-left-radius:@radius;
+	border-top-left-radius:@radius;
+	-webkit-border-top-left-radius:@radius;
+	background-clip:padding-box;
+}
+@borderRadiusTopLeft (@radius: 5px) {
+	-moz-border-top-left-radius:@radius;
+	border-top-left-radius:@radius;
+	-webkit-border-top-left-radius:@radius;
+	background-clip:padding-box;
+}
+@borderRadiusTopRight (@radius: 5px) {
+	-moz-border-top-right-radius:@radius;
+	border-top-right-radius:@radius;
+	-webkit-border-top-right-radius:@radius;
+	background-clip:padding-box;
+}
+@borderRadiusBottom (@radius: 5px) {
+	-moz-border-bottom-right-radius:@radius;
+	border-bottom-right-radius:@radius;
+	-webkit-border-bottom-right-radius:@radius;
+	-moz-border-bottom-left-radius:@radius;
+	border-bottom-left-radius:@radius;
+	-webkit-border-bottom-left-radius:@radius;
+	background-clip:padding-box;
+}
+/* clears the border radius from an element */
+@noBorderRadius {
+	-moz-border-radius:0;
+	border-radius:0;
+	-webkit-border-radius:0;
+}
+
+
+
+
+/**
+ * 
+ * BOX SHADOWS
+ * 
+ */
+@boxShadow (@hOffset: 0px, @vOffset: 1px, @blurRadius: 40px, @color: #000) {
+	-moz-box-shadow: @hOffset @vOffset @blurRadius @color;
+	-webkit-box-shadow: @hOffset @vOffset @blurRadius @color;
+	box-shadow: @hOffset @vOffset @blurRadius @color;
+}
+@innerBoxShadow(@hOffset: 0px, @vOffset: 0px, @blurRadius: 2px, @color: #ccc) {
+	-moz-box-shadow: inset @hOffset @vOffset @blurRadius @color;
+	-webkit-box-shadow: inset @hOffset @vOffset @blurRadius @color;
+	box-shadow: inset @hOffset @vOffset @blurRadius @color;
+}
+/* same as above, except with spread. not sure what uses above so i may screw it up */
+@insetShadow(@hOffset: 0px, @vOffset: 0px, @blurRadius: 8px, @spread: 1px, @color: #999) {
+	-moz-box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
+	-webkit-box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
+	box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
+}
+@noBoxShadow {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+
+
+
+
+/**
+ * 
+ * GRADIENTS
+ * 
+ */
+@verticalGradient(@topColor, @bottomColor) {
+	background: @topColor; /* Old browsers */
+	background: -moz-linear-gradient(top,  @topColor 0%, @bottomColor 100%); /* FF3.6+ */
+	/* Chrome,Safari4+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@bottomColor), color-stop(100%,@bottomColor));
+	background: -webkit-linear-gradient(top,  @topColor 0%,@bottomColor 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  @topColor 0%,@bottomColor 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  @topColor 0%,@bottomColor 100%); /* IE10+ */
+	background: linear-gradient(top,  @topColor 0%,@bottomColor 100%); /* W3C */
+	/* IE6-9 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@{topColor}', endColorstr='@{bottomColor}',
+														GradientType=0 );
+}
+
+
+
+
+
+
+
+/**
+ * 
+ * REUSABLE ELEMENTS
+ * 
+ */
+
+/* simple table */
+@simpleTable {
+	th, td, tr, tbody {
+		border:none;
+		background:none;
+		padding:0;
+		margin:0;
+	}
+}
+
+
+/* disables selection */
+@noSelect {
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	user-select:none;
+}
+
+/* enables selection */
+@select {
+	-moz-user-select:auto;
+	-webkit-user-select:auto;
+	user-select:auto;
+}
+
+/* overflow ellipsis */
+@overflowEllipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* clearfix */
+@clearfix{
+	zoom:1;
+	
+	&:before, &:after{
+	  content:"\0020";
+	  display:block;
+	  height:0;
+	  overflow:hidden;
+	}
+	&:after{
+		clear: both;
+	}
+}

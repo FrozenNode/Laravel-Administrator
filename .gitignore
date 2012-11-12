@@ -1,0 +1,16 @@
+*.rbc
+*.sassc
+**.swp
+.rspec
+.rvmrc
+.DS_Store
+**.orig
+**.swpw
+Gemfile.lock
+.DS_Store
+*~
+*.cache
+*.log
+*.pid
+tmp/**/*
+.idea
