@@ -216,9 +216,17 @@ class ModelHelper {
 		
 		//now set the "includedColumns"
 		$return['includedColumns'] = array();
+		$return['computedColumns'] = array();
 		
 		foreach ($columns as $key => $col) {
-			$return['includedColumns'][] = $model->table().'.'.$key;
+			if (method_exists($model, 'get_'.$key))
+			{
+				$return['computedColumns'][] = $key;
+			}
+			else
+			{
+				$return['includedColumns'][] = $key;
+			}
 		}
 		
 		return $return;
@@ -447,11 +455,19 @@ class ModelHelper {
 				$no_info = is_numeric($field);
 				$field = $no_info ? $info : $field;
 				
+				//if this is the primary key, consider this an id filter
+				if ($field === $model::$key)
+				{
+					$filter = array(
+						'type' => 'id',
+						'title' => isset($info['title']) ? $info['title'] : $field,
+					);
+				}
 				//if this filter is not in the data model, then we can't use it
-				if (in_array($field, array_keys($fields['editFields'])))
+				else if (in_array($field, array_keys($fields['editFields'])))
 				{
 					$ef = $fields['editFields'][$field];
-					
+
 					//set up the filter as the edit fields array, then overwrite anything that is set by the user
 					$filter = $ef;
 					
@@ -461,16 +477,16 @@ class ModelHelper {
 						$filter['title'] = $info['title'];
 					}
 				}
+				//if this is a relation field, get the field data
 				else if (!$no_info && $info['type'] === 'relation')
 				{
-					//if it's a related field, get the field data
 					if ($field_data = static::getFieldData($model, $field, $info))
 					{
 						$filter = $field_data['info'];
 					}
 					else continue;
 				}
-				
+
 				$filter['value'] = '';
 				$filter['field'] = $field;
 				
@@ -577,13 +593,21 @@ class ModelHelper {
 		}
 		
 		//then retrieve the rows
-		$rows = $rows->paginate($per_page, $columns['includedColumns']);
+		$rows = $rows->paginate($per_page);
 		$results = array();
 		
 		//convert the resulting set into arrays
 		foreach ($rows->results as $item)
 		{
-			$results[] = $item->to_array();
+			$colKeys = array_combine($columns['includedColumns'], $columns['includedColumns']);
+			$arr = array_intersect_key($item->to_array(), $colKeys);
+
+			foreach ($columns['computedColumns'] as $col)
+			{
+				$arr[$col] = $item->{$col};
+			}
+
+			$results[] = $arr;
 		}
 		
 		return array(
