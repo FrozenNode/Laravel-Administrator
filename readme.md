@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -435,6 +435,10 @@ Administrator was written by Jan Hartigan for the Laravel framework.
 Administrator is released under the MIT License. See the LICENSE file for details.
 
 ## Changelog
+
+### Administrator 1.0.1
+- 'id' filter type now works
+- Getter values now show up in the result set
 
 ### Administrator 1.0.0
 - Initial release.
