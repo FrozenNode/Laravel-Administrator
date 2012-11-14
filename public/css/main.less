@@ -279,6 +279,8 @@ body{
 					}
 					
 					&.sortable {
+						cursor: pointer;
+
 						div {
 							background: url("../img/orderable.png") no-repeat 0 4px;
 							padding-left: 13px;
@@ -286,7 +288,7 @@ body{
 						}
 					}
 					
-					&.sorted-asc, &.sorted-asc {
+					&.sorted-asc, &.sorted-desc {
 						@verticalGradient(#e2e2e2, #d2d4d6);
 					}
 					
@@ -307,7 +309,7 @@ body{
 					}
 				}
 				
-				tr {
+				tr.result {
 					cursor:pointer;
 					
 					td {
@@ -328,7 +330,7 @@ body{
 						}
 					}
 					
-					&.result:hover {
+					&:hover {
 						outline:1px solid #ddd;
 					}
 					

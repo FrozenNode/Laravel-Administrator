@@ -375,10 +375,23 @@
 			 */
 			setSortOptions: function(field) 
 			{	
-				//if the field is not a valid column, run away and cry
+				//if the field is not a valid column
 				if ( !(field in this.columns()) )
 				{
-					return false;
+					var found = false;
+
+					//iterate over the columns to check if it's a valid sort_field
+					$.each(this.columns(), function(i, col)
+					{
+						if (field === col.sort_field)
+						{
+							found = true;
+							return false;
+						}
+					})
+
+					if (!found)
+						return false;
 				}
 				
 				//the direction depends on the field

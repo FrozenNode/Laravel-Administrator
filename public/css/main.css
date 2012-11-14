@@ -257,12 +257,13 @@ a { text-decoration:none; }
   display:block;
   white-space:nowrap;
 }
+#admin_page #content div.table_container table.results th.sortable { cursor:pointer; }
 #admin_page #content div.table_container table.results th.sortable div {
   background:url("../img/orderable.png") no-repeat 0 4px;
   padding-left:13px;
   cursor:pointer;
 }
-#admin_page #content div.table_container table.results th.sorted-asc, #admin_page #content div.table_container table.results th.sorted-asc {
+#admin_page #content div.table_container table.results th.sorted-asc, #admin_page #content div.table_container table.results th.sorted-desc {
   background:#e2e2e2;
   background:-moz-linear-gradient(top,#e2e2e2 0%,#d2d4d6 100%);
   background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#d2d4d6),color-stop(100%,#d2d4d6));
@@ -275,14 +276,14 @@ a { text-decoration:none; }
 #admin_page #content div.table_container table.results th.sorted-asc div { background-position:0 -27px; }
 #admin_page #content div.table_container table.results th.sorted-desc div { background-position:0 -56px; }
 #admin_page #content div.table_container table.results th:last-child { border-right:solid 1px #d4d4d4; }
-#admin_page #content div.table_container table.results tr { cursor:pointer; }
-#admin_page #content div.table_container table.results tr td {
+#admin_page #content div.table_container table.results tr.result { cursor:pointer; }
+#admin_page #content div.table_container table.results tr.result td {
   padding:10px 12px 8px 12px;
   border-bottom:1px solid #e8e8e8;
   vertical-align:top;
 }
-#admin_page #content div.table_container table.results tr.even td { background:#f4f5f5; }
-#admin_page #content div.table_container table.results tr.selected td { background:#d9e4ec; }
+#admin_page #content div.table_container table.results tr.result.even td { background:#f4f5f5; }
+#admin_page #content div.table_container table.results tr.result.selected td { background:#d9e4ec; }
 #admin_page #content div.table_container table.results tr.result:hover { outline:1px solid #dddddd; }
 #admin_page #content div.table_container div.loading_rows {
   position:absolute;

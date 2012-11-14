@@ -3,6 +3,7 @@ namespace Admin\Libraries;
 
 use \Config;
 use \DateTime;
+use \DB;
 
 class ModelHelper {
 	
@@ -170,7 +171,10 @@ class ModelHelper {
 	 * 
 	 * @param object	$model
 	 * 
-	 * @return array('columns' => array(detailed..), 'includedColumns' => array(key, key, key))
+	 * @return array(
+	 *			'columns' => array(detailed..),
+	 *			'includedColumns' => array(field => full_column_name, ...)),
+	 *			'computedColumns' => array(key, key, key)
 	 */
 	 public static function getColumns($model)
 	 {
@@ -182,19 +186,45 @@ class ModelHelper {
 			
 			foreach ($model->columns as $key => $column)
 			{
-				//if the key is numeric, use the value string and set the default values.
+				//if the key is numeric, use the supplied string as the key
 				if (is_numeric($key))
 				{
 					$key = $column;
-					$column = array('title' => $key);
 				}
-				else
-				{
-					$column = array(
-						'title' => isset($column['title']) ? $column['title'] : $key
-					);
-				}
+
+				//set up the $column array with the supplied or default values
+				$column = array
+				(
+					'title' => array_get($column, 'title', $key), 
+					'sort_field' => array_get($column, 'sort_field', $key), 
+					'relation' => array_get($column, 'relation'), 
+					'select' => array_get($column, 'select'),
+					'sortable' => true, //for now...
+				);
 				
+				//if the relation option is set, we'll set up the column array using the select
+				if ($column['relation'])
+				{
+					if (!method_exists($model, $column['relation']) || !$column['select'])
+					{
+						continue;
+					}
+
+					//here we need to get the foreign table value
+					if (!$relation = static::getRelationInfo($model, $model->{$column['relation']}()))
+					{
+						continue;
+					}
+
+					//replace (:table) with the table name
+					$column['select'] = str_replace('(:table)', $relation['table'], $column['select']);
+				}
+
+				if (method_exists($model, 'get_'.$key) && $key === $column['sort_field'])
+				{
+					$column['sortable'] = false;
+				}
+
 				$columns[$key] = $column;
 			}
 			
@@ -214,18 +244,24 @@ class ModelHelper {
 			$return['columns'] = $columns;
 		}
 		
-		//now set the "includedColumns"
+		//now set the "includedColumns", "computedColumns", and "relatedColumns" arrays
 		$return['includedColumns'] = array();
 		$return['computedColumns'] = array();
+		$return['relatedColumns'] = array();
 		
-		foreach ($columns as $key => $col) {
-			if (method_exists($model, 'get_'.$key))
+		foreach ($columns as $key => $col)
+		{
+			if ($col['relation'])
 			{
-				$return['computedColumns'][] = $key;
+				$return['relatedColumns'][$key] = $key;
+			}
+			else if (method_exists($model, 'get_'.$key))
+			{
+				$return['computedColumns'][$key] = $key;
 			}
 			else
 			{
-				$return['includedColumns'][] = $key;
+				$return['includedColumns'][$key] = $model->table().'.'.$key;
 			}
 		}
 		
@@ -320,7 +356,7 @@ class ModelHelper {
 		{
 			//if the key is text, sort through the options to determine what to do with this field
 			$info['type'] = isset($info['type']) && in_array($info['type'], static::$fieldTypes) ? $info['type'] : static::$fieldTypes[0];
-			$info['title'] = isset($info['title']) ? $info['title'] : $field;
+			$info['title'] = array_get($info, 'title', $field);
 			
 			//if it's a related field
 			switch($info['type'])
@@ -336,32 +372,17 @@ class ModelHelper {
 					
 					//now that we know the method exists, we can determine if it's multiple or single
 					$related_model = $model->{$field}();
-					
-					//certain relationships need certain save/delete methods. For instance, a Belongs_To only stores the foreign key,
-					//so we would need to do ( $model->{$related_model->foreign} = $some_int ) in order to save it.
-					if (is_a($related_model, static::$relationshipBase.'Belongs_To'))
-					{
-						$info['type'] = 'relation_belongs_to';
-					}
-					else if (is_a($related_model, static::$relationshipBase.'Has_One'))
-					{
-						$info['type'] = 'relation_has_one';
-					}
-					else if (is_a($related_model, static::$relationshipBase.'Has_Many'))
-					{
-						$info['type'] = 'relation_has_many';
-					}
-					else if (is_a($related_model, static::$relationshipBase.'Has_Many_And_Belongs_To'))
-					{
-						$info['type'] = 'relation_has_many_and_belongs_to';
-					}
-					else
+
+					//certain relationships need certain save methods, filtering, and sorting, so we need to know which is which
+					if (!$relation_info = static::getRelationInfo($model, $related_model))
 					{
 						return false;
 					}
+
+					$info['type'] = $relation_info['type'];
 					
 					//set the title field
-					$info['title_field'] = isset($info['title_field']) ? $info['title_field'] : 'name';
+					$info['title_field'] = array_get($info, 'title_field', 'name');
 					
 					//set the options
 					$info['options'] = array_map(function($m) use ($info, $model)
@@ -376,24 +397,24 @@ class ModelHelper {
 				}
 				case 'currency':
 				{
-					$info['symbol'] = isset($info['symbol']) ? $info['symbol'] : '$';
-					$info['decimals'] = isset($info['decimals']) ? $info['decimals'] : 2;
+					$info['symbol'] = array_get($info, 'symbol', '$');
+					$info['decimals'] = array_get($info, 'decimals', 2);
 					break;
 				}
 				case 'date':
 				{
-					$info['date_format'] = isset($info['date_format']) ? $info['date_format'] : 'yy-mm-dd';
+					$info['date_format'] = array_get($info, 'date_format', 'yy-mm-dd');
 					break;
 				}
 				case 'time':
 				{
-					$info['time_format'] = isset($info['time_format']) ? $info['time_format'] : 'HH:mm';
+					$info['time_format'] = array_get($info, 'time_format', 'HH:mm');
 					break;
 				}
 				case 'datetime':
 				{
-					$info['date_format'] = isset($info['date_format']) ? $info['date_format'] : 'yy-mm-dd';
-					$info['time_format'] = isset($info['time_format']) ? $info['time_format'] : 'HH:mm';
+					$info['date_format'] = array_get($info, 'date_format', 'yy-mm-dd');
+					$info['time_format'] = array_get($info, 'time_format', 'HH:mm');
 					break;
 				}
 					
@@ -547,9 +568,13 @@ class ModelHelper {
 		$columns = ModelHelper::getColumns($model);
 		$sortOptions = array_merge(ModelHelper::getSortOptions($model), $sortOptions);
 		
-		//sort the results
-		$rows = $model::order_by($model->table().'.'.$sortOptions['field'], $sortOptions['direction']);
-		
+		//get things going by grouping the set
+		$rows = $model::group_by($model->table().'.'.$model::$key);
+
+		//set up initial array states for the joins and selects
+		$joins = array();
+		$selects = array(DB::raw($model->table().'.id'), DB::raw($model->table().'.*'));
+
 		//then we set the filters
 		if ($filters && is_array($filters))
 		{
@@ -559,6 +584,16 @@ class ModelHelper {
 				if (empty($filter['value']) || (is_string($filter['value']) && !trim($filter['value'])))
 				{
 					continue;
+				}
+
+				//get the relation table information if this is a relation field
+				if (in_array($filter['type'], static::$relationshipTypes))
+				{
+					//get the relation table info
+					if (!$relation = static::getRelationInfo($model, $model->{$filter['field']}()))
+					{
+						continue;
+					}
 				}
 				
 				switch ($filter['type'])
@@ -574,24 +609,77 @@ class ModelHelper {
 						break;
 					case 'relation_has_one':
 					case 'relation_has_many':
-						$relation_table = $model->{$filter['field']}()->table->from;
-						$wheres = $model->{$filter['field']}()->table->wheres[0];
-						
-						$rows->join($relation_table, $model->table().'.'.$model::$key, '=', $relation_table.'.'.$wheres['column']);
-						$rows->where_in($relation_table.'.id', (is_array($filter['value']) ? $filter['value'] : array($filter['value'])));
+						$joins[] = $relation['table'];
+						$rows->join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['table'].'.'.$relation['column']);
+						$rows->where_in($relation['table'].'.id', (is_array($filter['value']) ? $filter['value'] : array($filter['value'])));
 						break;
 					case 'relation_has_many_and_belongs_to':
-						$relation_table = $model->{$filter['field']}()->table->joins[0];
-						$wheres = $model->{$filter['field']}()->table->wheres[0];
-						
 						//join the connecting table
-						$rows->join($relation_table->table, $model->table().'.'.$model::$key, '=', $wheres['column']);
-						$rows->where_in($relation_table->clauses[0]['column2'], $filter['value']);
+						$joins[] = $relation['table'];
+						$rows->join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['column']);
+						$rows->where_in($relation['column2'], $filter['value']);
 						break;
 				}
 			}
 		}
-		
+
+		//determines if the sort should have the table prefixed to it
+		$sortOnTable = true;
+
+		//iterate over the columns to check if we need to join any values or add any extra columns
+		foreach ($columns['columns'] as $key => $column)
+		{
+			//if this is a relation column, join the proper tables and set the select value
+			if ($column['relation'])
+			{
+				$relationObject = $model->{$column['relation']}();
+
+				if (!$relation = static::getRelationInfo($model, $relationObject))
+				{
+					if ($sortOptions['field'] === $key)
+					{
+						$sortOptions['field'] = $model::$key;
+					}
+
+					continue;
+				}
+
+				//add the select statement
+				$selects[] = DB::raw($column['select'].' AS '.$key);
+
+				//if we've already joined this table, we can select from it without problems
+				if (in_array($relation['table'], $joins))
+				{
+					continue;
+				}
+
+				//add the joins
+				switch ($relation['type'])
+				{
+					case 'relation_belongs_to':
+						$rows->left_join($relation['table'], $model->table().'.'.$relationObject->foreign, '=', $relation['column']);
+					case 'relation_has_one':
+					case 'relation_has_many':
+						$rows->left_join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['table'].'.'.$relation['column']);
+						break;
+					case 'relation_has_many_and_belongs_to':
+						$rows->left_join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['column']);
+						break;
+				}
+
+				$sortOnTable = false;
+			}
+		}
+
+		//if the sort is on the model's table, prefix the table name to it
+		if ($sortOnTable)
+		{
+			$sortOptions['field'] = $model->table().'.'.$sortOptions['field'];
+		}
+
+		//order the set by the model table's id
+		$rows->order_by($sortOptions['field'], $sortOptions['direction']);
+
 		//if there is a global per page limit set, make sure the paginator uses that
 		$per_page = NULL;
 		$global_per_page = Config::get('administrator::administrator.global_per_page', NULL);
@@ -602,14 +690,13 @@ class ModelHelper {
 		}
 		
 		//then retrieve the rows
-		$rows = $rows->paginate($per_page);
+		$rows = $rows->paginate($per_page, $selects);
 		$results = array();
 		
 		//convert the resulting set into arrays
 		foreach ($rows->results as $item)
 		{
-			$colKeys = array_combine($columns['includedColumns'], $columns['includedColumns']);
-			$arr = array_intersect_key($item->to_array(), $colKeys);
+			$arr = array_intersect_key($item->to_array(), array_merge($columns['includedColumns'], $columns['relatedColumns']));
 
 			foreach ($columns['computedColumns'] as $col)
 			{
@@ -688,5 +775,63 @@ class ModelHelper {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Takes a relationship and returns certain information about its joining tables and fields
+	 *
+	 * @param object 	$model
+	 * @param object 	$relation
+	 * 
+	 * @return false|array
+	 */
+	public static function getRelationInfo($model, $relation)
+	{
+		$info = array();
+		
+		//check if this is a valid relationship object, and set up the type field
+		if (is_a($relation, static::$relationshipBase.'Belongs_To'))
+		{
+			$info['type'] = 'relation_belongs_to';
+		}
+		else if (is_a($relation, static::$relationshipBase.'Has_One'))
+		{
+			$info['type'] = 'relation_has_one';
+		}
+		else if (is_a($relation, static::$relationshipBase.'Has_Many'))
+		{
+			$info['type'] = 'relation_has_many';
+		}
+		else if (is_a($relation, static::$relationshipBase.'Has_Many_And_Belongs_To'))
+		{
+			$info['type'] = 'relation_has_many_and_belongs_to';
+		}
+		else
+		{
+			return false;
+		}
+
+		//now run through the types that have a foreign table of some sort and get that information
+		switch ($info['type'])
+		{
+			case 'relation_belongs_to':
+				$relmodel = $relation->model;
+				$info['table'] = $relmodel->table();
+				$info['column'] = $relmodel::$key;
+			case 'relation_has_one':
+			case 'relation_has_many':
+				$info['table'] = $relation->table->from;
+				$info['column'] = $relation->table->wheres[0]['column'];
+				break;
+			case 'relation_has_many_and_belongs_to':
+				$relation_table = $relation->table->joins[0];
+
+				$info['table'] = $relation_table->table;
+				$info['column'] = $relation->table->wheres[0]['column'];
+				$info['column2'] = $relation_table->clauses[0]['column2'];
+				break;
+		}
+
+		return $info;
 	}
 }

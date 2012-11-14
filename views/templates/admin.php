@@ -12,8 +12,13 @@
 		<thead>
 			<tr>
 				{{each(i, column) columns}}
-					<th class="sortable ${i == sortOptions.field() ? 'sorted-' + sortOptions.direction() : ''}">
-						<div data-bind="click: function() {setSortOptions(i)}">${title}</div>
+					<th class="${sortable ? 'sortable' : ''} 
+									${i == sortOptions.field() || sort_field == sortOptions.field() ? 'sorted-' + sortOptions.direction() : ''}">
+						{{if sortable}}
+							<div data-bind="click: function() {setSortOptions(sort_field ? sort_field : i)}">${title}</div>
+						{{else}}
+							<div>${title}</div>
+						{{/if}}
 					</th>
 				{{/each}}
 			</tr>

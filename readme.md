@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 1.0.1
+- **Version:** 1.1.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -169,15 +169,33 @@ Now let's take a look at the properties that you can set on Administrator models
 
 This property tells Administrator what columns to use when displaying the tabular result set. You can either pass it a simple string which will be used as the data key (i.e. if your database column is called `potato_farming_score`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `potato_farming_score` and it would contain an array of options.
 
+When defining relational or getter columns, you have several extra options.
+
+If you want to make a column have the value of a getter, you can do that easily. However, if you do so without setting a valid `sort_field` value, the column won't be sortable. The sort_field should be used when you're using a getter as a column key so that Administrator knows which column to sort.
+
+If you want to get a field from another table through a relationship, you'll have to set the `relation` option to the *method name* of the relationship and provide a valid select statement for your SQL driver. Since the result set is grouped by the current data model's primary key, this means you can use any of the grouping functions (like COUNT, AVG, MIN, MAX, etc.).
+
 The available options are:
 
 - *title*: default is column name
+- *sort_field*: default is the field key (i.e. if you do 'name' like below, it will look for the 'name' column). If this column is derived from a getter, it won't be sortable until you define a sort_field
+- *relation*: default is null. Set this to the method name of the relation. Only set this if you need to pull this field from another table
+- *select*: default is null. If you've set the relation, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
 
 <pre>
 public $columns = array(
 	'id',
 	'name',
 	'price',
+	'formatted_salary' => array(
+		'title' => 'Salary',
+		'sort_field' => 'salary', //must be a valid field on model's table
+	),
+	'num_films' => array(
+		'title' => '# films',
+		'relation' => 'films', //must be the relationship method name
+		'select' => 'COUNT((:table).id)', //use the (:table) placeholder so Administrator can 
+	),
 	'created_at' => array(
 		'title' => 'Created', //the header title of the column
 	),
@@ -350,6 +368,7 @@ This is the default type. It has no unique options. Soon there will be an option
 #### relation
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-relation-single.png" />
+
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-relation-multi.png" />
 
 <pre>
@@ -435,6 +454,12 @@ Administrator was written by Jan Hartigan for the Laravel framework.
 Administrator is released under the MIT License. See the LICENSE file for details.
 
 ## Changelog
+
+### Administrator 1.1.0
+- Sorting getter columns
+- Sorting relational columns with custom select statements
+- Fixed several bugs related to sorting
+- Fixed several bugs related to using getters as columns
 
 ### Administrator 1.0.1
 - 'id' filter type now works
