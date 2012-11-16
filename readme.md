@@ -470,15 +470,20 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### Administrator 1.1.0
+### 1.2.0
+- Added all field types to filters
+- Currency (and soon all numbers), date, datetime, and time filters are now a min/max range
+- Assorted improvements to make it easier to add field types
+
+### 1.1.0
 - Sorting getter columns
 - Sorting relational columns with custom select statements
 - Fixed several bugs related to sorting
 - Fixed several bugs related to using getters as columns
 
-### Administrator 1.0.1
+### 1.0.1
 - 'id' filter type now works
 - Getter values now show up in the result set
 
-### Administrator 1.0.0
+### 1.0.0
 - Initial release.
