@@ -19,6 +19,11 @@ class ModelHelper {
 	static $relationshipTypes = array('relation_belongs_to', 'relation_has_one', 'relation_has_many', 'relation_has_many_and_belongs_to');
 	
 	/**
+	 * List of fields that are min/max filter types
+	 */
+	static $minMaxTypes = array('currency', 'date', 'datetime', 'time');
+	
+	/**
 	 * List of possible related object class names
 	 */
 	static $relationshipBase = 'Laravel\\Database\\Eloquent\\Relationships\\';
@@ -332,7 +337,7 @@ class ModelHelper {
 	}
 
 	/**
-	 * Fills up a field with all of its required information given a model, key, and field
+	 * Fills up a field with all of its required information given a model, field name, and options info
 	 * 
 	 * @param object		$model
 	 * @param string|int	$key
@@ -342,15 +347,15 @@ class ModelHelper {
 	 */
 	public static function getFieldData($model, $field, $info)
 	{
-		if (is_numeric($field))
+		//set up the field/info
+		$no_info = is_numeric($field);
+		$info = $no_info ? array('title' => $info, 'type' => static::$fieldTypes[0]) : $info;
+		$field = $no_info ? $info : $field;
+		
+		//if this is the primary key, set it to a 
+		if ($field === $model::$key)
 		{
-			//if the key is numeric, use the value string and set the default values.
-			$field = $info;
-			
-			$info = array(
-				'title' => $field,
-				'type' => static::$fieldTypes[0],
-			);
+			$info['type'] = 'id';
 		}
 		else
 		{
@@ -419,6 +424,13 @@ class ModelHelper {
 				}
 					
 			}
+
+			//check if this needs a min and max value field
+			if (in_array($info['type'], static::$minMaxTypes))
+			{
+				$info['min_value'] = '';
+				$info['max_value'] = '';
+			}
 		}
 		
 		return array('field' => $field, 'info' => $info);
@@ -482,40 +494,8 @@ class ModelHelper {
 		{
 			foreach ($model->filters as $field => $info)
 			{
-				$no_info = is_numeric($field);
-				$field = $no_info ? $info : $field;
-				
-				//if this is the primary key, consider this an id filter
-				if ($field === $model::$key)
-				{
-					$filter = array(
-						'type' => 'id',
-						'title' => isset($info['title']) ? $info['title'] : $field,
-					);
-				}
-				//if this filter is not in the data model, then we can't use it
-				else if (in_array($field, array_keys($fields['editFields'])))
-				{
-					$ef = $fields['editFields'][$field];
-
-					//set up the filter as the edit fields array, then overwrite anything that is set by the user
-					$filter = $ef;
-					
-					//if the title key is set, overwrite the existing one
-					if (isset($info['title']))
-					{
-						$filter['title'] = $info['title'];
-					}
-				}
-				//if this is a relation field, get the field data
-				else if (!$no_info && $info['type'] === 'relation')
-				{
-					if ($field_data = static::getFieldData($model, $field, $info))
-					{
-						$filter = $field_data['info'];
-					}
-					else continue;
-				}
+				$fieldData = static::getFieldData($model, $field, $info);
+				$filter = $fieldData['info'];
 
 				$filter['value'] = '';
 				$filter['field'] = $field;
@@ -574,17 +554,43 @@ class ModelHelper {
 		//set up initial array states for the joins and selects
 		$joins = array();
 		$selects = array(DB::raw($model->table().'.id'), DB::raw($model->table().'.*'));
+		
 
 		//then we set the filters
 		if ($filters && is_array($filters))
 		{
 			foreach ($filters as $filter)
 			{
-				//if there is no value in this filter, ignore it
-				if (empty($filter['value']) || (is_string($filter['value']) && !trim($filter['value'])))
+				//get the filter values
+				$filter['value'] = static::getFilterValue(array_get($filter, 'value'));
+				$filter['min_value'] = static::getFilterValue(array_get($filter, 'min_value'));
+				$filter['max_value'] = static::getFilterValue(array_get($filter, 'max_value'));
+
+				//if this is a minMaxType, check if there is at least a min_value or max_value field
+				if (in_array($filter['type'], static::$minMaxTypes))
+				{
+					if (!$filter['min_value'] && !$filter['max_value'])
+					{
+						continue;
+					}
+
+					//set the where fields
+					if ($filter['min_value'])
+					{
+						$rows->where($model->table().'.'.$filter['field'], '>=', $filter['min_value']);
+					}
+
+					//then do the max value
+					if ($filter['max_value'])
+					{
+						$rows->where($model->table().'.'.$filter['field'], '<=', $filter['max_value']);
+					}
+				}
+				else if (!$filter['value'])
 				{
 					continue;
 				}
+
 
 				//get the relation table information if this is a relation field
 				if (in_array($filter['type'], static::$relationshipTypes))
@@ -595,7 +601,7 @@ class ModelHelper {
 						continue;
 					}
 				}
-				
+
 				switch ($filter['type'])
 				{
 					case 'text':
@@ -833,5 +839,24 @@ class ModelHelper {
 		}
 
 		return $info;
+	}
+
+	/**
+	 * Helper function to determine if a filter value should be considered "empty" or not
+	 *
+	 * @param string 	value
+	 *
+	 * @return false|string
+	 */
+	public static function getFilterValue($value)
+	{
+		if (empty($value) || (is_string($value) && trim($value) === ''))
+		{
+			return false;
+		}
+		else
+		{
+			return $value;
+		}
 	}
 }

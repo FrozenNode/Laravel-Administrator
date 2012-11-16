@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 1.1.0
+- **Version:** 1.2.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -177,10 +177,10 @@ If you want to get a field from another table through a relationship, you'll hav
 
 The available options are:
 
-- *title*: default is column name
-- *sort_field*: default is the field key (i.e. if you do 'name' like below, it will look for the 'name' column). If this column is derived from a getter, it won't be sortable until you define a sort_field
-- *relation*: default is null. Set this to the method name of the relation. Only set this if you need to pull this field from another table
-- *select*: default is null. If you've set the relation, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
+- **title**: default is column name
+- **sort_field**: default is the field key (i.e. if you do 'name' like below, it will look for the 'name' column). If this column is derived from a getter, it won't be sortable until you define a sort_field
+- **relation**: default is null. Set this to the method name of the relation. Only set this if you need to pull this field from another table
+- **select**: default is null. If you've set the relation, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
 
 <pre>
 public $columns = array(
@@ -194,7 +194,7 @@ public $columns = array(
 	'num_films' => array(
 		'title' => '# films',
 		'relation' => 'films', //must be the relationship method name
-		'select' => 'COUNT((:table).id)', //use the (:table) placeholder so Administrator can 
+		'select' => 'COUNT((:table).id)', //the (:table) is replaced with the relevant relationship table
 	),
 	'created_at' => array(
 		'title' => 'Created', //the header title of the column
@@ -238,9 +238,13 @@ This property tells Administrator what columns to use when editing an item. You 
 
 The available options are:
 
-- *title*
-- *type*: default is 'text'. Choices are: relation, text, date, time, datetime, currency
-- *title_field*: default is 'name'. Only use this if type is 'relation'. This is the field on the other table to use for displaying the name/title of the other data model.
+- **title**
+- **type**: default is 'text'. Choices are: relation, text, date, time, datetime, currency
+- **title_field**: default is 'name'. Only use this if type is 'relation'. This is the field on the other table to use for displaying the name/title of the other data model.
+- **symbol**: default is '$'. Only use this for 'currency' field type.
+- **decimals**: default is 2. Only use this for 'currency' field type.
+- **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
+- **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
 <pre>
 public $edit = array(
@@ -261,9 +265,14 @@ public $edit = array(
 		'title' => 'Price',
 		'type' => 'currency',
 		'symbol' => '$', //symbol shown in front of the number
-		'precision' => 10, //the number of digits in front of the decimal point (e.g. 1234567890.00 for 10)
-		'scale' => 2, //the number of digits after the decimal point
+		'decimals' => 2, //the number of digits after the decimal point
 	),
+	'release_date' => array(
+		'title' => 'Release Date',
+		'type' => 'datetime',
+		'date_format' => 'yy-mm-dd',
+		'time_format' => 'HH:mm',
+	)
 	
 );
 </pre>
@@ -306,12 +315,18 @@ Unless you're extending directly from Eloquent/Aware, these methods should alrea
 
 This property tells Administrator what columns to use to build the filterable set. This works almost exactly like the $edit property, so you can either pass it a simple string which will be used as the data key (i.e. if your database column is called `potato_farming_score`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `potato_farming_score` and it would contain an array of options.
 
+The date/time and number (for now only 'currency') field types automatically get mix/max filters where the user can select the range of dates, times, or numbers.
+
 **If you want to filter a related field, you have to put the relationship method name in the $filters array and use type 'relation'.**
 
 The available options are:
 
-- *title*
-- *type*: default is 'text'. choices are: text, date, time, datetime, relation
+- **title**
+- **type**: default is 'text'. choices are: text, currency, date, time, datetime, relation
+- **symbol**: default is '$'. Only use this for 'currency' field type.
+- **decimals**: default is 2. Only use this for 'currency' field type.
+- **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
+- **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
 <pre>
 public $filters = array(
@@ -455,15 +470,20 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### Administrator 1.1.0
+### 1.2.0
+- Added all field types to filters
+- Currency (and soon all numbers), date, datetime, and time filters are now a min/max range
+- Assorted improvements to make it easier to add field types
+
+### 1.1.0
 - Sorting getter columns
 - Sorting relational columns with custom select statements
 - Fixed several bugs related to sorting
 - Fixed several bugs related to using getters as columns
 
-### Administrator 1.0.1
+### 1.0.1
 - 'id' filter type now works
 - Getter values now show up in the result set
 
-### Administrator 1.0.0
+### 1.0.0
 - Initial release.
