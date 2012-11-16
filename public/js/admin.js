@@ -463,15 +463,28 @@
 			 */
 			getFilters: function()
 			{
-				var filters = [];
+				var filters = [],
+					observables = ['value', 'min_value', 'max_value'];
 				
 				$(window.admin.filtersViewModel.filters()).each(function(ind, el)
 				{
-					filters.push({
+					var filter = {
 						field: el.field,
 						type: el.type,
 						value: el.value() ? el.value() : null,
+					}
+
+					//iterate over the observables to see if we should include them
+					$(observables).each(function()
+					{
+						if (this in el)
+						{
+							filter[this] = el[this]() ? el[this]() : null;
+						}
 					});
+
+					//push this filter onto the filters array
+					filters.push(filter);
 				});
 				
 				return filters;
@@ -541,10 +554,18 @@
 			var filters = [];
 			
 			$.each(adminData.filters, function(ind, el) {
-				var filter = el;
+				var filter = el,
+					observables = ['value', 'min_value', 'max_value'];
 				
-				filter.value = ko.observable(filter.value);
-				
+				//iterate over the desired observables and check if they're there. if so, assign them an observable slot
+				$.each(observables, function(i, obs)
+				{
+					if (obs in filter)
+					{
+						filter[obs] = ko.observable(filter[obs]);
+					}
+				})
+
 				filters.push(filter);
 			});
 			
@@ -556,7 +577,11 @@
 		 */
 		initSubscriptions: function() 
 		{
-			var self = this;
+			var self = this,
+				runFilter = function(val)
+				{
+					self.viewModel.updateRows();
+				};
 			
 			//iterate over filters
 			$.each(self.filtersViewModel.filters(), function(ind, filter)
@@ -575,6 +600,20 @@
 					//update the rows now that we've got new filters
 					self.viewModel.updateRows();
 				});
+
+
+
+				//check if there's a min and max value. if so, subscribe to those as well
+				if ('min_value' in filter)
+				{
+					self.filtersViewModel.filters()[ind].min_value.subscribe(runFilter);
+				}
+				if ('max_value' in filter)
+				{
+					self.filtersViewModel.filters()[ind].max_value.subscribe(runFilter);
+				}
+
+
 			});
 			
 			//subscribe to page change

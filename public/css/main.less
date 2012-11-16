@@ -158,11 +158,22 @@ body{
 				margin-bottom:10px;
 				position:relative;
 				
-				&.currency {
+				&.min_max {
+					
+					input[type=text] {
+						width: 90px;
+					}
+
 					span.symbol {
 						position:absolute;
 						top:23px;
 						left:-15px;
+					}
+
+					&.datetime {
+						input[type=text] {
+							font-size:11px;
+						}
 					}
 				}
 			}

@@ -116,11 +116,13 @@ a { text-decoration:none; }
   margin-bottom:10px;
   position:relative;
 }
-#admin_page div#sidebar div.panel_contents > div.currency span.symbol {
+#admin_page div#sidebar div.panel_contents > div.min_max input[type=text] { width:90px; }
+#admin_page div#sidebar div.panel_contents > div.min_max span.symbol {
   position:absolute;
   top:23px;
   left:-15px;
 }
+#admin_page div#sidebar div.panel_contents > div.min_max.datetime input[type=text] { font-size:11px; }
 #admin_page #content { margin-right:290px; }
 #admin_page #content div.table_container { position:relative; }
 #admin_page #content div.table_container div.results_header {
