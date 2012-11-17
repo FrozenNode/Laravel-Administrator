@@ -464,7 +464,7 @@
 			getFilters: function()
 			{
 				var filters = [],
-					observables = ['value', 'min_value', 'max_value'];
+					observables = ['value', 'minValue', 'maxValue'];
 				
 				$(window.admin.filtersViewModel.filters()).each(function(ind, el)
 				{
@@ -555,7 +555,7 @@
 			
 			$.each(adminData.filters, function(ind, el) {
 				var filter = el,
-					observables = ['value', 'min_value', 'max_value'];
+					observables = ['value', 'minValue', 'maxValue'];
 				
 				//iterate over the desired observables and check if they're there. if so, assign them an observable slot
 				$.each(observables, function(i, obs)
@@ -604,13 +604,13 @@
 
 
 				//check if there's a min and max value. if so, subscribe to those as well
-				if ('min_value' in filter)
+				if ('minValue' in filter)
 				{
-					self.filtersViewModel.filters()[ind].min_value.subscribe(runFilter);
+					self.filtersViewModel.filters()[ind].minValue.subscribe(runFilter);
 				}
-				if ('max_value' in filter)
+				if ('maxValue' in filter)
 				{
-					self.filtersViewModel.filters()[ind].max_value.subscribe(runFilter);
+					self.filtersViewModel.filters()[ind].maxValue.subscribe(runFilter);
 				}
 
 

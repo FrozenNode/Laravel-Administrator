@@ -36,9 +36,9 @@
 	};
 	
 	/**
-	 * The currency binding ensures that a value is decimal-like 
+	 * The number binding ensures that a value is decimal-like 
 	 */
-	ko.bindingHandlers.currency = {
+	ko.bindingHandlers.number = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
 			var options = valueAccessor(),
@@ -50,7 +50,7 @@
 			{
 				if (value !== '')
 				{
-					$(element).val('0.00');
+					$(element).val('');
 				}
 			}
 			else

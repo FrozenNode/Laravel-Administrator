@@ -1,6 +1,5 @@
 <?php
 use Admin\Libraries\ModelHelper;
-use Admin\Libraries\lessc;
 
 //The admin group for all REST calls
 Route::group(array('before' => 'validate_admin|add_assets'), function()
@@ -123,7 +122,7 @@ View::composer('administrator::index', function($view)
 	$view->primaryKey = $modelInstance::$key;
 	$view->sortOptions = ModelHelper::getSortOptions($modelInstance);
 	$view->rows = ModelHelper::getRows($modelInstance, $view->sortOptions);
-	$view->editFields = $editFields['editFields'];
+	$view->editFields = $editFields['arrayFields'];
 	$view->dataModel = $editFields['dataModel'];
 	$view->filters = ModelHelper::getFilters($modelInstance);
 	$view->baseUrl = URL::to_route('admin_index');

@@ -4,6 +4,7 @@ namespace Admin\Libraries;
 use \Config;
 use \DateTime;
 use \DB;
+use Admin\Libraries\Fields\Field;
 
 class ModelHelper {
 	
@@ -55,14 +56,6 @@ class ModelHelper {
 		$columns = static::getColumns($emptyModel);
 		$editFields = static::getEditFields($emptyModel);
 		
-		foreach ($editFields['editFields'] as $field => $ef)
-		{
-			if ($ef['type'] === 'relation_belongs_to')
-			{
-				$columns['includedColumns'][] = $emptyModel->{$field}()->foreign;
-			}
-		}
-		
 		//get the model 
 		$model = $classname::find($id, $columns['includedColumns']);
 		
@@ -73,33 +66,35 @@ class ModelHelper {
 		else if ($model->exists)
 		{
 			//make sure the relationships are loaded
-			foreach ($editFields['editFields'] as $field => $ef)
+			foreach ($editFields['objectFields'] as $field => $info)
 			{
-				if (in_array($ef['type'], static::$relationshipTypes))
+				if ($info->relationship)
 				{
-					//get the relations
-					if ($relations = $model->{$field}()->get())
+					//get all existing values for this relationship
+					if ($relatedItems = $model->{$field}()->get())
 					{
-						$relations_arr = array();
-						
-						//if they're there, iterate over them and store them as fields that the JS can understand
-						foreach ($relations as $rel)
+						$relationsArray = array();
+
+						//iterate over the items
+						foreach ($relatedItems as $item)
 						{
-							if ($ef['type'] === 'relation_belongs_to' || $ef['type'] === 'relation_has_one')
+							//if this is a mutliple-value type (i.e. HasMany, HasManyAndBelongsTo), make sure this is an array
+							if ($info->multipleValues)
 							{
-								//if it's a single, just set the first item as the value
-								$model->{$field} = $rel->{$rel::$key};
+								$relationsArray[] = $item->{$item::$key};
 							}
-							else if ($ef['type'] === 'has_many' || $ef['type'] === 'relation_has_many_and_belongs_to')
+							else
 							{
-								$relations_arr[] = $rel->{$rel::$key};
+								$model->{$field} = $item->{$item::$key};
 							}
 						}
-						
-						if (!empty($relations_arr))
+
+						//if $relationsArray isn't empty, it means we should set the value on the model
+						if (!empty($relationsArray))
 						{
-							$model->{$field} = $relations_arr;
+							$model->{$field} = $relationsArray;
 						}
+						
 					}
 				}
 			}
@@ -175,101 +170,69 @@ class ModelHelper {
 	 * Gets the model's columns
 	 * 
 	 * @param object	$model
+	 * @param bool		$toArray
 	 * 
 	 * @return array(
 	 *			'columns' => array(detailed..),
 	 *			'includedColumns' => array(field => full_column_name, ...)),
 	 *			'computedColumns' => array(key, key, key)
 	 */
-	 public static function getColumns($model)
+	 public static function getColumns($model, $toArray = true)
 	 {
-	 	$return = array();
+	 	$return = array(
+	 		'columns' => array(),
+	 		'includedColumns' => array(),
+	 		'computedColumns' => array(),
+	 		'relatedColumns' => array(),
+	 	);
 		
 	 	if (isset($model->columns) && count($model->columns) > 0)
 		{
 			$columns = array();
 			
-			foreach ($model->columns as $key => $column)
+			foreach ($model->columns as $field => $column)
 			{
-				//if the key is numeric, use the supplied string as the key
-				if (is_numeric($key))
+				//get the column object
+				if (!$columnObject = Column::get($field, $column, $model))
 				{
-					$key = $column;
+					continue;
 				}
 
-				//set up the $column array with the supplied or default values
-				$column = array
-				(
-					'title' => array_get($column, 'title', $key), 
-					'sort_field' => array_get($column, 'sort_field', $key), 
-					'relation' => array_get($column, 'relation'), 
-					'select' => array_get($column, 'select'),
-					'sortable' => true, //for now...
-				);
-				
-				//if the relation option is set, we'll set up the column array using the select
-				if ($column['relation'])
+				//if $toArray is true, add the column as an array. otherwise add the column object
+				if ($toArray)
 				{
-					if (!method_exists($model, $column['relation']) || !$column['select'])
+					$return['columns'][$columnObject->field] = $columnObject->toArray();
+				}
+				else
+				{
+					$return['columns'][$columnObject->field] = $columnObject;
+				}
+
+				//categorize the columns
+				if ($columnObject->isRelated)
+				{
+					$return['relatedColumns'][$columnObject->field] = $columnObject->field;
+
+					if ($fk = $columnObject->relationshipField->foreignKey)
 					{
-						continue;
+						$return['includedColumns'][$fk] = $fk;
 					}
-
-					//here we need to get the foreign table value
-					if (!$relation = static::getRelationInfo($model, $model->{$column['relation']}()))
-					{
-						continue;
-					}
-
-					//replace (:table) with the table name
-					$column['select'] = str_replace('(:table)', $relation['table'], $column['select']);
 				}
-
-				if (method_exists($model, 'get_'.$key) && $key === $column['sort_field'])
+				else if ($columnObject->isComputed)
 				{
-					$column['sortable'] = false;
+					$return['computedColumns'][$columnObject->field] = $columnObject->field;
 				}
-
-				$columns[$key] = $column;
+				else
+				{
+					$return['includedColumns'][$columnObject->field] = $model->table().'.'.$columnObject->field;
+				}
 			}
-			
-			$return['columns'] = $columns;
 		}
 		else
 		{
-			//grab all the attribute keys and use them as the key/title
-			$attribute_keys = array_keys($model->attributes);
-			$columns = array();
-			
-			foreach ($attribute_keys as $attr)
-			{
-				$columns[$attr] = array('title' => $attr);
-			}
-			
-			$return['columns'] = $columns;
+			//throw exception!
 		}
-		
-		//now set the "includedColumns", "computedColumns", and "relatedColumns" arrays
-		$return['includedColumns'] = array();
-		$return['computedColumns'] = array();
-		$return['relatedColumns'] = array();
-		
-		foreach ($columns as $key => $col)
-		{
-			if ($col['relation'])
-			{
-				$return['relatedColumns'][$key] = $key;
-			}
-			else if (method_exists($model, 'get_'.$key))
-			{
-				$return['computedColumns'][$key] = $key;
-			}
-			else
-			{
-				$return['includedColumns'][$key] = $model->table().'.'.$key;
-			}
-		}
-		
+
 		return $return;
 	}
 	
@@ -282,159 +245,44 @@ class ModelHelper {
 	 */
 	public static function getEditFields($model)
 	{
-		$return = array();
+		$return = array(
+			'objectFields' => array(),
+			'arrayFields' => array(),
+			'dataModel' => array(),
+		);
 		
 		if (isset($model->edit) && count($model->edit) > 0)
 		{
-			$fields = array();
-			
 			foreach ($model->edit as $field => $info)
 			{
 				//if this field can be properly set up, put it into the edit fields array
-				if ($field_data = static::getFieldData($model, $field, $info))
+				if ($fieldObject = Field::get($field, $info, $model))
 				{
-					$fields[$field_data['field']] = $field_data['info'];
-				}
-			}
-		}
-		else
-		{
-			//grab all the attribute keys and use them as the key/title
-			$attribute_keys = array_keys($model->attributes);
-			$fields = array();
-			
-			foreach ($attribute_keys as $attr)
-			{
-				//we don't want to include the key
-				if ($attr !== $model::$key) {
-					$fields[$attr] = array(
-						'title' => $attr,
-						'type' => static::$fieldTypes[0],
-					);
+					$return['objectFields'][$fieldObject->field] = $fieldObject;
+					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
 				}
 			}
 		}
 		
 		//add the id field, which will be uneditable, but part of the data model
-		$fields['id'] = 0;
+		$return['arrayFields']['id'] = 0;
 		
 		//set up the data model
-		$dataModel = array();
-		
-		foreach ($fields as $key => $val)
+		foreach ($return['arrayFields'] as $field => $info)
 		{
-			if (is_array($val))
+			if (is_array($info) || is_a($info, 'Field'))
 			{
-				$dataModel[$key] = $model->$key;
+				$return['dataModel'][$field] = $model->$field;
 			}
 			else
 			{
-				$dataModel[$key] = $val;
+				$return['dataModel'][$field] = $info;
 			}
 		}
 		
-		return array('editFields' => $fields, 'dataModel' => $dataModel);
+		return $return;
 	}
 
-	/**
-	 * Fills up a field with all of its required information given a model, field name, and options info
-	 * 
-	 * @param object		$model
-	 * @param string|int	$key
-	 * @param string|array	$field
-	 * 
-	 * @return false|array
-	 */
-	public static function getFieldData($model, $field, $info)
-	{
-		//set up the field/info
-		$no_info = is_numeric($field);
-		$info = $no_info ? array('title' => $info, 'type' => static::$fieldTypes[0]) : $info;
-		$field = $no_info ? $info : $field;
-		
-		//if this is the primary key, set it to a 
-		if ($field === $model::$key)
-		{
-			$info['type'] = 'id';
-		}
-		else
-		{
-			//if the key is text, sort through the options to determine what to do with this field
-			$info['type'] = isset($info['type']) && in_array($info['type'], static::$fieldTypes) ? $info['type'] : static::$fieldTypes[0];
-			$info['title'] = array_get($info, 'title', $field);
-			
-			//if it's a related field
-			switch($info['type'])
-			{
-				//if this is a related field, check to see what kind of relation it is
-				case 'relation':
-				{
-					//check if the related method exists on the model
-					if (!method_exists($model, $field))
-					{
-						return false;
-					}
-					
-					//now that we know the method exists, we can determine if it's multiple or single
-					$related_model = $model->{$field}();
-
-					//certain relationships need certain save methods, filtering, and sorting, so we need to know which is which
-					if (!$relation_info = static::getRelationInfo($model, $related_model))
-					{
-						return false;
-					}
-
-					$info['type'] = $relation_info['type'];
-					
-					//set the title field
-					$info['title_field'] = array_get($info, 'title_field', 'name');
-					
-					//set the options
-					$info['options'] = array_map(function($m) use ($info, $model)
-					{ 
-						return array(
-							$model::$key => $m->{$model::$key},
-							$info['title_field'] => $m->{$info['title_field']},
-						);
-					}, $related_model->model->all());
-
-					break;
-				}
-				case 'currency':
-				{
-					$info['symbol'] = array_get($info, 'symbol', '$');
-					$info['decimals'] = array_get($info, 'decimals', 2);
-					break;
-				}
-				case 'date':
-				{
-					$info['date_format'] = array_get($info, 'date_format', 'yy-mm-dd');
-					break;
-				}
-				case 'time':
-				{
-					$info['time_format'] = array_get($info, 'time_format', 'HH:mm');
-					break;
-				}
-				case 'datetime':
-				{
-					$info['date_format'] = array_get($info, 'date_format', 'yy-mm-dd');
-					$info['time_format'] = array_get($info, 'time_format', 'HH:mm');
-					break;
-				}
-					
-			}
-
-			//check if this needs a min and max value field
-			if (in_array($info['type'], static::$minMaxTypes))
-			{
-				$info['min_value'] = '';
-				$info['max_value'] = '';
-			}
-		}
-		
-		return array('field' => $field, 'info' => $info);
-	}
 	
 	/**
 	 * Gets the sort options for a model
@@ -486,7 +334,6 @@ class ModelHelper {
 	public static function getFilters($model)
 	{
 		//get the model's edit fields
-		$fields = static::getEditFields($model);
 		$filters = array();
 		
 		//if the filters option is set, use it
@@ -494,41 +341,10 @@ class ModelHelper {
 		{
 			foreach ($model->filters as $field => $info)
 			{
-				$fieldData = static::getFieldData($model, $field, $info);
-				$filter = $fieldData['info'];
-
-				$filter['value'] = '';
-				$filter['field'] = $field;
-				
-				$filters[] = $filter;
-			}
-		}
-		else
-		{	//otherwise use the data model
-			foreach ($fields['dataModel'] as $field => $val)
-			{
-				$ef = $fields['editFields'][$field];
-				$filter = array();
-				
-				//if this is the id field, set it up with the id filter
-				if ($field === $model::$key)
+				if ($fieldObject = Field::get($field, $info, $model))
 				{
-					$filters[] = array(
-						'type' => 'id',
-						'title' => $field,
-						'field' => $field,
-						'value' => ''
-					);
-					
-					continue;
+					$filters[$fieldObject->field] = $fieldObject->toArray();
 				}
-				
-				//set the type and title fields
-				$filter = $ef;
-				$filter['value'] = '';
-				$filter['field'] = $field;
-				
-				$filters[] = $filter;
 			}
 		}
 		
@@ -545,7 +361,7 @@ class ModelHelper {
 	public static function getRows($model, $sortOptions, $filters = null)
 	{
 		//get the columns and sort options
-		$columns = ModelHelper::getColumns($model);
+		$columns = ModelHelper::getColumns($model, false);
 		$sortOptions = array_merge(ModelHelper::getSortOptions($model), $sortOptions);
 		
 		//get things going by grouping the set
@@ -553,7 +369,7 @@ class ModelHelper {
 
 		//set up initial array states for the joins and selects
 		$joins = array();
-		$selects = array(DB::raw($model->table().'.id'), DB::raw($model->table().'.*'));
+		$selects = array(DB::raw($model->table().'.'.$model::$key), DB::raw($model->table().'.*'));
 		
 
 		//then we set the filters
@@ -561,71 +377,12 @@ class ModelHelper {
 		{
 			foreach ($filters as $filter)
 			{
-				//get the filter values
-				$filter['value'] = static::getFilterValue(array_get($filter, 'value'));
-				$filter['min_value'] = static::getFilterValue(array_get($filter, 'min_value'));
-				$filter['max_value'] = static::getFilterValue(array_get($filter, 'max_value'));
-
-				//if this is a minMaxType, check if there is at least a min_value or max_value field
-				if (in_array($filter['type'], static::$minMaxTypes))
-				{
-					if (!$filter['min_value'] && !$filter['max_value'])
-					{
-						continue;
-					}
-
-					//set the where fields
-					if ($filter['min_value'])
-					{
-						$rows->where($model->table().'.'.$filter['field'], '>=', $filter['min_value']);
-					}
-
-					//then do the max value
-					if ($filter['max_value'])
-					{
-						$rows->where($model->table().'.'.$filter['field'], '<=', $filter['max_value']);
-					}
-				}
-				else if (!$filter['value'])
+				if (!$fieldObject = Field::get($filter['field'], $filter, $model))
 				{
 					continue;
 				}
 
-
-				//get the relation table information if this is a relation field
-				if (in_array($filter['type'], static::$relationshipTypes))
-				{
-					//get the relation table info
-					if (!$relation = static::getRelationInfo($model, $model->{$filter['field']}()))
-					{
-						continue;
-					}
-				}
-
-				switch ($filter['type'])
-				{
-					case 'text':
-						$rows->where($model->table().'.'.$filter['field'], 'LIKE', '%' . $filter['value'] . '%');
-						break;
-					case 'id':
-						$rows->where($model->table().'.'.$filter['field'], '=', $filter['value']);
-						break;
-					case 'relation_belongs_to':
-						$rows->where($model->{$filter['field']}()->foreign, 'LIKE', '%'.$filter['value'].'%');
-						break;
-					case 'relation_has_one':
-					case 'relation_has_many':
-						$joins[] = $relation['table'];
-						$rows->join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['table'].'.'.$relation['column']);
-						$rows->where_in($relation['table'].'.id', (is_array($filter['value']) ? $filter['value'] : array($filter['value'])));
-						break;
-					case 'relation_has_many_and_belongs_to':
-						//join the connecting table
-						$joins[] = $relation['table'];
-						$rows->join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['column']);
-						$rows->where_in($relation['column2'], $filter['value']);
-						break;
-				}
+				$fieldObject->filterQuery($rows, $model);
 			}
 		}
 
@@ -633,46 +390,13 @@ class ModelHelper {
 		$sortOnTable = true;
 
 		//iterate over the columns to check if we need to join any values or add any extra columns
-		foreach ($columns['columns'] as $key => $column)
+		foreach ($columns['columns'] as $field => $column)
 		{
-			//if this is a relation column, join the proper tables and set the select value
-			if ($column['relation'])
+			//if this is a related column, we'll need to add some joins
+			$column->filterQuery($rows, $selects, $model);
+
+			if ($column->isRelated && $column->field === $sortOptions['field'])
 			{
-				$relationObject = $model->{$column['relation']}();
-
-				if (!$relation = static::getRelationInfo($model, $relationObject))
-				{
-					if ($sortOptions['field'] === $key)
-					{
-						$sortOptions['field'] = $model::$key;
-					}
-
-					continue;
-				}
-
-				//add the select statement
-				$selects[] = DB::raw($column['select'].' AS '.$key);
-
-				//if we've already joined this table, we can select from it without problems
-				if (in_array($relation['table'], $joins))
-				{
-					continue;
-				}
-
-				//add the joins
-				switch ($relation['type'])
-				{
-					case 'relation_belongs_to':
-						$rows->left_join($relation['table'], $model->table().'.'.$relationObject->foreign, '=', $relation['column']);
-					case 'relation_has_one':
-					case 'relation_has_many':
-						$rows->left_join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['table'].'.'.$relation['column']);
-						break;
-					case 'relation_has_many_and_belongs_to':
-						$rows->left_join($relation['table'], $model->table().'.'.$model::$key, '=', $relation['column']);
-						break;
-				}
-
 				$sortOnTable = false;
 			}
 		}
@@ -694,7 +418,7 @@ class ModelHelper {
 		{
 			$per_page = $global_per_page;
 		}
-		
+
 		//then retrieve the rows
 		$rows = $rows->paginate($per_page, $selects);
 		$results = array();
@@ -732,131 +456,9 @@ class ModelHelper {
 		$editFields = static::getEditFields($model);
 		
 		//run through the edit fields to see if we need to set relationships
-		foreach ($editFields['editFields'] as $field => $ef)
+		foreach ($editFields['objectFields'] as $field => $info)
 		{
-			//now we set the model fields depending on what type of edit fields they are
-			switch ($ef['type'])
-			{
-				case 'text':
-				case 'currency':
-				{
-					$model->{$field} = \Input::get($field, '');
-					break;
-				}
-				case 'date':
-				case 'time':
-				case 'datetime':
-				{
-					$val = \Input::get($field, '');
-					
-					if (strtotime($val))
-					{
-						$model->{$field} = new DateTime($val);
-					}
-					
-					break;
-				}
-				case 'relation_belongs_to':
-				{
-					$relation = $model->{$field}();
-					$model->{$relation->foreign} = \Input::get($field, NULL);
-					unset($model->attributes[$field]);
-					break;
-				}
-				case 'relation_has_one':
-				{
-					
-					break;
-				}
-				case 'relation_has_many':
-				{
-					
-					break;
-				}
-				case 'relation_has_many_and_belongs_to':
-				{
-					$model->{$field}()->sync(\Input::get($field, array()));
-					unset($model->attributes[$field]);
-					break;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Takes a relationship and returns certain information about its joining tables and fields
-	 *
-	 * @param object 	$model
-	 * @param object 	$relation
-	 * 
-	 * @return false|array
-	 */
-	public static function getRelationInfo($model, $relation)
-	{
-		$info = array();
-		
-		//check if this is a valid relationship object, and set up the type field
-		if (is_a($relation, static::$relationshipBase.'Belongs_To'))
-		{
-			$info['type'] = 'relation_belongs_to';
-		}
-		else if (is_a($relation, static::$relationshipBase.'Has_One'))
-		{
-			$info['type'] = 'relation_has_one';
-		}
-		else if (is_a($relation, static::$relationshipBase.'Has_Many'))
-		{
-			$info['type'] = 'relation_has_many';
-		}
-		else if (is_a($relation, static::$relationshipBase.'Has_Many_And_Belongs_To'))
-		{
-			$info['type'] = 'relation_has_many_and_belongs_to';
-		}
-		else
-		{
-			return false;
-		}
-
-		//now run through the types that have a foreign table of some sort and get that information
-		switch ($info['type'])
-		{
-			case 'relation_belongs_to':
-				$relmodel = $relation->model;
-				$info['table'] = $relmodel->table();
-				$info['column'] = $relmodel::$key;
-			case 'relation_has_one':
-			case 'relation_has_many':
-				$info['table'] = $relation->table->from;
-				$info['column'] = $relation->table->wheres[0]['column'];
-				break;
-			case 'relation_has_many_and_belongs_to':
-				$relation_table = $relation->table->joins[0];
-
-				$info['table'] = $relation_table->table;
-				$info['column'] = $relation->table->wheres[0]['column'];
-				$info['column2'] = $relation_table->clauses[0]['column2'];
-				break;
-		}
-
-		return $info;
-	}
-
-	/**
-	 * Helper function to determine if a filter value should be considered "empty" or not
-	 *
-	 * @param string 	value
-	 *
-	 * @return false|string
-	 */
-	public static function getFilterValue($value)
-	{
-		if (empty($value) || (is_string($value) && trim($value) === ''))
-		{
-			return false;
-		}
-		else
-		{
-			return $value;
+			$info->fillModel($model, \Input::get($field, NULL));
 		}
 	}
 }

@@ -134,8 +134,6 @@ class Administrator_Admin_Controller extends Controller
 				'data' => $model->to_array(),
 			));
 		}
-
-		//$model = $this->uploadFiles($model, $modelName);
 		
 	}
 	
@@ -206,37 +204,5 @@ class Administrator_Admin_Controller extends Controller
 		//return the rows
 		return Response::json(ModelHelper::getRows($model, $sortOptions, $filters));
 	}
-
-
-	/**
-	+++Method Helpers
-	 */
-
-	private function uploadFiles($model, $modelName)
-	{
-		$attributes = $this->fileAttributes($model->edit);
-
-		foreach ($attributes as $key => $attribute) {
-			$name = InputFactory::getName($key, $attribute);
-			$imagePath = FileHelper::upload($model, $modelName, $name, $attribute, true);
-			if ($imagePath !== false) {
-				$model->$name = $imagePath["fileName"];
-			}
-		}
-
-		return $model;
-	}
-
-	private function fileAttributes($attributes)
-	{
-		$searchFunc = function ($value) {
-			return isset($value['type']) && $value['type'] === 'file';
-		};
-
-		return array_filter($attributes, $searchFunc);
-	}
-
-
-
 
 }
