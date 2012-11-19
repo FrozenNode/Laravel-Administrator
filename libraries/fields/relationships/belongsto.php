@@ -39,7 +39,7 @@ class BelongsTo extends Relationship {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->foreign} = $input;
+		$model->{$this->foreignKey} = $input;
 		unset($model->attributes[$this->field]);
 	}
 
@@ -61,7 +61,7 @@ class BelongsTo extends Relationship {
 		{
 			return;
 		}
-		
-		$query->where($model->{$this->field}()->foreign, 'LIKE', '%'.$this->value.'%');
+
+		$query->where($model->{$this->foreignKey}, 'LIKE', '%'.$this->value.'%');
 	}
 }

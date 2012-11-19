@@ -69,10 +69,10 @@ class Time extends Field {
 	public function fillModel(&$model, $input)
 	{
 		$val = ( is_null($input) || !is_string($input) ) ? '' : $input;
-		
+
 		if (strtotime($val))
 		{
-			$model->{$field} = new DateTime($val);
+			$model->{$this->field} = new DateTime($val);
 		}
 	}
 }
