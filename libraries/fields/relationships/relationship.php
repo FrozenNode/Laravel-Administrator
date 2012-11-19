@@ -1,18 +1,18 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields\Relationships;
 
 use Admin\Libraries\Fields\Field;
 
 abstract class Relationship extends Field {
-	
-	
+
+
 	/**
 	 * This is used in setting up filters
 	 *
 	 * @var bool
 	 */
 	public $relationship = true;
-	
+
 	/**
 	 * The string to use to name the items on the other table
 	 *
@@ -26,7 +26,7 @@ abstract class Relationship extends Field {
 	 * @var string
 	 */
 	public $table = '';
-	
+
 	/**
 	 * The number of decimal places after the number
 	 *
@@ -47,7 +47,7 @@ abstract class Relationship extends Field {
 	 * @var bool
 	 */
 	public $multipleValues = false;
-	
+
 	/**
 	 * The array of items from which the user will be able to choose
 	 *
@@ -89,7 +89,7 @@ abstract class Relationship extends Field {
 	public function toArray()
 	{
 		$arr = parent::toArray();
-		
+
 		$arr['table'] = $this->table;
 		$arr['column'] = $this->column;
 		$arr['name_field'] = $this->nameField;

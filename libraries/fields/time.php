@@ -1,25 +1,25 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields;
 
 use \DateTime;
 
 class Time extends Field {
-	
+
 	/**
 	 * Determines whether this field's filter uses a min/max range
 	 *
 	 * @var string
 	 */
 	public $minMax = true;
-	
+
 	/**
-	 * Format string for the jQuery UI Datepicker 
+	 * Format string for the jQuery UI Datepicker
 	 * http://docs.jquery.com/UI/Datepicker/formatDate
 	 *
 	 * @var string
 	 */
 	public $date_format = 'yy-mm-dd';
-	
+
 	/**
 	 * Format string for the jQUery timepicker plugin
 	 * http://trentrichardson.com/examples/timepicker/#tp-formatting
@@ -52,7 +52,7 @@ class Time extends Field {
 	public function toArray()
 	{
 		$arr = parent::toArray();
-		
+
 		$arr['date_format'] = $this->date_format;
 		$arr['time_format'] = $this->time_format;
 

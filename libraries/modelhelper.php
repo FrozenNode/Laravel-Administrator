@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Admin\Libraries;
 
 use \Config;
@@ -7,36 +7,36 @@ use \DB;
 use Admin\Libraries\Fields\Field;
 
 class ModelHelper {
-	
-	
+
+
 	/**
 	 * List of possible field types in the edit array. this will grow to be more complex in time...
 	 */
 	static $fieldTypes = array('text', 'relation', 'currency', 'date', 'time', 'datetime' );
-	
+
 	/**
 	 * List of possible field types in the edit array. this will grow to be more complex in time...
 	 */
 	static $relationshipTypes = array('relation_belongs_to', 'relation_has_one', 'relation_has_many', 'relation_has_many_and_belongs_to');
-	
+
 	/**
 	 * List of fields that are min/max filter types
 	 */
 	static $minMaxTypes = array('currency', 'date', 'datetime', 'time');
-	
+
 	/**
 	 * List of possible related object class names
 	 */
 	static $relationshipBase = 'Laravel\\Database\\Eloquent\\Relationships\\';
-	
-	
+
+
 	/**
 	 * Gets an instance of the supplied model given the id
-	 * 
+	 *
 	 * @param string	$modelName
 	 * @param id		$id
-	 * 
-	 * @return object|null	$model 
+	 *
+	 * @return object|null	$model
 	 * object with data => if the id exists
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
@@ -45,20 +45,20 @@ class ModelHelper {
 	{
 		//first instantiate a blank version of this object
 		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');;
-		
+
 		if (!class_exists($classname))
 		{
 			return null;
 		}
-		
+
 		//get an empty model to work with and its included columns
 		$emptyModel = static::getModelInstance($modelName);
 		$columns = static::getColumns($emptyModel);
 		$editFields = static::getEditFields($emptyModel);
-		
-		//get the model 
+
+		//get the model
 		$model = $classname::find($id, $columns['includedColumns']);
-		
+
 		if (!$model)
 		{
 			$model = $emptyModel;
@@ -94,27 +94,27 @@ class ModelHelper {
 						{
 							$model->{$field} = $relationsArray;
 						}
-						
+
 					}
 				}
 			}
 		}
-		
+
 		return $model;
 	}
-	
+
 	/**
 	 * Gets an instance of the supplied model
-	 * 
+	 *
 	 * @param string		$modelName
-	 * 
+	 *
 	 * @return object|null	$model
 	 */
 	public static function getModelInstance($modelName)
 	{
 		//first instantiate the object
 		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');;
-		
+
 		if (class_exists($classname))
 		{
 			return new $classname();
@@ -124,19 +124,19 @@ class ModelHelper {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Gets all necessary fields 
-	 * 
+	 * Gets all necessary fields
+	 *
 	 * @param string		$modelName
-	 * 
+	 *
 	 * @return object|null	$model
 	 */
 	public static function getAllModelData($modelName)
 	{
 		//first instantiate the object
 		$classname = static::$namespace.$modelName;
-		
+
 		if (class_exists($classname))
 		{
 			return new $classname();
@@ -146,12 +146,12 @@ class ModelHelper {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Deletes a model and all of its relationships 
-	 * 
+	 * Deletes a model and all of its relationships
+	 *
 	 * @param object		$model
-	 * 
+	 *
 	 * @return bool
 	 */
 	public static function deleteModel(&$model)
@@ -161,17 +161,17 @@ class ModelHelper {
 		{
 			$model->before_delete();
 		}
-		
+
 		//then delete the model
 		return $model->delete();
 	}
-	
+
 	/**
 	 * Gets the model's columns
-	 * 
+	 *
 	 * @param object	$model
 	 * @param bool		$toArray
-	 * 
+	 *
 	 * @return array(
 	 *			'columns' => array(detailed..),
 	 *			'includedColumns' => array(field => full_column_name, ...)),
@@ -185,11 +185,11 @@ class ModelHelper {
 	 		'computedColumns' => array(),
 	 		'relatedColumns' => array(),
 	 	);
-		
+
 	 	if (isset($model->columns) && count($model->columns) > 0)
 		{
 			$columns = array();
-			
+
 			foreach ($model->columns as $field => $column)
 			{
 				//get the column object
@@ -235,12 +235,12 @@ class ModelHelper {
 
 		return $return;
 	}
-	
+
 	/**
 	 * Gets the model's edit fields
-	 * 
+	 *
 	 * @param object	$model
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getEditFields($model)
@@ -250,7 +250,7 @@ class ModelHelper {
 			'arrayFields' => array(),
 			'dataModel' => array(),
 		);
-		
+
 		if (isset($model->edit) && count($model->edit) > 0)
 		{
 			foreach ($model->edit as $field => $info)
@@ -263,10 +263,10 @@ class ModelHelper {
 				}
 			}
 		}
-		
+
 		//add the id field, which will be uneditable, but part of the data model
 		$return['arrayFields']['id'] = 0;
-		
+
 		//set up the data model
 		foreach ($return['arrayFields'] as $field => $info)
 		{
@@ -279,17 +279,17 @@ class ModelHelper {
 				$return['dataModel'][$field] = $info;
 			}
 		}
-		
+
 		return $return;
 	}
 
-	
+
 	/**
 	 * Gets the sort options for a model
-	 * 
+	 *
 	 * @param object	$model
 	 * @param array		$includedColumns //simple array of column keys that are legitimate to be sorted
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getSortOptions($model, $includedColumns = null)
@@ -298,14 +298,14 @@ class ModelHelper {
 			'field' => 'id',
 			'direction' => 'asc',
 		);
-		
+
 		//first get the included columns if they don't exist
 		if (!isset($includedColumns) || count($includedColumns) === 0)
 		{
 			$columns = static::getColumns($model);
 			$includedColumns = $columns['includedColumns'];
 		}
-		
+
 		if (isset($model->sortOptions) && count($model->sortOptions) > 0)
 		{
 			//check if the column is valid, otherwise keep default
@@ -313,29 +313,29 @@ class ModelHelper {
 			{
 				$default['field'] = $model->sortOptions['field'];
 			}
-			
+
 			//check if the direction is valid, otherwise keep default
 			if (isset($model->sortOptions['direction']) && in_array($model->sortOptions['direction'], array('asc', 'desc')))
 			{
 				$default['direction'] = $model->sortOptions['direction'];
 			}
 		}
-		
+
 		return $default;
 	}
-	
+
 	/**
 	 * Gets the filters for the given model
-	 * 
+	 *
 	 * @param object	$model
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getFilters($model)
 	{
 		//get the model's edit fields
 		$filters = array();
-		
+
 		//if the filters option is set, use it
 		if (isset($model->filters) && count($model->filters) > 0)
 		{
@@ -347,13 +347,13 @@ class ModelHelper {
 				}
 			}
 		}
-		
+
 		return $filters;
 	}
 
 	/**
 	 * Helper that builds a results array (with results and pagination info)
-	 * 
+	 *
 	 * @param object	$model
 	 * @param array		$sortOptions (with 'field' and 'direction' keys)
 	 * @param array		$filters (see getFilters helper for the value types)
@@ -363,14 +363,14 @@ class ModelHelper {
 		//get the columns and sort options
 		$columns = ModelHelper::getColumns($model, false);
 		$sortOptions = array_merge(ModelHelper::getSortOptions($model), $sortOptions);
-		
+
 		//get things going by grouping the set
 		$rows = $model::group_by($model->table().'.'.$model::$key);
 
 		//set up initial array states for the joins and selects
 		$joins = array();
 		$selects = array(DB::raw($model->table().'.'.$model::$key), DB::raw($model->table().'.*'));
-		
+
 
 		//then we set the filters
 		if ($filters && is_array($filters))
@@ -413,7 +413,7 @@ class ModelHelper {
 		//if there is a global per page limit set, make sure the paginator uses that
 		$per_page = NULL;
 		$global_per_page = Config::get('administrator::administrator.global_per_page', NULL);
-		
+
 		if ($global_per_page && is_numeric($global_per_page))
 		{
 			$per_page = $global_per_page;
@@ -422,7 +422,7 @@ class ModelHelper {
 		//then retrieve the rows
 		$rows = $rows->paginate($per_page, $selects);
 		$results = array();
-		
+
 		//convert the resulting set into arrays
 		foreach ($rows->results as $item)
 		{
@@ -435,7 +435,7 @@ class ModelHelper {
 
 			$results[] = $arr;
 		}
-		
+
 		return array(
 			'page' => $rows->page,
 			'last' => $rows->last,
@@ -446,15 +446,15 @@ class ModelHelper {
 
 	/**
 	 * Prepare a model for saving given a post input array
-	 * 
+	 *
 	 * @param object	$model
-	 * 
+	 *
 	 * @return false|object
 	 */
 	public static function fillModel(&$model)
 	{
 		$editFields = static::getEditFields($model);
-		
+
 		//run through the edit fields to see if we need to set relationships
 		foreach ($editFields['objectFields'] as $field => $info)
 		{

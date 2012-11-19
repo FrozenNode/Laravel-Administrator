@@ -1,8 +1,8 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields\Relationships;
 
 class HasManyAndBelongsTo extends Relationship {
-	
+
 
 	/**
 	 * The field type which matches a $fieldTypes key
@@ -18,7 +18,7 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public $multipleValues = true;
 
-	
+
 	/**
 	 * Constructor function
 	 *
@@ -47,7 +47,7 @@ class HasManyAndBelongsTo extends Relationship {
 	public function toArray()
 	{
 		$arr = parent::toArray();
-		
+
 		$arr['column2'] = $this->column2;
 
 		return $arr;

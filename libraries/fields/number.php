@@ -1,22 +1,22 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields;
 
 class Number extends Field {
-	
+
 	/**
 	 * Determines whether this field's filter uses a min/max range
 	 *
 	 * @var string
 	 */
 	public $minMax = true;
-	
+
 	/**
 	 * The symbol to use in front of the number
 	 *
 	 * @var string
 	 */
 	public $symbol = '';
-	
+
 	/**
 	 * The number of decimal places after the number
 	 *
@@ -48,7 +48,7 @@ class Number extends Field {
 	public function toArray()
 	{
 		$arr = parent::toArray();
-		
+
 		$arr['symbol'] = $this->symbol;
 		$arr['decimals'] = $this->decimals;
 

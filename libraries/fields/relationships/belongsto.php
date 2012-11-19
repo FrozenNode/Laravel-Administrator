@@ -1,15 +1,15 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields\Relationships;
 
 class BelongsTo extends Relationship {
-	
+
 	/**
 	 * Determines if this column is a normal field on this table
 	 *
 	 * @var string
 	 */
 	public $foreignKey;
-	
+
 	/**
 	 * Constructor function
 	 *

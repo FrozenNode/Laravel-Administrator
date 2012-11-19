@@ -1,15 +1,15 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields\Relationships;
 
 class HasMany extends Relationship {
-	
+
 	/**
 	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
 	 *
 	 * @var bool
 	 */
 	public $multipleValues = true;
-	
+
 	/**
 	 * Constructor function
 	 *

@@ -4,11 +4,11 @@ namespace Admin\Libraries;
 use Admin\Libraries\Fields\Field;
 
 /**
- * The Column class helps us construct columns from models. It can be used to derive column information from a model, or it can be 
+ * The Column class helps us construct columns from models. It can be used to derive column information from a model, or it can be
  * instantiated to hold information about any given column.
  */
 class Column {
-	
+
 	/**
 	 * The field name
 	 *
@@ -22,21 +22,21 @@ class Column {
 	 * @var string
 	 */
 	public $title;
-	
+
 	/**
 	 * The sort field that the column will use if it is sortable
 	 *
 	 * @var string
 	 */
 	public $sort_field = NULL;
-	
+
 	/**
 	 * The string value of the relationship name
 	 *
 	 * @var string
 	 */
 	public $relationship = NULL;
-	
+
 	/**
 	 * This string SQL Select statement if this is a relationship or a computed value of some kind
 	 *
@@ -78,12 +78,12 @@ class Column {
 	 * @var bool
 	 */
 	public $isIncluded = false;
-	
-	
-	
+
+
+
 	/**
 	 * The constructor takes a field, column array, and the associated Eloquent model
-	 * 
+	 *
 	 * @param int|string	$field 	//column key
 	 * @param string|array	$column //column model
 	 * @param Eloquent		$model 	//eloquent model
@@ -131,9 +131,9 @@ class Column {
 		//set up the $column array with the supplied or default values
 		$column = array
 		(
-			'title' => array_get($column, 'title', $field), 
-			'sort_field' => array_get($column, 'sort_field', $field), 
-			'relationship' => array_get($column, 'relation'), 
+			'title' => array_get($column, 'title', $field),
+			'sort_field' => array_get($column, 'sort_field', $field),
+			'relationship' => array_get($column, 'relation'),
 			'select' => array_get($column, 'select'),
 			'sortable' => true, //for now...
 		);
@@ -208,7 +208,7 @@ class Column {
 		//add the select statement
 		$selects[] = DB::raw($this->select.' AS '.$this->field);
 
-		
+
 		//if we've already joined this table, we can select from it without problems
 		//^ for the moment leaving this out
 
@@ -217,12 +217,12 @@ class Column {
 		switch ($this->relationshipField->type)
 		{
 			case 'belongs_to':
-				$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->field}()->foreign, '=', 
+				$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->field}()->foreign, '=',
 												$this->relationshipField->column);
 				break;
 			case 'has_one':
 			case 'has_many':
-				$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=', 
+				$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=',
 												$this->relationshipField->table.'.'.$this->relationshipField->column);
 				break;
 			case 'has_many_and_belongs_to':

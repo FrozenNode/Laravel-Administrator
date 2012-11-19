@@ -1,9 +1,9 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields\Relationships;
 
 class HasOne extends Relationship {
-	
-	
+
+
 	/**
 	 * Constructor function
 	 *

@@ -4,10 +4,10 @@ namespace Admin\Libraries\Fields;
 use \Eloquent;
 
 abstract class Field {
-	
+
 	/**
 	 * The valid field types and their associated classes
-	 * 
+	 *
 	 * @var array
 	 */
 	protected static $fieldTypes = array(
@@ -42,9 +42,9 @@ abstract class Field {
 	 * @var bool
 	 */
 	public $relationship = false;
-	
+
 	/**
-	 * The name of the field 
+	 * The name of the field
 	 *
 	 * @var string
 	 */
@@ -123,7 +123,7 @@ abstract class Field {
 	public static function get($field, $info, $model)
 	{
 		$noInfo = is_numeric($field);
-		
+
 		$field = $noInfo ? $info : $field;
 		$info = $noInfo ? array() : $info;
 
@@ -178,7 +178,7 @@ abstract class Field {
 
 		return array_key_exists($type, static::$fieldTypes);
 	}
-	
+
 	/**
 	 * Given a field name and Eloquent model object, returns the type key or false
 	 *
@@ -251,7 +251,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Filters a query object given 
+	 * Filters a query object given
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
@@ -272,7 +272,7 @@ abstract class Field {
 			{
 				$query->where($model->table().'.'.$this->field, '<=', $this->maxValue);
 			}
-		} 
+		}
 	}
 
 	/**
