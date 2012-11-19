@@ -56,6 +56,15 @@ class ModelHelper {
 		$columns = static::getColumns($emptyModel);
 		$editFields = static::getEditFields($emptyModel);
 
+		//make sure the edit fields are included
+		foreach ($editFields['dataModel'] as $field => $val)
+		{
+			if (!array_key_exists($field, $columns['includedColumns']))
+			{
+				$columns['includedColumns'][$field] = $emptyModel->table().'.'.$field;
+			}
+		}
+
 		//get the model
 		$model = $classname::find($id, $columns['includedColumns']);
 
@@ -215,7 +224,7 @@ class ModelHelper {
 
 					if ($fk = $columnObject->relationshipField->foreignKey)
 					{
-						$return['includedColumns'][$fk] = $fk;
+						$return['includedColumns'][$fk] = $model->table().'.'.$fk;
 					}
 				}
 				else if ($columnObject->isComputed)
@@ -231,6 +240,12 @@ class ModelHelper {
 		else
 		{
 			//throw exception!
+		}
+
+		//make sure the table key is included
+		if (!array_get($return['includedColumns'], $model::$key))
+		{
+			$return['includedColumns'][$model::$key] = $model->table().'.'.$model::$key;
 		}
 
 		return $return;
@@ -395,7 +410,8 @@ class ModelHelper {
 			//if this is a related column, we'll need to add some joins
 			$column->filterQuery($rows, $selects, $model);
 
-			if ($column->isRelated && $column->field === $sortOptions['field'])
+			//if this is a related field or
+			if ( ($column->isRelated || $column->select) && $column->field === $sortOptions['field'])
 			{
 				$sortOnTable = false;
 			}
