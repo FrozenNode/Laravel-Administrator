@@ -2,6 +2,7 @@
 namespace Admin\Libraries;
 
 use Admin\Libraries\Fields\Field;
+use \DB;
 
 /**
  * The Column class helps us construct columns from models. It can be used to derive column information from a model, or it can be
@@ -102,7 +103,7 @@ class Column {
 		$this->title = array_get($column, 'title', $field);
 		$this->sort_field = array_get($column, 'sort_field', $field);
 		$this->sortable = array_get($column, 'sortable', $this->sortable);
-		$this->relationship = array_get($column, 'relation');
+		$this->relationship = array_get($column, 'relationship');
 		$this->select = array_get($column, 'select');
 		$this->isRelated = array_get($column, 'isRelated', $this->isRelated);
 		$this->isComputed = array_get($column, 'isComputed', $this->isComputed);
@@ -133,7 +134,7 @@ class Column {
 		(
 			'title' => array_get($column, 'title', $field),
 			'sort_field' => array_get($column, 'sort_field', $field),
-			'relationship' => array_get($column, 'relation'),
+			'relationship' => array_get($column, 'relationship'),
 			'select' => array_get($column, 'select'),
 			'sortable' => true, //for now...
 		);
@@ -147,7 +148,7 @@ class Column {
 			}
 
 			//now we'll need to grab a relation field to see what its foreign table is
-			if (!$relationshipField = Field::get($field, array('type' => 'relationship'), $model))
+			if (!$relationshipField = Field::get($column['relationship'], array('type' => 'relationship'), $model))
 			{
 				return false;
 			}
@@ -156,9 +157,8 @@ class Column {
 			$column['select'] = str_replace('(:table)', $relationshipField->table, $column['select']);
 			$column['relationshipField'] = $relationshipField;
 		}
-
 		//if the supplied item is a getter, make this unsortable for the moment
-		if (method_exists($model, 'get_'.$field) && $field === $column['sort_field'])
+		else if (method_exists($model, 'get_'.$field) && $field === $column['sort_field'])
 		{
 			$column['sortable'] = false;
 		}
@@ -200,35 +200,114 @@ class Column {
 	public function filterQuery(&$query, &$selects, $model)
 	{
 		//if this isn't a related column, we don't need to join anything
-		if (!$this->isRelated)
+		if ($this->isRelated)
 		{
-			return;
+			//perform the joins
+			switch ($this->relationshipField->type)
+			{
+				case 'belongs_to':
+					$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->relationship}()->foreign, '=',
+													$this->relationshipField->table.'.'.$this->relationshipField->column);
+					break;
+				case 'has_one':
+				case 'has_many':
+					$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=',
+													$this->relationshipField->table.'.'.$this->relationshipField->column);
+					break;
+				case 'has_many_and_belongs_to':
+					$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=', $this->relationshipField->column);
+					break;
+			}
 		}
 
 		//add the select statement
-		$selects[] = DB::raw($this->select.' AS '.$this->field);
+		if ($this->select)
+		{
+			$selects[] = DB::raw($this->select.' AS '.$this->field);
+		}
 
 
 		//if we've already joined this table, we can select from it without problems
 		//^ for the moment leaving this out
 
 
-		//perform the joins
-		switch ($this->relationshipField->type)
+
+	}
+
+	/**
+	 * Gets the model's columns
+	 *
+	 * @param object	$model
+	 * @param bool		$toArray
+	 *
+	 * @return array(
+	 *			'columns' => array(detailed..),
+	 *			'includedColumns' => array(field => full_column_name, ...)),
+	 *			'computedColumns' => array(key, key, key)
+	 */
+	 public static function getColumns($model, $toArray = true)
+	 {
+	 	$return = array(
+	 		'columns' => array(),
+	 		'includedColumns' => array(),
+	 		'computedColumns' => array(),
+	 		'relatedColumns' => array(),
+	 	);
+
+	 	if (isset($model->columns) && count($model->columns) > 0)
 		{
-			case 'belongs_to':
-				$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->field}()->foreign, '=',
-												$this->relationshipField->column);
-				break;
-			case 'has_one':
-			case 'has_many':
-				$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=',
-												$this->relationshipField->table.'.'.$this->relationshipField->column);
-				break;
-			case 'has_many_and_belongs_to':
-				$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=', $this->relationshipField->column);
-				break;
+			$columns = array();
+
+			foreach ($model->columns as $field => $column)
+			{
+				//get the column object
+				if (!$columnObject = Column::get($field, $column, $model))
+				{
+					continue;
+				}
+
+				//if $toArray is true, add the column as an array. otherwise add the column object
+				if ($toArray)
+				{
+					$return['columns'][$columnObject->field] = $columnObject->toArray();
+				}
+				else
+				{
+					$return['columns'][$columnObject->field] = $columnObject;
+				}
+
+				//categorize the columns
+				if ($columnObject->isRelated)
+				{
+					$return['relatedColumns'][$columnObject->field] = $columnObject->field;
+
+					if ($fk = $columnObject->relationshipField->foreignKey)
+					{
+						$return['includedColumns'][$fk] = $model->table().'.'.$fk;
+					}
+				}
+				else if ($columnObject->isComputed)
+				{
+					$return['computedColumns'][$columnObject->field] = $columnObject->field;
+				}
+				else
+				{
+					$return['includedColumns'][$columnObject->field] = $model->table().'.'.$columnObject->field;
+				}
+			}
 		}
+		else
+		{
+			//throw exception!
+		}
+
+		//make sure the table key is included
+		if (!array_get($return['includedColumns'], $model::$key))
+		{
+			$return['includedColumns'][$model::$key] = $model->table().'.'.$model::$key;
+		}
+
+		return $return;
 	}
 
 	/**

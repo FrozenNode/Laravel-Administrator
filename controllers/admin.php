@@ -1,7 +1,6 @@
 <?php
 use Admin\Libraries\Column;
 use Admin\Libraries\ModelHelper;
-use Admin\Libraries\ModelValidator;
 
 /**
  * Handles all requests related to managing the data models
@@ -128,6 +127,9 @@ class Administrator_Admin_Controller extends Controller
 		else
 		{
 			$model->save();
+
+			//Save the relationships
+			ModelHelper::saveRelationships($model);
 
 			return Response::json(array(
 				'success' => true,

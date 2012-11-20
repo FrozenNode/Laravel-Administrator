@@ -11,6 +11,13 @@ class BelongsTo extends Relationship {
 	public $foreignKey;
 
 	/**
+	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
+	 *
+	 * @var bool
+	 */
+	public $external = false;
+
+	/**
 	 * Constructor function
 	 *
 	 * @param string|int	$field

@@ -53,8 +53,8 @@ class ModelHelper {
 
 		//get an empty model to work with and its included columns
 		$emptyModel = static::getModelInstance($modelName);
-		$columns = static::getColumns($emptyModel);
-		$editFields = static::getEditFields($emptyModel);
+		$columns = Column::getColumns($emptyModel);
+		$editFields = Field::getEditFields($emptyModel);
 
 		//make sure the edit fields are included
 		foreach ($editFields['objectFields'] as $field => $obj)
@@ -176,170 +176,6 @@ class ModelHelper {
 	}
 
 	/**
-	 * Gets the model's columns
-	 *
-	 * @param object	$model
-	 * @param bool		$toArray
-	 *
-	 * @return array(
-	 *			'columns' => array(detailed..),
-	 *			'includedColumns' => array(field => full_column_name, ...)),
-	 *			'computedColumns' => array(key, key, key)
-	 */
-	 public static function getColumns($model, $toArray = true)
-	 {
-	 	$return = array(
-	 		'columns' => array(),
-	 		'includedColumns' => array(),
-	 		'computedColumns' => array(),
-	 		'relatedColumns' => array(),
-	 	);
-
-	 	if (isset($model->columns) && count($model->columns) > 0)
-		{
-			$columns = array();
-
-			foreach ($model->columns as $field => $column)
-			{
-				//get the column object
-				if (!$columnObject = Column::get($field, $column, $model))
-				{
-					continue;
-				}
-
-				//if $toArray is true, add the column as an array. otherwise add the column object
-				if ($toArray)
-				{
-					$return['columns'][$columnObject->field] = $columnObject->toArray();
-				}
-				else
-				{
-					$return['columns'][$columnObject->field] = $columnObject;
-				}
-
-				//categorize the columns
-				if ($columnObject->isRelated)
-				{
-					$return['relatedColumns'][$columnObject->field] = $columnObject->field;
-
-					if ($fk = $columnObject->relationshipField->foreignKey)
-					{
-						$return['includedColumns'][$fk] = $model->table().'.'.$fk;
-					}
-				}
-				else if ($columnObject->isComputed)
-				{
-					$return['computedColumns'][$columnObject->field] = $columnObject->field;
-				}
-				else
-				{
-					$return['includedColumns'][$columnObject->field] = $model->table().'.'.$columnObject->field;
-				}
-			}
-		}
-		else
-		{
-			//throw exception!
-		}
-
-		//make sure the table key is included
-		if (!array_get($return['includedColumns'], $model::$key))
-		{
-			$return['includedColumns'][$model::$key] = $model->table().'.'.$model::$key;
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Gets the model's edit fields
-	 *
-	 * @param object	$model
-	 *
-	 * @return array
-	 */
-	public static function getEditFields($model)
-	{
-		$return = array(
-			'objectFields' => array(),
-			'arrayFields' => array(),
-			'dataModel' => array(),
-		);
-
-		if (isset($model->edit) && count($model->edit) > 0)
-		{
-			foreach ($model->edit as $field => $info)
-			{
-				//if this field can be properly set up, put it into the edit fields array
-				if ($fieldObject = Field::get($field, $info, $model))
-				{
-					$return['objectFields'][$fieldObject->field] = $fieldObject;
-					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
-				}
-			}
-		}
-
-		//add the id field, which will be uneditable, but part of the data model
-		$return['arrayFields']['id'] = 0;
-
-		//set up the data model
-		foreach ($return['arrayFields'] as $field => $info)
-		{
-			if (is_array($info) || is_a($info, 'Field'))
-			{
-				$return['dataModel'][$field] = $model->$field;
-			}
-			else
-			{
-				$return['dataModel'][$field] = $info;
-			}
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * Gets the sort options for a model
-	 *
-	 * @param object	$model
-	 * @param array		$includedColumns //simple array of column keys that are legitimate to be sorted
-	 *
-	 * @return array
-	 */
-	public static function getSortOptions($model, $includedColumns = null)
-	{
-		$default = array(
-			'field' => 'id',
-			'direction' => 'asc',
-		);
-
-		//first get the included columns if they don't exist
-		if (!isset($includedColumns) || count($includedColumns) === 0)
-		{
-			$columns = static::getColumns($model);
-			$includedColumns = $columns['includedColumns'];
-		}
-
-		if (isset($model->sortOptions) && count($model->sortOptions) > 0)
-		{
-			//check if the column is valid, otherwise keep default
-			if (isset($model->sortOptions['field']) && in_array($model->sortOptions['field'], $includedColumns))
-			{
-				$default['field'] = $model->sortOptions['field'];
-			}
-
-			//check if the direction is valid, otherwise keep default
-			if (isset($model->sortOptions['direction']) && in_array($model->sortOptions['direction'], array('asc', 'desc')))
-			{
-				$default['direction'] = $model->sortOptions['direction'];
-			}
-		}
-
-		return $default;
-	}
-
-	/**
 	 * Gets the filters for the given model
 	 *
 	 * @param object	$model
@@ -376,8 +212,8 @@ class ModelHelper {
 	public static function getRows($model, $sortOptions, $filters = null)
 	{
 		//get the columns and sort options
-		$columns = ModelHelper::getColumns($model, false);
-		$sortOptions = array_merge(ModelHelper::getSortOptions($model), $sortOptions);
+		$columns = Column::getColumns($model, false);
+		$sort = Sort::get($model, $sortOptions['field'], $sortOptions['direction']);
 
 		//get things going by grouping the set
 		$query = $model::group_by($model->table().'.'.$model::$key);
@@ -411,7 +247,7 @@ class ModelHelper {
 			$column->filterQuery($query, $selects, $model);
 
 			//if this is a related field or
-			if ( ($column->isRelated || $column->select) && $column->field === $sortOptions['field'])
+			if ( ($column->isRelated || $column->select) && $column->field === $sort->field)
 			{
 				$sortOnTable = false;
 			}
@@ -420,11 +256,8 @@ class ModelHelper {
 		//if the sort is on the model's table, prefix the table name to it
 		if ($sortOnTable)
 		{
-			$sortOptions['field'] = $model->table().'.'.$sortOptions['field'];
+			$sort->field = $model->table().'.'.$sort->field;
 		}
-
-		//order the set by the model table's id
-		$query->order_by($sortOptions['field'], $sortOptions['direction']);
 
 		//if there is a global per page limit set, make sure the paginator uses that
 		$per_page = $model->per_page() ? $model->per_page() : 20;
@@ -458,6 +291,9 @@ class ModelHelper {
 		//now we need to limit and offset the rows in remembrance of our dear lost friend paginate()
 		$query->take($per_page);
 		$query->skip($per_page * ($page - 1));
+
+		//order the set by the model table's id
+		$query->order_by($sort->field, $sort->direction);
 
 		//then retrieve the rows
 		$rows = $query->get($selects);
@@ -493,12 +329,36 @@ class ModelHelper {
 	 */
 	public static function fillModel(&$model)
 	{
-		$editFields = static::getEditFields($model);
+		$editFields = Field::getEditFields($model);
 
 		//run through the edit fields to see if we need to set relationships
 		foreach ($editFields['objectFields'] as $field => $info)
 		{
-			$info->fillModel($model, \Input::get($field, NULL));
+			if (!$info->external)
+			{
+				$info->fillModel($model, \Input::get($field, NULL));
+			}
+		}
+	}
+
+	/**
+	 * After a model has been saved, this is called to save the relationships
+	 *
+	 * @param object	$model
+	 *
+	 * @return false|object
+	 */
+	public static function saveRelationships(&$model)
+	{
+		$editFields = Field::getEditFields($model);
+
+		//run through the edit fields to see if we need to set relationships
+		foreach ($editFields['objectFields'] as $field => $info)
+		{
+			if ($info->external)
+			{
+				$info->fillModel($model, \Input::get($field, NULL));
+			}
 		}
 	}
 }

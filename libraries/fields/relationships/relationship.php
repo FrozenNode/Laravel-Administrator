@@ -14,6 +14,13 @@ abstract class Relationship extends Field {
 	public $relationship = true;
 
 	/**
+	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
+	 *
+	 * @var bool
+	 */
+	public $external = true;
+
+	/**
 	 * The string to use to name the items on the other table
 	 *
 	 * @var string

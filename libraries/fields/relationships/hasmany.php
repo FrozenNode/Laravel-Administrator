@@ -50,4 +50,13 @@ class HasMany extends Relationship {
 		$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->table.'.'.$this->column);
 		$query->where_in($this->table.'.id', (is_array($this->value) ? $this->value : array($this->value)));
 	}
+
+	/**
+	 * For the moment this is an empty function until I can figure out a way to display HasOne and HasMany relationships on this model
+	 *
+	 * @param Eloquent	$model
+	 *
+	 * @return array
+	 */
+	public function fillModel(&$model, $input) {}
 }

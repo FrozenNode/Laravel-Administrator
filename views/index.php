@@ -15,7 +15,7 @@
 				id: <?php echo $model->exists ? $model->{$model::$key} : '0'; ?>,
 			<?php } ?>
 			rows: <?php echo json_encode($rows) ?>,
-			sortOptions: <?php echo json_encode($sortOptions) ?>,
+			sortOptions: <?php echo json_encode($sort) ?>,
 			model_name: "<?php echo $modelName ?>",
 			filters: <?php echo json_encode($filters); ?>,
 			edit_fields: <?php echo json_encode($editFields); ?>,
