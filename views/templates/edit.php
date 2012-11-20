@@ -12,55 +12,57 @@
 	
 	{{each(key, field) editFields}}
 		{{if key !== $root.primaryKey}}
-			{{if field.type === 'text'}}
+			{{if type === 'text'}}
 				<div>
-					<label for="edit_field_${ key }">${field.title}:</label>
+					<label for="edit_field_${ key }">${title}:</label>
 					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key]" />
 				</div>
 			{{/if}}
-			{{if field.type === 'relation_belongs_to' || field.type === 'relation_has_one'}}
+			{{if type === 'belongs_to' || type === 'has_one'}}
 				<div>
-					<label for="edit_field_${ key }">${field.title}:</label>
-					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, chosen: true, value: $root[key], options: field.options, 
+					<label for="edit_field_${ key }">${title}:</label>
+					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, chosen: true, value: $root[key], options: options, 
 														optionsValue: function(item) {return item.id}, 
-														optionsText: function(item) {return item[field.title_field]}, 
+														optionsText: function(item) {return item[name_field]}, 
 														optionsCaption: 'None'"></select>
 				</div>
 			{{/if}}
-			{{if field.type === 'relation_has_many' || field.type === 'relation_has_many_and_belongs_to'}}
+			{{if type === 'has_many' || type === 'has_many_and_belongs_to'}}
 				<div>
-					<label for="edit_field_${ key }">${field.title}:</label>
+					<label for="edit_field_${ key }">${title}:</label>
 					<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true, selectedOptions: $root[key], 
-														options: field.options, 
+														options: options, 
 														optionsValue: function(item) {return item.id}, 
-														optionsText: function(item) {return item[field.title_field]} "></select>
+														optionsText: function(item) {return item[name_field]} "></select>
 				</div>
 			{{/if}}
-			{{if field.type === 'currency'}}
-				<div class="currency">
-					<label for="edit_field_${ key }">${field.title}:</label>
-					<span class="symbol">${field.symbol}</span>
+			{{if type === 'number'}}
+				<div class="number">
+					<label for="edit_field_${ key }">${title}:</label>
+					<span class="symbol">${symbol}</span>
 					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], 
-																		currency: {decimals: field.decimals, key: key}" />
+																		number: {decimals: decimals, key: key}" />
 				</div>
 			{{/if}}
-			{{if field.type === 'date'}}
+			{{if type === 'date'}}
 				<div class="date">
-					<label for="edit_field_${ key }">${field.title}:</label>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], datepicker: {dateFormat: field.date_format}" />
-				</div>
-			{{/if}}
-			{{if field.type === 'time'}}
-				<div class="time">
-					<label for="edit_field_${ key }">${field.title}:</label>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], timepicker: {timeFormat: field.time_format}" />
-				</div>
-			{{/if}}
-			{{if field.type === 'datetime'}}
-				<div class="datetime">
-					<label for="edit_field_${ key }">${field.title}:</label>
+					<label for="edit_field_${ key }">${title}:</label>
 					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], 
-																				datetimepicker: {dateFormat: field.date_format, timeFormat: field.time_format}" />
+																				datepicker: {dateFormat: date_format}" />
+				</div>
+			{{/if}}
+			{{if type === 'time'}}
+				<div class="time">
+					<label for="edit_field_${ key }">${title}:</label>
+					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], 
+																				timepicker: {timeFormat: time_format}" />
+				</div>
+			{{/if}}
+			{{if type === 'datetime'}}
+				<div class="datetime">
+					<label for="edit_field_${ key }">${title}:</label>
+					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], 
+																				datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 				</div>
 			{{/if}}
 		{{/if}}
