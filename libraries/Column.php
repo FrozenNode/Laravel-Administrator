@@ -202,21 +202,25 @@ class Column {
 		//if this isn't a related column, we don't need to join anything
 		if ($this->isRelated)
 		{
-			//perform the joins
-			switch ($this->relationshipField->type)
+			//if the table has already been joined, skip it
+			if (!static::isJoined($query, $this->relationshipField->table))
 			{
-				case 'belongs_to':
-					$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->relationship}()->foreign, '=',
-													$this->relationshipField->table.'.'.$this->relationshipField->column);
-					break;
-				case 'has_one':
-				case 'has_many':
-					$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=',
-													$this->relationshipField->table.'.'.$this->relationshipField->column);
-					break;
-				case 'has_many_and_belongs_to':
-					$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=', $this->relationshipField->column);
-					break;
+				//perform the joins
+				switch ($this->relationshipField->type)
+				{
+					case 'belongs_to':
+						$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->relationship}()->foreign, '=',
+														$this->relationshipField->table.'.'.$this->relationshipField->column);
+						break;
+					case 'has_one':
+					case 'has_many':
+						$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=',
+														$this->relationshipField->table.'.'.$this->relationshipField->column);
+						break;
+					case 'has_many_and_belongs_to':
+						$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=', $this->relationshipField->column);
+						break;
+				}
 			}
 		}
 
@@ -225,12 +229,6 @@ class Column {
 		{
 			$selects[] = DB::raw($this->select.' AS '.$this->field);
 		}
-
-
-		//if we've already joined this table, we can select from it without problems
-		//^ for the moment leaving this out
-
-
 
 	}
 
@@ -324,5 +322,33 @@ class Column {
 			'select' => $this->select,
 			'sortable' => $this->sortable,
 		);
+	}
+
+	/**
+	 * Checks if a table is already joined to a query object
+	 *
+	 * @param Query		$query
+	 * @param string	$table
+	 *
+	 * @return bool
+	 */
+	public static function isJoined($query, $table)
+	{
+		$tableFound = false;
+		$joins = $query->table->joins;
+
+		if ($joins)
+		{
+			//iterate over the joins to see if the table is there
+			foreach ($joins as $join)
+			{
+				if ($join->table === $table)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

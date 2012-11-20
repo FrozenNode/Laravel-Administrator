@@ -218,10 +218,8 @@ class ModelHelper {
 		//get things going by grouping the set
 		$query = $model::group_by($model->table().'.'.$model::$key);
 
-		//set up initial array states for the joins and selects
-		$joins = array();
+		//set up initial array states for the selects
 		$selects = array(DB::raw($model->table().'.'.$model::$key), DB::raw($model->table().'.*'));
-
 
 		//then we set the filters
 		if ($filters && is_array($filters))

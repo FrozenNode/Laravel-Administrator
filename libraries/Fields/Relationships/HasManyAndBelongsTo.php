@@ -1,8 +1,10 @@
-<?php 
+<?php
 namespace Admin\Libraries\Fields\Relationships;
 
+use Admin\Libraries\Column;
+
 class HasManyAndBelongsTo extends Relationship {
-	
+
 
 	/**
 	 * The field type which matches a $fieldTypes key
@@ -18,7 +20,7 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public $multipleValues = true;
 
-	
+
 	/**
 	 * Constructor function
 	 *
@@ -47,7 +49,7 @@ class HasManyAndBelongsTo extends Relationship {
 	public function toArray()
 	{
 		$arr = parent::toArray();
-		
+
 		$arr['column2'] = $this->column2;
 
 		return $arr;
@@ -88,8 +90,12 @@ class HasManyAndBelongsTo extends Relationship {
 			return;
 		}
 
-		//$joins[] = $relation['table'];
-		$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->column);
+		//if the table hasn't been joined yet, join it
+		if (!Column::isJoined($query, $this->table))
+		{
+			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->column);
+		}
+
 		$query->where_in($this->column2, $this->value);
 	}
 }

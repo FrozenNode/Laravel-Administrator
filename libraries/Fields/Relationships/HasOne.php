@@ -1,6 +1,8 @@
 <?php
 namespace Admin\Libraries\Fields\Relationships;
 
+use Admin\Libraries\Column;
+
 class HasOne extends Relationship {
 
 
@@ -38,8 +40,12 @@ class HasOne extends Relationship {
 			return;
 		}
 
-		//$joins[] = $relation['table'];
-		$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->table.'.'.$this->column);
+		//if the table hasn't been joined yet, join it
+		if (!Column::isJoined($query, $this->table))
+		{
+			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->table.'.'.$this->column);
+		}
+
 		$query->where_in($this->table.'.id', (is_array($this->value) ? $this->value : array($this->value)));
 	}
 
