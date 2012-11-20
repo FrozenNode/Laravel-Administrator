@@ -4,7 +4,7 @@ namespace AdminModels
 class Hat extends \Hat
 {
 	public static $per_page = 10;
-	
+
 	public $columns = array(
 		'id',
 		'name',
@@ -19,12 +19,12 @@ class Hat extends \Hat
 			'title' => 'updated'
 		),
 	);
-	
+
 	public $sortOptions = array(
 		'field' => 'id',
 		'direction' => 'desc',
 	);
-	
+
 	public $edit = array(
 		'name',
 		'price' => array(
@@ -54,12 +54,12 @@ class Hat extends \Hat
 			'title_field' => 'name',
 		),
 	);
-	
+
 	public $filters = array(
 		'name',
 		'users' => array(
 			'type' => 'relation'
 		),
 	);
-	
+
 }
