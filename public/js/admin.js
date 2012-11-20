@@ -151,33 +151,37 @@
 
 				saveData.csrf_token = csrf;
 
-				if (!saveData.id) {
-					delete saveData.id;
-				}
+				//if this is a new item, delete the primary key from the data array
+				if (!saveData[self.primaryKey])
+					delete saveData[self.primaryKey];
 
 				self.statusMessage('Saving...').statusMessageType('');
 				self.freezeForm(true);
 
 				$.ajax({
-					url: base_url +  self.modelName() + '/' + self.id() + '/save',
+					url: base_url +  self.modelName() + '/' + self[self.primaryKey]() + '/save',
 					data: saveData,
 					dataType: 'json',
 					type: 'POST',
-					complete: function() {
+					complete: function()
+					{
 						self.freezeForm(false);
 					},
-					success: function(response) {
+					success: function(response)
+					{
 						if (response.success) {
 							//$('#users_list').trigger('reloadGrid');
 							self.statusMessage('Item saved.').statusMessageType('success');
-							self.id(response.data.id);
-							self.activeItem(response.data.id);
+							self[self.primaryKey](response.data[self.primaryKey]);
+							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
 
-							setTimeout(function() {
+							setTimeout(function()
+							{
 								History.pushState({modelName: self.modelName()}, null, route + self.modelName());
 							}, 200);
-						} else
+						}
+						else
 							self.statusMessage(response.errors.join(' ')).statusMessageType('error');
 					}
 				});
@@ -198,23 +202,24 @@
 				self.freezeForm(true);
 
 				$.ajax({
-					url: base_url + self.modelName() + '/' + self.id() + '/delete',
+					url: base_url + self.modelName() + '/' + self[self.primaryKey]() + '/delete',
 					data: {csrf_token: csrf},
 					dataType: 'json',
 					type: 'POST',
-					success: function(response) {
-						//$('#users_list').trigger('reloadGrid');
-
-						if (response.success) {
+					success: function(response)
+					{
+						if (response.success)
+						{
 							self.statusMessage('Item deleted.').statusMessageType('success');
 							self.updateRows();
 
-							setTimeout(function() {
+							setTimeout(function()
+							{
 								History.pushState({modelName: self.modelName()}, null, route + self.modelName());
 							}, 500);
-						} else {
-							self.statusMessage(response.error).statusMessageType('error');
 						}
+						else
+							self.statusMessage(response.error).statusMessageType('error');
 					}
 				});
 			},
@@ -269,12 +274,13 @@
 						}
 
 						//set the active item and update the model data
-						self.activeItem(data.id);
+						self.activeItem(data[self.primaryKey]);
 						self.loadingItem(false);
 						ko.mapping.updateData(self, self.model, data);
 
 						//fixes an error where the relationships wouldn't load
-						setTimeout(function() {
+						setTimeout(function()
+						{
 							ko.mapping.updateData(self, self.model, data);
 						}, 50);
 					}
@@ -553,7 +559,8 @@
 		{
 			var filters = [];
 
-			$.each(adminData.filters, function(ind, el) {
+			$.each(adminData.filters, function(ind, el)
+			{
 				var filter = el,
 					observables = ['value', 'minValue', 'maxValue'];
 
@@ -590,7 +597,7 @@
 				self.filtersViewModel.filters()[ind].value.subscribe(function(val)
 				{
 					//if this is an id field, make sure it's an integer
-					if (self.filtersViewModel.filters()[ind].type === 'id')
+					if (self.filtersViewModel.filters()[ind].type === 'key')
 					{
 						var intVal = isNaN(parseInt(val)) ? '' : parseInt(val);
 
@@ -617,7 +624,8 @@
 			});
 
 			//subscribe to page change
-			self.viewModel.pagination.page.subscribe(function(val) {
+			self.viewModel.pagination.page.subscribe(function(val)
+			{
 				self.viewModel.page(val);
 			});
 		},
@@ -630,7 +638,8 @@
 			var self = this;
 
 			//clicking the new item button
-			$('#content').on('click', 'div.results_header a.new_item', function(e) {
+			$('#content').on('click', 'div.results_header a.new_item', function(e)
+			{
 				e.preventDefault();
 				History.pushState({modelName: self.viewModel.modelName(), id: 0}, null, route + self.viewModel.modelName() + '/new');
 			});
@@ -698,16 +707,20 @@
 		initComputed: function()
 		{
 			//the title of the model
-			this.viewModel.modelTitle = ko.computed(function() {
+			this.viewModel.modelTitle = ko.computed(function()
+			{
 				return this.modelName().charAt(0).toUpperCase() + this.modelName().slice(1);
 			}, this.viewModel);
 
 
 			//pagination information
-			this.viewModel.pagination.isFirst = ko.computed(function() {
+			this.viewModel.pagination.isFirst = ko.computed(function()
+			{
 				return this.pagination.page() == 1;
 			}, this.viewModel);
-			this.viewModel.pagination.isLast = ko.computed(function() {
+
+			this.viewModel.pagination.isLast = ko.computed(function()
+			{
 				return this.pagination.page() == this.pagination.last();
 			}, this.viewModel);
 
@@ -717,6 +730,7 @@
 
 	//set up the admin instance
 	$(function() {
-		window.admin = new admin();
+		if ($('#admin_page').length)
+			window.admin = new admin();
 	});
 })(jQuery);
