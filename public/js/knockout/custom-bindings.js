@@ -20,7 +20,7 @@
 			{
 				viewModel.editFormClosed = true;
 				$element.show();
-				$child.animate({marginLeft: 2}, 150);
+				$child.stop().animate({marginLeft: 2}, 150);
 			}
 		}
 	};
