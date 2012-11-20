@@ -136,7 +136,6 @@ class Administrator_Admin_Controller extends Controller
 				'data' => $model->to_array(),
 			));
 		}
-
 	}
 
 	/**
