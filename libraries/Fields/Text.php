@@ -2,10 +2,10 @@
 namespace Admin\Libraries\Fields;
 
 class Text extends Field {
-	
+
 
 	/**
-	 * Filters a query object given 
+	 * Filters a query object given
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
@@ -22,7 +22,7 @@ class Text extends Field {
 		{
 			return;
 		}
-		
+
 		$query->where($model->table().'.'.$this->field, 'LIKE', '%' . $this->value . '%');
 	}
 }
