@@ -1,5 +1,8 @@
 <?php
 use Admin\Libraries\ModelHelper;
+use Admin\Libraries\Fields\Field;
+use Admin\Libraries\Column;
+use Admin\Libraries\Sort;
 
 //The admin group for all REST calls
 Route::group(array('before' => 'validate_admin|add_assets'), function()
@@ -27,7 +30,6 @@ Route::group(array('before' => 'validate_admin|add_assets'), function()
 		'as' => 'admin_new_item',
 		'uses' => 'administrator::admin@item'
 	));
-
 
 	//CSRF protection in forms
 	Route::group(array('before' => 'csrf'), function()
@@ -112,16 +114,16 @@ View::composer('administrator::index', function($view)
 	$modelInstance = ModelHelper::getModel($view->modelName);
 
 
-	$columns = ModelHelper::getColumns($modelInstance);
-	$editFields = ModelHelper::getEditFields($modelInstance);
+	$columns = Column::getColumns($modelInstance);
+	$editFields = Field::getEditFields($modelInstance);
 	$bundleConfig = Bundle::get('administrator');
 
 	//add the view fields
 	$view->columns = $columns['columns'];
 	$view->includedColumns = $columns['includedColumns'];
 	$view->primaryKey = $modelInstance::$key;
-	$view->sortOptions = ModelHelper::getSortOptions($modelInstance);
-	$view->rows = ModelHelper::getRows($modelInstance, $view->sortOptions);
+	$view->sort = Sort::get($modelInstance)->toArray();
+	$view->rows = ModelHelper::getRows($modelInstance, $view->sort);
 	$view->editFields = $editFields['arrayFields'];
 	$view->dataModel = $editFields['dataModel'];
 	$view->filters = ModelHelper::getFilters($modelInstance);

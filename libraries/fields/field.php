@@ -44,6 +44,13 @@ abstract class Field {
 	public $relationship = false;
 
 	/**
+	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
+	 *
+	 * @var bool
+	 */
+	public $external = false;
+
+	/**
 	 * The name of the field
 	 *
 	 * @var string
@@ -292,5 +299,52 @@ abstract class Field {
 		{
 			return $value;
 		}
+	}
+
+	/**
+	 * Gets the model's edit fields
+	 *
+	 * @param object	$model
+	 *
+	 * @return array
+	 */
+	public static function getEditFields($model)
+	{
+		$return = array(
+			'objectFields' => array(),
+			'arrayFields' => array(),
+			'dataModel' => array(),
+		);
+
+		if (isset($model->edit) && count($model->edit) > 0)
+		{
+			foreach ($model->edit as $field => $info)
+			{
+				//if this field can be properly set up, put it into the edit fields array
+				if ($fieldObject = static::get($field, $info, $model))
+				{
+					$return['objectFields'][$fieldObject->field] = $fieldObject;
+					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
+				}
+			}
+		}
+
+		//add the id field, which will be uneditable, but part of the data model
+		$return['arrayFields']['id'] = 0;
+
+		//set up the data model
+		foreach ($return['arrayFields'] as $field => $info)
+		{
+			if (is_array($info) || is_a($info, 'Field'))
+			{
+				$return['dataModel'][$field] = $model->$field;
+			}
+			else
+			{
+				$return['dataModel'][$field] = $info;
+			}
+		}
+
+		return $return;
 	}
 }

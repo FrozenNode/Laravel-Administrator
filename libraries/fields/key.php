@@ -2,10 +2,10 @@
 namespace Admin\Libraries\Fields;
 
 class Key extends Field {
-
+	
 
 	/**
-	 * Filters a query object given
+	 * Filters a query object given 
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
@@ -22,7 +22,7 @@ class Key extends Field {
 		{
 			return;
 		}
-
+		
 		$query->where($model->table().'.'.$this->field, '=', $this->value);
 	}
 }
