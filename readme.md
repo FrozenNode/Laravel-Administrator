@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 1.2.0
+- **Version:** 2.0.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -29,7 +29,7 @@ Then add this to your `bundles.php` array:
 ),
 </pre>
 
-Once the bundle is installed, create a new config file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created. If you prefer to keep your bundle config inside the bundle, you can just change the bundle's config directly. However, moving this to the application config helps avoid issues when you are updating the bundle.
+Once the bundle is installed, create a new config file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created.
 
 ### Config
 
@@ -118,17 +118,17 @@ Once the bundle is installed, create a new config file in your application confi
 
 ### Data Models
 
-This bundle was designed to take advantage of the data models that already exist on your site (normally in `application/models`). Administrator data models should be, at their base, some form of an Eloquent data model with several additional required properties. As long as you provide the fully-qualified class name in the config (see above), Administrator will be able to use the model. This means that you have several organizational options:
+This bundle was designed to take advantage of the data models that already exist on your site (normally in `application/models`). Administrator data models should ultimately extend from an Eloquent data model with several additional required properties ($columns, $filters, $edit ...see below for info on these). As long as you provide the fully-qualified class name in the config (see above), Administrator will be able to use the model. This means that you have several organizational options:
 
 - Use your existing Eloquent models and add the required properties
 
 - Create new models that extend your existing Eloquent models and prefix them with something like `Admin_` so there are no namespace collisions. This would allow you to keep your Administrator properties separated from your regular models.
 
-- (preferred) Create new models that uses the same name as and extend your existing Eloquent models and namespace them to something like `AdminModels`. This also would separate your Administrator properties from your base model.
+- (preferred) Create new models that extend your existing Eloquent models and namespace them to something like `AdminModels`. This also would separate your Administrator properties from your base model.
 
-The last option has (in my opinion) the best of all worlds: it would allow you to retain your clear model names, avoid namespace collisions, and keep your Administrator properties separated from your base models.
+The last option has (in my opinion) the best of all worlds: it would allow you to retain your clear model names, avoid namespace collisions, and keep your Administrator properties separated from your regular Eloquent models.
 
-What I like to do is create a directory under my models (or entities, or however you define it) directory called `admin`. Each of the models in this directory can extend any Eloquent-based class (which means Eloquent, Aware, or your base models)
+What I like to do is create a directory under my models directory called `admin`. Each of the models in this directory can extend any Eloquent-based class (which means Eloquent, Aware, or your base models)
 
 #### Extending from Eloquent
 <pre>
@@ -154,11 +154,9 @@ class User extends \User
 { .. }
 </pre>
 
-If you're using the namespace approach as I did above, make sure you add that backslash in front of the class you're extending. This tells PHP to look in the core Laravel namespace.
+If you're using the namespace approach as I did above, make sure you add that backslash in front of the class you're extending. This tells PHP to look in the base namespace.
 
 In the first two examples, you need to set up the model as if it were any other Eloquent/Aware model. You will need to make a `$rules` array that works just like Aware's.
-
-The last case will likely be the most common as it means you won't have to repeat your model's rules. You can just declare the Administrator properties and you'll be all set to go!
 
 Now let's take a look at the properties that you can set on Administrator models and what they mean. Keep in mind that since these are Eloquent models, all of the traditional properties apply (e.g. $per_page, $table).
 
@@ -173,14 +171,14 @@ When defining relational or getter columns, you have several extra options.
 
 If you want to make a column have the value of a getter, you can do that easily. However, if you do so without setting a valid `sort_field` value, the column won't be sortable. The sort_field should be used when you're using a getter as a column key so that Administrator knows which column to sort.
 
-If you want to get a field from another table through a relationship, you'll have to set the `relation` option to the *method name* of the relationship and provide a valid select statement for your SQL driver. Since the result set is grouped by the current data model's primary key, this means you can use any of the grouping functions (like COUNT, AVG, MIN, MAX, etc.).
+If you want to get a field from another table through a relationship, you'll have to set the `relationship` option to the *method name* of the relationship and provide a valid select statement for your SQL driver. Since the result set is grouped by the current data model's primary key, this means you can use any of the grouping functions (like COUNT, AVG, MIN, MAX, etc.).
 
 The available options are:
 
 - **title**: default is column name
 - **sort_field**: default is the field key (i.e. if you do 'name' like below, it will look for the 'name' column). If this column is derived from a getter, it won't be sortable until you define a sort_field
-- **relation**: default is null. Set this to the method name of the relation. Only set this if you need to pull this field from another table
-- **select**: default is null. If you've set the relation, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
+- **relationship**: default is null. Set this to the method name of the relationship. Only set this if you need to pull this field from another table
+- **select**: default is null. If you've set the relationship, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
 
 <pre>
 public $columns = array(
@@ -189,11 +187,11 @@ public $columns = array(
 	'price',
 	'formatted_salary' => array(
 		'title' => 'Salary',
-		'sort_field' => 'salary', //must be a valid field on model's table
+		'sort_field' => 'salary', //must be a valid field on the model's table
 	),
 	'num_films' => array(
 		'title' => '# films',
-		'relation' => 'films', //must be the relationship method name
+		'relationship' => 'films', //must be the relationship method name
 		'select' => 'COUNT((:table).id)', //the (:table) is replaced with the relevant relationship table
 	),
 	'created_at' => array(
@@ -205,44 +203,22 @@ public $columns = array(
 );
 </pre>
 
-One of the nice things about extending Eloquent is that you can use getters to return computed values. For example, if you wanted to have a column called `# Posts`, all you would have to do is set a getter for the field `num_posts` and then add this to the $columns array:
-
-<pre>
-	'num_posts' => array(
-		'title' => '# Posts',
-	)
-</pre>
-
-#### $sortOptions
-
-<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/sorting.png" />
-
-The $sortOptions array has these options:
-
-<pre>
-public $sortOptions = array(
-	'field' => 'id', 		//can be any of the supplied keys in the $columns array
-	'direction' => 'asc', 	//either 'asc' or 'desc'
-)
-</pre>
-
-Naturally, this is only the initial sort. As the user interacts with the table, it will change.
 
 #### $edit
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/edit-form.png" />
 
-This property tells Administrator what columns to use when editing an item. You can either pass it a simple string which will be used as the data key (i.e. if your database column is called `potato_farming_score`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `potato_farming_score` and it would contain an array of options.
+This property tells Administrator what columns to use when editing an item. You can either pass it a simple string which will be used as the data key (i.e. if your database column is called `name`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `name` and it would contain an array of options.
 
-**If you want to edit a related field, you have to put the relationship method name in the $edit array and use type 'relation'.**
+**If you want to edit a related field, you have to put the relationship method name in the $edit array and use type 'relationship'.**
 
 The available options are:
 
 - **title**
-- **type**: default is 'text'. Choices are: relation, text, date, time, datetime, currency
-- **title_field**: default is 'name'. Only use this if type is 'relation'. This is the field on the other table to use for displaying the name/title of the other data model.
-- **symbol**: default is '$'. Only use this for 'currency' field type.
-- **decimals**: default is 2. Only use this for 'currency' field type.
+- **type**: default is 'text'. Choices are: relationship, text, date, time, datetime, number
+- **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
+- **symbol**: default is NULL. Only use this for 'number' field type.
+- **decimals**: default is 2. Only use this for 'number' field type.
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
@@ -258,12 +234,12 @@ public $edit = array(
 	),
 	'roles' => array(
 		'title' => 'Roles',
-		'type' => 'relation',
-		'title_field' => 'title', //field on other table to use for the name/title
+		'type' => 'relationship',
+		'name_field' => 'title', //field on other table to use for the name/title
 	),
 	'price' => array(
 		'title' => 'Price',
-		'type' => 'currency',
+		'type' => 'number',
 		'symbol' => '$', //symbol shown in front of the number
 		'decimals' => 2, //the number of digits after the decimal point
 	),
@@ -277,7 +253,7 @@ public $edit = array(
 );
 </pre>
 
-If you select the 'relation' type, the edit form will display either a single- or multi-select box depending on the type of relationship. The Administrator bundle recognizes all types of Eloquent relationships (belongs_to, has_one, has_many, has_many_and_belongs_to). All you have to do is ensure that the key in the $edit array is **the name of the relation method in your data model**. If you have a User model and your user has many Roles, you'll typically want to have a method that looks like this in Eloquent:
+If you select the 'relationship' type, the edit form will display either a single- or multi-select box depending on the type of relationship. The Administrator bundle recognizes all types of Eloquent relationships (belongs_to, has_one, has_many, has_many_and_belongs_to), but only belongs_to and has_many_and_belongs_to relationships can be used for editing/filtering. All you have to do is ensure that the key in the $edit array is **the name of the relationship method in your data model**. If you have a User model and your user has many Roles, you'll typically want to have a method that looks like this in Eloquent:
 
 <pre>
 public function roles()
@@ -286,12 +262,12 @@ public function roles()
 }
 </pre>
 
-Similarly, if each of your users has only a *single* Potato, you'll want a method that looks like:
+Similarly, if each of your users has only a *single* Job, you'll want a method that looks like:
 
 <pre>
-public function potato()
+public function job()
 {
-	return $this->has_one('Potato');
+	return $this->has_one('Job');
 }
 </pre>
 
@@ -300,12 +276,12 @@ Unless you're extending directly from Eloquent/Aware, these methods should alrea
 <pre>
 'roles' => array(
 	'title' => 'Roles',
-	'type' => 'relation',
+	'type' => 'relationship',
 ),
-'potato' => array(
-	'title' => 'Potato',
-	'type' => 'relation',
-	'title_field' => 'title', //this lets Administrator know what column to reference on the Potato model. Default is 'name'
+'job' => array(
+	'title' => 'Job',
+	'type' => 'relationship',
+	'name_field' => 'title', //this lets Administrator know what column to reference on the Potato model. Default is 'name'
 ),
 </pre>
 
@@ -313,16 +289,17 @@ Unless you're extending directly from Eloquent/Aware, these methods should alrea
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/filters.png" />
 
-This property tells Administrator what columns to use to build the filterable set. This works almost exactly like the $edit property, so you can either pass it a simple string which will be used as the data key (i.e. if your database column is called `potato_farming_score`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `potato_farming_score` and it would contain an array of options.
+This property tells Administrator what columns to use to build the filterable set. This works almost exactly like the $edit property, so you can either pass it a simple string which will be used as the data key (i.e. if your database column is called `name`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `name` and it would contain an array of options.
 
-The date/time and number (for now only 'currency') field types automatically get mix/max filters where the user can select the range of dates, times, or numbers.
+The date/time and number field types automatically get min/max filters where the user can select the range of dates, times, or numbers.
 
-**If you want to filter a related field, you have to put the relationship method name in the $filters array and use type 'relation'.**
+**If you want to filter a related field, you have to put the relationship method name in the $filters array and use type 'relationship'.**
 
 The available options are:
 
 - **title**
-- **type**: default is 'text'. choices are: text, currency, date, time, datetime, relation
+- **type**: default is 'text'. choices are: text, number, date, time, datetime, relationship
+- **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
 - **symbol**: default is '$'. Only use this for 'currency' field type.
 - **decimals**: default is 2. Only use this for 'currency' field type.
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
@@ -341,18 +318,34 @@ public $filters = array(
 	),
 	'roles' => array(
 		'title' => 'Roles',
-		'type' => 'relation',
+		'type' => 'relationship',
+		'name_field' => 'name',
 	),
 
 );
 </pre>
 
-The relation type behaves just like it does in the $edit array. If you don't supply a $filters property, it will automatically use your $edit property to set up the filter.
+The relationship type behaves just like it does in the $edit array.
+
+#### $sortOptions (not required)
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/sorting.png" />
+
+The $sortOptions array has these options:
+
+<pre>
+public $sortOptions = array(
+	'field' => 'id', 		//can be any of the supplied keys in the $columns array
+	'direction' => 'asc', 	//either 'asc' or 'desc'
+)
+</pre>
+
+Naturally, this is only the initial sort. As the user interacts with the table, it will change.
 
 
 #### before_delete()
 
-The before_delete() method will always be run before an item is deleted. It's important to realize that **Administrator does not automatically delete relationships**. This is done because some people have cascading deletes built into their database, others might want to only delete some related data, and others might want to delete all of it. So if you have a users relationship (has_many_and_belongs_to) on your Role model, you might want to do something like this:
+The before_delete() method will always be run before an item is deleted. It's important to know that **Administrator does not automatically delete relationships**. This is done because some people have cascading deletes built into their database, others might want to only delete some related data, and others might want to delete all of it. So if you have a users relationship (has_many_and_belongs_to) on your Role model, you might want to do something like this:
 
 <pre>
 public function before_delete()
@@ -380,7 +373,7 @@ This is a list of all the field types that you can use in the $edit array.
 
 This is the default type. It has no unique options. Soon there will be an option to have different text input types and text size limits.
 
-#### relation
+#### relationship
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-relation-single.png" />
 
@@ -388,29 +381,28 @@ This is the default type. It has no unique options. Soon there will be an option
 
 <pre>
 'roles' => array(
-	'type' => 'relation',
+	'type' => 'relationship',
 	'title' => 'Roles',
-	'title_field' => 'name', //what column on the other table you want to use to represent this object
+	'name_field' => 'name', //what column on the other table you want to use to represent this object
 )
 </pre>
 
-The relation field should have the relationship's method name as its index. The title_field will be the item's name when displayed in the select boxes.
+The relationship field should have the relationship's method name as its index. The name_field will be the item's name when displayed in the select boxes.
 
-#### currency
+#### number
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-currency.png" />
 
 <pre>
 'price' => array(
-	'type' => 'currency',
+	'type' => 'number',
 	'title' => 'Price',
 	'symbol' => '$', //symbol shown in front of the number
-	'precision' => 10, //the number of digits in front of the decimal point (e.g. 1234567890.00 for 10)
-	'scale' => 2, //the number of digits after the decimal point
+	'decimals' => 2, //the number of digits after the decimal point
 )
 </pre>
 
-The currency field should be a numeric field in your database (normally something like Decimal(precision, scale)). The symbol will be displayed before the number.
+The number field should be a numeric field in your database (normally something like Decimal(precision, scale)). The symbol will be displayed before the number if present.
 
 #### date
 
@@ -469,6 +461,16 @@ Administrator was written by Jan Hartigan for the Laravel framework.
 Administrator is released under the MIT License. See the LICENSE file for details.
 
 ## Changelog
+
+### 2.0.0
+- Reorganized the libraries
+- title_field is now name_field
+- relation is now relationship
+- currency is now number and non-currency number types are now supported
+- $edit and $filters arrays no longer have default values. You must supply them or they won't show up
+- $column now accepts a 'select' option for any field to allow for proper sorting
+- Temporarily found a work around for a major bug with Laravel paginate() method where it wouldn't properly count the rows when using a grouping (will be fixed in L4)
+- Innumerable bugfixes (with plenty more to come)
 
 ### 1.2.0
 - Added all field types to filters
