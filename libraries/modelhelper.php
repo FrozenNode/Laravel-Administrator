@@ -380,7 +380,7 @@ class ModelHelper {
 		$sortOptions = array_merge(ModelHelper::getSortOptions($model), $sortOptions);
 
 		//get things going by grouping the set
-		$rows = $model::group_by($model->table().'.'.$model::$key);
+		$query = $model::group_by($model->table().'.'.$model::$key);
 
 		//set up initial array states for the joins and selects
 		$joins = array();
@@ -397,7 +397,7 @@ class ModelHelper {
 					continue;
 				}
 
-				$fieldObject->filterQuery($rows, $model);
+				$fieldObject->filterQuery($query, $model);
 			}
 		}
 
@@ -408,7 +408,7 @@ class ModelHelper {
 		foreach ($columns['columns'] as $field => $column)
 		{
 			//if this is a related column, we'll need to add some joins
-			$column->filterQuery($rows, $selects, $model);
+			$column->filterQuery($query, $selects, $model);
 
 			//if this is a related field or
 			if ( ($column->isRelated || $column->select) && $column->field === $sortOptions['field'])
@@ -424,10 +424,10 @@ class ModelHelper {
 		}
 
 		//order the set by the model table's id
-		$rows->order_by($sortOptions['field'], $sortOptions['direction']);
+		$query->order_by($sortOptions['field'], $sortOptions['direction']);
 
 		//if there is a global per page limit set, make sure the paginator uses that
-		$per_page = NULL;
+		$per_page = $model->per_page() ? $model->per_page() : 20;
 		$global_per_page = Config::get('administrator::administrator.global_per_page', NULL);
 
 		if ($global_per_page && is_numeric($global_per_page))
@@ -435,12 +435,36 @@ class ModelHelper {
 			$per_page = $global_per_page;
 		}
 
+		/**
+		 * We need to do our own pagination since there is a bug (!!!!!!!!!!!!!!) in the L3 paginator when using groupings :(
+		 * When L4 is released, this problem will go away and we'll be able to use the paginator again
+		 * Trust me, I understand how ghetto this is. I also understand that it may not work too well on other drivers. Let me know...
+		 */
+
+		//first get the sql sans selects
+		$sql = $query->table->grammar->select($query->table);
+
+		//then we need to round out the inner select
+		$sql = "SELECT {$model->table()}.{$model::$key} " . $sql;
+
+		//then wrap the inner table and perform the count
+		$sql = "SELECT COUNT({$model::$key}) AS aggregate FROM ({$sql}) AS agg";
+
+		//then perform the
+		$results = $query->table->connection->query($sql, $query->table->bindings);
+		$num_rows = $results[0]->aggregate;
+		$page = (int) \Input::get('page', 1);
+
+		//now we need to limit and offset the rows in remembrance of our dear lost friend paginate()
+		$query->take($per_page);
+		$query->skip($per_page * ($page - 1));
+
 		//then retrieve the rows
-		$rows = $rows->paginate($per_page, $selects);
+		$rows = $query->get($selects);
 		$results = array();
 
 		//convert the resulting set into arrays
-		foreach ($rows->results as $item)
+		foreach ($rows as $item)
 		{
 			$arr = array_intersect_key($item->to_array(), array_merge($columns['includedColumns'], $columns['relatedColumns']));
 
@@ -453,9 +477,9 @@ class ModelHelper {
 		}
 
 		return array(
-			'page' => $rows->page,
-			'last' => $rows->last,
-			'total' => $rows->total,
+			'page' => $page,
+			'last' => ceil($num_rows/$per_page),
+			'total' => $num_rows,
 			'results' => $results,
 		);
 	}
