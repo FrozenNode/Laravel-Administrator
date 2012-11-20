@@ -10,7 +10,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 ## Inspiration / Credit
 
-The initial inspiration for this project came from the [Lara Admin](https://github.com/chalien/lara_admin) bundle by chalien. In between then and the initial release of this bundle, pretty much the entire codebase has been changed. Still, some of the design elements of Lara Admin remain (for the time being), partially as a testament to chalien's work! 
+The initial inspiration for this project came from the [Lara Admin](https://github.com/chalien/lara_admin) bundle by chalien. In between then and the initial release of this bundle, pretty much the entire codebase has been changed. Still, some of the design elements of Lara Admin remain (for the time being), partially as a testament to chalien's work!
 
 ## Installation / Documentation
 
@@ -36,19 +36,19 @@ Once the bundle is installed, create a new config file in your application confi
 <pre>
 /**
  * Page title
- * 
+ *
  * @type string
  */
 'title' => 'Admin',
 
 /**
  * Models
- * 
+ *
  * @type array
- * 
+ *
  * Each item in the array should itself be an array (with two items inside it: title, model) and it should be indexed on the model name.
  * This should look something like this:
- * 
+ *
  * 'user' => array(
  * 		'title' => 'Users', //The title that will be used when displaying the model's page
  * 		'model' => 'AdminModels\\User', //The string class name of the model you will be using. If you wish to extend your app models directly, you can just pass in 'User'. Beware, though: your model will need to have the required properties on it for Administrator to recognize it.
@@ -75,9 +75,9 @@ Once the bundle is installed, create a new config file in your application confi
 
 /**
  * Auth Check
- * 
+ *
  * @type closure
- * 
+ *
  * This is a closure that should return true if the current user is allowed to view the admin section. If this fails, it will redirect the user to the login_path.
  */
 'auth_check'=> function()
@@ -88,27 +88,27 @@ Once the bundle is installed, create a new config file in your application confi
 
 /**
  * Login Path
- * 
+ *
  * @type string
- * 
+ *
  * This is the path where Administrator will send the user if the the auth_check fails
  */
 'login_path' => 'user/login',
 
 /**
  * Redirect key
- * 
+ *
  * @type string
- * 
- * This comes with the redirection to your login_action. Input::get('redirect') will hold the return URL.   
+ *
+ * This comes with the redirection to your login_action. Input::get('redirect') will hold the return URL.
  */
 'login_redirect_key' => 'redirect',
 
 /**
  * Global items per page
- * 
+ *
  * @type NULL|int
- * 
+ *
  * If you set this to an integer value greater than 0, it will override the $per_page static property in ALL of your models
  * If you set this to false/NULL/0, each model's $per_page property will be used
  */
@@ -124,7 +124,7 @@ This bundle was designed to take advantage of the data models that already exist
 
 - Create new models that extend your existing Eloquent models and prefix them with something like `Admin_` so there are no namespace collisions. This would allow you to keep your Administrator properties separated from your regular models.
 
-- (preferred) Create new models that user the same name as and extend your existing Eloquent models and namespace them to something like `AdminModels`. This also would separate your Administrator properties from your base model.
+- (preferred) Create new models that uses the same name as and extend your existing Eloquent models and namespace them to something like `AdminModels`. This also would separate your Administrator properties from your base model.
 
 The last option has (in my opinion) the best of all worlds: it would allow you to retain your clear model names, avoid namespace collisions, and keep your Administrator properties separated from your base models.
 
@@ -132,24 +132,24 @@ What I like to do is create a directory under my models (or entities, or however
 
 #### Extending from Eloquent
 <pre>
-&lt;?php namespace AdminModels; 
- 
+&lt;?php namespace AdminModels;
+
 class User extends \Eloquent
 { .. }
 </pre>
 
 #### Extending from Aware
 <pre>
-&lt;?php namespace AdminModels; 
- 
+&lt;?php namespace AdminModels;
+
 class User extends \Aware
 { .. }
 </pre>
 
 #### Extending from an existing User model
 <pre>
-&lt;?php namespace AdminModels; 
- 
+&lt;?php namespace AdminModels;
+
 class User extends \User
 { .. }
 </pre>
@@ -273,7 +273,7 @@ public $edit = array(
 		'date_format' => 'yy-mm-dd',
 		'time_format' => 'HH:mm',
 	)
-	
+
 );
 </pre>
 
@@ -343,7 +343,7 @@ public $filters = array(
 		'title' => 'Roles',
 		'type' => 'relation',
 	),
-	
+
 );
 </pre>
 
@@ -424,7 +424,7 @@ The currency field should be a numeric field in your database (normally somethin
 )
 </pre>
 
-Using the date type will set the field up as a jQuery UI datepicker. 
+Using the date type will set the field up as a jQuery UI datepicker.
 
 The date_format supplied has to be a valid DatePicker date format. You can see a full list here: [http://docs.jquery.com/UI/Datepicker/formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 
