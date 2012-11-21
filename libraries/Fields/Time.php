@@ -70,7 +70,7 @@ class Time extends Field {
 	{
 		$val = ( is_null($input) || !is_string($input) ) ? '' : $input;
 
-		if (strtotime($val))
+		if (strtotime($val) !== false)
 		{
 			$model->{$this->field} = new DateTime($val);
 		}
