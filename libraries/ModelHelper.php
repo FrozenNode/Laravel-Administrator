@@ -344,6 +344,10 @@ class ModelHelper {
 			{
 				$info->fillModel($model, \Input::get($field, NULL));
 			}
+			else
+			{
+				unset($model->attributes[$field]);
+			}
 		}
 	}
 
