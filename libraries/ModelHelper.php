@@ -300,8 +300,16 @@ class ModelHelper {
 		//convert the resulting set into arrays
 		foreach ($rows as $item)
 		{
-			$arr = array_intersect_key($item->to_array(), array_merge($columns['includedColumns'], $columns['relatedColumns']));
+			//iterate over the included and related columns
+			$onTableColumns = array_merge($columns['includedColumns'], $columns['relatedColumns']);
+			$arr = array();
 
+			foreach ($onTableColumns as $field => $col)
+			{
+				$arr[$field] = $item->get_attribute($field);
+			}
+
+			//then grab the computed, unsortable columns
 			foreach ($columns['computedColumns'] as $col)
 			{
 				$arr[$col] = $item->{$col};
