@@ -18,15 +18,19 @@
 				<label for="filter_field_min_${ field }">${title}:</label>
 				<span class="symbol">${symbol}</span>
 
-				<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, number: {decimals: decimals, key: field}" />
+				<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, number: {decimals: decimals, key: field,
+																						thousandsSeparator: thousandsSeparator,
+																						decimalSeparator: decimalSeparator}" />
 				<span>to</span>
-				<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, number: {decimals: decimals, key: field}" />
+				<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, number: {decimals: decimals, key: field,
+																						thousandsSeparator: thousandsSeparator,
+																						decimalSeparator: decimalSeparator}" />
 			</div>
 		{{/if}}
 		{{if type === 'date'}}
 			<div class="date min_max">
 				<label for="filter_field_min_${ field }">${title}:</label>
-				
+
 				<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, datepicker: {dateFormat: date_format}" />
 				<span>to</span>
 				<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, datepicker: {dateFormat: date_format}" />
@@ -35,7 +39,7 @@
 		{{if type === 'time'}}
 			<div class="time min_max">
 				<label for="filter_field_min_${ field }">${title}:</label>
-				
+
 				<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, timepicker: {timeFormat: time_format}" />
 				<span>to</span>
 				<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, timepicker: {timeFormat: time_format}" />
@@ -44,20 +48,20 @@
 		{{if type === 'datetime'}}
 			<div class="datetime min_max">
 				<label for="filter_field_min_${ field }">${title}:</label>
-				
-				<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, 
+
+				<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue,
 																		datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 				<span>to</span>
-				<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, 
+				<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue,
 																		datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 			</div>
 		{{/if}}
 		{{if type === 'belongs_to' || type === 'has_one'}}
 			<div>
 				<label for="filter_field_${ field }">${title}:</label>
-				<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: options, 
-														optionsValue: function(item) {return item.id}, 
-														optionsText: function(item) {return item[name_field]}, 
+				<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: options,
+														optionsValue: function(item) {return item.id},
+														optionsText: function(item) {return item[name_field]},
 														optionsCaption: 'None'"></select>
 			</div>
 		{{/if}}
@@ -65,7 +69,7 @@
 			<div>
 				<label for="filter_field_${ field }">${title}:</label>
 				<select id="filter_field_${ field }" size="7" multiple="true" data-bind="chosen: true, options: options, selectedOptions: value,
-														optionsValue: function(item) {return item.id}, 
+														optionsValue: function(item) {return item.id},
 														optionsText: function(item) {return item[name_field]} "></select>
 			</div>
 		{{/if}}

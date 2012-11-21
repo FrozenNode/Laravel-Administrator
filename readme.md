@@ -219,6 +219,8 @@ The available options are:
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
 - **symbol**: default is NULL. Only use this for 'number' field type.
 - **decimals**: default is 2. Only use this for 'number' field type.
+- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
+- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
@@ -242,6 +244,8 @@ public $edit = array(
 		'type' => 'number',
 		'symbol' => '$', //symbol shown in front of the number
 		'decimals' => 2, //the number of digits after the decimal point
+		'decimalSeparator' => ',', //the character to use for the decimal place
+		'thousandsSeparator' => '.', //the character to use between thousands groups
 	),
 	'release_date' => array(
 		'title' => 'Release Date',
@@ -302,6 +306,8 @@ The available options are:
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
 - **symbol**: default is '$'. Only use this for 'currency' field type.
 - **decimals**: default is 2. Only use this for 'currency' field type.
+- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
+- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 

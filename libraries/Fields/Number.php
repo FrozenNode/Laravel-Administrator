@@ -24,6 +24,20 @@ class Number extends Field {
 	 */
 	public $decimals = 0;
 
+	/**
+	 * The thousands separator
+	 *
+	 * @var string
+	 */
+	public $thousandsSeparator = ',';
+
+	/**
+	 * The decimal separator
+	 *
+	 * @var int
+	 */
+	public $decimalSeparator = '.';
+
 
 	/**
 	 * Constructor function
@@ -38,6 +52,8 @@ class Number extends Field {
 
 		$this->symbol = array_get($info, 'symbol', $this->symbol);
 		$this->decimals = array_get($info, 'decimals', $this->decimals);
+		$this->decimalSeparator = array_get($info, 'decimalSeparator', $this->decimalSeparator);
+		$this->thousandsSeparator = array_get($info, 'thousandsSeparator', $this->thousandsSeparator);
 	}
 
 	/**
@@ -51,6 +67,8 @@ class Number extends Field {
 
 		$arr['symbol'] = $this->symbol;
 		$arr['decimals'] = $this->decimals;
+		$arr['decimalSeparator'] = $this->decimalSeparator;
+		$arr['thousandsSeparator'] = $this->thousandsSeparator;
 
 		return $arr;
 	}
