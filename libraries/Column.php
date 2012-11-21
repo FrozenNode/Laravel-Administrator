@@ -189,7 +189,7 @@ class Column {
 	}
 
 	/**
-	 * Adds joins to a query
+	 * Adds selects to a query
 	 *
 	 * @param Query 	$query
 	 * @param array 	$selects
@@ -199,35 +199,40 @@ class Column {
 	 */
 	public function filterQuery(&$query, &$selects, $model)
 	{
-		//if this isn't a related column, we don't need to join anything
-		if ($this->isRelated)
-		{
-			//if the table has already been joined, skip it
-			if (!static::isJoined($query, $this->relationshipField->table))
-			{
-				//perform the joins
-				switch ($this->relationshipField->type)
-				{
-					case 'belongs_to':
-						$query->left_join($this->relationshipField->table, $model->table().'.'.$model->{$this->relationship}()->foreign, '=',
-														$this->relationshipField->table.'.'.$this->relationshipField->column);
-						break;
-					case 'has_one':
-					case 'has_many':
-						$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=',
-														$this->relationshipField->table.'.'.$this->relationshipField->column);
-						break;
-					case 'has_many_and_belongs_to':
-						$query->left_join($this->relationshipField->table, $model->table().'.'.$model::$key, '=', $this->relationshipField->column);
-						break;
-				}
-			}
-		}
-
 		//add the select statement
 		if ($this->select)
 		{
-			$selects[] = DB::raw($this->select.' AS '.$this->field);
+			//if this is a related field, we have to set up a fancy select because of issues with grouping
+			if ($this->isRelated)
+			{
+				$where = '';
+
+				switch ($this->relationshipField->type)
+				{
+					case 'belongs_to':
+						$where = $model->table().'.'.$this->relationshipField->foreignKey.
+							' = '.
+						$this->relationshipField->table.'.'.$this->relationshipField->column;
+						break;
+					case 'has_one':
+					case 'has_many':
+						$where = $model->table().'.'.$model::$key.
+							' = '.
+						$this->relationshipField->table.'.'.$this->relationshipField->column;
+						break;
+					case 'has_many_and_belongs_to':
+						$where = $model->table().'.'.$model::$key.
+							' = '.
+						$this->relationshipField->column;
+						break;
+				}
+
+				$selects[] = DB::raw("(SELECT ".$this->select." FROM ".$this->relationshipField->table." WHERE ".$where.") AS " .$this->field);
+			}
+			else
+			{
+				$selects[] = DB::raw($this->select.' AS '.$this->field);
+			}
 		}
 
 	}

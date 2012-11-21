@@ -17,6 +17,7 @@
 			rows: <?php echo json_encode($rows) ?>,
 			sortOptions: <?php echo json_encode($sort) ?>,
 			model_name: "<?php echo $modelName ?>",
+			model_title: "<?php echo $modelTitle ?>",
 			filters: <?php echo json_encode($filters); ?>,
 			edit_fields: <?php echo json_encode($editFields); ?>,
 			data_model: <?php echo json_encode($dataModel); ?>,

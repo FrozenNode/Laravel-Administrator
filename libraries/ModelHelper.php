@@ -44,7 +44,7 @@ class ModelHelper {
 	public static function getModel($modelName, $id = false)
 	{
 		//first instantiate a blank version of this object
-		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');;
+		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');
 
 		if (!class_exists($classname))
 		{
@@ -294,7 +294,7 @@ class ModelHelper {
 		$query->order_by($sort->field, $sort->direction);
 
 		//then retrieve the rows
-		$rows = $query->get($selects);
+		$rows = $query->distinct()->get($selects);
 		$results = array();
 
 		//convert the resulting set into arrays

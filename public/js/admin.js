@@ -53,7 +53,7 @@
 			/* The model title for this data model
 			 * string
 			 */
-			modelTitle: '',
+			modelTitle: ko.observable(''),
 
 			/* The primary key value for this model
 			 * string
@@ -523,6 +523,7 @@
 			this.viewModel.columns(adminData.column_model);
 			this.viewModel.editFields(adminData.edit_fields);
 			this.viewModel.modelName(adminData.model_name);
+			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.primaryKey = adminData.primary_key;
 
 			//now that we have most of our data, we can set up the computed values
@@ -706,13 +707,6 @@
 		 */
 		initComputed: function()
 		{
-			//the title of the model
-			this.viewModel.modelTitle = ko.computed(function()
-			{
-				return this.modelName().charAt(0).toUpperCase() + this.modelName().slice(1);
-			}, this.viewModel);
-
-
 			//pagination information
 			this.viewModel.pagination.isFirst = ko.computed(function()
 			{

@@ -6,13 +6,13 @@
 			<input type="button" value="next" data-bind="attr: {disabled: pagination.isLast() || !pagination.last() }, click: function() {page('next')}" />
 			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 }, value: pagination.page" /> of ${pagination.last}
 		</div>
-		<a href="${base_url + modelName() + '/new'}" class="new_item">New ${modelName}</a>
+		<a href="${base_url + modelName() + '/new'}" class="new_item">New ${modelTitle}</a>
 	</div>
 	<table class="results" border="0" cellspacing="0" id="customers" cellpadding="0">
 		<thead>
 			<tr>
 				{{each(i, column) columns}}
-					<th class="${sortable ? 'sortable' : ''} 
+					<th class="${sortable ? 'sortable' : ''}
 									${i == sortOptions.field() || sort_field == sortOptions.field() ? 'sorted-' + sortOptions.direction() : ''}">
 						{{if sortable}}
 							<div data-bind="click: function() {setSortOptions(sort_field ? sort_field : i)}">${title}</div>
@@ -34,11 +34,11 @@
 			{{/each}}
 		</tbody>
 	</table>
-	
+
 	<div class="loading_rows" data-bind="visible: loadingRows">
 		<div>Loading...</div>
 	</div>
-	
+
 	<div class="no_results" data-bind="visible: pagination.last() === 0">
 		<div>No Results</div>
 	</div>

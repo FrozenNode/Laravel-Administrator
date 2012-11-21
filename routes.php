@@ -119,6 +119,7 @@ View::composer('administrator::index', function($view)
 	$bundleConfig = Bundle::get('administrator');
 
 	//add the view fields
+	$view->modelTitle = Config::get('administrator::administrator.models.'.$view->modelName.'.title', $view->modelName);
 	$view->columns = $columns['columns'];
 	$view->includedColumns = $columns['includedColumns'];
 	$view->primaryKey = $modelInstance::$key;
