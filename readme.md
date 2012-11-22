@@ -12,6 +12,15 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 The initial inspiration for this project came from the [Lara Admin](https://github.com/chalien/lara_admin) bundle by chalien. In between then and the initial release of this bundle, pretty much the entire codebase has been changed. Still, some of the design elements of Lara Admin remain (for the time being), partially as a testament to chalien's work!
 
+## Tutorials/Guides
+
+I'm currently working on expanding this section. So far I've only got the one overview video. More to come soon!
+
+###Videos
+
+[https://vimeo.com/54058030](Administrator Bundle Overview)
+
+
 ## Installation / Documentation
 
 You can either create a bundle directory called `administrator` and manually copy the bundle contents into it, or you can run the artisan command:
