@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 2.0.1
+- **Version:** 2.1.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -477,9 +477,16 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
+### 2.1.0
+- You can no longer use has_one or has_many fields in the $edit property. This is because those relationships require a new item to be created on the other table.
+- The number field now formats nicely in the interface
+- Added the first tutorial video to the README
+- Bugfix: There was a case sensitivity issue with the libraries folder because of the namespaces I was using. Quickfixed this by changing libraries to Libraries.
+- Bugfix: Getting model rows was calling 'SELECT * FROM [whatever_relationship_table]' multiple times. This should alleviate some performance issues.
+
 ### 2.0.1
-- Fixed a big related to grouping functions in the 'select' option
-- Fixed a bug related to the model title showing up
+- Bugfix: related to grouping functions in the 'select' option
+- Bugfix: related to the model title showing up
 
 ### 2.0.0
 - Reorganized the libraries
