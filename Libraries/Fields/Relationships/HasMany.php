@@ -13,6 +13,13 @@ class HasMany extends Relationship {
 	public $multipleValues = true;
 
 	/**
+	 * If this is true, the field is editable
+	 *
+	 * @var bool
+	 */
+	public $editable = false;
+
+	/**
 	 * Constructor function
 	 *
 	 * @param string|int	$field

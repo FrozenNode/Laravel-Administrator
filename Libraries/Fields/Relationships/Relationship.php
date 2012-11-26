@@ -79,13 +79,17 @@ abstract class Relationship extends Field {
 		//get the name field option
 		$this->nameField = $info['name_field'] = array_get($info, 'name_field', $this->nameField);
 
-		$this->options = array_map(function($m) use ($info, $model)
+		//if we want all of the options, load them up, otherwise leave it an empty array
+		if (array_get($info, 'load_options', false))
 		{
-			return array(
-				$model::$key => $m->{$model::$key},
-				$info['name_field'] => $m->{$info['name_field']},
-			);
-		}, $relationship->model->all());
+			$this->options = array_map(function($m) use ($info, $model)
+			{
+				return array(
+					$model::$key => $m->{$model::$key},
+					$info['name_field'] => $m->{$info['name_field']},
+				);
+			}, $relationship->model->all());
+		}
 	}
 
 	/**

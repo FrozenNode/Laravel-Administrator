@@ -5,6 +5,12 @@ use Admin\Libraries\Column;
 
 class HasOne extends Relationship {
 
+	/**
+	 * If this is true, the field is editable
+	 *
+	 * @var bool
+	 */
+	public $editable = false;
 
 	/**
 	 * Constructor function

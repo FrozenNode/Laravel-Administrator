@@ -51,6 +51,13 @@ abstract class Field {
 	public $external = false;
 
 	/**
+	 * If this is true, the field is editable
+	 *
+	 * @var bool
+	 */
+	public $editable = true;
+
+	/**
 	 * The name of the field
 	 *
 	 * @var string
@@ -121,13 +128,14 @@ abstract class Field {
 	/**
 	 * Takes a the key/value of the options array and the associated model and returns an instance of the field
 	 *
-	 * @param string|int	$field 		//the key of the options array
-	 * @param array|string	$info 		//the value of the options array
-	 * @param Eloquent 		$model 		//an instance of the Eloquent model
+	 * @param string|int	$field 			//the key of the options array
+	 * @param array|string	$info 			//the value of the options array
+	 * @param Eloquent 		$model 			//an instance of the Eloquent model
+	 * @param bool	 		$loadOptions	//determines whether or not to load the relationship
 	 *
 	 * @return false|Field object
 	 */
-	public static function get($field, $info, $model)
+	public static function get($field, $info, $model, $loadOptions = true)
 	{
 		$noInfo = is_numeric($field);
 
@@ -153,6 +161,12 @@ abstract class Field {
 			else
 			{
 				return false;
+			}
+
+			//if we should load the options, set the $info key
+			if ($loadOptions)
+			{
+				$info['load_options'] = true;
 			}
 		}
 
@@ -242,6 +256,7 @@ abstract class Field {
 			'value' => $this->value,
 			'minValue' => $this->minValue,
 			'maxValue' => $this->maxValue,
+			'editable' => $this->editable,
 		);
 	}
 
@@ -320,8 +335,10 @@ abstract class Field {
 		{
 			foreach ($model->edit as $field => $info)
 			{
+				$fieldObject = static::get($field, $info, $model);
+
 				//if this field can be properly set up, put it into the edit fields array
-				if ($fieldObject = static::get($field, $info, $model))
+				if ($fieldObject && $fieldObject->editable)
 				{
 					$return['objectFields'][$fieldObject->field] = $fieldObject;
 					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
