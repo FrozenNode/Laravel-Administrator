@@ -18,7 +18,7 @@ I'm currently working on expanding this section. So far I've only got the one ov
 
 ###Videos
 
-[https://vimeo.com/54058030](Administrator Bundle Overview)
+[Administrator Bundle Overview](https://vimeo.com/54058030)
 
 
 ## Installation / Documentation
