@@ -43,7 +43,7 @@
 		{
 			var options = valueAccessor(),
 				value = allBindingsAccessor().value(),
-				floatVal = parseFloat(value);
+				floatVal = value === null || value === false ? null : parseFloat(value.replace(',', ''));
 
 			//if the value is not a number, set the value equal to 0.00
 			if (isNaN(floatVal))
@@ -55,7 +55,7 @@
 			}
 			else
 			{
-				$(element).val(floatVal.toFixed(parseInt(options.decimals)));
+				$(element).val(accounting.formatMoney(floatVal, "", 2, ",", "."));
 			}
 		}
 	};

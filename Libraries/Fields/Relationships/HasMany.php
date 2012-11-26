@@ -3,8 +3,21 @@ namespace Admin\Libraries\Fields\Relationships;
 
 use Admin\Libraries\Column;
 
-class HasOne extends Relationship {
+class HasMany extends Relationship {
 
+	/**
+	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
+	 *
+	 * @var bool
+	 */
+	public $multipleValues = true;
+
+	/**
+	 * If this is true, the field is editable
+	 *
+	 * @var bool
+	 */
+	public $editable = false;
 
 	/**
 	 * Constructor function
@@ -15,6 +28,8 @@ class HasOne extends Relationship {
 	 */
 	public function __construct($field, $info, $model)
 	{
+		parent::__construct($field, $info, $model);
+
 		$relationship = $model->{$field}();
 
 		$this->table = $relationship->table->from;
@@ -45,6 +60,7 @@ class HasOne extends Relationship {
 		{
 			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->table.'.'.$this->column);
 		}
+
 
 		$query->where_in($this->table.'.id', (is_array($this->value) ? $this->value : array($this->value)));
 	}

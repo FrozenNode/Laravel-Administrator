@@ -4,13 +4,22 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 2.0.1
+- **Version:** 2.1.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
 ## Inspiration / Credit
 
 The initial inspiration for this project came from the [Lara Admin](https://github.com/chalien/lara_admin) bundle by chalien. In between then and the initial release of this bundle, pretty much the entire codebase has been changed. Still, some of the design elements of Lara Admin remain (for the time being), partially as a testament to chalien's work!
+
+## Tutorials/Guides
+
+I'm currently working on expanding this section. So far I've only got the one overview video. More to come soon!
+
+###Videos
+
+[https://vimeo.com/54058030](Administrator Bundle Overview)
+
 
 ## Installation / Documentation
 
@@ -219,6 +228,8 @@ The available options are:
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
 - **symbol**: default is NULL. Only use this for 'number' field type.
 - **decimals**: default is 2. Only use this for 'number' field type.
+- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
+- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
@@ -242,6 +253,8 @@ public $edit = array(
 		'type' => 'number',
 		'symbol' => '$', //symbol shown in front of the number
 		'decimals' => 2, //the number of digits after the decimal point
+		'decimalSeparator' => ',', //the character to use for the decimal place
+		'thousandsSeparator' => '.', //the character to use between thousands groups
 	),
 	'release_date' => array(
 		'title' => 'Release Date',
@@ -302,6 +315,8 @@ The available options are:
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
 - **symbol**: default is '$'. Only use this for 'currency' field type.
 - **decimals**: default is 2. Only use this for 'currency' field type.
+- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
+- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
@@ -462,9 +477,16 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
+### 2.1.0
+- You can no longer use has_one or has_many fields in the $edit property. This is because those relationships require a new item to be created on the other table.
+- The number field now formats nicely in the interface
+- Added the first tutorial video to the README and added the code from that video to the examples/application directory
+- Bugfix: There was a case sensitivity issue with the libraries folder because of the namespaces I was using. Quickfixed this by changing libraries to Libraries.
+- Bugfix: Getting model rows was calling 'SELECT * FROM [whatever_relationship_table]' multiple times. This should alleviate some performance issues.
+
 ### 2.0.1
-- Fixed a big related to grouping functions in the 'select' option
-- Fixed a bug related to the model title showing up
+- Bugfix: related to grouping functions in the 'select' option
+- Bugfix: related to the model title showing up
 
 ### 2.0.0
 - Reorganized the libraries

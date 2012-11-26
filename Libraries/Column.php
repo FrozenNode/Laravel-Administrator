@@ -148,7 +148,7 @@ class Column {
 			}
 
 			//now we'll need to grab a relation field to see what its foreign table is
-			if (!$relationshipField = Field::get($column['relationship'], array('type' => 'relationship'), $model))
+			if (!$relationshipField = Field::get($column['relationship'], array('type' => 'relationship'), $model, false))
 			{
 				return false;
 			}
