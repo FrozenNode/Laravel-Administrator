@@ -3,14 +3,14 @@ namespace Admin\Libraries\Fields\Relationships;
 
 use Admin\Libraries\Column;
 
-class HasMany extends Relationship {
+class HasOne extends Relationship {
 
 	/**
-	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
+	 * If this is true, the field is editable
 	 *
 	 * @var bool
 	 */
-	public $multipleValues = true;
+	public $editable = false;
 
 	/**
 	 * Constructor function
@@ -21,8 +21,6 @@ class HasMany extends Relationship {
 	 */
 	public function __construct($field, $info, $model)
 	{
-		parent::__construct($field, $info, $model);
-
 		$relationship = $model->{$field}();
 
 		$this->table = $relationship->table->from;
@@ -53,7 +51,6 @@ class HasMany extends Relationship {
 		{
 			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->table.'.'.$this->column);
 		}
-
 
 		$query->where_in($this->table.'.id', (is_array($this->value) ? $this->value : array($this->value)));
 	}

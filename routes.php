@@ -83,6 +83,8 @@ Route::filter('add_assets', function()
 	$assets->add('knockout-update-data', 'js/knockout/knockout.updateData.js');
 	$assets->add('knockout-custom-bindings', 'js/knockout/custom-bindings.js');
 
+	$assets->add('accountingjs', 'js/accounting.js');
+
 	$assets->add('historyjs', 'js/history/native.history.js');
 
 	$assets->add('admin', 'js/admin.js');

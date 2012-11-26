@@ -10,27 +10,6 @@ class ModelHelper {
 
 
 	/**
-	 * List of possible field types in the edit array. this will grow to be more complex in time...
-	 */
-	static $fieldTypes = array('text', 'relation', 'currency', 'date', 'time', 'datetime' );
-
-	/**
-	 * List of possible field types in the edit array. this will grow to be more complex in time...
-	 */
-	static $relationshipTypes = array('relation_belongs_to', 'relation_has_one', 'relation_has_many', 'relation_has_many_and_belongs_to');
-
-	/**
-	 * List of fields that are min/max filter types
-	 */
-	static $minMaxTypes = array('currency', 'date', 'datetime', 'time');
-
-	/**
-	 * List of possible related object class names
-	 */
-	static $relationshipBase = 'Laravel\\Database\\Eloquent\\Relationships\\';
-
-
-	/**
 	 * Gets an instance of the supplied model given the id
 	 *
 	 * @param string	$modelName
