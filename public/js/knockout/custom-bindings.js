@@ -43,9 +43,9 @@
 		{
 			var options = valueAccessor(),
 				value = allBindingsAccessor().value(),
-				floatVal = value === null || value === false ? null : parseFloat(value.replace(',', ''));
+				floatVal = value === null || value === false ? parseFloat(value) : parseFloat(value.split(',').join(''));
 
-			//if the value is not a number, set the value equal to 0.00
+			//if the value is not a number, set the value equal to ''
 			if (isNaN(floatVal))
 			{
 				if (value !== '')

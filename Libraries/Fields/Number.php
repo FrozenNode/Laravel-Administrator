@@ -54,6 +54,20 @@ class Number extends Field {
 		$this->decimals = array_get($info, 'decimals', $this->decimals);
 		$this->decimalSeparator = array_get($info, 'decimalSeparator', $this->decimalSeparator);
 		$this->thousandsSeparator = array_get($info, 'thousandsSeparator', $this->thousandsSeparator);
+		$this->minValue = $this->minValue ? str_replace(',', '', $this->minValue) : $this->minValue;
+		$this->maxValue = $this->maxValue ? str_replace(',', '', $this->maxValue) : $this->maxValue;
+	}
+
+	/**
+	 * Fill a model with input data
+	 *
+	 * @param Eloquent	$model
+	 *
+	 * @return array
+	 */
+	public function fillModel(&$model, $input)
+	{
+		$model->{$this->field} = is_null($input) ? '' : str_replace(',', '', $input);
 	}
 
 	/**
