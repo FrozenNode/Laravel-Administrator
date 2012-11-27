@@ -254,6 +254,7 @@ abstract class Field {
 			'field' => $this->field,
 			'title' => $this->title,
 			'value' => $this->value,
+			'minMax' => $this->minMax,
 			'minValue' => $this->minValue,
 			'maxValue' => $this->maxValue,
 			'editable' => $this->editable,

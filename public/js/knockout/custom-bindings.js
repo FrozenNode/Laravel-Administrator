@@ -43,7 +43,7 @@
 
 			$(element).ajaxChosen({
 				minTermLength: 1,
-				afterTypeDelay: 150,
+				afterTypeDelay: 50,
 				type: 'GET',
 				url: base_url + 'search_relation/' + adminData.model_name + '/' + options.field + '/' + options.type,
 				dataType: 'json',
@@ -177,6 +177,25 @@
 				dateFormat: options.dateFormat,
 				timeFormat: options.timeFormat
 			});
+		}
+	};
+
+	/**
+	 * The characterLimit binding makes sure a text field only has so many characters
+	 */
+	ko.bindingHandlers.characterLimit = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var limit = valueAccessor(),
+				val = allBindingsAccessor().value();
+
+			if (!limit || val === null)
+				return;
+
+			val = val.substr(0, limit);
+
+			$(element).val(val);
+			allBindingsAccessor().value(val);
 		}
 	};
 })(jQuery);

@@ -233,6 +233,9 @@ The available options are:
 - **num_options**: default is 10. If autocomplete is on, this is the number of items to show
 - **search_fields**: default is array(name_field). Must be an array. You can supply an on-table column name or a raw SQL function like CONCAT(first_name, ' ', last_name)
 
+##### Text/Textarea
+- **limit**: default is 0 (i.e. no character limit).
+
 ##### Numbers
 - **symbol**: default is NULL. Only use this for 'number' field type.
 - **decimals**: default is 2. Only use this for 'number' field type.
@@ -391,6 +394,7 @@ This is a list of all the field types that you can use in the $edit array.
 'name' => array(
 	'type' => 'text',
 	'title' => 'Name',
+	'limit' => 50,
 )
 </pre>
 
@@ -403,10 +407,13 @@ This is the default type. It has no unique options. Soon there will be an option
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-relation-multi.png" />
 
 <pre>
-'roles' => array(
+'actors' => array(
 	'type' => 'relationship',
-	'title' => 'Roles',
-	'name_field' => 'name', //what column on the other table you want to use to represent this object
+	'title' => 'Actors',
+	'name_field' => 'name', //what column or getter on the other table you want to use to represent this object
+	'autocomplete' => true, //set these three fields if you want to have an autocomplete select box
+	'num_options' => 5,
+	'search_fields' => array("CONCAT(first_name, ' ', last_name)"),
 )
 </pre>
 
@@ -487,6 +494,8 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ### 2.2.0
 - There is now an autocomplete option for relationships with a lot of potential values
+- New 'textarea' field type
+- Added 'limit' option for text/textarea field types
 - Bugfix: Multiple commas in number fields were messing up the values
 
 ### 2.1.0

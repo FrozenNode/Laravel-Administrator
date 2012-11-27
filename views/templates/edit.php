@@ -12,79 +12,66 @@
 
 	{{each(key, field) editFields}}
 		{{if key !== $root.primaryKey}}
+			<div class="${type}">
+				<label for="edit_field_${ key }">${title}:</label>
 			{{if type === 'text'}}
-				<div>
-					<label for="edit_field_${ key }">${title}:</label>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key]" />
-				</div>
+				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																		valueUpdate: 'afterkeydown', characterLimit: limit" />
+			{{/if}}
+			{{if type === 'textarea'}}
+				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																		valueUpdate: 'afterkeydown', characterLimit: limit"></textarea>
 			{{/if}}
 			{{if type === 'belongs_to'}}
-				<div>
-					<label for="edit_field_${ key }">${title}:</label>
-					{{if autocomplete}}
-					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
-														ajaxChosen: {field: field, type: 'edit'},
-														options: $root.listOptions[field],
-														optionsValue: function(item) {return item.id},
-														optionsText: function(item) {return item[name_field]},
-														optionsCaption: 'None'"></select>
-					{{else}}
-					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
-														options: $root.listOptions[field],
-														optionsValue: function(item) {return item.id},
-														optionsText: function(item) {return item[name_field]},
-														optionsCaption: 'None'"></select>
-					{{/if}}
-				</div>
+				{{if autocomplete}}
+				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+													ajaxChosen: {field: field, type: 'edit'},
+													options: $root.listOptions[field],
+													optionsValue: function(item) {return item.id},
+													optionsText: function(item) {return item[name_field]},
+													optionsCaption: 'None'"></select>
+				{{else}}
+				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
+													options: $root.listOptions[field],
+													optionsValue: function(item) {return item.id},
+													optionsText: function(item) {return item[name_field]},
+													optionsCaption: 'None'"></select>
+				{{/if}}
 			{{/if}}
 			{{if type === 'has_many_and_belongs_to'}}
-				<div>
-					<label for="edit_field_${ key }">${title}:</label>
-					{{if autocomplete}}
-					<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm},
-														ajaxChosen: {field: field, type: 'edit'},
-														selectedOptions: $root[key], options: $root.listOptions[field],
-														optionsValue: function(item) {return item.id},
-														optionsText: function(item) {return item[name_field]} "></select>
-					{{else}}
-					<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true,
-														selectedOptions: $root[key], options: $root.listOptions[field],
-														optionsValue: function(item) {return item.id},
-														optionsText: function(item) {return item[name_field]} "></select>
-					{{/if}}
-				</div>
+				{{if autocomplete}}
+				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm},
+													ajaxChosen: {field: field, type: 'edit'},
+													selectedOptions: $root[key], options: $root.listOptions[field],
+													optionsValue: function(item) {return item.id},
+													optionsText: function(item) {return item[name_field]} "></select>
+				{{else}}
+				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true,
+													selectedOptions: $root[key], options: $root.listOptions[field],
+													optionsValue: function(item) {return item.id},
+													optionsText: function(item) {return item[name_field]} "></select>
+				{{/if}}
 			{{/if}}
 			{{if type === 'number'}}
-				<div class="number">
-					<label for="edit_field_${ key }">${title}:</label>
-					<span class="symbol">${symbol}</span>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
-																		number: {decimals: decimals, key: key,
-																				thousandsSeparator: thousandsSeparator,
-																				decimalSeparator: decimalSeparator}" />
-				</div>
+				<span class="symbol">${symbol}</span>
+				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																	number: {decimals: decimals, key: key,
+																			thousandsSeparator: thousandsSeparator,
+																			decimalSeparator: decimalSeparator}" />
 			{{/if}}
 			{{if type === 'date'}}
-				<div class="date">
-					<label for="edit_field_${ key }">${title}:</label>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
-																				datepicker: {dateFormat: date_format}" />
-				</div>
+				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																			datepicker: {dateFormat: date_format}" />
 			{{/if}}
 			{{if type === 'time'}}
-				<div class="time">
-					<label for="edit_field_${ key }">${title}:</label>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
-																				timepicker: {timeFormat: time_format}" />
-				</div>
+				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																			timepicker: {timeFormat: time_format}" />
 			{{/if}}
 			{{if type === 'datetime'}}
-				<div class="datetime">
-					<label for="edit_field_${ key }">${title}:</label>
-					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
-																				datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
-				</div>
+				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																			datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 			{{/if}}
+			</div>
 		{{/if}}
 	{{/each}}
 
