@@ -225,7 +225,7 @@ The available options are:
 
 ##### Common
 - **title**
-- **type**: default is 'text'. Choices are: relationship, text, date, time, datetime, number
+- **type**: default is 'text'. Choices are: relationship, text, textarea, date, time, datetime, number
 
 ##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
