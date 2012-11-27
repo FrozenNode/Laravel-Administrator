@@ -35,6 +35,82 @@
 		}
 	};
 
+	//for ajax chosen js
+	ko.bindingHandlers.ajaxChosen = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var options = valueAccessor();
+
+			$(element).ajaxChosen({
+				minTermLength: 1,
+				afterTypeDelay: 150,
+				type: 'GET',
+				url: base_url + 'search_relation/' + adminData.model_name + '/' + options.field + '/' + options.type,
+				dataType: 'json',
+				fillData: function()
+				{
+					var data = {};
+
+					if (options.type === 'filter')
+					{
+						$.each(admin.filtersViewModel.filters(), function(ind, el)
+						{
+							if (el.field === options.field && el.value())
+							{
+								data.selectedItems = el.value();
+							}
+						});
+					}
+					else
+					{
+						if (admin.viewModel[options.field]())
+						{
+							data.selectedItems = admin.viewModel[options.field]();
+						}
+					}
+
+					return data;
+				}
+			}, function(data, term, select)
+			{
+				var $chosen = select.next(),
+					$single = $chosen.find('div.chzn-search input'),
+					$multi = $chosen.find('ul.chzn-choices'),
+					$multiInput = $multi.find('li.search-field input'),
+					singleVal = $single.val(),
+					multiVal = $multiInput.val();
+
+				if (options.type === 'filter')
+				{
+					admin.filtersViewModel.listOptions[options.field](data);
+				}
+				else
+				{
+					admin.viewModel.listOptions[options.field](data);
+				}
+
+				setTimeout(function()
+				{
+					//reset the search and focus
+					if ($single.length)
+					{
+						$single.val(singleVal);
+						$single.focus();
+					}
+					else
+					{
+						$multiInput.val(multiVal);
+						$multiInput.focus();
+					}
+				}, 50);
+
+				return false;
+			});
+
+			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
+		}
+	};
+
 	/**
 	 * The number binding ensures that a value is decimal-like
 	 */

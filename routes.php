@@ -31,6 +31,12 @@ Route::group(array('before' => 'validate_admin|add_assets'), function()
 		'uses' => 'administrator::admin@item'
 	));
 
+	//Search Relationship Items
+	Route::get('(:bundle)/search_relation/(:any)/(:any)/(:any)', array(
+		'as' => 'admin_search_relation',
+		'uses' => 'administrator::admin@search_relation'
+	));
+
 	//CSRF protection in forms
 	Route::group(array('before' => 'csrf'), function()
 	{
@@ -72,6 +78,7 @@ Route::filter('add_assets', function()
 	//JS
 	$assets->add('jquery', 'js/jquery/jquery-1.8.2.min.js');
 	$assets->add('jquery-chosen', 'js/jquery/jquery.chosen.min.js');
+	$assets->add('jquery-ajax-chosen', 'js/jquery/jquery.ajax-chosen.min.js');
 	$assets->add('jquery-tmpl', 'js/jquery/jquery.tmpl.min.js');
 
 	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');

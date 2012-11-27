@@ -28,10 +28,16 @@
 		 * Filters view model
 		 */
 		filtersViewModel: {
+
 			/* The filters for the current result set
 			 * array
 			 */
 			filters: ko.observableArray(),
+
+			/* The options lists for any fields
+			 * object
+			 */
+			listOptions: {},
 		},
 
 		/*
@@ -69,6 +75,11 @@
 			 * array
 			 */
 			columns: ko.observable(),
+
+			/* The options lists for any fields
+			 * object
+			 */
+			listOptions: {},
 
 			/* The current sort options
 			 * object
@@ -478,7 +489,7 @@
 						field: el.field,
 						type: el.type,
 						value: el.value() ? el.value() : null,
-					}
+					};
 
 					//iterate over the observables to see if we should include them
 					$(observables).each(function()
@@ -534,6 +545,9 @@
 
 			this.filtersViewModel.filters = ko.observableArray(filters);
 
+			//set up the relationships
+			this.initRelationships();
+
 			//set up the KO bindings
 			ko.applyBindings(this.viewModel, $('#main_content')[0]);
 			ko.applyBindings(this.filtersViewModel, $('#filters_sidebar_section')[0]);
@@ -572,12 +586,34 @@
 					{
 						filter[obs] = ko.observable(filter[obs]);
 					}
-				})
+				});
 
 				filters.push(filter);
 			});
 
 			return filters;
+		},
+
+		/**
+		 * Set up the relationship items
+		 */
+		initRelationships: function()
+		{
+			var self = this;
+
+			//set up the filters
+			$.each(adminData.filters, function(ind, el)
+			{
+				if (el.relationship)
+					self.filtersViewModel.listOptions[ind] = ko.observableArray(el.options);
+			});
+
+			//set up the edit fields
+			$.each(adminData.edit_fields, function(ind, el)
+			{
+				if (el.relationship)
+					self.viewModel.listOptions[ind] = ko.observableArray(el.options);
+			});
 		},
 
 		/**

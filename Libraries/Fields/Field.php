@@ -164,7 +164,7 @@ abstract class Field {
 			}
 
 			//if we should load the options, set the $info key
-			if ($loadOptions)
+			if ($loadOptions && !array_get($info, 'autocomplete', false))
 			{
 				$info['load_options'] = true;
 			}
@@ -257,6 +257,7 @@ abstract class Field {
 			'minValue' => $this->minValue,
 			'maxValue' => $this->maxValue,
 			'editable' => $this->editable,
+			'relationship' => $this->relationship,
 		);
 	}
 

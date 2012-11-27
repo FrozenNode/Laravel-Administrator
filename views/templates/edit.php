@@ -18,22 +18,40 @@
 					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key]" />
 				</div>
 			{{/if}}
-			{{if type === 'belongs_to' || type === 'has_one'}}
+			{{if type === 'belongs_to'}}
 				<div>
 					<label for="edit_field_${ key }">${title}:</label>
-					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, chosen: true, value: $root[key], options: options,
+					{{if autocomplete}}
+					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+														ajaxChosen: {field: field, type: 'edit'},
+														options: $root.listOptions[field],
 														optionsValue: function(item) {return item.id},
 														optionsText: function(item) {return item[name_field]},
 														optionsCaption: 'None'"></select>
+					{{else}}
+					<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
+														options: $root.listOptions[field],
+														optionsValue: function(item) {return item.id},
+														optionsText: function(item) {return item[name_field]},
+														optionsCaption: 'None'"></select>
+					{{/if}}
 				</div>
 			{{/if}}
-			{{if type === 'has_many' || type === 'has_many_and_belongs_to'}}
+			{{if type === 'has_many_and_belongs_to'}}
 				<div>
 					<label for="edit_field_${ key }">${title}:</label>
-					<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true, selectedOptions: $root[key],
-														options: options,
+					{{if autocomplete}}
+					<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm},
+														ajaxChosen: {field: field, type: 'edit'},
+														selectedOptions: $root[key], options: $root.listOptions[field],
 														optionsValue: function(item) {return item.id},
 														optionsText: function(item) {return item[name_field]} "></select>
+					{{else}}
+					<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true,
+														selectedOptions: $root[key], options: $root.listOptions[field],
+														optionsValue: function(item) {return item.id},
+														optionsText: function(item) {return item[name_field]} "></select>
+					{{/if}}
 				</div>
 			{{/if}}
 			{{if type === 'number'}}

@@ -206,4 +206,31 @@ class Administrator_Admin_Controller extends Controller
 		return Response::json(ModelHelper::getRows($model, $sortOptions, $filters));
 	}
 
+	/**
+	 * Gets a list of related items based on a string search param called 'term'
+	 *
+	 * @param string	$modelName
+	 * @param string	$field 		//the relationship field/method name
+	 *
+	 * @return array of objects [{id: string} ... {1: 'name'}, ...]
+	 */
+	public function action_search_relation($modelName, $field, $type)
+	{
+		//try to get the object
+		$model = ModelHelper::getModel($modelName);
+
+		//if we can't instantiate the model, something's fishy
+		if (!$model)
+		{
+			return Response::error('404');
+		}
+
+		//get the search term
+		$term = Input::get('term', '');
+		$selectedItems = Input::get('selectedItems', false);
+
+		//return the rows
+		return Response::json(ModelHelper::getRelationshipSuggestions($model, $field, $type, $selectedItems, $term));
+	}
+
 }

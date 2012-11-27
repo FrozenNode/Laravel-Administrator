@@ -350,4 +350,85 @@ class ModelHelper {
 			}
 		}
 	}
+
+	/**
+	 * Given a model, field, type (filter or edit), and search term, this returns an array of arrays with 'id' and 'name'
+	 *
+	 * @param Eloquent		$model
+	 * @param string		$field
+	 * @param string		$type			//either 'filter' or 'edit'
+	 * @param array|false	$selectedItems	//an array of ids of currently-selected items (necessary to maintain selections)
+	 * @param string		$term			//the search term
+	 *
+	 * @return array
+	 */
+	public static function getRelationshipSuggestions($model, $field, $type, $selectedItems, $term)
+	{
+		//first get the related model
+		$related_model = $model->{$field}()->model;
+		$info = false;
+
+		//now we can sort out what the actual field info is
+		if ($type === 'filter')
+		{
+			$fields = static::getFilters($model);
+		}
+		else
+		{
+			$editFields = Field::getEditFields($model);
+			$fields = $editFields['arrayFields'];
+		}
+
+		//iterate over the fields to get the one for this $field value
+		foreach ($fields as $key => $val)
+		{
+			if ($key === $field)
+			{
+				$info = $val;
+			}
+		}
+
+		//if we can't find the field, return an empty array
+		if (!$info)
+		{
+			return array();
+		}
+
+		//set up the field object
+		$info = Field::get($field, $info, $model, false);
+
+		//now we can start to set up the query
+		$query = new \Laravel\Database\Eloquent\Query($related_model);
+
+		//set up the wheres
+		foreach ($info->searchFields as $search)
+		{
+			$query->or_where(DB::raw($search), 'LIKE', '%'.$term.'%');
+		}
+
+		//include the currently-selected items
+		if ($selectedItems)
+		{
+			//if this isn't an array, set it up as one
+			$selectedItems = is_array($selectedItems) ? $selectedItems : array($selectedItems);
+
+			$query->or_where_in($related_model::$key, $selectedItems);
+		}
+		else
+		{
+			$selectedItems = array();
+		}
+
+		//set up the limits
+		$query->take($info->numOptions + count($selectedItems));
+
+		//return the array map based on the result set
+		return array_map(function($m) use ($info, $field, $related_model)
+		{
+			return array(
+				$related_model::$key => $m->{$related_model::$key},
+				$info->nameField => $m->{$info->nameField},
+			);
+		}, $query->get());
+	}
 }

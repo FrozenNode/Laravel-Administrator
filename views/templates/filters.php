@@ -56,21 +56,37 @@
 																		datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 			</div>
 		{{/if}}
-		{{if type === 'belongs_to' || type === 'has_one'}}
+		{{if type === 'belongs_to'}}
 			<div>
 				<label for="filter_field_${ field }">${title}:</label>
-				<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: options,
+				{{if autocomplete}}
+				<select id="filter_field_${ field }" data-bind="value: value, ajaxChosen: {field: field, type: 'filter'},
+														options: $root.listOptions[field],
 														optionsValue: function(item) {return item.id},
 														optionsText: function(item) {return item[name_field]},
 														optionsCaption: 'None'"></select>
+				{{else}}
+				<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: $root.listOptions[field],
+														optionsValue: function(item) {return item.id},
+														optionsText: function(item) {return item[name_field]},
+														optionsCaption: 'None'"></select>
+				{{/if}}
 			</div>
 		{{/if}}
-		{{if type === 'has_many' || type === 'has_many_and_belongs_to'}}
+		{{if type === 'has_many_and_belongs_to'}}
 			<div>
 				<label for="filter_field_${ field }">${title}:</label>
-				<select id="filter_field_${ field }" size="7" multiple="true" data-bind="chosen: true, options: options, selectedOptions: value,
+				{{if autocomplete}}
+				<select id="filter_field_${ field }" size="7" multiple="true" data-bind="ajaxChosen: {field: field, type: 'filter'},
+														options: $root.listOptions[field], selectedOptions: value,
 														optionsValue: function(item) {return item.id},
 														optionsText: function(item) {return item[name_field]} "></select>
+				{{else}}
+				<select id="filter_field_${ field }" size="7" multiple="true" data-bind="chosen: true,
+														options: $root.listOptions[field], selectedOptions: value,
+														optionsValue: function(item) {return item.id},
+														optionsText: function(item) {return item[name_field]} "></select>
+				{{/if}}
 			</div>
 		{{/if}}
 	{{/each}}
