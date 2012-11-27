@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 2.1.0
+- **Version:** 2.2.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -33,12 +33,12 @@ Then add this to your `bundles.php` array:
 
 <pre>
 'administrator' => array(
-	'handles' => 'admin', //this determines what URI this bundle will use
+	'handles' => 'admin', //determines what URI this bundle will use
 	'auto' => true,
 ),
 </pre>
 
-Once the bundle is installed, create a new config file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created.
+Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created.
 
 ### Config
 
@@ -223,13 +223,23 @@ This property tells Administrator what columns to use when editing an item. You 
 
 The available options are:
 
+##### Common
 - **title**
 - **type**: default is 'text'. Choices are: relationship, text, date, time, datetime, number
+
+##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
+- **autocomplete**: default is false. If this is true, the related items won't be prefilled. The user will have to start typing some values which will then be used to create suggestions
+- **num_options**: default is 10. If autocomplete is on, this is the number of items to show
+- **search_fields**: default is array(name_field). Must be an array. You can supply an on-table column name or a raw SQL function like CONCAT(first_name, ' ', last_name)
+
+##### Numbers
 - **symbol**: default is NULL. Only use this for 'number' field type.
 - **decimals**: default is 2. Only use this for 'number' field type.
 - **thousandsSeparator**: default is ','. Only use this for 'number' field type.
 - **decimalSeparator**: default is '.'. Only use this for 'number' field type.
+
+##### Date/Time
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
@@ -247,6 +257,14 @@ public $edit = array(
 		'title' => 'Roles',
 		'type' => 'relationship',
 		'name_field' => 'title', //field on other table to use for the name/title
+	),
+	'elements' => array(
+		'title' => 'Element',
+		'type' => 'relationship',
+		'name_field' => 'name', //field on other table to use for the name/title
+		'autocomplete' => true,
+		'num_options' => 5,
+		'search_fields' => array("CONCAT(first_name, ' ', last_name)"),
 	),
 	'price' => array(
 		'title' => 'Price',
@@ -294,7 +312,7 @@ Unless you're extending directly from Eloquent/Aware, these methods should alrea
 'job' => array(
 	'title' => 'Job',
 	'type' => 'relationship',
-	'name_field' => 'title', //this lets Administrator know what column to reference on the Potato model. Default is 'name'
+	'name_field' => 'title', //this lets Administrator know what column to reference on the Job model. Default is 'name'
 ),
 </pre>
 
@@ -308,17 +326,7 @@ The date/time and number field types automatically get min/max filters where the
 
 **If you want to filter a related field, you have to put the relationship method name in the $filters array and use type 'relationship'.**
 
-The available options are:
-
-- **title**
-- **type**: default is 'text'. choices are: text, number, date, time, datetime, relationship
-- **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
-- **symbol**: default is '$'. Only use this for 'currency' field type.
-- **decimals**: default is 2. Only use this for 'currency' field type.
-- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
-- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
-- **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
-- **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
+The available options are the same as the $edit property's options.
 
 <pre>
 public $filters = array(
@@ -476,6 +484,10 @@ Administrator was written by Jan Hartigan for the Laravel framework.
 Administrator is released under the MIT License. See the LICENSE file for details.
 
 ## Changelog
+
+### 2.2.0
+- There is now an autocomplete option for relationships with a lot of potential values
+- Bugfix: Multiple commas in number fields were messing up the values
 
 ### 2.1.0
 - You can no longer use has_one or has_many fields in the $edit property. This is because those relationships require a new item to be created on the other table.
