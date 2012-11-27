@@ -128,14 +128,14 @@ abstract class Field {
 	/**
 	 * Takes a the key/value of the options array and the associated model and returns an instance of the field
 	 *
-	 * @param string|int	$field 			//the key of the options array
-	 * @param array|string	$info 			//the value of the options array
-	 * @param Eloquent 		$model 			//an instance of the Eloquent model
-	 * @param bool	 		$loadOptions	//determines whether or not to load the relationship
+	 * @param string|int	$field 				//the key of the options array
+	 * @param array|string	$info 				//the value of the options array
+	 * @param Eloquent 		$model 				//an instance of the Eloquent model
+	 * @param bool	 		$loadRelationships	//determines whether or not to load the relationships
 	 *
 	 * @return false|Field object
 	 */
-	public static function get($field, $info, $model, $loadOptions = true)
+	public static function get($field, $info, $model, $loadRelationships = true)
 	{
 		$noInfo = is_numeric($field);
 
@@ -163,10 +163,10 @@ abstract class Field {
 				return false;
 			}
 
-			//if we should load the options, set the $info key
-			if ($loadOptions && !array_get($info, 'autocomplete', false))
+			//if we should load the relationships, set the $info key
+			if ($loadRelationships && !array_get($info, 'autocomplete', false))
 			{
-				$info['load_options'] = true;
+				$info['load_relationships'] = true;
 			}
 		}
 
@@ -321,10 +321,11 @@ abstract class Field {
 	 * Gets the model's edit fields
 	 *
 	 * @param object	$model
+	 * @param bool		$loadRelationships
 	 *
 	 * @return array
 	 */
-	public static function getEditFields($model)
+	public static function getEditFields($model, $loadRelationships = true)
 	{
 		$return = array(
 			'objectFields' => array(),
@@ -336,7 +337,7 @@ abstract class Field {
 		{
 			foreach ($model->edit as $field => $info)
 			{
-				$fieldObject = static::get($field, $info, $model);
+				$fieldObject = static::get($field, $info, $model, $loadRelationships);
 
 				//if this field can be properly set up, put it into the edit fields array
 				if ($fieldObject && $fieldObject->editable)

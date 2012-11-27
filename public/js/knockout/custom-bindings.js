@@ -51,6 +51,7 @@
 				{
 					var data = {};
 
+					//if this is a filter, go through the filters until this one is found and update the value
 					if (options.type === 'filter')
 					{
 						$.each(admin.filtersViewModel.filters(), function(ind, el)

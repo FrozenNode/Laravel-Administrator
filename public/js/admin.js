@@ -287,7 +287,17 @@
 						//set the active item and update the model data
 						self.activeItem(data[self.primaryKey]);
 						self.loadingItem(false);
+
 						ko.mapping.updateData(self, self.model, data);
+
+						//set the new options for relationships
+						$.each(adminData.edit_fields, function(ind, el)
+						{
+							if (el.relationship)
+							{
+								self.listOptions[ind](data[ind + '_options']);
+							}
+						});
 
 						//fixes an error where the relationships wouldn't load
 						setTimeout(function()

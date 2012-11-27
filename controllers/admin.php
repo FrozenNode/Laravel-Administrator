@@ -50,7 +50,7 @@ class Administrator_Admin_Controller extends Controller
 	public function action_item($modelName, $itemId = false)
 	{
 		//try to get the object
-		$model = ModelHelper::getModel($modelName, $itemId);
+		$model = ModelHelper::getModel($modelName, $itemId, true);
 
 		//if we can't instantiate the model, something's fishy
 		if (!$model)

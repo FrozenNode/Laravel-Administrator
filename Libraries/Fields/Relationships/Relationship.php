@@ -103,17 +103,27 @@ abstract class Relationship extends Field {
 		$this->numOptions = array_get($info, 'num_options', $this->numOptions);
 		$this->searchFields = array_get($info, 'search_fields', array($this->nameField));
 
-		//if we want all of the options, load them up, otherwise leave it an empty array
-		if (array_get($info, 'load_options', false))
+		//if we want all of the possible items on the other model, load them up, otherwise leave the options empty
+		$options = array();
+
+		if (array_get($info, 'load_relationships', false))
 		{
-			$this->options = array_map(function($m) use ($info, $model)
-			{
-				return array(
-					$model::$key => $m->{$model::$key},
-					$info['name_field'] => $m->{$info['name_field']},
-				);
-			}, $relationship->model->all());
+			$options = $relationship->model->all();
 		}
+		//otherwise if there are relationship items, we need them in the initial options list
+		else if ($relationshipItems = $relationship->get())
+		{
+			$options = $relationshipItems;
+		}
+
+		//map the options to the options property where array([key]: int, [name_field]: string)
+		$this->options = array_map(function($m) use ($info, $model)
+		{
+			return array(
+				$model::$key => $m->{$model::$key},
+				$info['name_field'] => $m->{$info['name_field']},
+			);
+		}, $options);
 	}
 
 	/**

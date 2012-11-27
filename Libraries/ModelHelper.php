@@ -14,13 +14,15 @@ class ModelHelper {
 	 *
 	 * @param string	$modelName
 	 * @param id		$id
+	 * @param bool		$updateRelationships	//if this is true, the model will come back with an extra "[field]_options" attribute
+	 *												for relationships
 	 *
 	 * @return object|null	$model
 	 * object with data => if the id exists
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
 	 */
-	public static function getModel($modelName, $id = false)
+	public static function getModel($modelName, $id = false, $updateRelationships = false)
 	{
 		//first instantiate a blank version of this object
 		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');
@@ -33,7 +35,9 @@ class ModelHelper {
 		//get an empty model to work with and its included columns
 		$emptyModel = static::getModelInstance($modelName);
 		$columns = Column::getColumns($emptyModel);
-		$editFields = Field::getEditFields($emptyModel);
+
+		//if we're getting an existing model, we'll want to first get the edit fields without the relationships loaded
+		$editFields = Field::getEditFields($emptyModel, ($id ? false : true));
 
 		//make sure the edit fields are included
 		foreach ($editFields['objectFields'] as $field => $obj)
@@ -46,12 +50,13 @@ class ModelHelper {
 
 		//get the model
 		$model = $classname::find($id, $columns['includedColumns']);
+		$model = $model ? $model : $emptyModel;
 
-		if (!$model)
-		{
-			$model = $emptyModel;
-		}
-		else if ($model->exists)
+		//now we get the edit fields with the relationships loaded
+		$editFields = Field::getEditFields($model);
+
+		//if the model exists, load up the existing related items
+		if ($model->exists)
 		{
 			//make sure the relationships are loaded
 			foreach ($editFields['objectFields'] as $field => $info)
@@ -66,6 +71,7 @@ class ModelHelper {
 						//iterate over the items
 						foreach ($relatedItems as $item)
 						{
+
 							//if this is a mutliple-value type (i.e. HasMany, HasManyAndBelongsTo), make sure this is an array
 							if ($info->multipleValues)
 							{
@@ -73,7 +79,7 @@ class ModelHelper {
 							}
 							else
 							{
-								$model->{$field} = $item->{$item::$key};
+								$model->set_attribute($field, $item->{$item::$key});
 							}
 						}
 
@@ -83,6 +89,14 @@ class ModelHelper {
 							$model->{$field} = $relationsArray;
 						}
 
+						//set the options attribute if $updateRelationships is true
+						if ($updateRelationships)
+						{
+							$model->set_attribute($field.'_options', $info->options);
+
+							//unset the relationships so we only get back what we need
+							$model->relationships = array();
+						}
 					}
 				}
 			}
