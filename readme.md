@@ -468,10 +468,21 @@ The bool field should be an integer field (usually tinyint(1) or whatever your d
 	'title' => 'Season',
 	'type' => 'enum',
 	'options' => array('Winter', 'Spring', 'Summer', 'Fall'), //must be an array
-)
+),
+//alternate method:
+'season' => array(
+	'title' => 'Season',
+	'type' => 'enum',
+	'options' => array(
+		'Winter' => 'Cold, Cold Winter!',
+		'Spring',
+		'Summer' => 'Hot, Hot Summer!',
+		'Fall'
+	),
+),
 </pre>
 
-The enum field gives the user a permanent limited selection of items from which to choose.
+The enum field gives the user a permanent limited selection of items from which to choose. If an array with string keys is supplied, those string keys will be considered the enum value, while the values will be displayed to the user. You can mix and match these array slots as seen above.
 
 #### date
 
