@@ -64,7 +64,10 @@
 			{{/if}}
 			{{if type === 'enum'}}
 				<select id="edit_field_${ field }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
-																options: options, optionsCaption: 'None'"></select>
+																options: options,
+																optionsValue: function(item) {return item.value},
+																optionsText: function(item) {return item.text},
+																optionsCaption: 'None'"></select>
 			{{/if}}
 			{{if type === 'date'}}
 				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],

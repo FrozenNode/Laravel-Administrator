@@ -21,8 +21,17 @@ class Enum extends Field {
 	{
 		parent::__construct($field, $info, $model);
 
-		$this->options = array_get($info, 'options', $this->options);
 		$this->value = $this->value === '' ? null : $this->value;
+		$options = array_get($info, 'options', $this->options);
+
+		//iterate over the options to create the options assoc array
+		foreach ($options as $val => $text)
+		{
+			$this->options[] = array(
+				'text' => $text,
+				'value' => is_numeric($val) ? $text : $val,
+			);
+		}
 	}
 
 	/**

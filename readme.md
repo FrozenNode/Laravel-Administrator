@@ -234,7 +234,7 @@ The available options are:
 - **search_fields**: default is array(name_field). Must be an array. You can supply an on-table column name or a raw SQL function like CONCAT(first_name, ' ', last_name)
 
 ##### Enum
-- **options**: default is an empty array. Must be an array of values that can be converted into strings
+- **options**: default is an empty array. This can either be an array of strings (array('Spring', 'Winter')) or an array of strings indexed on the enum value (array('Spring' => 'Beautiful Spring!', 'Winter' => 'Cold Winter! :(')). In the latter case, the key value will be used to save to / query the database.
 
 ##### Text/Textarea
 - **limit**: default is 0 (i.e. no character limit).
