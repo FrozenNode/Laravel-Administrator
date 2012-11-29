@@ -187,7 +187,7 @@ The available options are:
 - **title**: default is column name
 - **sort_field**: default is the field key (i.e. if you do 'name' like below, it will look for the 'name' column). If this column is derived from a getter, it won't be sortable until you define a sort_field
 - **relationship**: default is null. Set this to the method name of the relationship. Only set this if you need to pull this field from another table
-- **select**: default is null. If you've set the relationship, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
+- **select**: default is null. This can be used for relationship columns or on-table columns. If it's an on-table column, you can use any regular SQL select function (e.g. IF, CONCAT, etc.). If you've set the relationship, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
 
 <pre>
 public $columns = array(
@@ -197,6 +197,10 @@ public $columns = array(
 	'formatted_salary' => array(
 		'title' => 'Salary',
 		'sort_field' => 'salary', //must be a valid field on the model's table
+	),
+	'is_good' => array(
+		'title' => 'Is Good',
+		'select' => "IF((:table).is_good, 'yes', 'no')", //here using a select for items on this table
 	),
 	'num_films' => array(
 		'title' => '# films',
