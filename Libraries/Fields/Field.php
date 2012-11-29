@@ -350,7 +350,7 @@ abstract class Field {
 		}
 
 		//add the id field, which will be uneditable, but part of the data model
-		$return['arrayFields']['id'] = 0;
+		$return['arrayFields'][$model::$key] = 0;
 
 		//set up the data model
 		foreach ($return['arrayFields'] as $field => $info)
