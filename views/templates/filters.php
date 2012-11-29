@@ -21,10 +21,11 @@
 																					decimalSeparator: decimalSeparator}" />
 		{{/if}}
 		{{if type === 'bool'}}
-			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: ['true', 'false'], optionsCaption: 'Both'"></select>
+			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: ['true', 'false'],
+															optionsCaption: 'All'"></select>
 		{{/if}}
 		{{if type === 'enum'}}
-			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: options, optionsCaption: 'None'"></select>
+			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: options, optionsCaption: 'All'"></select>
 		{{/if}}
 		{{if type === 'date'}}
 			<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, datepicker: {dateFormat: date_format}" />
@@ -49,12 +50,12 @@
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: 'None'"></select>
+													optionsCaption: 'All'"></select>
 			{{else}}
 			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: 'None'"></select>
+													optionsCaption: 'All'"></select>
 			{{/if}}
 		{{/if}}
 		{{if type === 'has_many_and_belongs_to'}}
