@@ -19,6 +19,7 @@ abstract class Field {
 		'time' => 'Admin\\Libraries\\Fields\\Time',
 		'datetime' => 'Admin\\Libraries\\Fields\\Time',
 		'number' => 'Admin\\Libraries\\Fields\\Number',
+		'bool' => 'Admin\\Libraries\\Fields\\Bool',
 		'image' => 'Admin\\Libraries\\Fields\\Image',
 		'multi_image' => 'Admin\\Libraries\\Fields\\MultiImage',
 		'file' => 'Admin\\Libraries\\Fields\\File',

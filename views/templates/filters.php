@@ -20,6 +20,11 @@
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
 		{{/if}}
+		{{if type === 'bool'}}
+			<select id="filter_field_${ field }" data-bind="value: value, chosen: true,
+													options: ['true', 'false'],
+													optionsCaption: 'None'"></select>
+		{{/if}}
 		{{if type === 'date'}}
 			<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, datepicker: {dateFormat: date_format}" />
 			<span>to</span>

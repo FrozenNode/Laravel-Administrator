@@ -59,6 +59,9 @@
 																			thousandsSeparator: thousandsSeparator,
 																			decimalSeparator: decimalSeparator}" />
 			{{/if}}
+			{{if type === 'bool'}}
+				<input type="checkbox" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, checked: $root[key]" />
+			{{/if}}
 			{{if type === 'date'}}
 				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
 																			datepicker: {dateFormat: date_format}" />

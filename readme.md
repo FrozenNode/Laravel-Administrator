@@ -225,7 +225,7 @@ The available options are:
 
 ##### Common
 - **title**
-- **type**: default is 'text'. Choices are: relationship, text, textarea, date, time, datetime, number
+- **type**: default is 'text'. Choices are: relationship, text, textarea, date, time, datetime, number, bool
 
 ##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
@@ -251,6 +251,10 @@ public $edit = array(
 	'email',
 	'name' => array(
 		'title' => 'Name',
+	),
+	'is_good' => array(
+		'title' => 'Is Good',
+		'type' => 'bool',
 	),
 	'birthdate' => array(
 		'title' => 'Birth Date',
@@ -434,6 +438,17 @@ The relationship field should have the relationship's method name as its index. 
 
 The number field should be a numeric field in your database (normally something like Decimal(precision, scale)). The symbol will be displayed before the number if present.
 
+#### bool
+
+<pre>
+'is_good' => array(
+	'type' => 'bool',
+	'title' => 'Is Good',
+)
+</pre>
+
+The bool field should be an integer field (usually tinyint(1) or whatever your db supports).
+
 #### date
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-date.png" />
@@ -494,6 +509,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ### 2.2.0
 - There is now an autocomplete option for relationships with a lot of potential values
+- New 'bool' field type
 - New 'textarea' field type
 - Added 'limit' option for text/textarea field types
 - Bugfix: Multiple commas in number fields were messing up the values
