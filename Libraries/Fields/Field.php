@@ -20,6 +20,7 @@ abstract class Field {
 		'datetime' => 'Admin\\Libraries\\Fields\\Time',
 		'number' => 'Admin\\Libraries\\Fields\\Number',
 		'bool' => 'Admin\\Libraries\\Fields\\Bool',
+		'enum' => 'Admin\\Libraries\\Fields\\Enum',
 		'image' => 'Admin\\Libraries\\Fields\\Image',
 		'multi_image' => 'Admin\\Libraries\\Fields\\MultiImage',
 		'file' => 'Admin\\Libraries\\Fields\\File',

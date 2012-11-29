@@ -225,13 +225,16 @@ The available options are:
 
 ##### Common
 - **title**
-- **type**: default is 'text'. Choices are: relationship, text, textarea, date, time, datetime, number, bool
+- **type**: default is 'text'. Choices are: relationship, text, textarea, date, time, datetime, number, bool, enum
 
 ##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
 - **autocomplete**: default is false. If this is true, the related items won't be prefilled. The user will have to start typing some values which will then be used to create suggestions
 - **num_options**: default is 10. If autocomplete is on, this is the number of items to show
 - **search_fields**: default is array(name_field). Must be an array. You can supply an on-table column name or a raw SQL function like CONCAT(first_name, ' ', last_name)
+
+##### Enum
+- **options**: default is an empty array. Must be an array of values that can be converted into strings
 
 ##### Text/Textarea
 - **limit**: default is 0 (i.e. no character limit).
@@ -255,6 +258,11 @@ public $edit = array(
 	'is_good' => array(
 		'title' => 'Is Good',
 		'type' => 'bool',
+	),
+	'season' => array(
+		'title' => 'Season',
+		'type' => 'enum',
+		'options' => array('Winter', 'Spring', 'Summer', 'Fall'), //must be an array
 	),
 	'birthdate' => array(
 		'title' => 'Birth Date',
@@ -449,6 +457,18 @@ The number field should be a numeric field in your database (normally something 
 
 The bool field should be an integer field (usually tinyint(1) or whatever your db supports).
 
+#### enum
+
+<pre>
+'season' => array(
+	'title' => 'Season',
+	'type' => 'enum',
+	'options' => array('Winter', 'Spring', 'Summer', 'Fall'), //must be an array
+)
+</pre>
+
+The enum field gives the user a permanent limited selection of items from which to choose.
+
 #### date
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-date.png" />
@@ -510,6 +530,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 ### 2.2.0
 - There is now an autocomplete option for relationships with a lot of potential values
 - New 'bool' field type
+- New 'enum' field type
 - New 'textarea' field type
 - Added 'limit' option for text/textarea field types
 - Bugfix: Multiple commas in number fields were messing up the values
