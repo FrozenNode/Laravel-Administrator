@@ -66,6 +66,11 @@
 			 */
 			itemLink: ko.observable(null),
 
+			/* The expand width of the edit area
+			 * int
+			 */
+			expandWidth: ko.observable(null),
+
 			/* The primary key value for this model
 			 * string
 			 */
@@ -557,6 +562,7 @@
 			this.viewModel.editFields(adminData.edit_fields);
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
+			this.viewModel.expandWidth(adminData.expand_width);
 			this.viewModel.primaryKey = adminData.primary_key;
 
 			//now that we have most of our data, we can set up the computed values

@@ -18,12 +18,19 @@
 			sortOptions: <?php echo json_encode($sort) ?>,
 			model_name: "<?php echo $modelName ?>",
 			model_title: "<?php echo $modelTitle ?>",
+			expand_width: <?php echo $expandWidth ?>,
 			filters: <?php echo json_encode($filters); ?>,
 			edit_fields: <?php echo json_encode($editFields); ?>,
 			data_model: <?php echo json_encode($dataModel); ?>,
 			column_model: <?php echo json_encode($columns); ?>
 		};
 </script>
+
+<style type="text/css">
+	div.item_edit div.edit_form select[multiple="true"] {
+		width: <?php echo $expandWidth - 65?>px;
+	}
+</style>
 
 <?php echo Form::token() ?>
 

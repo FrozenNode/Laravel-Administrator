@@ -44,6 +44,6 @@
 	</div>
 </div>
 
-<div class="item_edit_container" data-bind="itemTransition: activeItem() !== null || loadingItem()">
-	<div class="item_edit" data-bind="template: 'itemFormTemplate'"></div>
+<div class="item_edit_container" data-bind="itemTransition: activeItem() !== null || loadingItem(), style: {width: expandWidth() + 'px'}">
+	<div class="item_edit" data-bind="template: 'itemFormTemplate', style: {width: (expandWidth() - 27) + 'px'}"></div>
 </div>

@@ -139,6 +139,7 @@ View::composer('administrator::index', function($view)
 	$view->filters = ModelHelper::getFilters($modelInstance);
 	$view->baseUrl = URL::to_route('admin_index');
 	$view->bundleHandles = $bundleConfig['handles'];
+	$view->expandWidth = ModelHelper::getExpandWidth($modelInstance);
 	$view->modelInstance = $modelInstance;
 	$view->model = isset($view->model) ? $view->model : false;
 

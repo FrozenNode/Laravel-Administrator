@@ -7,20 +7,25 @@
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel)
 		{
 			var $element = $(element),
-				$child = $element.find('.item_edit');
+				$child = $element.find('.item_edit'),
+				$tableContainer = $('div.table_container'),
+				expandWidth = viewModel.expandWidth();
 
 			//if the value is false, we want to hide the form, otherwise show it
 			if (!valueAccessor())
 			{
-				$child.stop().animate({marginLeft: 288}, 150, function() {
+				$child.stop().animate({marginLeft: expandWidth + 2}, 150, function() {
 					$element.hide();
 				});
+
+				$tableContainer.stop().animate({marginRight: 290}, 150);
 			}
 			else
 			{
 				viewModel.editFormClosed = true;
 				$element.show();
 				$child.stop().animate({marginLeft: 2}, 150);
+				$tableContainer.stop().animate({marginRight: expandWidth + 5}, 150);
 			}
 		}
 	};
@@ -196,6 +201,16 @@
 
 			$(element).val(val);
 			allBindingsAccessor().value(val);
+		}
+	};
+
+	/**
+	 * The wysiwyg binding makes the field a redactor wysiwyg
+	 */
+	ko.bindingHandlers.wysiwyg = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+
 		}
 	};
 })(jQuery);

@@ -384,6 +384,14 @@ public $sortOptions = array(
 
 Naturally, this is only the initial sort. As the user interacts with the table, it will change.
 
+#### $expand (not required)
+
+The $expand property, when used, determines how wide the edit area should be for a model. It can either be set to boolean true to accept the default expand (which is 500px), or it can be set to an integer above 285 (which is the size of the filter area that the edit box covers). This is useful if you want some extra space for a textarea type, a has_many_and_belongs_to relationship with many possible items, etc.
+
+<pre>
+public $expand = 400;
+</pre>
+
 
 #### before_delete()
 
@@ -559,6 +567,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ### 2.2.0
 - There is now an autocomplete option for relationships with a lot of potential values
+- You can now set the $expand property for a model to boolean true or any integer above 285 (i.e. pixels) to get more room for the edit form
 - New 'bool' field type
 - New 'enum' field type
 - New 'textarea' field type

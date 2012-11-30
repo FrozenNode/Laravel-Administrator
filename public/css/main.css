@@ -123,8 +123,10 @@ a { text-decoration:none; }
   left:-15px;
 }
 #admin_page div#sidebar div.panel_contents > div.min_max.datetime input[type=text] { font-size:11px; }
-#admin_page #content { margin-right:290px; }
-#admin_page #content div.table_container { position:relative; }
+#admin_page #content div.table_container {
+  position:relative;
+  margin-right:290px;
+}
 #admin_page #content div.table_container div.results_header {
   background:#efefef;
   background:-moz-linear-gradient(top,#efefef 0%,#dfe1e2 100%);
@@ -361,6 +363,7 @@ a { text-decoration:none; }
   top:23px;
   left:-15px;
 }
+#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key { margin-right:100px; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.bool label { display:inline-block; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form div.control_buttons {
   margin-top:20px;

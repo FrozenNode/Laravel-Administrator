@@ -175,6 +175,33 @@ class ModelHelper {
 	}
 
 	/**
+	 * Gets the expand width for the model
+	 *
+	 * @param object		$model
+	 *
+	 * @return int
+	 */
+	public static function getExpandWidth(&$model)
+	{
+		$defaultWidth = 285;
+
+		//check if the expand property is set
+		if (isset($model->expand))
+		{
+			if ($model->expand === true)
+			{
+				return 500;
+			}
+			else if (is_int($model->expand) && $model->expand > $defaultWidth)
+			{
+				return $model->expand;
+			}
+		}
+
+		return $defaultWidth;
+	}
+
+	/**
 	 * Gets the filters for the given model
 	 *
 	 * @param object	$model
