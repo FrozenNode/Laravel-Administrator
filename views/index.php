@@ -27,9 +27,15 @@
 </script>
 
 <style type="text/css">
-	div.item_edit div.edit_form select[multiple="true"] {
+
+	div.item_edit div.edit_form select {
 		width: <?php echo $expandWidth - 65?>px;
 	}
+
+	div.item_edit div.edit_form input[type="text"], div.item_edit div.edit_form textarea {
+		width: <?php echo $expandWidth - 75?>px;
+	}
+
 </style>
 
 <?php echo Form::token() ?>
