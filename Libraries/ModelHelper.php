@@ -96,6 +96,12 @@ class ModelHelper {
 
 							//unset the relationships so we only get back what we need
 							$model->relationships = array();
+
+							//include the item link if one exists
+							if (method_exists($model, 'create_link'))
+							{
+								$model->set_attribute('admin_item_link', $model->create_link());
+							}
 						}
 					}
 				}

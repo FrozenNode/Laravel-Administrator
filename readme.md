@@ -397,6 +397,21 @@ public function before_delete()
 }
 </pre>
 
+#### create_link()
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/create-link.png" />
+
+The create_link() method lets you define a model's front-end URL if applicable. If provided, this will show up as a link in the edit form as shown above.
+
+<pre>
+public function create_link()
+{
+	//here I have a named route to which I'm passing the id parameter
+	return URL::to_route('my_named_route', array($this->id));
+}
+</pre>
+
+You can construct this URL however you like. In the above example you can see that I used named routes. However, you can also build the URL manually or use controller actions. You could also just return 'http://www.google.com' for every item if that's what you want.
 
 ### Field Types
 
@@ -548,6 +563,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - New 'enum' field type
 - New 'textarea' field type
 - Added 'limit' option for text/textarea field types
+- You can now provide a create_link method in your model that should return the URL of the string of the item's front-end page
 - Bugfix: Multiple commas in number fields were messing up the values
 
 ### 2.1.0

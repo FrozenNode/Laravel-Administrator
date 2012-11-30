@@ -61,6 +61,11 @@
 			 */
 			modelTitle: ko.observable(''),
 
+			/* The link (usually front-end) associated with this item
+			 * string
+			 */
+			itemLink: ko.observable(null),
+
 			/* The primary key value for this model
 			 * string
 			 */
@@ -299,6 +304,12 @@
 							}
 						});
 
+						//set the item link if it exists
+						if (data.admin_item_link)
+						{
+							self.itemLink(data.admin_item_link);
+						}
+
 						//fixes an error where the relationships wouldn't load
 						setTimeout(function()
 						{
@@ -324,6 +335,7 @@
 				this.freezeForm(false);
 				this.statusMessage('');
 				this.statusMessageType('');
+				this.itemLink(null);
 				this.itemLoadingId(null);
 				this.activeItem(null);
 			},

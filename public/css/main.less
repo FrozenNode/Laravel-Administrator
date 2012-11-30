@@ -16,13 +16,13 @@ a{ text-decoration: none; }
 	Main Styling
 */
 body{
-	
+
 }
 
 
 /* common structure */
 #wrapper {
-	
+
 	header {
 		@verticalGradient(#6a7176, #4d5256);
 		@boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
@@ -33,7 +33,7 @@ body{
 		padding: 12px 30px 9px;
 		position: relative;
 		z-index: 900;
-		
+
 		h1 {
 			display: inline-block;
 			color: #CDCDCD;
@@ -44,21 +44,21 @@ body{
 			font-weight: normal;
 			line-height: 1;
 		}
-		
+
 		a {
 			color: #cdcdcd;
 		}
-		
+
 		ul#tabs {
 			display: inline-block;
 			height: 100%;
-			
+
 			> li {
 				display: inline-block;
 				margin-right: 4px;
 				font-size: 1.0em;
 				position: relative;
-				
+
 				a {
 					text-decoration: none;
 					padding: 6px 10px 4px 10px;
@@ -67,42 +67,42 @@ body{
 					-moz-border-radius: 10px;
 					border-radius: 10px;
 				}
-				
+
 				&.current {
 					a {
 						background: #7b8389;
 						color: #fff;
 					}
 				}
-				
+
 				&:hover {
 					> a {
 						background: #7b8389;
 						color: #fff;
 					}
 				}
-				
+
 			}
 		}
-		
+
 		#utility_nav {
 			color: #aaa;
 			float: right;
 			display: inline-block;
-			
+
 			a {
 				margin-left: 10px;
 				text-decoration: none;
-				
+
 				:hover {
 					color: #fff;
 				}
 			}
 		}
 	}
-	
+
 	footer {
-		
+
 	}
 }
 
@@ -112,19 +112,19 @@ body{
 #dashboard {
 	padding-left:30px;
 	padding-top:25px;
-	
+
 	h2 {
 		color:#444;
 		text-shadow: #DDD 0 1px 0;
 	}
-	
+
 	ul.models {
 		margin-top:20px;
-		
+
 		li {
 			display:inline-block;
 			margin-right:15px;
-			
+
 			a {
 				padding:5px 10px;
 				font-size:18px;
@@ -135,31 +135,31 @@ body{
 
 
 /*
- * Admin page 
+ * Admin page
  */
 
 #admin_page {
-	
+
 	position:relative;
-	
+
 	div#sidebar {
 		float:right;
 		margin-right:13px;
 		margin-top:25px;
 		width:245px;
-		
+
 		h2 {
 			color:#444;
 			text-shadow: #DDD 0 1px 0;
 		}
-		
+
 		div.panel_contents {
 			> div {
 				margin-bottom:10px;
 				position:relative;
-				
+
 				&.min_max {
-					
+
 					input[type=text] {
 						width: 90px;
 					}
@@ -179,13 +179,13 @@ body{
 			}
 		}
 	}
-	
+
 	#content {
 		margin-right:290px;
-		
+
 		div.table_container {
 			position:relative;
-			
+
 			div.results_header {
 				@verticalGradient(#efefef, #dfe1e2);
 				@boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
@@ -200,26 +200,26 @@ body{
 				position: relative;
 				z-index: 800;
 				margin-bottom: 3px;
-				
+
 				h2 {
 					padding: 10px 15px;
 					display: inline-block;
 				}
-				
+
 				div.paginator {
 					display: inline-block;
 					margin-left: 20px;
-					
+
 					input {
 						display: inline-block;
 						vertical-align: baseline;
-						
+
 						&[type=text] {
 							width:30px;
 						}
 					}
 				}
-				
+
 				a.new_item {
 					@verticalGradient(#fdfdfd, #e8e8e8);
 					@boxShadow(0, 1px, 0px, rgba(0, 0, 0, 0.1));
@@ -241,12 +241,12 @@ body{
 					position:absolute;
 					top:10px;
 					right:25px;
-					
+
 					&:hover {
 						color: #444;
 						@verticalGradient(#fdfdfd, #eaeaea);
 					}
-					
+
 					&:active {
 						@verticalGradient(#fcfcfc, #e5e4e5);
 						-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
@@ -257,13 +257,13 @@ body{
 					}
 				}
 			}
-			
+
 			table.results {
 				width: 100%;
 				margin-bottom: 10px;
 				border: 0;
 				border-spacing: 0;
-				
+
 				th {
 					@verticalGradient(#efefef, #dfe1e2);
 					text-shadow: white 0 1px 0;
@@ -281,14 +281,14 @@ body{
 					color: #5e6469;
 					padding: 5px 12px 3px 12px;
 					text-align: left;
-					
+
 					div {
 						color: #5e6469;
 						text-decoration: none;
 						display: block;
 						white-space: nowrap;
 					}
-					
+
 					&.sortable {
 						cursor: pointer;
 
@@ -298,56 +298,56 @@ body{
 							cursor:pointer;
 						}
 					}
-					
+
 					&.sorted-asc, &.sorted-desc {
 						@verticalGradient(#e2e2e2, #d2d4d6);
 					}
-					
+
 					&.sorted-asc {
 						div {
 							background-position: 0 -27px;
 						}
 					}
-					
+
 					&.sorted-desc {
 						div {
 							background-position: 0 -56px;
 						}
 					}
-					
+
 					&:last-child {
 						border-right: solid 1px #d4d4d4;
 					}
 				}
-				
+
 				tr.result {
 					cursor:pointer;
-					
+
 					td {
 						padding: 10px 12px 8px 12px;
 						border-bottom: 1px solid #e8e8e8;
 						vertical-align: top;
 					}
-					
+
 					&.even {
 						td {
 							background: #f4f5f5;
 						}
 					}
-					
+
 					&.selected {
 						td {
 							background: #d9e4ec;
 						}
 					}
-					
+
 					&:hover {
 						outline:1px solid #ddd;
 					}
-					
+
 				}
 			}
-			
+
 			div.loading_rows {
 				position:absolute;
 				top:60px;
@@ -360,7 +360,7 @@ body{
 				filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 				filter:alpha(opacity=50);
 				text-align:center;
-				
+
 				> div {
 					position:absolute;
 					top:45%;
@@ -371,7 +371,7 @@ body{
 					text-shadow: #000 1px 1px 1px;
 				}
 			}
-			
+
 			div.no_results {
 				position:absolute;
 				top:120px;
@@ -379,16 +379,16 @@ body{
 				right:0;
 				bottom:0;
 				text-align:center;
-				
+
 				> div {
 					color:#444;
 					font-size:28px;
 					text-shadow: #ddd 1px 1px 1px;
 				}
 			}
-			
+
 		}
-		
+
 		/* edit form */
 		div.item_edit_container {
 			display:none;
@@ -397,7 +397,7 @@ body{
 			right:0;
 			width:285px;
 			overflow:hidden;
-			
+
 			div.item_edit {
 				position:relative;
 				padding-top:25px;
@@ -408,15 +408,21 @@ body{
 				@boxShadow(-1px, 1px, 2px, rgba(0, 0, 0, 0.4));
 				margin-left:2px;
 				margin-bottom:2px;
-				
+
 				div.edit_form {
 					color: #444;
 					text-shadow: white 0 1px 0;
-					
+
+					a.item_link {
+						position: absolute;
+						top:61px;
+						right:41px;
+					}
+
 					> div {
 						margin-bottom:10px;
 						position:relative;
-						
+
 						&.number {
 							span.symbol {
 								position:absolute;
@@ -424,14 +430,20 @@ body{
 								left:-15px;
 							}
 						}
+
+						&.key, &.bool {
+							label {
+								display:inline-block;
+							}
+						}
 					}
-					
+
 					div.control_buttons {
 						margin-top:20px;
 						padding-bottom:20px;
 					}
 				}
-				
+
 				div.loading {
 					position: absolute;
 					top: 200px;
@@ -440,6 +452,6 @@ body{
 				}
 			}
 		}
-		
+
 	}
 }

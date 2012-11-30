@@ -347,6 +347,11 @@ a { text-decoration:none; }
   color:#444444;
   text-shadow:white 0 1px 0;
 }
+#admin_page #content div.item_edit_container div.item_edit div.edit_form a.item_link {
+  position:absolute;
+  top:61px;
+  right:41px;
+}
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div {
   margin-bottom:10px;
   position:relative;
@@ -356,6 +361,7 @@ a { text-decoration:none; }
   top:23px;
   left:-15px;
 }
+#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.bool label { display:inline-block; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form div.control_buttons {
   margin-top:20px;
   padding-bottom:20px;

@@ -4,10 +4,14 @@
 	<h2 data-bind="text: $root[$root.primaryKey]() ? 'Edit' : 'Create New'"></h2>
 
 	{{if $root[$root.primaryKey]()}}
-	<div>
-		<label>ID:</label>
-		<span>${$root[$root.primaryKey]}</span>
-	</div>
+		{{if $root.itemLink()}}
+			<a href="${$root.itemLink()}" class="item_link" target="_blank">View Item</a>
+		{{/if}}
+
+		<div class="key">
+			<label>ID:</label>
+			<span>${$root[$root.primaryKey]}</span>
+		</div>
 	{{/if}}
 
 	{{each(key, field) editFields}}
