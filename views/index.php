@@ -32,6 +32,11 @@
 		width: <?php echo $expandWidth - 65?>px;
 	}
 
+
+	div.item_edit div.edit_form .cke {
+		width: <?php echo $expandWidth - 67?>px;
+	}
+
 	div.item_edit div.edit_form input[type="text"], div.item_edit div.edit_form textarea {
 		width: <?php echo $expandWidth - 75?>px;
 	}

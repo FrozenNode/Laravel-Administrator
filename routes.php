@@ -84,6 +84,9 @@ Route::filter('add_assets', function()
 	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');
 	$assets->add('jquery.ui.timepicker', 'js/jquery/jquery-ui-timepicker-addon.js');
 
+	$assets->add('ckeditor', 'js/ckeditor/ckeditor.js');
+	$assets->add('ckeditor-jquery', 'js/ckeditor/adapters/jquery.js');
+
 	$assets->add('knockout', 'js/knockout/knockout-2.2.0.js');
 	$assets->add('knockout-mapping', 'js/knockout/knockout.mapping.js');
 	$assets->add('knockout-notification', 'js/knockout/KnockoutNotification.knockout.min.js');

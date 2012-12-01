@@ -229,7 +229,7 @@ The available options are:
 
 ##### Common
 - **title**
-- **type**: default is 'text'. Choices are: relationship, text, textarea, date, time, datetime, number, bool, enum
+- **type**: default is 'text'. Choices are: relationship, text, textarea, wysiwyg, date, time, datetime, number, bool, enum
 
 ##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
@@ -437,7 +437,32 @@ This is a list of all the field types that you can use in the $edit array.
 )
 </pre>
 
-This is the default type. It has no unique options. Soon there will be an option to have different text input types and text size limits.
+This is the default type. You can set a character limit by providing an integer value to the 'limit' option
+
+#### textarea
+
+<pre>
+'name' => array(
+	'type' => 'textarea',
+	'title' => 'Name',
+	'limit' => 500,
+)
+</pre>
+
+The textarea is basically the same thing as a text type, except it uses a textarea.
+
+#### wysiwyg
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-wysiwyg.png" />
+
+<pre>
+'name' => array(
+	'type' => 'wysiwyg',
+	'title' => 'Name',
+)
+</pre>
+
+The wysiwyg type is a text field that uses CKEditor. If you use this field you'll likely want to also set the $expand property so that the wysiwyg has enough space on the page.
 
 #### relationship
 
@@ -570,6 +595,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - You can now set the $expand property for a model to boolean true or any integer above 285 (i.e. pixels) to get more room for the edit form
 - New 'bool' field type
 - New 'enum' field type
+- New 'wysiwyg' field type
 - New 'textarea' field type
 - Added 'limit' option for text/textarea field types
 - You can now provide a create_link method in your model that should return the URL of the string of the item's front-end page

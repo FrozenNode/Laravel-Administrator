@@ -205,12 +205,41 @@
 	};
 
 	/**
-	 * The wysiwyg binding makes the field a redactor wysiwyg
+	 * The wysiwyg binding makes the field a ckeditor wysiwyg
 	 */
 	ko.bindingHandlers.wysiwyg = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		init: function (element, valueAccessor, allBindingsAccessor, context)
 		{
+			var value = ko.utils.unwrapObservable(valueAccessor()),
+				$element = $(element);
 
+			$element.html(value);
+			$element.ckeditor();
+
+			var editor = $element.ckeditorGet();
+
+			//handle edits made in the editor
+			editor.on('blur', function (e)
+			{
+				if (ko.isWriteableObservable(this))
+				{
+					this($(e.listenerData).val());
+				}
+			}, valueAccessor(), element);
+
+			//destroy the existing editor if the DOM node is removed
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+				var existingEditor = CKEDITOR.instances[element.name];
+
+				if (existingEditor)
+					existingEditor.destroy(true);
+			});
+		},
+		update: function (element, valueAccessor, allBindingsAccessor, context)
+		{
+			//handle programmatic updates to the observable
+			var value = ko.utils.unwrapObservable(valueAccessor());
+			$(element).html(value);
 		}
 	};
 })(jQuery);
