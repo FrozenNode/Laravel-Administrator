@@ -441,6 +441,8 @@ This is the default type. You can set a character limit by providing an integer 
 
 #### textarea
 
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-textarea.png" />
+
 <pre>
 'name' => array(
 	'type' => 'textarea',
@@ -500,6 +502,8 @@ The number field should be a numeric field in your database (normally something 
 
 #### bool
 
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-bool.png" />
+
 <pre>
 'is_good' => array(
 	'type' => 'bool',
@@ -510,6 +514,8 @@ The number field should be a numeric field in your database (normally something 
 The bool field should be an integer field (usually tinyint(1) or whatever your db supports).
 
 #### enum
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-enum.png" />
 
 <pre>
 'season' => array(
