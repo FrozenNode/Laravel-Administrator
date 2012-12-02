@@ -42,7 +42,7 @@ Once the bundle is installed, create a new file in your application config calle
 
 ### Config
 
-The configuration is detailed below. The models array requires a 'title' and a 'model' key, both of which are strings, and the latter being the fully-qualified class name of your admin model. It also accepts an optional 'permission_check' property which should be a function that returns a boolean which Administrator uses to determine if the current user is allowed to access this model. This runs in after the catch-all auth_check, so you don't need to check for general authentication again in the model's permission_check. If the model can be accessed by all users who pass the auth_check, then you don't need to provide a permission_check for that model.
+The configuration is detailed below. The models array requires a 'title' and a 'model' key, both of which are strings, and the latter being the fully-qualified class name of your admin model. It also accepts an optional 'permission_check' property which should be a function that returns a boolean which Administrator uses to determine if the current user is allowed to access this model. This runs after the auth_check function, so you don't need to check for general authentication again in the model's permission_check. If the model can be accessed by all users who pass the auth_check, then you don't need to provide a permission_check for that model.
 
 <pre>
 /**
