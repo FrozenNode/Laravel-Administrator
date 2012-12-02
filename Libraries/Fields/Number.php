@@ -52,8 +52,8 @@ class Number extends Field {
 
 		$this->symbol = array_get($info, 'symbol', $this->symbol);
 		$this->decimals = array_get($info, 'decimals', $this->decimals);
-		$this->decimalSeparator = array_get($info, 'decimalSeparator', $this->decimalSeparator);
-		$this->thousandsSeparator = array_get($info, 'thousandsSeparator', $this->thousandsSeparator);
+		$this->decimalSeparator = array_get($info, 'decimal_separator', $this->decimalSeparator);
+		$this->thousandsSeparator = array_get($info, 'thousands_separator', $this->thousandsSeparator);
 		$this->minValue = $this->minValue ? str_replace(',', '', $this->minValue) : $this->minValue;
 		$this->maxValue = $this->maxValue ? str_replace(',', '', $this->maxValue) : $this->maxValue;
 	}
@@ -67,7 +67,19 @@ class Number extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = is_null($input) ? '' : str_replace(',', '', $input);
+		$model->{$this->field} = is_null($input) ? '' : $this->parseNumber($input);
+	}
+
+	/**
+	 * Parses a user-supplied number into the required SQL format with no commas for thousands and a . for decimals
+	 *
+	 * @param string	$number
+	 *
+	 * @return string
+	 */
+	private function parseNumber($number)
+	{
+		return str_replace($this->decimalSeparator, '.', str_replace($this->thousandsSeparator, '', $number));
 	}
 
 	/**

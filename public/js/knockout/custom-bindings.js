@@ -125,7 +125,18 @@
 		{
 			var options = valueAccessor(),
 				value = allBindingsAccessor().value(),
-				floatVal = value === null || value === false ? parseFloat(value) : parseFloat(value.split(',').join(''));
+				floatVal;
+
+			//if this is a null or false value, run a parseFloat on it so we can check for isNaN later
+			if (value === null || value === false)
+			{
+				floatVal = parseFloat(value);
+			}
+			//else we will try to parse the number using the user-supplied thousands and decimal separators
+			else
+			{
+				floatVal = value.toString().split(options.thousandsSeparator).join('').split(options.decimalSeparator).join('.');
+			}
 
 			//if the value is not a number, set the value equal to ''
 			if (isNaN(floatVal))
@@ -135,9 +146,10 @@
 					$(element).val('');
 				}
 			}
+			//else set up the value up using the accounting library with the user-supplied separators
 			else
 			{
-				$(element).val(accounting.formatMoney(floatVal, "", 2, ",", "."));
+				$(element).val(accounting.formatMoney(floatVal, "", options.decimals, options.thousandsSeparator, options.decimalSeparator));
 			}
 		}
 	};

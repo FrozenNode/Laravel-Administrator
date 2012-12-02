@@ -253,9 +253,9 @@ The available options are:
 
 ##### Numbers
 - **symbol**: default is NULL. Only use this for 'number' field type.
-- **decimals**: default is 2. Only use this for 'number' field type.
-- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
-- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
+- **decimals**: default is 0. Only use this for 'number' field type.
+- **thousands_separator**: default is ','. Only use this for 'number' field type.
+- **decimal_separator**: default is '.'. Only use this for 'number' field type.
 
 ##### Date/Time
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
@@ -503,10 +503,12 @@ The relationship field should have the relationship's method name as its index. 
 	'title' => 'Price',
 	'symbol' => '$', //symbol shown in front of the number
 	'decimals' => 2, //the number of digits after the decimal point
+	'thousands_separator' => ',',
+	'decimal_separator' => '.',
 )
 </pre>
 
-The number field should be a numeric field in your database (normally something like Decimal(precision, scale)). The symbol will be displayed before the number if present.
+The number field should be a numeric field (integer, decimal, float) in your database. The symbol will be displayed before the number if present. The decimal separator will be used if the decimal value is above 0.
 
 #### bool
 
@@ -615,6 +617,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - You can now provide a create_link method in your model that should return the URL of the string of the item's front-end page
 - You can now optionally provide a 'permission_check' closure for each model in the config. This works just like auth_check but on a per-model basis. If provided, and if it evaluates to false, the user will be redirected back to the admin dashboard.
 - Bugfix: Multiple commas in number fields were messing up the values
+- Bugfix: The custom binding for the number field now uses the user-supplied fields like decimals, thousands_separator, and decimal_separator.
 
 ### 2.1.0
 - You can no longer use has_one or has_many fields in the $edit property. This is because those relationships require a new item to be created on the other table.
