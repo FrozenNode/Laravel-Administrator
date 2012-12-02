@@ -4,15 +4,16 @@ use Admin\Libraries\Fields\Field;
 use Admin\Libraries\Column;
 use Admin\Libraries\Sort;
 
-//The admin group for all REST calls
-Route::group(array('before' => 'validate_admin|add_assets'), function()
-{
-	//Admin Dashboard
-	Route::get('(:bundle)', array(
-		'as' => 'admin_dashboard',
-		'uses' => 'administrator::admin@dashboard'
-	));
+//Admin Dashboard
+Route::get('(:bundle)', array(
+	'as' => 'admin_dashboard',
+	'uses' => 'administrator::admin@dashboard',
+	'before' => 'validate_admin|add_assets', //only needs to validate admin and add assets
+));
 
+//The route group for all other requests needs to validate admin, model, and add assets
+Route::group(array('before' => 'validate_admin|validate_model|add_assets'), function()
+{
 	//Model Index
 	Route::get('(:bundle)/(:any)', array(
 		'as' => 'admin_index',
@@ -32,7 +33,7 @@ Route::group(array('before' => 'validate_admin|add_assets'), function()
 	));
 
 	//Search Relationship Items
-	Route::get('(:bundle)/search_relation/(:any)/(:any)/(:any)', array(
+	Route::get('(:bundle)/(:any)/search_relation/(:any)/(:any)', array(
 		'as' => 'admin_search_relation',
 		'uses' => 'administrator::admin@search_relation'
 	));
@@ -100,18 +101,39 @@ Route::filter('add_assets', function()
 	$assets->add('admin', 'js/admin.js');
 });
 
+
+//validate_admin filter
 Route::filter('validate_admin', function ()
 {
 	//get the admin check closure that should be supplied in the config
-	$auth_check = Config::get('administrator::administrator.auth_check');
+	$authCheck = Config::get('administrator::administrator.auth_check');
 
-	if (!$auth_check())
+	if (!$authCheck())
 	{
-		$login_url = URL::to(Config::get('administrator::administrator.login_path', 'user/login'));
-		$redirect_key = Config::get('administrator::administrator.login_redirect_key', 'redirect');
-		$redirect_uri = URL::to_route('admin_dashboard');
+		$loginUrl = URL::to(Config::get('administrator::administrator.login_path', 'user/login'));
+		$redirectKey = Config::get('administrator::administrator.login_redirect_key', 'redirect');
+		$redirectUri = URL::to_route('admin_dashboard');
 
-		return Redirect::to($login_url)->with($redirect_key, $redirect_uri);
+		return Redirect::to($loginUrl)->with($redirectKey, $redirectUri);
+	}
+});
+
+//validate_model filter
+Route::filter('validate_model', function ()
+{
+	$modelName = URI::segment(2);
+	$model = ModelHelper::getModelInstance($modelName);
+
+	//if the model doesn't exist at all, redirect to 404
+	if (!$model)
+	{
+		return Response::error('404');
+	}
+
+	//if the model does exist, check if this user has permission to access it
+	if (!ModelHelper::checkPermission($modelName))
+	{
+		Redirect::to_route('admin_dashboard');
 	}
 });
 

@@ -42,6 +42,8 @@ Once the bundle is installed, create a new file in your application config calle
 
 ### Config
 
+The configuration is detailed below. The models array requires a 'title' and a 'model' key, both of which are strings, and the latter being the fully-qualified class name of your admin model. It also accepts an optional 'permission_check' property which should be a function that returns a boolean which Administrator uses to determine if the current user is allowed to access this model. This runs in after the catch-all auth_check, so you don't need to check for general authentication again in the model's permission_check. If the model can be accessed by all users who pass the auth_check, then you don't need to provide a permission_check for that model.
+
 <pre>
 /**
  * Page title
@@ -61,6 +63,7 @@ Once the bundle is installed, create a new file in your application config calle
  * 'user' => array(
  * 		'title' => 'Users', //The title that will be used when displaying the model's page
  * 		'model' => 'AdminModels\\User', //The string class name of the model you will be using. If you wish to extend your app models directly, you can just pass in 'User'. Beware, though: your model will need to have the required properties on it for Administrator to recognize it.
+ *  	'permission_check' => function() { ... }, //[OPTIONAL] Return bool true if the current user is allowed to access this model. False otherwise
  * )
  */
 'models' => array(
@@ -71,6 +74,11 @@ Once the bundle is installed, create a new file in your application config calle
 	'role' => array(
 		'title' => 'Roles',
 		'model' => 'AdminModels\\Role',
+		'permission_check' => function()
+		{
+			//An example permission check using the Authority bundle:
+			return Auth::user()->has_role('superadmin');
+		}
 	),
 	'hat' => array(
 		'title' => 'Hats',
@@ -87,7 +95,7 @@ Once the bundle is installed, create a new file in your application config calle
  *
  * @type closure
  *
- * This is a closure that should return true if the current user is allowed to view the admin section. If this fails, it will redirect the user to the login_path.
+ * This is a closure that should return true if the current user is allowed to view the admin section. If this fails, it will redirect the user to the login_path. This is run prior to the model's permission_check closure (if provided). Consider this a catch-all for the entire admin section.
  */
 'auth_check'=> function()
 {
@@ -605,6 +613,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - New 'textarea' field type
 - Added 'limit' option for text/textarea field types
 - You can now provide a create_link method in your model that should return the URL of the string of the item's front-end page
+- You can now optionally provide a 'permission_check' closure for each model in the config. This works just like auth_check but on a per-model basis. If provided, and if it evaluates to false, the user will be redirected back to the admin dashboard.
 - Bugfix: Multiple commas in number fields were messing up the values
 
 ### 2.1.0

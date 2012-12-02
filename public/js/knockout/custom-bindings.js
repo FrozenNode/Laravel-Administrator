@@ -50,7 +50,7 @@
 				minTermLength: 1,
 				afterTypeDelay: 50,
 				type: 'GET',
-				url: base_url + 'search_relation/' + adminData.model_name + '/' + options.field + '/' + options.type,
+				url: base_url + adminData.model_name + '/search_relation/' + options.field + '/' + options.type,
 				dataType: 'json',
 				fillData: function()
 				{

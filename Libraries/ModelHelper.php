@@ -134,6 +134,21 @@ class ModelHelper {
 	}
 
 	/**
+	 * Checks if a user has permission to access a model
+	 *
+	 * @param string	$modelName
+	 *
+	 * @return bool
+	 */
+	public static function checkPermission($modelName)
+	{
+		//grab the config item if it exists
+		$permissionCheck = Config::get('administrator::administrator.models.'.$modelName.'.permission_check', false);
+
+		return $permissionCheck && !$permissionCheck() ? false : true;
+	}
+
+	/**
 	 * Gets all necessary fields
 	 *
 	 * @param string		$modelName
