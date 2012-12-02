@@ -253,9 +253,9 @@ The available options are:
 
 ##### Numbers
 - **symbol**: default is NULL. Only use this for 'number' field type.
-- **decimals**: default is 2. Only use this for 'number' field type.
-- **thousandsSeparator**: default is ','. Only use this for 'number' field type.
-- **decimalSeparator**: default is '.'. Only use this for 'number' field type.
+- **decimals**: default is 0. Only use this for 'number' field type.
+- **thousands_separator**: default is ','. Only use this for 'number' field type.
+- **decimal_separator**: default is '.'. Only use this for 'number' field type.
 
 ##### Date/Time
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
@@ -503,10 +503,12 @@ The relationship field should have the relationship's method name as its index. 
 	'title' => 'Price',
 	'symbol' => '$', //symbol shown in front of the number
 	'decimals' => 2, //the number of digits after the decimal point
+	'thousands_separator' => ',',
+	'decimal_separator' => '.',
 )
 </pre>
 
-The number field should be a numeric field in your database (normally something like Decimal(precision, scale)). The symbol will be displayed before the number if present.
+The number field should be a numeric field (integer, decimal, float) in your database. The symbol will be displayed before the number if present. The decimal separator will be used if the decimal value is above 0.
 
 #### bool
 
