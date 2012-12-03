@@ -250,6 +250,7 @@ The available options are:
 
 ##### Text/Textarea/Markdown
 - **limit**: default is 0 (i.e. no character limit).
+- **height**: default is 100. Supply any integer value which will be the height in pixels. Only applies to textarea and markdown fields.
 
 ##### Numbers
 - **symbol**: default is NULL. Only use this for 'number' field type.
@@ -456,6 +457,7 @@ This is the default type. You can set a character limit by providing an integer 
 	'type' => 'textarea',
 	'title' => 'Name',
 	'limit' => 500,
+	'height' => 130, //default is 100
 )
 </pre>
 
@@ -482,6 +484,7 @@ The wysiwyg type is a text field that uses CKEditor. If you use this field you'l
 'name' => array(
 	'type' => 'markdown',
 	'title' => 'Name',
+	'height' => 200, //default is 100
 )
 </pre>
 
@@ -628,6 +631,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - New 'textarea' field type
 - New 'markdown' field type
 - Added 'limit' option for text/textarea/markdown field types
+- Added 'height' option for textarea/markdown field types (pixels as an integer)
 - You can now provide a create_link method in your model that should return the URL of the string of the item's front-end page
 - You can now optionally provide a 'permission_check' closure for each model in the config. This works just like auth_check but on a per-model basis. If provided, and if it evaluates to false, the user will be redirected back to the admin dashboard.
 - Bugfix: Multiple commas in number fields were messing up the values

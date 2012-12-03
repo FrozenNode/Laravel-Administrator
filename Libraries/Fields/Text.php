@@ -11,6 +11,13 @@ class Text extends Field {
 	public $limit = 0;
 
 	/**
+	 * The starting height of the textarea (if applicable)
+	 *
+	 * @var string
+	 */
+	public $height = 100;
+
+	/**
 	 * Constructor function
 	 *
 	 * @param string|int	$field
@@ -56,6 +63,7 @@ class Text extends Field {
 		$arr = parent::toArray();
 
 		$arr['limit'] = $this->limit;
+		$arr['height'] = $this->height;
 
 		return $arr;
 	}
