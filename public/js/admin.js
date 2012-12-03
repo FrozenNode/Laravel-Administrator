@@ -28,10 +28,16 @@
 		 * Filters view model
 		 */
 		filtersViewModel: {
+
 			/* The filters for the current result set
 			 * array
 			 */
 			filters: ko.observableArray(),
+
+			/* The options lists for any fields
+			 * object
+			 */
+			listOptions: {},
 		},
 
 		/*
@@ -55,6 +61,21 @@
 			 */
 			modelTitle: ko.observable(''),
 
+			/* The title for single items of this model
+			 * string
+			 */
+			modelSingle: ko.observable(''),
+
+			/* The link (usually front-end) associated with this item
+			 * string
+			 */
+			itemLink: ko.observable(null),
+
+			/* The expand width of the edit area
+			 * int
+			 */
+			expandWidth: ko.observable(null),
+
 			/* The primary key value for this model
 			 * string
 			 */
@@ -69,6 +90,11 @@
 			 * array
 			 */
 			columns: ko.observable(),
+
+			/* The options lists for any fields
+			 * object
+			 */
+			listOptions: {},
 
 			/* The current sort options
 			 * object
@@ -100,6 +126,11 @@
 			 */
 			activeItem: ko.observable(null),
 
+			/* The id of the last active item. This is set to null when an item is closed. 0 is new.
+			 * mixed (null, int)
+			 */
+			lastItem: null,
+
 			/* If this is set to true, the loading screen will be visible
 			 * bool
 			 */
@@ -120,11 +151,6 @@
 			 */
 			rowLoadingId: 0,
 
-			/* The roles available to the user
-			 * array
-			 */
-			//roles: ko.observableArray([{id: 0, name: 'User'}, {id: 1, name: 'Admin'}]),
-
 			/* If this is set to true, the form becomes uneditable
 			 * bool
 			 */
@@ -135,11 +161,6 @@
 			 */
 			statusMessage: ko.observable(''),
 			statusMessageType: ko.observable(''),
-
-			/* If the edit form has been registered as closed, this is true
-			 * bool
-			 */
-			editFormClosed: true,
 
 			/**
 			 * Saves the item with the current settings. If id is 0, the server interprets it as a new item
@@ -244,12 +265,17 @@
 			{
 				var self = this;
 
+
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
 					ko.mapping.updateData(self, self.model, self.model);
 					self.itemLoadingId(null);
 					self.activeItem(0);
+
+					//set the last item property which helps manage the animation states
+					self.lastItem = id;
+
 					return;
 				}
 
@@ -276,7 +302,26 @@
 						//set the active item and update the model data
 						self.activeItem(data[self.primaryKey]);
 						self.loadingItem(false);
+
 						ko.mapping.updateData(self, self.model, data);
+
+						//set the new options for relationships
+						$.each(adminData.edit_fields, function(ind, el)
+						{
+							if (el.relationship)
+							{
+								self.listOptions[ind](data[ind + '_options']);
+							}
+						});
+
+						//set the item link if it exists
+						if (data.admin_item_link)
+						{
+							self.itemLink(data.admin_item_link);
+						}
+
+						//set the last item property which helps manage the animation states
+						self.lastItem = id;
 
 						//fixes an error where the relationships wouldn't load
 						setTimeout(function()
@@ -303,8 +348,10 @@
 				this.freezeForm(false);
 				this.statusMessage('');
 				this.statusMessageType('');
+				this.itemLink(null);
 				this.itemLoadingId(null);
 				this.activeItem(null);
+				this.lastItem = null;
 			},
 
 			/**
@@ -478,7 +525,7 @@
 						field: el.field,
 						type: el.type,
 						value: el.value() ? el.value() : null,
-					}
+					};
 
 					//iterate over the observables to see if we should include them
 					$(observables).each(function()
@@ -524,6 +571,8 @@
 			this.viewModel.editFields(adminData.edit_fields);
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
+			this.viewModel.modelSingle(adminData.model_single);
+			this.viewModel.expandWidth(adminData.expand_width);
 			this.viewModel.primaryKey = adminData.primary_key;
 
 			//now that we have most of our data, we can set up the computed values
@@ -533,6 +582,9 @@
 			var filters = this.prepareFilters();
 
 			this.filtersViewModel.filters = ko.observableArray(filters);
+
+			//set up the relationships
+			this.initRelationships();
 
 			//set up the KO bindings
 			ko.applyBindings(this.viewModel, $('#main_content')[0]);
@@ -572,12 +624,34 @@
 					{
 						filter[obs] = ko.observable(filter[obs]);
 					}
-				})
+				});
 
 				filters.push(filter);
 			});
 
 			return filters;
+		},
+
+		/**
+		 * Set up the relationship items
+		 */
+		initRelationships: function()
+		{
+			var self = this;
+
+			//set up the filters
+			$.each(adminData.filters, function(ind, el)
+			{
+				if (el.relationship)
+					self.filtersViewModel.listOptions[ind] = ko.observableArray(el.options);
+			});
+
+			//set up the edit fields
+			$.each(adminData.edit_fields, function(ind, el)
+			{
+				if (el.relationship)
+					self.viewModel.listOptions[ind] = ko.observableArray(el.options);
+			});
 		},
 
 		/**

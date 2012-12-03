@@ -15,10 +15,13 @@ abstract class Field {
 		'text' => 'Admin\\Libraries\\Fields\\Text',
 		'textarea' => 'Admin\\Libraries\\Fields\\Text',
 		'wysiwyg' => 'Admin\\Libraries\\Fields\\Text',
+		'markdown' => 'Admin\\Libraries\\Fields\\Text',
 		'date' => 'Admin\\Libraries\\Fields\\Time',
 		'time' => 'Admin\\Libraries\\Fields\\Time',
 		'datetime' => 'Admin\\Libraries\\Fields\\Time',
 		'number' => 'Admin\\Libraries\\Fields\\Number',
+		'bool' => 'Admin\\Libraries\\Fields\\Bool',
+		'enum' => 'Admin\\Libraries\\Fields\\Enum',
 		'image' => 'Admin\\Libraries\\Fields\\Image',
 		'multi_image' => 'Admin\\Libraries\\Fields\\MultiImage',
 		'file' => 'Admin\\Libraries\\Fields\\File',
@@ -118,6 +121,7 @@ abstract class Field {
 	{
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
+		//$this->editable = array_get($info, 'editable', $this->editable);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));
@@ -128,14 +132,14 @@ abstract class Field {
 	/**
 	 * Takes a the key/value of the options array and the associated model and returns an instance of the field
 	 *
-	 * @param string|int	$field 			//the key of the options array
-	 * @param array|string	$info 			//the value of the options array
-	 * @param Eloquent 		$model 			//an instance of the Eloquent model
-	 * @param bool	 		$loadOptions	//determines whether or not to load the relationship
+	 * @param string|int	$field 				//the key of the options array
+	 * @param array|string	$info 				//the value of the options array
+	 * @param Eloquent 		$model 				//an instance of the Eloquent model
+	 * @param bool	 		$loadRelationships	//determines whether or not to load the relationships
 	 *
 	 * @return false|Field object
 	 */
-	public static function get($field, $info, $model, $loadOptions = true)
+	public static function get($field, $info, $model, $loadRelationships = true)
 	{
 		$noInfo = is_numeric($field);
 
@@ -163,10 +167,10 @@ abstract class Field {
 				return false;
 			}
 
-			//if we should load the options, set the $info key
-			if ($loadOptions)
+			//if we should load the relationships, set the $info key
+			if ($loadRelationships && !array_get($info, 'autocomplete', false))
 			{
-				$info['load_options'] = true;
+				$info['load_relationships'] = true;
 			}
 		}
 
@@ -254,9 +258,11 @@ abstract class Field {
 			'field' => $this->field,
 			'title' => $this->title,
 			'value' => $this->value,
+			'minMax' => $this->minMax,
 			'minValue' => $this->minValue,
 			'maxValue' => $this->maxValue,
 			'editable' => $this->editable,
+			'relationship' => $this->relationship,
 		);
 	}
 
@@ -320,10 +326,11 @@ abstract class Field {
 	 * Gets the model's edit fields
 	 *
 	 * @param object	$model
+	 * @param bool		$loadRelationships
 	 *
 	 * @return array
 	 */
-	public static function getEditFields($model)
+	public static function getEditFields($model, $loadRelationships = true)
 	{
 		$return = array(
 			'objectFields' => array(),
@@ -335,10 +342,10 @@ abstract class Field {
 		{
 			foreach ($model->edit as $field => $info)
 			{
-				$fieldObject = static::get($field, $info, $model);
+				$fieldObject = static::get($field, $info, $model, $loadRelationships);
 
 				//if this field can be properly set up, put it into the edit fields array
-				if ($fieldObject && $fieldObject->editable)
+				if ($fieldObject)
 				{
 					$return['objectFields'][$fieldObject->field] = $fieldObject;
 					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
@@ -347,7 +354,7 @@ abstract class Field {
 		}
 
 		//add the id field, which will be uneditable, but part of the data model
-		$return['arrayFields']['id'] = 0;
+		$return['arrayFields'][$model::$key] = 0;
 
 		//set up the data model
 		foreach ($return['arrayFields'] as $field => $info)
