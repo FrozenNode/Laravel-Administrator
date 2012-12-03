@@ -16,10 +16,12 @@
 			if (viewModel.lastItem === null)
 			{
 				$tableContainer.css('margin-right', 290);
+				$element.hide();
 			}
 			else
 			{
 				$tableContainer.css('margin-right', expandWidth + 5);
+				$element.show();
 			}
 		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel)

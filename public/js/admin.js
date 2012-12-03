@@ -267,6 +267,10 @@
 					ko.mapping.updateData(self, self.model, self.model);
 					self.itemLoadingId(null);
 					self.activeItem(0);
+
+					//set the last item property which helps manage the animation states
+					self.lastItem = id;
+
 					return;
 				}
 
@@ -311,7 +315,7 @@
 							self.itemLink(data.admin_item_link);
 						}
 
-						//set the last item property
+						//set the last item property which helps manage the animation states
 						self.lastItem = id;
 
 						//fixes an error where the relationships wouldn't load
