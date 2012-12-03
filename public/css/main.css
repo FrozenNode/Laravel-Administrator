@@ -102,6 +102,7 @@ a { text-decoration:none; }
   font-size:18px;
 }
 #admin_page { position:relative; }
+#admin_page label { margin-bottom:3px; }
 #admin_page div#sidebar {
   float:right;
   margin-right:13px;
@@ -357,6 +358,12 @@ a { text-decoration:none; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div {
   margin-bottom:10px;
   position:relative;
+}
+#admin_page #content div.item_edit_container div.item_edit div.edit_form > div div.characters_left {
+  position:absolute;
+  top:1px;
+  right:40px;
+  font-size:11px;
 }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.number span.symbol {
   position:absolute;

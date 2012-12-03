@@ -217,6 +217,31 @@
 	};
 
 	/**
+	 * The charactersLeft binding fills the element with (#chars allowed - #chars typed)
+	 */
+	ko.bindingHandlers.charactersLeft = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var options = valueAccessor(),
+				limit = options.limit,
+				val = options.value();
+
+			//if the limit is zero, there is no limit
+			if (!limit)
+				return;
+
+			//if the value is null, set it to an empty string
+			if (val === null)
+				val = '';
+
+			left = limit - val.length;
+			text = ' character' + (left !== 1 ? 's' : '') + ' left';
+
+			$(element).text(left + text);
+		}
+	};
+
+	/**
 	 * The wysiwyg binding makes the field a ckeditor wysiwyg
 	 */
 	ko.bindingHandlers.wysiwyg = {

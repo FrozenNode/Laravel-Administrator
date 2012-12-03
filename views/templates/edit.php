@@ -19,10 +19,12 @@
 			<div class="${type}">
 				<label for="edit_field_${ key }">${title}:</label>
 			{{if type === 'text'}}
+				<div class="characters_left" data-bind="charactersLeft: {value: $root[key], limit: limit}"></div>
 				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
 																		valueUpdate: 'afterkeydown', characterLimit: limit" />
 			{{/if}}
 			{{if type === 'textarea'}}
+				<div class="characters_left" data-bind="charactersLeft: {value: $root[key], limit: limit}"></div>
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
 																		valueUpdate: 'afterkeydown', characterLimit: limit,
 																		style: {height: height + 'px'}"></textarea>
@@ -31,6 +33,7 @@
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, wysiwyg: $root[key]"></textarea>
 			{{/if}}
 			{{if type === 'markdown'}}
+				<div class="characters_left" data-bind="charactersLeft: {value: $root[key], limit: limit}"></div>
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, characterLimit: limit,
 																value: $root[key], valueUpdate: 'afterkeydown',
 																style: {height: height + 'px'}"></textarea>
