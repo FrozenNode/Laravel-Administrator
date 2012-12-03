@@ -121,6 +121,7 @@ abstract class Field {
 	{
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
+		//$this->editable = array_get($info, 'editable', $this->editable);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));
@@ -344,7 +345,7 @@ abstract class Field {
 				$fieldObject = static::get($field, $info, $model, $loadRelationships);
 
 				//if this field can be properly set up, put it into the edit fields array
-				if ($fieldObject && $fieldObject->editable)
+				if ($fieldObject)
 				{
 					$return['objectFields'][$fieldObject->field] = $fieldObject;
 					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();

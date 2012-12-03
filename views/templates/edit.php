@@ -15,19 +15,28 @@
 	{{/if}}
 
 	{{each(key, field) editFields}}
-		{{if key !== $root.primaryKey}}
+		{{if key !== $root.primaryKey && ( $root[$root.primaryKey]() || editable )}}
 			<div class="${type}">
 				<label for="edit_field_${ key }">${title}:</label>
+
 			{{if type === 'text'}}
 				<div class="characters_left" data-bind="charactersLeft: {value: $root[key], limit: limit}"></div>
-				<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
-																		valueUpdate: 'afterkeydown', characterLimit: limit" />
+				{{if editable}}
+					<input type="text" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+																			valueUpdate: 'afterkeydown', characterLimit: limit" />
+				{{else}}
+					<div>${$root[key]()}</div>
+				{{/if}}
 			{{/if}}
 			{{if type === 'textarea'}}
 				<div class="characters_left" data-bind="charactersLeft: {value: $root[key], limit: limit}"></div>
-				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+				{{if editable}}
+				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm || !editable}, value: $root[key],
 																		valueUpdate: 'afterkeydown', characterLimit: limit,
 																		style: {height: height + 'px'}"></textarea>
+				{{else}}
+					<div>${$root[key]()}</div>
+				{{/if}}
 			{{/if}}
 			{{if type === 'wysiwyg'}}
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, wysiwyg: $root[key]"></textarea>
