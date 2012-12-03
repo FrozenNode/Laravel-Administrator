@@ -626,7 +626,8 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - New 'enum' field type
 - New 'wysiwyg' field type
 - New 'textarea' field type
-- Added 'limit' option for text/textarea field types
+- New 'markdown' field type
+- Added 'limit' option for text/textarea/markdown field types
 - You can now provide a create_link method in your model that should return the URL of the string of the item's front-end page
 - You can now optionally provide a 'permission_check' closure for each model in the config. This works just like auth_check but on a per-model basis. If provided, and if it evaluates to false, the user will be redirected back to the admin dashboard.
 - Bugfix: Multiple commas in number fields were messing up the values
