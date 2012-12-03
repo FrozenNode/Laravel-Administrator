@@ -237,7 +237,7 @@ The available options are:
 
 ##### Common
 - **title**
-- **type**: default is 'text'. Choices are: relationship, text, textarea, wysiwyg, date, time, datetime, number, bool, enum
+- **type**: default is 'text'. Choices are: relationship, text, textarea, wysiwyg, markdown, date, time, datetime, number, bool, enum
 
 ##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
@@ -248,7 +248,7 @@ The available options are:
 ##### Enum
 - **options**: default is an empty array. This can either be an array of strings (array('Spring', 'Winter')) or an array of strings indexed on the enum value (array('Spring' => 'Beautiful Spring!', 'Winter' => 'Cold Winter! :(')). In the latter case, the key value will be used to save to / query the database.
 
-##### Text/Textarea
+##### Text/Textarea/Markdown
 - **limit**: default is 0 (i.e. no character limit).
 
 ##### Numbers
@@ -473,6 +473,19 @@ The textarea is basically the same thing as a text type, except it uses a textar
 </pre>
 
 The wysiwyg type is a text field that uses CKEditor. If you use this field you'll likely want to also set the $expand property so that the wysiwyg has enough space on the page.
+
+#### markdown
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-markdown.png" />
+
+<pre>
+'name' => array(
+	'type' => 'markdown',
+	'title' => 'Name',
+)
+</pre>
+
+The markdown type lets you create a field that is essentially a text field but shows a preview of the rendered markdown.
 
 #### relationship
 

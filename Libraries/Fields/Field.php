@@ -15,6 +15,7 @@ abstract class Field {
 		'text' => 'Admin\\Libraries\\Fields\\Text',
 		'textarea' => 'Admin\\Libraries\\Fields\\Text',
 		'wysiwyg' => 'Admin\\Libraries\\Fields\\Text',
+		'markdown' => 'Admin\\Libraries\\Fields\\Text',
 		'date' => 'Admin\\Libraries\\Fields\\Time',
 		'time' => 'Admin\\Libraries\\Fields\\Time',
 		'datetime' => 'Admin\\Libraries\\Fields\\Time',

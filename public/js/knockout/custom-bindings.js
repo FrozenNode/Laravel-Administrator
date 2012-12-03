@@ -254,4 +254,24 @@
 			$(element).html(value);
 		}
 	};
+
+	/**
+	 * The markdown binding is attached to the field next a markdown textarea
+	 */
+	 ko.bindingHandlers.markdown = {
+	 	update: function (element, valueAccessor, allBindingsAccessor, context)
+		{
+			//handle programmatic updates to the observable
+			var value = ko.utils.unwrapObservable(valueAccessor());
+
+			if (!value)
+			{
+				$(element).html(value);
+			}
+			else
+			{
+				$(element).html(markdown.toHTML(value.toString()));
+			}
+		}
+	 };
 })(jQuery);

@@ -365,6 +365,11 @@ a { text-decoration:none; }
 }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key { margin-right:100px; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.bool label { display:inline-block; }
+#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.markdown div.preview {
+  display:inline-block;
+  margin-left:10px;
+}
+#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.markdown div.preview p { margin-bottom:7px; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form div.control_buttons {
   margin-top:20px;
   padding-bottom:20px;

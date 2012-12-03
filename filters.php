@@ -8,7 +8,10 @@ Route::filter('add_assets', function()
 {
 	$assets = Asset::container('container')->bundle('administrator');
 
-	//CSS
+	/**
+	 * CSS
+	 */
+
 	$assets->add('bootstrap', 'css/bootstrap.css');
 	$assets->add('bootstrap-responsive', 'css/bootstrap-responsive.css');
 	$assets->add('jquery.ui.css', 'css/ui/jquery-ui-1.9.1.custom.min.css');
@@ -16,28 +19,52 @@ Route::filter('add_assets', function()
 	$assets->add('chosen_css', 'css/chosen.css');
 	$assets->add('main_style', 'css/main.css');
 
-	//JS
+
+	/**
+	 * JavaScript
+	 */
+
+	//jquery core
 	$assets->add('jquery', 'js/jquery/jquery-1.8.2.min.js');
+
+	//jquery chosen and ajax chosen
 	$assets->add('jquery-chosen', 'js/jquery/jquery.chosen.min.js');
 	$assets->add('jquery-ajax-chosen', 'js/jquery/jquery.ajax-chosen.min.js');
+
+	//jquery template
 	$assets->add('jquery-tmpl', 'js/jquery/jquery.tmpl.min.js');
 
+	//jquery ui
 	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');
+
+	//jquery timepicker addon
 	$assets->add('jquery.ui.timepicker', 'js/jquery/jquery-ui-timepicker-addon.js');
 
+	//ckeditor and jquery adapter
 	$assets->add('ckeditor', 'js/ckeditor/ckeditor.js');
 	$assets->add('ckeditor-jquery', 'js/ckeditor/adapters/jquery.js');
 
+	//markdown
+	$assets->add('markdownjs', 'js/markdown.js');
+
+	//knockout
 	$assets->add('knockout', 'js/knockout/knockout-2.2.0.js');
+
+	//knockout plugins
 	$assets->add('knockout-mapping', 'js/knockout/knockout.mapping.js');
 	$assets->add('knockout-notification', 'js/knockout/KnockoutNotification.knockout.min.js');
 	$assets->add('knockout-update-data', 'js/knockout/knockout.updateData.js');
+
+	//knockout custom bindings
 	$assets->add('knockout-custom-bindings', 'js/knockout/custom-bindings.js');
 
+	//accountingjs
 	$assets->add('accountingjs', 'js/accounting.js');
 
+	//historyjs
 	$assets->add('historyjs', 'js/history/native.history.js');
 
+	//and finally the admin js file
 	$assets->add('admin', 'js/admin.js');
 });
 

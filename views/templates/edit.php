@@ -29,6 +29,11 @@
 			{{if type === 'wysiwyg'}}
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, wysiwyg: $root[key]"></textarea>
 			{{/if}}
+			{{if type === 'markdown'}}
+				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, characterLimit: limit,
+																value: $root[key], valueUpdate: 'afterkeydown'"></textarea>
+				<div class="preview" data-bind="markdown: $root[key]"></div>
+			{{/if}}
 			{{if type === 'belongs_to'}}
 				{{if autocomplete}}
 				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
