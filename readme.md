@@ -153,12 +153,12 @@ The last option has (in my opinion) the best of all worlds: it would allow you t
 What I like to do is create a directory under my models directory called `admin`. Each of the models in this directory can extend any Eloquent-based class (which means Eloquent, Aware, or your base models)
 
 #### Extending from Eloquent
-<pre>
+<code>
 &lt;?php namespace AdminModels;
 
 class User extends \Eloquent
 { .. }
-</pre>
+</code>
 
 #### Extending from Aware
 <pre>
