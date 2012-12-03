@@ -25,18 +25,18 @@ I'm currently working on expanding this section. So far I've only got the one ov
 
 You can either create a bundle directory called `administrator` and manually copy the bundle contents into it, or you can run the artisan command:
 
-<pre>
+```php
 php artisan bundle:install administrator
-</pre>
+```
 
 Then add this to your `bundles.php` array:
 
-<pre>
+```php
 'administrator' => array(
 	'handles' => 'admin', //determines what URI this bundle will use
 	'auto' => true,
 ),
-</pre>
+```
 
 Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created.
 
@@ -44,7 +44,7 @@ Once the bundle is installed, create a new file in your application config calle
 
 The configuration is detailed below. The models array requires a 'title' and a 'model' key, both of which are strings, and the latter being the fully-qualified class name of your admin model. It also accepts an optional 'permission_check' property which should be a function that returns a boolean which Administrator uses to determine if the current user is allowed to access this model. This runs after the auth_check function, so you don't need to check for general authentication again in the model's permission_check. If the model can be accessed by all users who pass the auth_check, then you don't need to provide a permission_check for that model.
 
-<pre>
+```php
 /**
  * Page title
  *
@@ -135,7 +135,7 @@ The configuration is detailed below. The models array requires a 'title' and a '
  * If you set this to false/NULL/0, each model's $per_page property will be used
  */
 'global_per_page' => NULL,
-</pre>
+```
 
 
 ### Data Models
@@ -153,28 +153,29 @@ The last option has (in my opinion) the best of all worlds: it would allow you t
 What I like to do is create a directory under my models directory called `admin`. Each of the models in this directory can extend any Eloquent-based class (which means Eloquent, Aware, or your base models)
 
 #### Extending from Eloquent
-<code>
+
+```php
 &lt;?php namespace AdminModels;
 
 class User extends \Eloquent
 { .. }
-</code>
+```
 
 #### Extending from Aware
-<pre>
+```php
 &lt;?php namespace AdminModels;
 
 class User extends \Aware
 { .. }
-</pre>
+```
 
 #### Extending from an existing User model
-<pre>
+```php
 &lt;?php namespace AdminModels;
 
 class User extends \User
 { .. }
-</pre>
+```
 
 If you're using the namespace approach as I did above, make sure you add that backslash in front of the class you're extending. This tells PHP to look in the base namespace.
 
@@ -202,7 +203,7 @@ The available options are:
 - **relationship**: default is null. Set this to the method name of the relationship. Only set this if you need to pull this field from another table
 - **select**: default is null. This can be used for relationship columns or on-table columns. If it's an on-table column, you can use any regular SQL select function (e.g. IF, CONCAT, etc.). If you've set the relationship, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
 
-<pre>
+```php
 public $columns = array(
 	'id',
 	'name',
@@ -227,7 +228,7 @@ public $columns = array(
 		'title' => 'Updated',
 	),
 );
-</pre>
+```
 
 
 #### $edit
@@ -267,7 +268,7 @@ The available options are:
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
-<pre>
+```php
 public $edit = array(
 	'email',
 	'name' => array(
@@ -315,29 +316,29 @@ public $edit = array(
 	)
 
 );
-</pre>
+```
 
 If you select the 'relationship' type, the edit form will display either a single- or multi-select box depending on the type of relationship. The Administrator bundle recognizes all types of Eloquent relationships (belongs_to, has_one, has_many, has_many_and_belongs_to), but only belongs_to and has_many_and_belongs_to relationships can be used for editing/filtering. All you have to do is ensure that the key in the $edit array is **the name of the relationship method in your data model**. If you have a User model and your user has many Roles, you'll typically want to have a method that looks like this in Eloquent:
 
-<pre>
+```php
 public function roles()
 {
 	return $this->has_many_and_belongs_to('Role', 'role_user');
 }
-</pre>
+```
 
 Similarly, if each of your users has only a *single* Job, you'll want a method that looks like:
 
-<pre>
+```php
 public function job()
 {
 	return $this->has_one('Job');
 }
-</pre>
+```
 
 Unless you're extending directly from Eloquent/Aware, these methods should already exist in your data models. Here's how each of those would look in your $edit property:
 
-<pre>
+```php
 'roles' => array(
 	'title' => 'Roles',
 	'type' => 'relationship',
@@ -347,7 +348,7 @@ Unless you're extending directly from Eloquent/Aware, these methods should alrea
 	'type' => 'relationship',
 	'name_field' => 'title', //this lets Administrator know what column to reference on the Job model. Default is 'name'
 ),
-</pre>
+```
 
 #### $filters
 
@@ -361,7 +362,7 @@ The date/time and number field types automatically get min/max filters where the
 
 The available options are the same as the $edit property's options.
 
-<pre>
+```php
 public $filters = array(
 	'id', //if this is the name of the primary key for this model, it will be an id lookup, which is useful for quick searches
 	'email',
@@ -379,7 +380,7 @@ public $filters = array(
 	),
 
 );
-</pre>
+```
 
 The relationship type behaves just like it does in the $edit array.
 
@@ -389,12 +390,12 @@ The relationship type behaves just like it does in the $edit array.
 
 The $sortOptions array has these options:
 
-<pre>
+```php
 public $sortOptions = array(
 	'field' => 'id', 		//can be any of the supplied keys in the $columns array
 	'direction' => 'asc', 	//either 'asc' or 'desc'
 )
-</pre>
+```
 
 Naturally, this is only the initial sort. As the user interacts with the table, it will change.
 
@@ -402,22 +403,22 @@ Naturally, this is only the initial sort. As the user interacts with the table, 
 
 The $expand property, when used, determines how wide the edit area should be for a model. It can either be set to boolean true to accept the default expand (which is 500px), or it can be set to an integer above 285 (which is the size of the filter area that the edit box covers). This is useful if you want some extra space for a textarea type, a has_many_and_belongs_to relationship with many possible items, etc.
 
-<pre>
+```php
 public $expand = 400;
-</pre>
+```
 
 
 #### before_delete()
 
 The before_delete() method will always be run before an item is deleted. It's important to know that **Administrator does not automatically delete relationships**. This is done because some people have cascading deletes built into their database, others might want to only delete some related data, and others might want to delete all of it. So if you have a users relationship (has_many_and_belongs_to) on your Role model, you might want to do something like this:
 
-<pre>
+```php
 public function before_delete()
 {
 	//delete the users relationship
 	$this->users()->delete();
 }
-</pre>
+```
 
 #### create_link()
 
@@ -425,13 +426,13 @@ public function before_delete()
 
 The create_link() method lets you define a model's front-end URL if applicable. If provided, this will show up as a link in the edit form as shown above.
 
-<pre>
+```php
 public function create_link()
 {
 	//here I have a named route to which I'm passing the id parameter
 	return URL::to_route('my_named_route', array($this->id));
 }
-</pre>
+```
 
 You can construct this URL however you like. In the above example you can see that I used named routes. However, you can also build the URL manually or use controller actions. You could also just return 'http://www.google.com' for every item if that's what you want.
 
@@ -443,13 +444,13 @@ This is a list of all the field types that you can use in the $edit array.
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-text.png" />
 
-<pre>
+```php
 'name' => array(
 	'type' => 'text',
 	'title' => 'Name',
 	'limit' => 50,
 )
-</pre>
+```
 
 This is the default type. You can set a character limit by providing an integer value to the 'limit' option
 
@@ -457,14 +458,14 @@ This is the default type. You can set a character limit by providing an integer 
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-textarea.png" />
 
-<pre>
+```php
 'name' => array(
 	'type' => 'textarea',
 	'title' => 'Name',
 	'limit' => 500,
 	'height' => 130, //default is 100
 )
-</pre>
+```
 
 The textarea is basically the same thing as a text type, except it uses a textarea.
 
@@ -472,12 +473,12 @@ The textarea is basically the same thing as a text type, except it uses a textar
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-wysiwyg.png" />
 
-<pre>
+```php
 'name' => array(
 	'type' => 'wysiwyg',
 	'title' => 'Name',
 )
-</pre>
+```
 
 The wysiwyg type is a text field that uses CKEditor. If you use this field you'll likely want to also set the $expand property so that the wysiwyg has enough space on the page.
 
@@ -485,13 +486,13 @@ The wysiwyg type is a text field that uses CKEditor. If you use this field you'l
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-markdown.png" />
 
-<pre>
+```php
 'name' => array(
 	'type' => 'markdown',
 	'title' => 'Name',
 	'height' => 200, //default is 100
 )
-</pre>
+```
 
 The markdown type lets you create a field that is essentially a text field but shows a preview of the rendered markdown.
 
@@ -501,7 +502,7 @@ The markdown type lets you create a field that is essentially a text field but s
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-relation-multi.png" />
 
-<pre>
+```php
 'actors' => array(
 	'type' => 'relationship',
 	'title' => 'Actors',
@@ -510,7 +511,7 @@ The markdown type lets you create a field that is essentially a text field but s
 	'num_options' => 5,
 	'search_fields' => array("CONCAT(first_name, ' ', last_name)"),
 )
-</pre>
+```
 
 The relationship field should have the relationship's method name as its index. The name_field will be the item's name when displayed in the select boxes.
 
@@ -518,7 +519,7 @@ The relationship field should have the relationship's method name as its index. 
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-currency.png" />
 
-<pre>
+```php
 'price' => array(
 	'type' => 'number',
 	'title' => 'Price',
@@ -527,7 +528,7 @@ The relationship field should have the relationship's method name as its index. 
 	'thousands_separator' => ',',
 	'decimal_separator' => '.',
 )
-</pre>
+```
 
 The number field should be a numeric field (integer, decimal, float) in your database. The symbol will be displayed before the number if present. The decimal separator will be used if the decimal value is above 0.
 
@@ -535,12 +536,12 @@ The number field should be a numeric field (integer, decimal, float) in your dat
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-bool.png" />
 
-<pre>
+```php
 'is_good' => array(
 	'type' => 'bool',
 	'title' => 'Is Good',
 )
-</pre>
+```
 
 The bool field should be an integer field (usually tinyint(1) or whatever your db supports).
 
@@ -548,7 +549,7 @@ The bool field should be an integer field (usually tinyint(1) or whatever your d
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-enum.png" />
 
-<pre>
+```php
 'season' => array(
 	'title' => 'Season',
 	'type' => 'enum',
@@ -565,7 +566,7 @@ The bool field should be an integer field (usually tinyint(1) or whatever your d
 		'Fall'
 	),
 ),
-</pre>
+```
 
 The enum field gives the user a permanent limited selection of items from which to choose. If an array with string keys is supplied, those string keys will be considered the enum value, while the values will be displayed to the user. You can mix and match these array slots as seen above.
 
@@ -573,13 +574,13 @@ The enum field gives the user a permanent limited selection of items from which 
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-date.png" />
 
-<pre>
+```php
 'start_date' => array(
 	'type' => 'date',
 	'title' => 'Start Date',
 	'date_format' => 'yy-mm-dd', //The date format to be shown in the field (in the database it should be a Date type)
 )
-</pre>
+```
 
 Using the date type will set the field up as a jQuery UI datepicker.
 
@@ -589,13 +590,13 @@ The date_format supplied has to be a valid DatePicker date format. You can see a
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-time.png" />
 
-<pre>
+```php
 'opening_time' => array(
 	'type' => 'time',
 	'title' => 'Opening Time',
 	'time_format' => 'HH:mm', //The time format to be shown in the field
 )
-</pre>
+```
 
 Using the time type will set the field up as a jQuery UI timepicker.
 
@@ -605,14 +606,14 @@ The time format supplied has to be a valid timepicker time format. You can see a
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-datetime.png" />
 
-<pre>
+```php
 'game_start_time' => array(
 	'type' => 'datetime',
 	'title' => 'Start Time',
 	'date_format' => 'yy-mm-dd', //The date format to be shown in the field
 	'time_format' => 'HH:mm', //The time format to be shown in the field
 )
-</pre>
+```
 
 Using the datetime type will set the field up as a jQuery UI datetimepicker. The formatters are the same as above.
 
