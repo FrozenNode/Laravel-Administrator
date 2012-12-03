@@ -25,7 +25,7 @@
 			{{if type === 'textarea'}}
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
 																		valueUpdate: 'afterkeydown', characterLimit: limit,
-																		style: {height: height}"></textarea>
+																		style: {height: height + 'px'}"></textarea>
 			{{/if}}
 			{{if type === 'wysiwyg'}}
 				<textarea id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, wysiwyg: $root[key]"></textarea>
