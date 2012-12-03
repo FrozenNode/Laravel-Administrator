@@ -17,11 +17,12 @@
 			{
 				$tableContainer.css('margin-right', 290);
 				$element.hide();
+				$child.css('marginLeft', expandWidth + 2);
 			}
 			else
 			{
 				$tableContainer.css('margin-right', expandWidth + 5);
-				$element.show();
+				$child.css('marginLeft', 2);
 			}
 		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel)
