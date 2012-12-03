@@ -188,7 +188,6 @@ body{
 
 		div.table_container {
 			position: relative;
-			margin-right: 290px;
 
 			div.results_header {
 				@verticalGradient(#efefef, #dfe1e2);
@@ -395,7 +394,6 @@ body{
 
 		/* edit form */
 		div.item_edit_container {
-			display: none;
 			position: absolute;
 			top: 0;
 			right: 0;
@@ -424,8 +422,12 @@ body{
 					}
 
 					> div {
-						margin-bottom: 10px;
+						margin-bottom: 15px;
 						position: relative;
+
+						select, textarea, input {
+							margin-bottom:0;
+						}
 
 						div.characters_left {
 							position: absolute;

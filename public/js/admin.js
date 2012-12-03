@@ -121,6 +121,11 @@
 			 */
 			activeItem: ko.observable(null),
 
+			/* The id of the last active item. This is set to null when an item is closed. 0 is new.
+			 * mixed (null, int)
+			 */
+			lastItem: null,
+
 			/* If this is set to true, the loading screen will be visible
 			 * bool
 			 */
@@ -141,11 +146,6 @@
 			 */
 			rowLoadingId: 0,
 
-			/* The roles available to the user
-			 * array
-			 */
-			//roles: ko.observableArray([{id: 0, name: 'User'}, {id: 1, name: 'Admin'}]),
-
 			/* If this is set to true, the form becomes uneditable
 			 * bool
 			 */
@@ -156,11 +156,6 @@
 			 */
 			statusMessage: ko.observable(''),
 			statusMessageType: ko.observable(''),
-
-			/* If the edit form has been registered as closed, this is true
-			 * bool
-			 */
-			editFormClosed: true,
 
 			/**
 			 * Saves the item with the current settings. If id is 0, the server interprets it as a new item
@@ -265,6 +260,7 @@
 			{
 				var self = this;
 
+
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
@@ -315,6 +311,9 @@
 							self.itemLink(data.admin_item_link);
 						}
 
+						//set the last item property
+						self.lastItem = id;
+
 						//fixes an error where the relationships wouldn't load
 						setTimeout(function()
 						{
@@ -343,6 +342,7 @@
 				this.itemLink(null);
 				this.itemLoadingId(null);
 				this.activeItem(null);
+				this.lastItem = null;
 			},
 
 			/**

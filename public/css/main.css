@@ -124,10 +124,7 @@ a { text-decoration:none; }
   left:-15px;
 }
 #admin_page div#sidebar div.panel_contents > div.min_max.datetime input[type=text] { font-size:11px; }
-#admin_page #content div.table_container {
-  position:relative;
-  margin-right:290px;
-}
+#admin_page #content div.table_container { position:relative; }
 #admin_page #content div.table_container div.results_header {
   background:#efefef;
   background:-moz-linear-gradient(top,#efefef 0%,#dfe1e2 100%);
@@ -326,7 +323,6 @@ a { text-decoration:none; }
   text-shadow:#dddddd 1px 1px 1px;
 }
 #admin_page #content div.item_edit_container {
-  display:none;
   position:absolute;
   top:0;
   right:0;
@@ -356,9 +352,10 @@ a { text-decoration:none; }
   right:41px;
 }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div {
-  margin-bottom:10px;
+  margin-bottom:15px;
   position:relative;
 }
+#admin_page #content div.item_edit_container div.item_edit div.edit_form > div select, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div textarea, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div input { margin-bottom:0; }
 #admin_page #content div.item_edit_container div.item_edit div.edit_form > div div.characters_left {
   position:absolute;
   top:1px;

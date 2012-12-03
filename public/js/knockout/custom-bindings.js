@@ -4,6 +4,24 @@
 	 * For the item form transition
 	 */
 	ko.bindingHandlers.itemTransition = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var $element = $(element),
+				$child = $element.find('.item_edit'),
+				$tableContainer = $('div.table_container'),
+				expandWidth = viewModel.expandWidth();
+
+			//the lastItem gets reset to null when the form is closed. This way we can draw the table properly initially
+			//so that it doesn't keep reopening.
+			if (viewModel.lastItem === null)
+			{
+				$tableContainer.css('margin-right', 290);
+			}
+			else
+			{
+				$tableContainer.css('margin-right', expandWidth + 5);
+			}
+		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel)
 		{
 			var $element = $(element),
@@ -22,10 +40,12 @@
 			}
 			else
 			{
-				viewModel.editFormClosed = true;
-				$element.show();
-				$child.stop().animate({marginLeft: 2}, 150);
-				$tableContainer.stop().animate({marginRight: expandWidth + 5}, 150);
+				if (viewModel.lastItem === null)
+				{
+					$element.show();
+					$child.stop().animate({marginLeft: 2}, 150);
+					$tableContainer.stop().animate({marginRight: expandWidth + 5}, 150);
+				}
 			}
 		}
 	};
