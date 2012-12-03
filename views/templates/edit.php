@@ -53,13 +53,13 @@
 				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
 													ajaxChosen: {field: field, type: 'edit'},
 													options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'None'"></select>
 				{{else}}
 				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
 													options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'None'"></select>
 				{{/if}}
@@ -69,12 +69,12 @@
 				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm},
 													ajaxChosen: {field: field, type: 'edit'},
 													selectedOptions: $root[key], options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
 				{{else}}
 				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true,
 													selectedOptions: $root[key], options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
 				{{/if}}
 			{{/if}}

@@ -34,10 +34,12 @@ class HasManyAndBelongsTo extends Relationship {
 
 		$relationship = $model->{$field}();
 		$table = $relationship->table->joins[0];
+		$related_model = $relationship->model;
 
 		$this->table = $table->table;
 		$this->column = $relationship->table->wheres[0]['column'];
 		$this->column2 = $table->clauses[0]['column2'];
+		$this->foreignKey = $related_model::$key;
 	}
 
 

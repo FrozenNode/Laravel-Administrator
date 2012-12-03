@@ -120,7 +120,7 @@ abstract class Relationship extends Field {
 		$this->options = array_map(function($m) use ($info, $model)
 		{
 			return array(
-				$model::$key => $m->{$model::$key},
+				$m::$key => $m->{$m::$key},
 				$info['name_field'] => $m->{$info['name_field']},
 			);
 		}, $options);
@@ -137,6 +137,7 @@ abstract class Relationship extends Field {
 
 		$arr['table'] = $this->table;
 		$arr['column'] = $this->column;
+		$arr['foreignKey'] = $this->foreignKey;
 		$arr['name_field'] = $this->nameField;
 		$arr['options'] = $this->options;
 		$arr['autocomplete'] = $this->autocomplete;

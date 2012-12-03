@@ -322,14 +322,18 @@ class ModelHelper {
 		//then wrap the inner table and perform the count
 		$sql = "SELECT COUNT({$model::$key}) AS aggregate FROM ({$sql}) AS agg";
 
-		//then perform the
+		//then perform the count query
 		$results = $query->table->connection->query($sql, $query->table->bindings);
 		$num_rows = $results[0]->aggregate;
 		$page = (int) \Input::get('page', 1);
+		$last = (int) ceil($num_rows/$per_page);
+
+		//if the current page is greater than the last page, set the current page to the last page
+		$page = $page > $last ? $last : $page;
 
 		//now we need to limit and offset the rows in remembrance of our dear lost friend paginate()
 		$query->take($per_page);
-		$query->skip($per_page * ($page - 1));
+		$query->skip($per_page * ($page === 0 ? $page : $page - 1));
 
 		//order the set by the model table's id
 		$query->order_by($sort->field, $sort->direction);
@@ -361,7 +365,7 @@ class ModelHelper {
 
 		return array(
 			'page' => $page,
-			'last' => ceil($num_rows/$per_page),
+			'last' => $last,
 			'total' => $num_rows,
 			'results' => $results,
 		);

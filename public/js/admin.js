@@ -308,7 +308,7 @@
 						//set the new options for relationships
 						$.each(adminData.edit_fields, function(ind, el)
 						{
-							if (el.relationship)
+							if (el.relationship && el.autocomplete)
 							{
 								self.listOptions[ind](data[ind + '_options']);
 							}
