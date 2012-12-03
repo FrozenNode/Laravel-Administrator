@@ -6,7 +6,7 @@
 			<input type="button" value="next" data-bind="attr: {disabled: pagination.isLast() || !pagination.last() }, click: function() {page('next')}" />
 			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 }, value: pagination.page" /> of ${pagination.last}
 		</div>
-		<a href="${base_url + modelName() + '/new'}" class="new_item">New ${modelTitle}</a>
+		<a href="${base_url + modelName() + '/new'}" class="new_item">New ${modelSingle}</a>
 	</div>
 	<table class="results" border="0" cellspacing="0" id="customers" cellpadding="0">
 		<thead>

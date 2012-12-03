@@ -57,11 +57,12 @@ The configuration is detailed below. The models array requires a 'title' and a '
  *
  * @type array
  *
- * Each item in the array should itself be an array (with two items inside it: title, model) and it should be indexed on the model name.
- * This should look something like this:
+ * Each item in the array should itself be an array with two required items inside it (title, model) and two optional items (single, permission_check).
+ * The key will be what the user sees as the URI for this model.
  *
  * 'user' => array(
  * 		'title' => 'Users', //The title that will be used when displaying the model's page
+ * 		'single' => 'user', //The name used for singular items. Film model would be 'film'. BoxOffice model might be 'take'
  * 		'model' => 'AdminModels\\User', //The string class name of the model you will be using. If you wish to extend your app models directly, you can just pass in 'User'. Beware, though: your model will need to have the required properties on it for Administrator to recognize it.
  *  	'permission_check' => function() { ... }, //[OPTIONAL] Return bool true if the current user is allowed to access this model. False otherwise
  * )
@@ -69,10 +70,12 @@ The configuration is detailed below. The models array requires a 'title' and a '
 'models' => array(
 	'user' => array(
 		'title' => 'Users',
+		'single' => 'user',
 		'model' => 'AdminModels\\User', //This is just a fully-qualified classname. Here I've namespaced my admin models to AdminModels so I can reuse the "User" classname.
 	),
 	'role' => array(
 		'title' => 'Roles',
+		'single' => 'role',
 		'model' => 'AdminModels\\Role',
 		'permission_check' => function()
 		{
@@ -82,10 +85,12 @@ The configuration is detailed below. The models array requires a 'title' and a '
 	),
 	'hat' => array(
 		'title' => 'Hats',
+		'single' => 'hat',
 		'model' => 'Hat', //In this case I'm just using the un-namespaced "Hat" class/model.
 	),
 	'film' => array(
 		'title' => 'Films',
+		'single' => 'film',
 		'model' => 'Film',
 	),
 ),
@@ -623,8 +628,9 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 ## Changelog
 
 ### 2.2.0
-- There is now an autocomplete option for relationships with a lot of potential values
+- There is now an autocomplete option for relationships that could have a lot of potential values
 - You can now set the $expand property for a model to boolean true or any integer above 285 (i.e. pixels) to get more room for the edit form
+- Model config now allows for a 'single' name. Example: Film model would be 'film'. BoxOffice model would be 'take'. i.e. New film, New take
 - New 'bool' field type
 - New 'enum' field type
 - New 'wysiwyg' field type
@@ -636,6 +642,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - You can now optionally provide a 'permission_check' closure for each model in the config. This works just like auth_check but on a per-model basis. If provided, and if it evaluates to false, the user will be redirected back to the admin dashboard.
 - Bugfix: Multiple commas in number fields were messing up the values
 - Bugfix: The custom binding for the number field now uses the user-supplied fields like decimals, thousands_separator, and decimal_separator.
+- Bugfix: Various animation bugs in the UI
 
 ### 2.1.0
 - You can no longer use has_one or has_many fields in the $edit property. This is because those relationships require a new item to be created on the other table.

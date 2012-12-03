@@ -20,6 +20,7 @@ View::composer('administrator::index', function($view)
 
 	//add the view fields
 	$view->modelTitle = Config::get('administrator::administrator.models.'.$view->modelName.'.title', $view->modelName);
+	$view->modelSingle = Config::get('administrator::administrator.models.'.$view->modelName.'.single', $view->modelTitle);
 	$view->columns = $columns['columns'];
 	$view->includedColumns = $columns['includedColumns'];
 	$view->primaryKey = $modelInstance::$key;

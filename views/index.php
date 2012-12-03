@@ -18,6 +18,7 @@
 			sortOptions: <?php echo json_encode($sort) ?>,
 			model_name: "<?php echo $modelName ?>",
 			model_title: "<?php echo $modelTitle ?>",
+			model_single: "<?php echo $modelSingle ?>",
 			expand_width: <?php echo $expandWidth ?>,
 			filters: <?php echo json_encode($filters); ?>,
 			edit_fields: <?php echo json_encode($editFields); ?>,

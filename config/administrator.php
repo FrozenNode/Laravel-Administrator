@@ -14,12 +14,13 @@ return array(
 	 *
 	 * @type array
 	 *
-	 * Each item in the array should itself be an array with two required items inside it (title, model) and one optional item (permission_check).
+	 * Each item in the array should itself be an array with two required items inside it (title, model) and two optional items (single, permission_check).
 	 * The key will be what the user sees as the URI for this model.
 	 * This should look something like this:
 	 *
 	 * 'user' => array(
 	 * 		'title' => 'Users', //the title that will be used when displaying the model's page
+	 *		'single' => 'user', //The name used for singular items. Film model would be 'film'. BoxOffice model might be 'take'
 	 * 		'model' => 'AdminModels\\User', //the string class name of the model you will be using. if you wish to extend your app models directly, you can just pass in 'User'
 	 *  	'permission_check' => function() { ... }, //[OPTIONAL] Return bool true if the current user is allowed to access this model. False otherwise
 	 * )

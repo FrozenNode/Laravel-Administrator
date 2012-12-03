@@ -61,6 +61,11 @@
 			 */
 			modelTitle: ko.observable(''),
 
+			/* The title for single items of this model
+			 * string
+			 */
+			modelSingle: ko.observable(''),
+
 			/* The link (usually front-end) associated with this item
 			 * string
 			 */
@@ -566,6 +571,7 @@
 			this.viewModel.editFields(adminData.edit_fields);
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
+			this.viewModel.modelSingle(adminData.model_single);
 			this.viewModel.expandWidth(adminData.expand_width);
 			this.viewModel.primaryKey = adminData.primary_key;
 
