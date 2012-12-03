@@ -155,7 +155,7 @@ What I like to do is create a directory under my models directory called `admin`
 #### Extending from Eloquent
 
 ```php
-&lt;?php namespace AdminModels;
+namespace AdminModels;
 
 class User extends \Eloquent
 { .. }
@@ -163,7 +163,7 @@ class User extends \Eloquent
 
 #### Extending from Aware
 ```php
-&lt;?php namespace AdminModels;
+namespace AdminModels;
 
 class User extends \Aware
 { .. }
@@ -171,7 +171,7 @@ class User extends \Aware
 
 #### Extending from an existing User model
 ```php
-&lt;?php namespace AdminModels;
+namespace AdminModels;
 
 class User extends \User
 { .. }
