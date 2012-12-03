@@ -23,12 +23,6 @@ class Administrator_Admin_Controller extends Controller
 		//first we get the data model
 		$model = ModelHelper::getModelInstance($modelName);
 
-		//if we can't instantiate the model, something's fishy
-		if (!$model)
-		{
-			return Response::error('404');
-		}
-
 		$view = View::make("administrator::index",
 			array(
 				"modelName" => $modelName,
@@ -50,13 +44,7 @@ class Administrator_Admin_Controller extends Controller
 	public function action_item($modelName, $itemId = false)
 	{
 		//try to get the object
-		$model = ModelHelper::getModel($modelName, $itemId);
-
-		//if we can't instantiate the model, something's fishy
-		if (!$model)
-		{
-			return Response::error('404');
-		}
+		$model = ModelHelper::getModel($modelName, $itemId, true);
 
 		//if it's ajax, we just return the item information as json
 		//otherwise we load up the index page and dump values into
@@ -88,11 +76,6 @@ class Administrator_Admin_Controller extends Controller
 	public function action_save($modelName, $id = false)
 	{
 		$model = ModelHelper::getModel($modelName, $id);
-
-		if (!$model)
-		{
-			return Response::error('404');
-		}
 
 		//fill the model with our input
 		ModelHelper::fillModel($model);
@@ -149,11 +132,15 @@ class Administrator_Admin_Controller extends Controller
 	public function action_delete($modelName, $id)
 	{
 		$model = ModelHelper::getModel($modelName, $id);
+		$errorResponse = array(
+			'success' => false,
+			'error' => "There was an error deleting this item. Please reload the page and try again.",
+		);
 
 		//if the model or the id don't exist, send back 404
-		if (!$model || !$model->exists)
+		if (!$model->exists)
 		{
-			return Response::error('404');
+			return Response::json($errorResponse);
 		}
 
 		//delete the model
@@ -166,10 +153,7 @@ class Administrator_Admin_Controller extends Controller
 		}
 		else
 		{
-			return Response::json(array(
-				'success' => false,
-				'error' => "There was an error deleting this item. Please reload the page and try again.",
-			));
+			return Response::json($errorResponse);
 		}
 	}
 
@@ -192,18 +176,33 @@ class Administrator_Admin_Controller extends Controller
 		//try to get the object
 		$model = ModelHelper::getModel($modelName);
 
-		//if we can't instantiate the model, something's fishy
-		if (!$model)
-		{
-			return Response::error('404');
-		}
-
 		//get the sort options and filters
 		$sortOptions = Input::get('sortOptions', array());
 		$filters = Input::get('filters', array());
 
 		//return the rows
 		return Response::json(ModelHelper::getRows($model, $sortOptions, $filters));
+	}
+
+	/**
+	 * Gets a list of related items based on a string search param called 'term'
+	 *
+	 * @param string	$modelName
+	 * @param string	$field 		//the relationship field/method name
+	 *
+	 * @return array of objects [{id: string} ... {1: 'name'}, ...]
+	 */
+	public function action_search_relation($modelName, $field, $type)
+	{
+		//try to get the object
+		$model = ModelHelper::getModel($modelName);
+
+		//get the search term
+		$term = Input::get('term', '');
+		$selectedItems = Input::get('selectedItems', false);
+
+		//return the rows
+		return Response::json(ModelHelper::getRelationshipSuggestions($model, $field, $type, $selectedItems, $term));
 	}
 
 }
