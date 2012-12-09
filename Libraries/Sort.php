@@ -46,12 +46,12 @@ class Sort {
 
 		if (!$field || !is_string($field))
 		{
-			$field = $modelSort['field'];
+			$field = array_get($modelSort, 'field', $model::$key);
 		}
 
 		if (!$direction || !in_array($direction, array('asc', 'desc')))
 		{
-			$direction = $modelSort['direction'];
+			$direction = array_get($modelSort, 'direction', 'desc');
 		}
 
 		//now we can instantiate the object
