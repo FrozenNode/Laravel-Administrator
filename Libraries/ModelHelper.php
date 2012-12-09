@@ -22,7 +22,7 @@ class ModelHelper {
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
 	 */
-	public static function getModel($modelName, $id = false, $updateRelationships = false)
+	public static function getModel($modelName, $id = 0, $updateRelationships = false)
 	{
 		//first instantiate a blank version of this object
 		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');
