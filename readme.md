@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 2.2.0
+- **Version:** 2.3.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -626,6 +626,10 @@ Administrator was written by Jan Hartigan for the Laravel framework.
 Administrator is released under the MIT License. See the LICENSE file for details.
 
 ## Changelog
+
+### 2.3.0
+
+- Bugfix: There was an array index error when not providing a name_field or when only providing one of the sort options.
 
 ### 2.2.0
 - There is now an autocomplete option for relationships that could have a lot of potential values
