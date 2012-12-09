@@ -7,7 +7,7 @@
 
 <script type="text/javascript">
 	var base_url = "<?php echo $baseUrl ?>/",
-		route = "/<?php echo $bundleHandles ?>/",
+		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		adminData = {
 			primary_key: "<?php echo $primaryKey; ?>",
