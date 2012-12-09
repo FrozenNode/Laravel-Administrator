@@ -110,18 +110,21 @@ abstract class Relationship extends Field {
 		{
 			$options = $relationship->model->all();
 		}
+
 		//otherwise if there are relationship items, we need them in the initial options list
 		else if ($relationshipItems = $relationship->get())
 		{
 			$options = $relationshipItems;
 		}
 
+		$nameField = $this->nameField;
+
 		//map the options to the options property where array([key]: int, [name_field]: string)
-		$this->options = array_map(function($m) use ($info, $model)
+		$this->options = array_map(function($m) use ($info, $model, $nameField)
 		{
 			return array(
-				$model::$key => $m->{$model::$key},
-				$info['name_field'] => $m->{$info['name_field']},
+				$m::$key => $m->{$m::$key},
+				$nameField => $m->{$nameField},
 			);
 		}, $options);
 	}
@@ -137,6 +140,7 @@ abstract class Relationship extends Field {
 
 		$arr['table'] = $this->table;
 		$arr['column'] = $this->column;
+		$arr['foreignKey'] = $this->foreignKey;
 		$arr['name_field'] = $this->nameField;
 		$arr['options'] = $this->options;
 		$arr['autocomplete'] = $this->autocomplete;
