@@ -279,7 +279,7 @@
 			var editor = $element.ckeditorGet();
 
 			//handle edits made in the editor
-			editor.on('blur', function (e)
+			editor.on('change', function (e)
 			{
 				if (ko.isWriteableObservable(this))
 				{

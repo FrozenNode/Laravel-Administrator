@@ -628,7 +628,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 ## Changelog
 
 ### 2.3.0
-
+- Bugfix: Adding real-time viewModel updates to the wysiwyg field. Sometimes if you hit "save" fast enough it wouldn't write the changes back to the viewModel from the CKEditor.
 - Bugfix: There was an array index error when not providing a name_field or when only providing one of the sort options.
 
 ### 2.2.0
