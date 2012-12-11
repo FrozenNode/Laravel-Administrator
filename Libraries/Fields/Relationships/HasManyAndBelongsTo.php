@@ -34,10 +34,12 @@ class HasManyAndBelongsTo extends Relationship {
 
 		$relationship = $model->{$field}();
 		$table = $relationship->table->joins[0];
+		$related_model = $relationship->model;
 
 		$this->table = $table->table;
 		$this->column = $relationship->table->wheres[0]['column'];
 		$this->column2 = $table->clauses[0]['column2'];
+		$this->foreignKey = $related_model::$key;
 	}
 
 
@@ -97,5 +99,25 @@ class HasManyAndBelongsTo extends Relationship {
 		}
 
 		$query->where_in($this->column2, $this->value);
+	}
+
+	/**
+	 * Constrains a query by a given set of constraints
+	 *
+	 * @param  Query 		$query
+	 * @param  Eloquent 	$model
+	 * @param  array 		$constraints
+	 *
+	 * @return void
+	 */
+	public function constrainQuery(&$query, $model, $constraints)
+	{
+		//if the column hasn't been joined yet, join it
+		if (!Column::isJoined($query, $this->table))
+		{
+			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->column2);
+		}
+
+		$query->where_in($this->column, $constraints);
 	}
 }

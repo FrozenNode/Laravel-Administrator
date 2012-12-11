@@ -185,24 +185,26 @@ class Administrator_Admin_Controller extends Controller
 	}
 
 	/**
-	 * Gets a list of related items based on a string search param called 'term'
+	 * Gets a list of related items given constraints
 	 *
 	 * @param string	$modelName
-	 * @param string	$field 		//the relationship field/method name
 	 *
 	 * @return array of objects [{id: string} ... {1: 'name'}, ...]
 	 */
-	public function action_search_relation($modelName, $field, $type)
+	public function action_update_options($modelName)
 	{
 		//try to get the object
 		$model = ModelHelper::getModel($modelName);
 
-		//get the search term
+		//get the constraints, the search term, and the currently-selected items
+		$constraints = Input::get('constraints', array());
 		$term = Input::get('term', '');
+		$type = Input::get('type', false);
+		$field = Input::get('field', false);
 		$selectedItems = Input::get('selectedItems', false);
 
 		//return the rows
-		return Response::json(ModelHelper::getRelationshipSuggestions($model, $field, $type, $selectedItems, $term));
+		return Response::json(ModelHelper::updateRelationshipOptions($model, $field, $type, $constraints, $selectedItems, $term));
 	}
 
 }

@@ -308,7 +308,7 @@
 						//set the new options for relationships
 						$.each(adminData.edit_fields, function(ind, el)
 						{
-							if (el.relationship)
+							if (el.relationship && el.autocomplete)
 							{
 								self.listOptions[ind](data[ind + '_options']);
 							}
@@ -698,6 +698,50 @@
 
 			});
 
+			//iterate over the edit fields
+			$.each(self.viewModel.editFields(), function(ind, field)
+			{
+				//if there are constraints to maintain, set up the subscriptions
+				if (field.constraints && self.getObjectSize(field.constraints))
+				{
+					//the subscription callback functiont that we'll use in a moment
+					var subscriptionCallback = function(val)
+					{
+						//when this value changes, we will want to update the listOptions for the other field
+						//this shouldn't affect the currently-selected item
+						var constraints = {};
+
+						//iterate over this field's constraints
+						$.each(field.constraints, function(key, relationshipName)
+						{
+							constraints[key] = self.viewModel[key]();
+						});
+
+						$.ajax({
+							url: base_url + self.viewModel.modelName() + '/update_options/',
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								constraints: constraints,
+								type: 'edit',
+								field: ind
+							},
+							success: function(response)
+							{
+								//update the options
+								self.viewModel.listOptions[ind](response);
+							}
+						});
+					}
+
+					//we want to subscribe to changes on the OTHER fields since that's what defines changes to this one
+					$.each(field.constraints, function(key, relationshipName)
+					{
+						self.viewModel[key].subscribe(subscriptionCallback);
+					});
+				}
+			});
+
 			//subscribe to page change
 			self.viewModel.pagination.page.subscribe(function(val)
 			{
@@ -792,6 +836,25 @@
 				return this.pagination.page() == this.pagination.last();
 			}, this.viewModel);
 
+		},
+
+		/**
+		 * Helper to get an object's size
+		 *
+		 * @param object
+		 *
+		 * @return int
+		 */
+		getObjectSize: function(obj)
+		{
+			var size = 0, key;
+
+			for (key in obj)
+			{
+				if (obj.hasOwnProperty(key)) size++;
+			}
+
+			return size;
 		}
 	};
 

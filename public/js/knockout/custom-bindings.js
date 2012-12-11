@@ -67,13 +67,25 @@
 	ko.bindingHandlers.ajaxChosen = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			var options = valueAccessor();
+			var options = valueAccessor(),
+				data = {
+					constraints: {},
+					field: options.field,
+					type: options.type
+				};
+
+			//figure out if there are any constraints that we need to send over
+			$(options.constraints).each(function(ind, el)
+			{
+				data.constraints[ind] = viewModel[ind]();
+			});
 
 			$(element).ajaxChosen({
 				minTermLength: 1,
 				afterTypeDelay: 50,
-				type: 'GET',
-				url: base_url + adminData.model_name + '/search_relation/' + options.field + '/' + options.type,
+				data: data,
+				type: 'POST',
+				url: base_url + adminData.model_name + '/update_options/',
 				dataType: 'json',
 				fillData: function()
 				{

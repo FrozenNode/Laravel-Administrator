@@ -371,4 +371,68 @@ abstract class Field {
 
 		return $return;
 	}
+
+	/**
+	 * Gets the filters for the given model
+	 *
+	 * @param object	$model
+	 *
+	 * @return array
+	 */
+	public static function getFilters($model)
+	{
+		//get the model's edit fields
+		$filters = array();
+
+		//if the filters option is set, use it
+		if (isset($model->filters) && count($model->filters) > 0)
+		{
+			foreach ($model->filters as $field => $info)
+			{
+				if ($fieldObject = Field::get($field, $info, $model))
+				{
+					$filters[$fieldObject->field] = $fieldObject->toArray();
+				}
+			}
+		}
+
+		return $filters;
+	}
+
+	/**
+	 * Finds a field's options given a field name, a model, and a type (filter/edit)
+	 *
+	 * @param  string 	$field
+	 * @param  Eloquent $model
+	 * @param  string 	$type
+	 *
+	 * @return array|false
+	 */
+	public static function getOptions($field, $model, $type)
+	{
+		$info = false;
+
+		//we want to get the correct options depending on the type of field it is
+		if ($type === 'filter')
+		{
+			$fields = static::getFilters($model);
+		}
+		else
+		{
+			$editFields = static::getEditFields($model);
+			$fields = $editFields['arrayFields'];
+		}
+
+		//iterate over the fields to get the one for this $field value
+		foreach ($fields as $key => $val)
+		{
+			if ($key === $field)
+			{
+				$info = $val;
+			}
+		}
+
+		//if we can't find the field, return an empty array
+		return $info;
+	}
 }

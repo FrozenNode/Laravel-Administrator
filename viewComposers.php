@@ -28,7 +28,7 @@ View::composer('administrator::index', function($view)
 	$view->rows = ModelHelper::getRows($modelInstance, $view->sort);
 	$view->editFields = $editFields['arrayFields'];
 	$view->dataModel = $editFields['dataModel'];
-	$view->filters = ModelHelper::getFilters($modelInstance);
+	$view->filters = Field::getFilters($modelInstance);
 	$view->baseUrl = $baseUrl;
 	$view->route = $route['path'].'/';
 	$view->expandWidth = ModelHelper::getExpandWidth($modelInstance);

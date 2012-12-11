@@ -12,8 +12,6 @@ require __DIR__.'/filters.php';
 require __DIR__.'/viewComposers.php';
 
 
-
-
 /**
  * Routes
  */
@@ -45,31 +43,31 @@ Route::group(array('before' => 'validate_admin|validate_model|add_assets'), func
 		'uses' => 'administrator::admin@item'
 	));
 
-	//Search Relationship Items
-	Route::get('(:bundle)/(:any)/search_relation/(:any)/(:any)', array(
-		'as' => 'admin_search_relation',
-		'uses' => 'administrator::admin@search_relation'
+	//Update a relationship's items with constraints
+	Route::post('(:bundle)/(:any)/update_options', array(
+		'as' => 'admin_update_options',
+		'uses' => 'administrator::admin@update_options'
+	));
+});
+
+//CSRF protection in forms
+Route::group(array('before' => 'validate_admin|validate_model|csrf'), function()
+{
+	//Save Item
+	Route::post('(:bundle)/(:any)/(:num?)/save', array(
+		'as' => 'admin_save_item',
+		'uses' => 'administrator::admin@save'
 	));
 
-	//CSRF protection in forms
-	Route::group(array('before' => 'csrf'), function()
-	{
-		//Save Item
-		Route::post('(:bundle)/(:any)/(:num?)/save', array(
-			'as' => 'admin_save_item',
-			'uses' => 'administrator::admin@save'
-		));
+	//Delete Item
+	Route::post('(:bundle)/(:any)/(:num)/delete', array(
+		'as' => 'admin_delete_item',
+		'uses' => 'administrator::admin@delete'
+	));
 
-		//Delete Item
-		Route::post('(:bundle)/(:any)/(:num)/delete', array(
-			'as' => 'admin_delete_item',
-			'uses' => 'administrator::admin@delete'
-		));
-
-		//Get results
-		Route::post('(:bundle)/(:any)/results', array(
-			'as' => 'admin_get_results',
-			'uses' => 'administrator::admin@results'
-		));
-	});
+	//Get results
+	Route::post('(:bundle)/(:any)/results', array(
+		'as' => 'admin_get_results',
+		'uses' => 'administrator::admin@results'
+	));
 });
