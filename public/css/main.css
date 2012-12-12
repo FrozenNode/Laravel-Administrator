@@ -360,6 +360,17 @@ a { text-decoration:none; }
   margin-bottom:15px;
   position:relative;
 }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.loader {
+  position:absolute;
+  top:26px;
+  left:-21px;
+  width:16px;
+  height:16px;
+  background:url(../img/loader.gif) no-repeat;
+  zoom:1;
+  filter:1;
+  opacity:0.3;
+}
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div select, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div textarea, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div input { margin-bottom:0; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.characters_left {
   position:absolute;

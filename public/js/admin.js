@@ -156,6 +156,11 @@
 			 */
 			freezeForm: ko.observable(false),
 
+			/* If this is set to true, the action buttons on the form cannot be accessed
+			 * bool
+			 */
+			freezeActions: ko.observable(false),
+
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
 			 */
@@ -568,7 +573,6 @@
 			this.viewModel.sortOptions.field(adminData.sortOptions.field);
 			this.viewModel.sortOptions.direction(adminData.sortOptions.direction);
 			this.viewModel.columns(adminData.column_model);
-			this.viewModel.editFields(adminData.edit_fields);
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.modelSingle(adminData.model_single);
@@ -580,8 +584,11 @@
 
 			//prepare the filters
 			var filters = this.prepareFilters();
-
 			this.filtersViewModel.filters = ko.observableArray(filters);
+
+			//prepare the edit fields
+			var fields = this.prepareEditFields();
+			this.viewModel.editFields(fields);
 
 			//set up the relationships
 			this.initRelationships();
@@ -630,6 +637,30 @@
 			});
 
 			return filters;
+		},
+
+		/**
+		 * Prepare the edit fields
+		 *
+		 * @return object with loadingOptions observables
+		 */
+		prepareEditFields: function()
+		{
+			var self = this,
+				fields = {};
+
+			$.each(adminData.edit_fields, function(ind, field)
+			{
+				//if this is a relationship field, set up the loadingOptions observable
+				if (field.relationship)
+				{
+					field.loadingOptions = ko.observable(false);
+				}
+
+				fields[ind] = field;
+			});
+
+			return fields;
 		},
 
 		/**
@@ -704,40 +735,49 @@
 				//if there are constraints to maintain, set up the subscriptions
 				if (field.constraints && self.getObjectSize(field.constraints))
 				{
-					//the subscription callback functiont that we'll use in a moment
-					var subscriptionCallback = function(val)
-					{
-						//when this value changes, we will want to update the listOptions for the other field
-						//this shouldn't affect the currently-selected item
-						var constraints = {};
-
-						//iterate over this field's constraints
-						$.each(field.constraints, function(key, relationshipName)
-						{
-							constraints[key] = self.viewModel[key]();
-						});
-
-						$.ajax({
-							url: base_url + self.viewModel.modelName() + '/update_options/',
-							type: 'POST',
-							dataType: 'json',
-							data: {
-								constraints: constraints,
-								type: 'edit',
-								field: ind
-							},
-							success: function(response)
-							{
-								//update the options
-								self.viewModel.listOptions[ind](response);
-							}
-						});
-					}
-
 					//we want to subscribe to changes on the OTHER fields since that's what defines changes to this one
 					$.each(field.constraints, function(key, relationshipName)
 					{
-						self.viewModel[key].subscribe(subscriptionCallback);
+						var fieldName = ind;
+
+						self.viewModel[key].subscribe(function(val)
+						{
+							//when this value changes, we will want to update the listOptions for the other field
+							//this shouldn't affect the currently-selected item
+							var constraints = {};
+
+							//iterate over this field's constraints
+							$.each(field.constraints, function(key, relationshipName)
+							{
+								constraints[key] = self.viewModel[key]();
+							});
+
+							//freeze the actions
+							self.viewModel.freezeActions(true);
+							self.viewModel.editFields()[fieldName].loadingOptions(true);
+
+							$.ajax({
+								url: base_url + self.viewModel.modelName() + '/update_options/',
+								type: 'POST',
+								dataType: 'json',
+								data: {
+									constraints: constraints,
+									type: 'edit',
+									field: fieldName,
+									selectedItems: self.viewModel[fieldName]()
+								},
+								complete: function()
+								{
+									self.viewModel.freezeActions(false);
+									self.viewModel.editFields()[fieldName].loadingOptions(false);
+								},
+								success: function(response)
+								{
+									//update the options
+									self.viewModel.listOptions[ind](response);
+								}
+							});
+						});
 					});
 				}
 			});

@@ -417,17 +417,36 @@ class ModelHelper {
 		//set up the field object
 		$info = Field::get($field, $info, $model, false);
 
+		//make sure we're grouping by the model's id
+		$query = $relatedModel::with($relatedModel->includes)->group_by($relatedModel->table().'.'.$relatedModel::$key);
+
+		//set up the selects
+		$selects = array(DB::raw($relatedModel->table().'.*'));
+
+		//if selectedItems are provided, set them up as a proper array
+		if ($selectedItems)
+		{
+			//if this isn't an array, set it up as one
+			$selectedItems = is_array($selectedItems) ? $selectedItems : array($selectedItems);
+		}
+		else
+		{
+			$selectedItems = array();
+		}
+
 		//if this is an autocomplete field, check if there is a search term. If not, just return the selected items
 		if ($info->autocomplete && !$term)
 		{
-			//set up the query to only find the selected items
-			$items = $relatedModel::where_in($relatedModel::$key, $selectedItems)->get();
-
-			return static::formatOptions($relatedModel, $info, $items);
+			if (sizeof($selectedItems))
+			{
+				$query->where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
+				return static::formatOptions($relatedModel, $info, $query->get($selects));
+			}
+			else
+			{
+				return array();
+			}
 		}
-
-		//make sure we're grouping by the model's id
-		$query = $relatedModel::group_by($relatedModel->table().'.'.$relatedModel::$key);
 
 		//if there are constraints
 		if (sizeof($info->constraints))
@@ -453,25 +472,15 @@ class ModelHelper {
 				$query->or_where(DB::raw($search), 'LIKE', '%'.$term.'%');
 			}
 
-			//include the currently-selected items
-			if ($selectedItems)
+			//include the currently-selected items if there are any
+			if (count($selectedItems))
 			{
-				//if this isn't an array, set it up as one
-				$selectedItems = is_array($selectedItems) ? $selectedItems : array($selectedItems);
-
-				$query->or_where_in($relatedModel::$key, $selectedItems);
-			}
-			else
-			{
-				$selectedItems = array();
+				$query->or_where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
 			}
 
 			//set up the limits
 			$query->take($info->numOptions + count($selectedItems));
 		}
-
-		//set up the selects
-		$selects = array(DB::raw($relatedModel->table().'.*'));
 
 		//finally we can return the options
 		return static::formatOptions($relatedModel, $info, $query->get($selects));

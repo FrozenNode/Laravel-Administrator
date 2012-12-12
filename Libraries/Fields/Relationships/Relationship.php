@@ -126,12 +126,14 @@ abstract class Relationship extends Field {
 			$options = $relationshipItems;
 		}
 
+		$nameField = $this->nameField;
+
 		//map the options to the options property where array([key]: int, [name_field]: string)
-		$this->options = array_map(function($m) use ($info, $model)
+		$this->options = array_map(function($m) use ($nameField, $model)
 		{
 			return array(
 				$m::$key => $m->{$m::$key},
-				$info['name_field'] => $m->{$info['name_field']},
+				$nameField => $m->{$nameField},
 			);
 		}, $options);
 	}

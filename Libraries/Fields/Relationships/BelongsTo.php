@@ -72,18 +72,4 @@ class BelongsTo extends Relationship {
 		$query->where($this->foreignKey, 'LIKE', '%'.$this->value.'%');
 	}
 
-	/**
-	 * Constrains a query by a given set of constraints
-	 *
-	 * @param  Query 		$query
-	 * @param  Eloquent 	$model
-	 * @param  array 		$constraints
-	 *
-	 * @return void
-	 */
-	public function constrainQuery(&$query, $model, $constraints)
-	{
-		$query->where_in($this->foreignKey, $constraints);
-	}
-
 }

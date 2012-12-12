@@ -49,15 +49,16 @@
 				<div class="preview" data-bind="markdown: $root[key]"></div>
 			{{/if}}
 			{{if type === 'belongs_to'}}
+				<div class="loader" data-bind="visible: loadingOptions"></div>
 				{{if autocomplete}}
-				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key],
+				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm() || loadingOptions()}, value: $root[key],
 													ajaxChosen: {field: field, type: 'edit'},
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'None'"></select>
 				{{else}}
-				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
+				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm() || loadingOptions()}, value: $root[key], chosen: true,
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
@@ -65,14 +66,15 @@
 				{{/if}}
 			{{/if}}
 			{{if type === 'has_many_and_belongs_to'}}
+				<div class="loader" data-bind="visible: loadingOptions"></div>
 				{{if autocomplete}}
-				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm},
+				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm() || loadingOptions()},
 													ajaxChosen: {field: field, type: 'edit'},
 													selectedOptions: $root[key], options: $root.listOptions[field],
 													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
 				{{else}}
-				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm}, chosen: true,
+				<select id="edit_field_${ key }" multiple="true" data-bind="attr: {disabled: freezeForm() || loadingOptions()}, chosen: true,
 													selectedOptions: $root[key], options: $root.listOptions[field],
 													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
@@ -113,12 +115,12 @@
 
 	<div class="control_buttons">
 		{{if $root[$root.primaryKey]()}}
-			<input type="button" value="Close" data-bind="click: closeItem, attr: {disabled: freezeForm}" />
-			<input type="button" value="Delete" data-bind="click: deleteItem, attr: {disabled: freezeForm}" />
-			<input type="submit" value="Save" data-bind="attr: {disabled: freezeForm}" />
+			<input type="button" value="Close" data-bind="click: closeItem, attr: {disabled: freezeForm() || freezeActions()}" />
+			<input type="button" value="Delete" data-bind="click: deleteItem, attr: {disabled: freezeForm() || freezeActions()}" />
+			<input type="submit" value="Save" data-bind="attr: {disabled: freezeForm() || freezeActions()}" />
 		{{else}}
-			<input type="button" value="Cancel" data-bind="click: closeItem, attr: {disabled: freezeForm}" />
-			<input type="submit" value="Create" data-bind="attr: {disabled: freezeForm}" />
+			<input type="button" value="Cancel" data-bind="click: closeItem, attr: {disabled: freezeForm() || freezeActions()}" />
+			<input type="submit" value="Create" data-bind="attr: {disabled: freezeForm() || freezeActions()}" />
 		{{/if}}
 		<span class="message" data-bind="css: { error: statusMessageType() == 'error', success: statusMessageType() == 'success' },
 										notification: statusMessage "></span>
