@@ -50,12 +50,12 @@
 			{{if autocomplete}}
 			<select id="filter_field_${ field }" data-bind="value: value, ajaxChosen: {field: field, type: 'filter'},
 													options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'All'"></select>
 			{{else}}
 			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'All'"></select>
 			{{/if}}
@@ -64,12 +64,12 @@
 			{{if autocomplete}}
 			<select id="filter_field_${ field }" size="7" multiple="true" data-bind="ajaxChosen: {field: field, type: 'filter'},
 													options: $root.listOptions[field], selectedOptions: value,
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
 			{{else}}
 			<select id="filter_field_${ field }" size="7" multiple="true" data-bind="chosen: true,
 													options: $root.listOptions[field], selectedOptions: value,
-													optionsValue: function(item) {return item.id},
+													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
 			{{/if}}
 		{{/if}}

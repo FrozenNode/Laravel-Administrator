@@ -1,0 +1,11 @@
+{
+	"name"        : "Laravel Administrator",
+	"description" : "Administrator is a database interface bundle for the Laravel PHP framework.",
+	"author"      : "Jan Hartigan",
+	"url"         : "http://bundles.laravel.com/bundle/administrator",
+	"version"     : "2.2.0",
+	"config"      : {
+		"handles" : "administrator"
+	},
+	"require"     : {}
+}
