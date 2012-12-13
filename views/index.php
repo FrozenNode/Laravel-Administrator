@@ -29,24 +29,24 @@
 
 <style type="text/css">
 
-	div.item_edit div.edit_form select {
+	div.item_edit form.edit_form select {
 		width: <?php echo $expandWidth - 65 ?>px;
 	}
 
-	div.item_edit div.edit_form .cke {
+	div.item_edit form.edit_form .cke {
 		width: <?php echo $expandWidth - 67 ?>px;
 	}
 
-	div.item_edit div.edit_form div.markdown textarea {
+	div.item_edit form.edit_form div.markdown textarea {
 		width: <?php echo intval(($expandWidth - 75) / 2) - 12 ?>px;
 		max-width: <?php echo intval(($expandWidth - 75) / 2) - 12 ?>px;
 	}
 
-	div.item_edit div.edit_form div.markdown div.preview {
+	div.item_edit form.edit_form div.markdown div.preview {
 		width: <?php echo intval(($expandWidth - 75) / 2) ?>px;
 	}
 
-	div.item_edit div.edit_form input[type="text"], div.item_edit div.edit_form textarea {
+	div.item_edit form.edit_form input[type="text"], div.item_edit form.edit_form textarea {
 		max-width: <?php echo $expandWidth - 75 ?>px;
 		width: <?php echo $expandWidth - 75 ?>px;
 	}
