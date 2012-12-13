@@ -277,6 +277,21 @@
 	};
 
 	/**
+	 * This ensures that a bool field is always a boolean value
+	 */
+	ko.bindingHandlers.bool = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var modelVal = viewModel[valueAccessor()]();
+
+			if (modelVal === '0')
+				viewModel[valueAccessor()](false);
+			else if (modelVal === '1')
+				viewModel[valueAccessor()](true);
+		}
+	};
+
+	/**
 	 * The wysiwyg binding makes the field a ckeditor wysiwyg
 	 */
 	ko.bindingHandlers.wysiwyg = {

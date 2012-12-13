@@ -632,6 +632,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 ### 2.3.0
 - Relationship constraints are now possible if you want to limit one relationship field's options by its relation to another relationship field (only applies when those two fields themselves have a pivot table)
 - You can now hit the enter key on text/textarea fields to submit the create/edit form
+- Bugfix: Bool field now works properly with SQLite (or any database that returns ints as strings)
 - Bugfix: History.js now recognizes base URIs other than '/'
 - Bugfix: In PostgreSQL there was an issue with using boolean false to pull back no results on an integer column
 - Bugfix: If you are on some high page number and you filter the set such that that page number is now outside the range of the filtered set, you will be brought back to the last page of the set instead of staying on that page
