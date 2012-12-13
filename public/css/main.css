@@ -353,7 +353,7 @@ a { text-decoration:none; }
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form a.item_link {
   position:absolute;
-  top:61px;
+  top:75px;
   right:41px;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div {
