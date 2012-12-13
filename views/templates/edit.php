@@ -88,10 +88,10 @@
 																			decimalSeparator: decimalSeparator}" />
 			{{/if}}
 			{{if type === 'bool'}}
-				<input type="checkbox" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, checked: $root[key]" />
+				<input type="checkbox" id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, bool: key, checked: $root[key]" />
 			{{/if}}
 			{{if type === 'enum'}}
-				<select id="edit_field_${ field }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
+				<select id="edit_field_${ key }" data-bind="attr: {disabled: freezeForm}, value: $root[key], chosen: true,
 																options: options,
 																optionsValue: function(item) {return item.value},
 																optionsText: function(item) {return item.text},
