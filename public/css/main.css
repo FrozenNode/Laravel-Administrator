@@ -121,6 +121,17 @@ a { text-decoration:none; }
   margin-bottom:10px;
   position:relative;
 }
+#admin_page div#sidebar div.panel_contents > div div.loader {
+  position:absolute;
+  top:26px;
+  left:-21px;
+  width:16px;
+  height:16px;
+  background:url(../img/loader.gif) no-repeat;
+  zoom:1;
+  filter:1;
+  opacity:0.3;
+}
 #admin_page div#sidebar div.panel_contents > div.min_max input[type=text] { width:90px; }
 #admin_page div#sidebar div.panel_contents > div.min_max span.symbol {
   position:absolute;

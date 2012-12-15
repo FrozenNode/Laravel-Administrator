@@ -201,6 +201,7 @@
 							self[self.primaryKey](response.data[self.primaryKey]);
 							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
+							self.updateSelfRelationships();
 
 							setTimeout(function()
 							{
@@ -238,6 +239,7 @@
 						{
 							self.statusMessage('Item deleted.').statusMessageType('success');
 							self.updateRows();
+							self.updateSelfRelationships();
 
 							setTimeout(function()
 							{
@@ -524,7 +526,7 @@
 				var filters = [],
 					observables = ['value', 'minValue', 'maxValue'];
 
-				$(window.admin.filtersViewModel.filters()).each(function(ind, el)
+				$.each(window.admin.filtersViewModel.filters(), function(ind, el)
 				{
 					var filter = {
 						field: el.field,
@@ -546,6 +548,75 @@
 				});
 
 				return filters;
+			},
+
+			/**
+			 * Updates any self-relationships
+			 */
+			updateSelfRelationships: function()
+			{
+				var self = this;
+
+				//first we will iterate over the filters and update them if any exist
+				$.each(window.admin.filtersViewModel.filters(), function(ind, filter)
+				{
+					if ((!filter.constraints || !filter.constraints.length) && filter.selfRelationship)
+					{
+						window.admin.filtersViewModel.filters()[filter.field].loadingOptions(true);
+
+						$.ajax({
+							url: base_url + self.modelName() + '/update_options/',
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								type: 'filter',
+								field: filter.field,
+								selectedItems: filter.value()
+							},
+							complete: function()
+							{
+								window.admin.filtersViewModel.filters()[filter.field].loadingOptions(false);
+							},
+							success: function(response)
+							{
+								//update the options
+								window.admin.filtersViewModel.listOptions[filter.field](response);
+							}
+						});
+
+					}
+				});
+
+				//then we'll update the edit fields
+				$.each(self.editFields(), function(ind, field)
+				{
+					//if there are constraints to maintain, set up the subscriptions
+					if ((!field.constraints || !field.constraints.length) && field.selfRelationship)
+					{
+						self.editFields()[ind].loadingOptions(true);
+
+						$.ajax({
+							url: base_url + self.modelName() + '/update_options/',
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								type: 'edit',
+								field: ind,
+								selectedItems: self[ind]()
+							},
+							complete: function()
+							{
+								self.editFields()[ind].loadingOptions(false);
+							},
+							success: function(response)
+							{
+								//update the options
+								self.listOptions[ind](response);
+							}
+						});
+
+					}
+				});
 			}
 		},
 
@@ -583,12 +654,10 @@
 			this.initComputed();
 
 			//prepare the filters
-			var filters = this.prepareFilters();
-			this.filtersViewModel.filters = ko.observableArray(filters);
+			this.filtersViewModel.filters(this.prepareFilters());
 
 			//prepare the edit fields
-			var fields = this.prepareEditFields();
-			this.viewModel.editFields(fields);
+			this.viewModel.editFields(this.prepareEditFields());
 
 			//set up the relationships
 			this.initRelationships();
@@ -617,12 +686,11 @@
 		 */
 		prepareFilters: function()
 		{
-			var filters = [];
+			var filters = {};
 
-			$.each(adminData.filters, function(ind, el)
+			$.each(adminData.filters, function(ind, filter)
 			{
-				var filter = el,
-					observables = ['value', 'minValue', 'maxValue'];
+				var observables = ['value', 'minValue', 'maxValue'];
 
 				//iterate over the desired observables and check if they're there. if so, assign them an observable slot
 				$.each(observables, function(i, obs)
@@ -633,7 +701,13 @@
 					}
 				});
 
-				filters.push(filter);
+				//if this is a relationship field, we want to set up the loading options observable
+				if (filter.relationship)
+				{
+					filter.loadingOptions = ko.observable(false);
+				}
+
+				filters[filter.field] = filter;
 			});
 
 			return filters;
@@ -774,7 +848,7 @@
 								success: function(response)
 								{
 									//update the options
-									self.viewModel.listOptions[ind](response);
+									self.viewModel.listOptions[fieldName](response);
 								}
 							});
 						});

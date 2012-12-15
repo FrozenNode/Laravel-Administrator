@@ -67,6 +67,13 @@ abstract class Relationship extends Field {
 	 *
 	 * @var bool
 	 */
+	public $selfRelationship = false;
+
+	/**
+	 * If this is true, the field will start with no options and be an autocomplete
+	 *
+	 * @var bool
+	 */
 	public $autocomplete = false;
 
 	/**
@@ -109,6 +116,7 @@ abstract class Relationship extends Field {
 		$this->autocomplete = array_get($info, 'autocomplete', $this->autocomplete);
 		$this->numOptions = array_get($info, 'num_options', $this->numOptions);
 		$this->searchFields = array_get($info, 'search_fields', array($this->nameField));
+		$this->selfRelationship = $relationship->model->table() === $model->table();
 
 		//set up and check the constraints
 		$this->setUpConstraints($info, $model);
@@ -203,6 +211,7 @@ abstract class Relationship extends Field {
 		$arr['foreignKey'] = $this->foreignKey;
 		$arr['name_field'] = $this->nameField;
 		$arr['options'] = $this->options;
+		$arr['selfRelationship'] = $this->selfRelationship;
 		$arr['autocomplete'] = $this->autocomplete;
 		$arr['num_options'] = $this->numOptions;
 		$arr['search_fields'] = $this->searchFields;

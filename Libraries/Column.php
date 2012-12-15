@@ -153,8 +153,18 @@ class Column {
 				return false;
 			}
 
-			//replace (:table) with the table name
-			$column['select'] = str_replace('(:table)', $relationshipField->table, $column['select']);
+			//if this is a belongs_to, we need to set up the proper aliased select replacement
+			if (!$relationshipField->external)
+			{
+				$selectTable = $field.'_'.$relationshipField->table;
+			}
+			//else replace (:table) with the simple table name
+			else
+			{
+				$selectTable = $relationshipField->table;
+			}
+
+			$column['select'] = str_replace('(:table)', $selectTable, $column['select']);
 			$column['relationshipField'] = $relationshipField;
 		}
 		//if the supplied item is a getter, make this unsortable for the moment
@@ -206,19 +216,22 @@ class Column {
 			if ($this->isRelated)
 			{
 				$where = '';
+				$fieldTable = $this->relationshipField->table;
 
 				switch ($this->relationshipField->type)
 				{
 					case 'belongs_to':
+						$fieldTable = $this->field.'_'.$this->relationshipField->table;
+
 						$where = $model->table().'.'.$this->relationshipField->foreignKey.
 							' = '.
-						$this->relationshipField->table.'.'.$this->relationshipField->column;
+						$fieldTable.'.'.$this->relationshipField->column;
 						break;
 					case 'has_one':
 					case 'has_many':
 						$where = $model->table().'.'.$model::$key.
 							' = '.
-						$this->relationshipField->table.'.'.$this->relationshipField->column;
+						$fieldTable.'.'.$this->relationshipField->column;
 						break;
 					case 'has_many_and_belongs_to':
 						$where = $model->table().'.'.$model::$key.
@@ -227,7 +240,9 @@ class Column {
 						break;
 				}
 
-				$selects[] = DB::raw("(SELECT ".$this->select." FROM ".$this->relationshipField->table." WHERE ".$where.") AS " .$this->field);
+				$selects[] = DB::raw("(SELECT ".$this->select."
+										FROM ".$this->relationshipField->table." AS ".$fieldTable."
+										WHERE ".$where.") AS ".$this->field);
 			}
 			else
 			{
