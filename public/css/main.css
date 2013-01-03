@@ -121,6 +121,17 @@ a { text-decoration:none; }
   margin-bottom:10px;
   position:relative;
 }
+#admin_page div#sidebar div.panel_contents > div div.loader {
+  position:absolute;
+  top:26px;
+  left:-21px;
+  width:16px;
+  height:16px;
+  background:url(../img/loader.gif) no-repeat;
+  zoom:1;
+  filter:1;
+  opacity:0.3;
+}
 #admin_page div#sidebar div.panel_contents > div.min_max input[type=text] { width:90px; }
 #admin_page div#sidebar div.panel_contents > div.min_max span.symbol {
   position:absolute;
@@ -347,39 +358,50 @@ a { text-decoration:none; }
   margin-left:2px;
   margin-bottom:2px;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form {
   color:#444444;
   text-shadow:white 0 1px 0;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form a.item_link {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form a.item_link {
   position:absolute;
-  top:61px;
+  top:75px;
   right:41px;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div {
   margin-bottom:15px;
   position:relative;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div select, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div textarea, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div input { margin-bottom:0; }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div div.characters_left {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.loader {
+  position:absolute;
+  top:26px;
+  left:-21px;
+  width:16px;
+  height:16px;
+  background:url(../img/loader.gif) no-repeat;
+  zoom:1;
+  filter:1;
+  opacity:0.3;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div select, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div textarea, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div input { margin-bottom:0; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.characters_left {
   position:absolute;
   top:1px;
   right:40px;
   font-size:11px;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.number span.symbol {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.number span.symbol {
   position:absolute;
   top:27px;
   left:-15px;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key { margin-right:100px; }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit div.edit_form > div.bool label { display:inline-block; }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.markdown div.preview {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key { margin-right:100px; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.bool label { display:inline-block; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.preview {
   display:inline-block;
   margin-left:10px;
 }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form > div.markdown div.preview p { margin-bottom:7px; }
-#admin_page #content div.item_edit_container div.item_edit div.edit_form div.control_buttons {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.preview p { margin-bottom:7px; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form div.control_buttons {
   margin-top:20px;
   padding-bottom:20px;
 }

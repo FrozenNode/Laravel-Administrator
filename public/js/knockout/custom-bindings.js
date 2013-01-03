@@ -67,13 +67,25 @@
 	ko.bindingHandlers.ajaxChosen = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			var options = valueAccessor();
+			var options = valueAccessor(),
+				data = {
+					constraints: {},
+					field: options.field,
+					type: options.type
+				};
+
+			//figure out if there are any constraints that we need to send over
+			$(options.constraints).each(function(ind, el)
+			{
+				data.constraints[ind] = viewModel[ind]();
+			});
 
 			$(element).ajaxChosen({
 				minTermLength: 1,
 				afterTypeDelay: 50,
-				type: 'GET',
-				url: base_url + adminData.model_name + '/search_relation/' + options.field + '/' + options.type,
+				data: data,
+				type: 'POST',
+				url: base_url + adminData.model_name + '/update_options/',
 				dataType: 'json',
 				fillData: function()
 				{
@@ -265,6 +277,21 @@
 	};
 
 	/**
+	 * This ensures that a bool field is always a boolean value
+	 */
+	ko.bindingHandlers.bool = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var modelVal = viewModel[valueAccessor()]();
+
+			if (modelVal === '0')
+				viewModel[valueAccessor()](false);
+			else if (modelVal === '1')
+				viewModel[valueAccessor()](true);
+		}
+	};
+
+	/**
 	 * The wysiwyg binding makes the field a ckeditor wysiwyg
 	 */
 	ko.bindingHandlers.wysiwyg = {
@@ -279,7 +306,7 @@
 			var editor = $element.ckeditorGet();
 
 			//handle edits made in the editor
-			editor.on('blur', function (e)
+			editor.on('change', function (e)
 			{
 				if (ko.isWriteableObservable(this))
 				{

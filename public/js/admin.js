@@ -156,6 +156,11 @@
 			 */
 			freezeForm: ko.observable(false),
 
+			/* If this is set to true, the action buttons on the form cannot be accessed
+			 * bool
+			 */
+			freezeActions: ko.observable(false),
+
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
 			 */
@@ -196,6 +201,7 @@
 							self[self.primaryKey](response.data[self.primaryKey]);
 							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
+							self.updateSelfRelationships();
 
 							setTimeout(function()
 							{
@@ -233,6 +239,7 @@
 						{
 							self.statusMessage('Item deleted.').statusMessageType('success');
 							self.updateRows();
+							self.updateSelfRelationships();
 
 							setTimeout(function()
 							{
@@ -519,7 +526,7 @@
 				var filters = [],
 					observables = ['value', 'minValue', 'maxValue'];
 
-				$(window.admin.filtersViewModel.filters()).each(function(ind, el)
+				$.each(window.admin.filtersViewModel.filters(), function(ind, el)
 				{
 					var filter = {
 						field: el.field,
@@ -541,6 +548,75 @@
 				});
 
 				return filters;
+			},
+
+			/**
+			 * Updates any self-relationships
+			 */
+			updateSelfRelationships: function()
+			{
+				var self = this;
+
+				//first we will iterate over the filters and update them if any exist
+				$.each(window.admin.filtersViewModel.filters(), function(ind, filter)
+				{
+					if ((!filter.constraints || !filter.constraints.length) && filter.selfRelationship)
+					{
+						window.admin.filtersViewModel.filters()[filter.field].loadingOptions(true);
+
+						$.ajax({
+							url: base_url + self.modelName() + '/update_options/',
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								type: 'filter',
+								field: filter.field,
+								selectedItems: filter.value()
+							},
+							complete: function()
+							{
+								window.admin.filtersViewModel.filters()[filter.field].loadingOptions(false);
+							},
+							success: function(response)
+							{
+								//update the options
+								window.admin.filtersViewModel.listOptions[filter.field](response);
+							}
+						});
+
+					}
+				});
+
+				//then we'll update the edit fields
+				$.each(self.editFields(), function(ind, field)
+				{
+					//if there are constraints to maintain, set up the subscriptions
+					if ((!field.constraints || !field.constraints.length) && field.selfRelationship)
+					{
+						self.editFields()[ind].loadingOptions(true);
+
+						$.ajax({
+							url: base_url + self.modelName() + '/update_options/',
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								type: 'edit',
+								field: ind,
+								selectedItems: self[ind]()
+							},
+							complete: function()
+							{
+								self.editFields()[ind].loadingOptions(false);
+							},
+							success: function(response)
+							{
+								//update the options
+								self.listOptions[ind](response);
+							}
+						});
+
+					}
+				});
 			}
 		},
 
@@ -568,7 +644,6 @@
 			this.viewModel.sortOptions.field(adminData.sortOptions.field);
 			this.viewModel.sortOptions.direction(adminData.sortOptions.direction);
 			this.viewModel.columns(adminData.column_model);
-			this.viewModel.editFields(adminData.edit_fields);
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.modelSingle(adminData.model_single);
@@ -579,9 +654,10 @@
 			this.initComputed();
 
 			//prepare the filters
-			var filters = this.prepareFilters();
+			this.filtersViewModel.filters(this.prepareFilters());
 
-			this.filtersViewModel.filters = ko.observableArray(filters);
+			//prepare the edit fields
+			this.viewModel.editFields(this.prepareEditFields());
 
 			//set up the relationships
 			this.initRelationships();
@@ -610,12 +686,11 @@
 		 */
 		prepareFilters: function()
 		{
-			var filters = [];
+			var filters = {};
 
-			$.each(adminData.filters, function(ind, el)
+			$.each(adminData.filters, function(ind, filter)
 			{
-				var filter = el,
-					observables = ['value', 'minValue', 'maxValue'];
+				var observables = ['value', 'minValue', 'maxValue'];
 
 				//iterate over the desired observables and check if they're there. if so, assign them an observable slot
 				$.each(observables, function(i, obs)
@@ -626,10 +701,40 @@
 					}
 				});
 
-				filters.push(filter);
+				//if this is a relationship field, we want to set up the loading options observable
+				if (filter.relationship)
+				{
+					filter.loadingOptions = ko.observable(false);
+				}
+
+				filters[filter.field] = filter;
 			});
 
 			return filters;
+		},
+
+		/**
+		 * Prepare the edit fields
+		 *
+		 * @return object with loadingOptions observables
+		 */
+		prepareEditFields: function()
+		{
+			var self = this,
+				fields = {};
+
+			$.each(adminData.edit_fields, function(ind, field)
+			{
+				//if this is a relationship field, set up the loadingOptions observable
+				if (field.relationship)
+				{
+					field.loadingOptions = ko.observable(false);
+				}
+
+				fields[ind] = field;
+			});
+
+			return fields;
 		},
 
 		/**
@@ -696,6 +801,59 @@
 				}
 
 
+			});
+
+			//iterate over the edit fields
+			$.each(self.viewModel.editFields(), function(ind, field)
+			{
+				//if there are constraints to maintain, set up the subscriptions
+				if (field.constraints && self.getObjectSize(field.constraints))
+				{
+					//we want to subscribe to changes on the OTHER fields since that's what defines changes to this one
+					$.each(field.constraints, function(key, relationshipName)
+					{
+						var fieldName = ind;
+
+						self.viewModel[key].subscribe(function(val)
+						{
+							//when this value changes, we will want to update the listOptions for the other field
+							//this shouldn't affect the currently-selected item
+							var constraints = {};
+
+							//iterate over this field's constraints
+							$.each(field.constraints, function(key, relationshipName)
+							{
+								constraints[key] = self.viewModel[key]();
+							});
+
+							//freeze the actions
+							self.viewModel.freezeActions(true);
+							self.viewModel.editFields()[fieldName].loadingOptions(true);
+
+							$.ajax({
+								url: base_url + self.viewModel.modelName() + '/update_options/',
+								type: 'POST',
+								dataType: 'json',
+								data: {
+									constraints: constraints,
+									type: 'edit',
+									field: fieldName,
+									selectedItems: self.viewModel[fieldName]()
+								},
+								complete: function()
+								{
+									self.viewModel.freezeActions(false);
+									self.viewModel.editFields()[fieldName].loadingOptions(false);
+								},
+								success: function(response)
+								{
+									//update the options
+									self.viewModel.listOptions[fieldName](response);
+								}
+							});
+						});
+					});
+				}
 			});
 
 			//subscribe to page change
@@ -792,6 +950,25 @@
 				return this.pagination.page() == this.pagination.last();
 			}, this.viewModel);
 
+		},
+
+		/**
+		 * Helper to get an object's size
+		 *
+		 * @param object
+		 *
+		 * @return int
+		 */
+		getObjectSize: function(obj)
+		{
+			var size = 0, key;
+
+			for (key in obj)
+			{
+				if (obj.hasOwnProperty(key)) size++;
+			}
+
+			return size;
 		}
 	};
 

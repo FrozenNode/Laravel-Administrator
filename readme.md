@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 2.2.0
+- **Version:** 2.3.0
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.png" />
 
@@ -247,9 +247,10 @@ The available options are:
 
 ##### Relationships
 - **name_field**: default is 'name'. Only use this if type is 'relationship'. This is the field on the other table to use for displaying the name/title of the other data model.
-- **autocomplete**: default is false. If this is true, the related items won't be prefilled. The user will have to start typing some values which will then be used to create suggestions
+- **autocomplete**: default is false. If this is true, the related items won't be prefilled. The user will have to start typing some values which will then be used to create suggestions. *(Set this to true if you expect any large amount of records, or it will try to load all rows!)*
 - **num_options**: default is 10. If autocomplete is on, this is the number of items to show
 - **search_fields**: default is array(name_field). Must be an array. You can supply an on-table column name or a raw SQL function like CONCAT(first_name, ' ', last_name)
+- **constraints**: default is array(). Must be an array of string key => value pairs where the key is the relationship method on this model and the value is the method name on that relationship's model. So let's say you're setting up a film times model where each film time needs a film and a theater. When the user is creating the film time and selects a particular theater, you want to limit the film options to those films that are in that theater. When they select a film, you want to limit the theater options to those theaters that are showing that film. In this case you would put `'constraints' => array('film' => 'theaters')` in the theater relationship field, and `'constraints' => array('theater' => 'films')` in the film relationship field. This only applies when the 'films' and 'theaters' tables/models themselves have a pivot table (i.e. films_theaters).
 
 ##### Enum
 - **options**: default is an empty array. This can either be an array of strings (array('Spring', 'Winter')) or an array of strings indexed on the enum value (array('Spring' => 'Beautiful Spring!', 'Winter' => 'Cold Winter! :(')). In the latter case, the key value will be used to save to / query the database.
@@ -507,13 +508,14 @@ The markdown type lets you create a field that is essentially a text field but s
 	'type' => 'relationship',
 	'title' => 'Actors',
 	'name_field' => 'name', //what column or getter on the other table you want to use to represent this object
-	'autocomplete' => true, //set these three fields if you want to have an autocomplete select box
+	'constraints' => array('film' => 'actors') //'film' should be another relationship *in this model* and 'actors' should be a method on the film model
+	'autocomplete' => true, //set the following three fields if you want to have an autocomplete select box
 	'num_options' => 5,
 	'search_fields' => array("CONCAT(first_name, ' ', last_name)"),
 )
 ```
 
-The relationship field should have the relationship's method name as its index. The name_field will be the item's name when displayed in the select boxes.
+The relationship field should have the relationship's method name as its index. The only required option is 'type'. The name_field will be the item's name when displayed in the select boxes. If autocomplete is set to true, you can also provide num_options and search_fields. If constraints are supplied, the key must be the method name of the other relationship you want to couple the constraint, and the value must be the name of the relationship on that relationship's model. Constriants only apply when the models representing the two fields in question themselves have a pivot table (i.e. films_actors).
 
 #### number
 
@@ -627,6 +629,17 @@ Administrator was written by Jan Hartigan for the Laravel framework.
 Administrator is released under the MIT License. See the LICENSE file for details.
 
 ## Changelog
+
+### 2.3.0
+- Relationship constraints are now possible if you want to limit one relationship field's options by its relation to another relationship field (only applies when those two fields themselves have a pivot table)
+- You can now hit the enter key on text/textarea fields to submit the create/edit form
+- Self-relationships are now possible
+- Bugfix: Bool field now works properly with SQLite (or any database that returns ints as strings)
+- Bugfix: History.js now recognizes base URIs other than '/'
+- Bugfix: In PostgreSQL there was an issue with using boolean false to pull back no results on an integer column
+- Bugfix: If you are on some high page number and you filter the set such that that page number is now outside the range of the filtered set, you will be brought back to the last page of the set instead of staying on that page
+- Bugfix: Adding real-time viewModel updates to the wysiwyg field. Sometimes if you hit "save" fast enough it wouldn't write the changes back to the viewModel from the CKEditor
+- Bugfix: There was an array index error when not providing a name_field or when only providing one of the sort options
 
 ### 2.2.0
 - There is now an autocomplete option for relationships that could have a lot of potential values

@@ -12,11 +12,11 @@ View::composer('administrator::index', function($view)
 {
 	//get a model instance that we'll use for constructing stuff
 	$modelInstance = ModelHelper::getModel($view->modelName);
-
+	$baseUrl = URL::to_route('admin_index');
+	$route = parse_url($baseUrl);
 
 	$columns = Column::getColumns($modelInstance);
 	$editFields = Field::getEditFields($modelInstance);
-	$bundleConfig = Bundle::get('administrator');
 
 	//add the view fields
 	$view->modelTitle = Config::get('administrator::administrator.models.'.$view->modelName.'.title', $view->modelName);
@@ -28,9 +28,9 @@ View::composer('administrator::index', function($view)
 	$view->rows = ModelHelper::getRows($modelInstance, $view->sort);
 	$view->editFields = $editFields['arrayFields'];
 	$view->dataModel = $editFields['dataModel'];
-	$view->filters = ModelHelper::getFilters($modelInstance);
-	$view->baseUrl = URL::to_route('admin_index');
-	$view->bundleHandles = $bundleConfig['handles'];
+	$view->filters = Field::getFilters($modelInstance);
+	$view->baseUrl = $baseUrl;
+	$view->route = $route['path'].'/';
 	$view->expandWidth = ModelHelper::getExpandWidth($modelInstance);
 	$view->modelInstance = $modelInstance;
 	$view->model = isset($view->model) ? $view->model : false;

@@ -100,4 +100,24 @@ class HasManyAndBelongsTo extends Relationship {
 
 		$query->where_in($this->column2, $this->value);
 	}
+
+	/**
+	 * Constrains a query by a given set of constraints
+	 *
+	 * @param  Query 		$query
+	 * @param  Eloquent 	$model
+	 * @param  array 		$constraints
+	 *
+	 * @return void
+	 */
+	public function constrainQuery(&$query, $model, $constraints)
+	{
+		//if the column hasn't been joined yet, join it
+		if (!Column::isJoined($query, $this->table))
+		{
+			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->column2);
+		}
+
+		$query->where_in($this->column, $constraints);
+	}
 }
