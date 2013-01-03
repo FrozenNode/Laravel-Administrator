@@ -26,7 +26,7 @@ class Bool extends Field {
 		//if it isn't null, we have to check the 'true'/'false' string
 		if ($this->value !== '')
 		{
-			$this->value = $this->value === 'true' ? true : false;
+			$this->value = $this->value === 'true' ? 1 : 0;
 		}
 	}
 
@@ -51,7 +51,7 @@ class Bool extends Field {
 	 */
 	public function filterQuery(&$query, $model)
 	{
-		//if the field is
+		//if the field isn't empty
 		if ($this->value !== '')
 		{
 			$query->where($model->table().'.'.$this->field, '=', $this->value);

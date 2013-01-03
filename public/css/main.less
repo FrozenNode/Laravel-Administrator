@@ -164,6 +164,16 @@ body{
 				margin-bottom: 10px;
 				position: relative;
 
+				div.loader {
+					position: absolute;
+					top: 26px;
+					left: -21px;
+					width: 16px;
+					height: 16px;
+					background: url(../img/loader.gif) no-repeat;
+					@opacity(0.3);
+				}
+
 				&.min_max {
 
 					input[type=text] {
@@ -417,19 +427,29 @@ body{
 				margin-left: 2px;
 				margin-bottom: 2px;
 
-				div.edit_form {
+				form.edit_form {
 					color: #444;
 					text-shadow: white 0 1px 0;
 
 					a.item_link {
 						position: absolute;
-						top: 61px;
+						top: 75px;
 						right: 41px;
 					}
 
 					> div {
 						margin-bottom: 15px;
 						position: relative;
+
+						div.loader {
+							position: absolute;
+							top: 26px;
+							left: -21px;
+							width: 16px;
+							height: 16px;
+							background: url(../img/loader.gif) no-repeat;
+							@opacity(0.3);
+						}
 
 						select, textarea, input {
 							margin-bottom:0;

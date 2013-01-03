@@ -47,29 +47,31 @@
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 		{{/if}}
 		{{if type === 'belongs_to'}}
+			<div class="loader" data-bind="visible: loadingOptions"></div>
 			{{if autocomplete}}
 			<select id="filter_field_${ field }" data-bind="value: value, ajaxChosen: {field: field, type: 'filter'},
 													options: $root.listOptions[field],
-													optionsValue: function(item) {return item[column]},
+													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'All'"></select>
 			{{else}}
 			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: $root.listOptions[field],
-													optionsValue: function(item) {return item[column]},
+													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'All'"></select>
 			{{/if}}
 		{{/if}}
 		{{if type === 'has_many_and_belongs_to'}}
+			<div class="loader" data-bind="visible: loadingOptions"></div>
 			{{if autocomplete}}
 			<select id="filter_field_${ field }" size="7" multiple="true" data-bind="ajaxChosen: {field: field, type: 'filter'},
 													options: $root.listOptions[field], selectedOptions: value,
-													optionsValue: function(item) {return item[foreignKey]},
+													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]} "></select>
 			{{else}}
 			<select id="filter_field_${ field }" size="7" multiple="true" data-bind="chosen: true,
 													options: $root.listOptions[field], selectedOptions: value,
-													optionsValue: function(item) {return item[foreignKey]},
+													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]} "></select>
 			{{/if}}
 		{{/if}}

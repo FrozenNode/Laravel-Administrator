@@ -71,4 +71,5 @@ class BelongsTo extends Relationship {
 
 		$query->where($this->foreignKey, 'LIKE', '%'.$this->value.'%');
 	}
+
 }

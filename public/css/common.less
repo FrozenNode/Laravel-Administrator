@@ -11,9 +11,9 @@
 
 
 /**
- * 
+ *
  * HTML ELEMENTS
- * 
+ *
  */
 
 
@@ -21,9 +21,9 @@
 
 
 /**
- * 
+ *
  * BORDER RADIUS
- * 
+ *
  */
 @borderRadius (@radius: 5px) {
 	-moz-border-radius:@radius;
@@ -90,9 +90,9 @@
 
 
 /**
- * 
+ *
  * BOX SHADOWS
- * 
+ *
  */
 @boxShadow (@hOffset: 0px, @vOffset: 1px, @blurRadius: 40px, @color: #000) {
 	-moz-box-shadow: @hOffset @vOffset @blurRadius @color;
@@ -121,9 +121,9 @@
 
 
 /**
- * 
+ *
  * GRADIENTS
- * 
+ *
  */
 @verticalGradient(@topColor, @bottomColor) {
 	background: @topColor; /* Old browsers */
@@ -141,14 +141,28 @@
 
 
 
+/**
+ *
+ * TRANSITIONS
+ *
+ */
+
+
+@transition(@property: all, @duration: 0.2s) {
+	-webkit-transition: @property @duration;
+	-moz-transition: @property @duration;
+	-ms-transition: @property @duration;
+	-o-transition: @property @duration;
+	transition: @property @duration;
+}
 
 
 
 
 /**
- * 
+ *
  * REUSABLE ELEMENTS
- * 
+ *
  */
 
 /* simple table */
@@ -183,10 +197,18 @@
 	white-space: nowrap;
 }
 
+/* opacity */
+@opacity(@value: 0.5) {
+	@msValue: @value * 100;
+	zoom: 1;
+	filter: alpha(opacity=@msValue);
+	opacity: @value;
+}
+
 /* clearfix */
 @clearfix{
 	zoom:1;
-	
+
 	&:before, &:after{
 	  content:"\0020";
 	  display:block;

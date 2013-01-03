@@ -6,6 +6,13 @@ use Admin\Libraries\Column;
 class HasMany extends Relationship {
 
 	/**
+	 * The field type which matches a $fieldTypes key
+	 *
+	 * @var string
+	 */
+	public $foreignTable = '';
+
+	/**
 	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
 	 *
 	 * @var bool
@@ -31,8 +38,11 @@ class HasMany extends Relationship {
 		parent::__construct($field, $info, $model);
 
 		$relationship = $model->{$field}();
+		$table = $relationship->table->joins[0];
+		$related_model = $relationship->model;
 
 		$this->table = $relationship->table->from;
+		$this->foreignTable = $related_model->table();
 		$this->column = $relationship->table->wheres[0]['column'];
 	}
 

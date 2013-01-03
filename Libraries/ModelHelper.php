@@ -22,7 +22,7 @@ class ModelHelper {
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
 	 */
-	public static function getModel($modelName, $id = false, $updateRelationships = false)
+	public static function getModel($modelName, $id = 0, $updateRelationships = false)
 	{
 		//first instantiate a blank version of this object
 		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');
@@ -217,38 +217,11 @@ class ModelHelper {
 	}
 
 	/**
-	 * Gets the filters for the given model
-	 *
-	 * @param object	$model
-	 *
-	 * @return array
-	 */
-	public static function getFilters($model)
-	{
-		//get the model's edit fields
-		$filters = array();
-
-		//if the filters option is set, use it
-		if (isset($model->filters) && count($model->filters) > 0)
-		{
-			foreach ($model->filters as $field => $info)
-			{
-				if ($fieldObject = Field::get($field, $info, $model))
-				{
-					$filters[$fieldObject->field] = $fieldObject->toArray();
-				}
-			}
-		}
-
-		return $filters;
-	}
-
-	/**
 	 * Helper that builds a results array (with results and pagination info)
 	 *
 	 * @param object	$model
 	 * @param array		$sortOptions (with 'field' and 'direction' keys)
-	 * @param array		$filters (see getFilters helper for the value types)
+	 * @param array		$filters (see Field::getFilters method for the value types)
 	 */
 	public static function getRows($model, $sortOptions, $filters = null)
 	{
@@ -418,41 +391,22 @@ class ModelHelper {
 	}
 
 	/**
-	 * Given a model, field, type (filter or edit), and search term, this returns an array of arrays with 'id' and 'name'
+	 * Given a model, field, type (filter or edit), and constraints (either int or array), returns an array of options
 	 *
 	 * @param Eloquent		$model
 	 * @param string		$field
 	 * @param string		$type			//either 'filter' or 'edit'
-	 * @param array|false	$selectedItems	//an array of ids of currently-selected items (necessary to maintain selections)
+	 * @param array			$constraints	//an array of ids of the other model's items
+	 * @param array			$selectedItems	//an array of ids that are currently selected
 	 * @param string		$term			//the search term
 	 *
 	 * @return array
 	 */
-	public static function getRelationshipSuggestions($model, $field, $type, $selectedItems, $term)
+	public static function updateRelationshipOptions($model, $field, $type, $constraints, $selectedItems, $term = null)
 	{
-		//first get the related model
-		$related_model = $model->{$field}()->model;
-		$info = false;
-
-		//now we can sort out what the actual field info is
-		if ($type === 'filter')
-		{
-			$fields = static::getFilters($model);
-		}
-		else
-		{
-			$editFields = Field::getEditFields($model);
-			$fields = $editFields['arrayFields'];
-		}
-
-		//iterate over the fields to get the one for this $field value
-		foreach ($fields as $key => $val)
-		{
-			if ($key === $field)
-			{
-				$info = $val;
-			}
-		}
+		//first get the related model and fetch the field's options
+		$relatedModel = $model->{$field}()->model;
+		$info = Field::getOptions($field, $model, $type);
 
 		//if we can't find the field, return an empty array
 		if (!$info)
@@ -463,38 +417,92 @@ class ModelHelper {
 		//set up the field object
 		$info = Field::get($field, $info, $model, false);
 
-		//now we can start to set up the query
-		$query = new \Laravel\Database\Eloquent\Query($related_model);
+		//make sure we're grouping by the model's id
+		$query = $relatedModel::with($relatedModel->includes)->group_by($relatedModel->table().'.'.$relatedModel::$key);
 
-		//set up the wheres
-		foreach ($info->searchFields as $search)
-		{
-			$query->or_where(DB::raw($search), 'LIKE', '%'.$term.'%');
-		}
+		//set up the selects
+		$selects = array(DB::raw($relatedModel->table().'.*'));
 
-		//include the currently-selected items
+		//if selectedItems are provided, set them up as a proper array
 		if ($selectedItems)
 		{
 			//if this isn't an array, set it up as one
 			$selectedItems = is_array($selectedItems) ? $selectedItems : array($selectedItems);
-
-			$query->or_where_in($related_model::$key, $selectedItems);
 		}
 		else
 		{
 			$selectedItems = array();
 		}
 
-		//set up the limits
-		$query->take($info->numOptions + count($selectedItems));
+		//if this is an autocomplete field, check if there is a search term. If not, just return the selected items
+		if ($info->autocomplete && !$term)
+		{
+			if (sizeof($selectedItems))
+			{
+				$query->where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
+				return static::formatOptions($relatedModel, $info, $query->get($selects));
+			}
+			else
+			{
+				return array();
+			}
+		}
 
-		//return the array map based on the result set
-		return array_map(function($m) use ($info, $field, $related_model)
+		//if there are constraints
+		if (sizeof($info->constraints))
+		{
+			//iterate over the constraints
+			foreach ($info->constraints as $key => $relationshipName)
+			{
+				//now that we're looping through the constraints, check to see if this one was supplied
+				if (isset($constraints[$key]) && $constraints[$key] && sizeof($constraints[$key]))
+				{
+					//constrain the query
+					$info->applyConstraints($query, $model, $key, $relationshipName, $constraints);
+				}
+			}
+		}
+
+		//if there is a search term, limit the result set by that term
+		if ($term)
+		{
+			//set up the wheres
+			foreach ($info->searchFields as $search)
+			{
+				$query->or_where(DB::raw($search), 'LIKE', '%'.$term.'%');
+			}
+
+			//include the currently-selected items if there are any
+			if (count($selectedItems))
+			{
+				$query->or_where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
+			}
+
+			//set up the limits
+			$query->take($info->numOptions + count($selectedItems));
+		}
+
+		//finally we can return the options
+		return static::formatOptions($relatedModel, $info, $query->get($selects));
+	}
+
+	/**
+	 * Takes an eloquent result array and turns it into an options array that can be used in the UI
+	 *
+	 * @param  Eloquent 	$model
+	 * @param  Relationship $info
+	 * @param  array 		$eloquentResults
+	 *
+	 * @return array
+	 */
+	public static function formatOptions($model, $info, $eloquentResults)
+	{
+		return array_map(function($m) use ($info, $model)
 		{
 			return array(
-				$related_model::$key => $m->{$related_model::$key},
+				$model::$key => $m->{$model::$key},
 				$info->nameField => $m->{$info->nameField},
 			);
-		}, $query->get());
+		}, $eloquentResults);
 	}
 }
