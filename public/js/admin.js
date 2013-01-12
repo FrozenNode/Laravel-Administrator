@@ -568,7 +568,11 @@
 					url: rows_per_page_url,
 					data: {csrf_token: csrf, rows: rows},
 					dataType: 'json',
-					type: 'POST'
+					type: 'POST',
+					complete: function()
+					{
+						self.updateRows();
+					}
 				});
 			},
 
