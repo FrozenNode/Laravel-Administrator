@@ -133,6 +133,44 @@ class ModelHelper {
 		}
 	}
 
+	public static function getModelConfig($model)
+	{
+		//Config::get('administrator::administrator.models.'.$modelName.'.model', '');
+		$models = Config::get('administrator::administrator.models', array());
+		$config = false;
+
+		//iterate over the models to found the relevant name
+		foreach ($models as $key => $m)
+		{
+			if (is_a($model, $m['model']))
+			{
+				$config = $m;
+				break;
+			}
+		}
+
+		return $config;
+	}
+
+	public static function getModelKey($model)
+	{
+		//Config::get('administrator::administrator.models.'.$modelName.'.model', '');
+		$models = Config::get('administrator::administrator.models', array());
+		$return = false;
+
+		//iterate over the models to found the relevant name
+		foreach ($models as $key => $m)
+		{
+			if (is_a($model, $m['model']))
+			{
+				$return = $key;
+				break;
+			}
+		}
+
+		return $return;
+	}
+
 	/**
 	 * Checks if a user has permission to access a model
 	 *

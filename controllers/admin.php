@@ -1,6 +1,7 @@
 <?php
 use Admin\Libraries\Column;
 use Admin\Libraries\ModelHelper;
+use Admin\Libraries\Fields\Field;
 
 /**
  * Handles all requests related to managing the data models
@@ -205,6 +206,23 @@ class Administrator_Admin_Controller extends Controller
 
 		//return the rows
 		return Response::json(ModelHelper::updateRelationshipOptions($model, $field, $type, $constraints, $selectedItems, $term));
+	}
+
+	/**
+	 * The POST method that runs when a user uploads an image on an image field
+	 *
+	 * @param string	$modelName
+	 * @param string	$fieldName
+	 *
+	 * @return JSON
+	 */
+	public function action_image_upload($modelName, $fieldName)
+	{
+		//get the model and the field object
+		$model = ModelHelper::getModel($modelName);
+		$field = Field::findField($model, $fieldName);
+
+		return Response::JSON($field->doUpload());
 	}
 
 }

@@ -44,6 +44,9 @@ Route::filter('add_assets', function()
 	//markdown
 	$assets->add('markdownjs', 'js/markdown.js');
 
+	//plupload
+	$assets->add('plupload-js', 'js/plupload/js/plupload.full.js');
+
 	//knockout
 	$assets->add('knockout', 'js/knockout/knockout-2.2.0.js');
 

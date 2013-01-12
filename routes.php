@@ -70,4 +70,13 @@ Route::group(array('before' => 'validate_admin|validate_model|csrf'), function()
 		'as' => 'admin_get_results',
 		'uses' => 'administrator::admin@results'
 	));
+
+//Standard validation without csrf
+Route::group(array('before' => 'validate_admin|validate_model'), function()
+{
+	//Image Uploads
+	Route::post('(:bundle)/(:any)/(:any)/image_upload', array(
+		'as' => 'admin_image_upload',
+		'uses' => 'administrator::admin@image_upload'
+	));
 });

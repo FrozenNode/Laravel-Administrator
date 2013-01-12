@@ -6,7 +6,9 @@
 </div>
 
 <script type="text/javascript">
-	var base_url = "<?php echo $baseUrl ?>/",
+	var site_url = "<?php echo Url::to('/') ?>",
+		base_url = "<?php echo $baseUrl ?>/",
+		asset_url = "<?php echo $assetUrl ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		adminData = {
@@ -49,6 +51,11 @@
 	div.item_edit form.edit_form input[type="text"], div.item_edit form.edit_form textarea {
 		max-width: <?php echo $expandWidth - 75 ?>px;
 		width: <?php echo $expandWidth - 75 ?>px;
+	}
+
+	div.item_edit form.edit_form > div.image img, div.item_edit form.edit_form > div.image div.image_container {
+		max-width: <?php echo $expandWidth - 65 ?>px;
+		width: <?php echo $expandWidth - 65 ?>px;
 	}
 
 </style>

@@ -30,6 +30,7 @@ View::composer('administrator::index', function($view)
 	$view->dataModel = $editFields['dataModel'];
 	$view->filters = Field::getFilters($modelInstance);
 	$view->baseUrl = $baseUrl;
+	$view->assetUrl = URL::to('bundles/administrator/');
 	$view->route = $route['path'].'/';
 	$view->expandWidth = ModelHelper::getExpandWidth($modelInstance);
 	$view->modelInstance = $modelInstance;

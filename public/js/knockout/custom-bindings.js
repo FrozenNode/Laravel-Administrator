@@ -353,4 +353,101 @@
 			}
 		}
 	 };
+
+
+	/**
+	 * File uploader using plupload
+	 */
+	ko.bindingHandlers.imageupload = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
+		{
+			var options = valueAccessor(),
+				cacheName = options.field + '_uploader',
+				viewModel = context.$root;
+
+			viewModel[cacheName] = new plupload.Uploader({
+				runtimes: 'html5,flash,silverlight,gears,browserplus',
+				browse_button: cacheName,
+				container: 'edit_field_' + options.field,
+				drop_element: cacheName,
+				multi_selection: false,
+				max_file_size: options.size_limit + 'mb',
+				url: options.upload_url,
+				flash_swf_url: asset_url + 'js/plupload/js/plupload.flash.swf',
+				silverlight_xap_url: asset_url + 'js/plupload/js/plupload.silverlight.xap',
+				filters: [
+					{title: 'Image files', extensions: 'jpg,jpeg,gif,png'}
+				]
+			});
+
+			viewModel[cacheName].init();
+
+			viewModel[cacheName].bind('FilesAdded', function(up, files) {
+
+				$(files).each(function(i, file) {
+					//parent.uploader.removeFile(file);
+
+				});
+
+				options.upload_percentage(0);
+				options.uploading(true);
+
+				viewModel[cacheName].start();
+			});
+
+			viewModel[cacheName].bind('UploadProgress', function(up, file) {
+				options.upload_percentage(file.percent);
+			});
+
+			viewModel[cacheName].bind('Error', function(up, err) {
+				alert(err.message);
+			});
+
+			viewModel[cacheName].bind('FileUploaded', function(up, file, response) {
+				var data = JSON.parse(response.response);
+
+				options.uploading(false);
+
+				if (!data.errors.length) {
+					//success
+					//iterate over the images until we find it and then set the proper fields
+					viewModel[options.field](data.filename);
+					viewModel[cacheName].splice();
+					viewModel[cacheName].refresh();
+				} else {
+					//error
+					alert('ERRRORRRRR');
+				}
+			});
+
+			$('#' + cacheName).bind('dragenter', function(e)
+			{
+				$(this).addClass('drag');
+			});
+
+			$('#' + cacheName).bind('dragleave drop', function(e)
+			{
+				$(this).removeClass('drag');
+			});
+
+			//destroy the existing editor if the DOM node is removed
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+				viewModel[cacheName].destroy();
+			});
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
+		{
+			var options = valueAccessor(),
+				cacheName = options.field + '_uploader',
+				viewModel = context.$root;
+
+			//hack to get the z-index properly set up
+			setTimeout(function()
+			{
+				viewModel[cacheName].refresh();
+				$('div.plupload').css('z-index', 71);
+			}, 200);
+		}
+	}
+
 })(jQuery);

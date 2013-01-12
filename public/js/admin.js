@@ -741,6 +741,14 @@
 					field.loadingOptions = ko.observable(false);
 				}
 
+				//if this is an image field, set the upload params
+				if (field.type === 'image')
+				{
+					field.uploading = ko.observable(false);
+					field.upload_percentage = ko.observable(0);
+				}
+
+				//add the id field
 				field.field_id = 'edit_field_' + ind;
 
 				fields.push(field);

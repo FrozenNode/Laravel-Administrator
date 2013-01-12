@@ -23,7 +23,7 @@ abstract class Field {
 		'bool' => 'Admin\\Libraries\\Fields\\Bool',
 		'enum' => 'Admin\\Libraries\\Fields\\Enum',
 		'image' => 'Admin\\Libraries\\Fields\\Image',
-		'multi_image' => 'Admin\\Libraries\\Fields\\MultiImage',
+		//'multi_image' => 'Admin\\Libraries\\Fields\\MultiImage',
 		'file' => 'Admin\\Libraries\\Fields\\File',
 
 		//relationships
@@ -320,6 +320,22 @@ abstract class Field {
 		{
 			return $value;
 		}
+	}
+
+	/**
+	 * Given a model instance and a field name, this returns the field object
+	 *
+	 * @param Eloquent	 	$model
+	 * @param string	 	$field
+	 *
+	 * @return false|Field object
+	 */
+	public static function findField($model, $field)
+	{
+		$fields = static::getEditFields($model, false);
+
+		//iterate over the object fields until we have our match
+		return isset($fields['objectFields'][$field]) ? $fields['objectFields'][$field] : false;
 	}
 
 	/**

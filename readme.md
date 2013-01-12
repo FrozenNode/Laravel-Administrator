@@ -633,6 +633,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 x - not done
 d - done, but needs documentation
 ### 3.0.0
+d New image field
 - Migrated from the old string-based jQuery template engine to the faster, smarter Knockout comment bindings
 
 ### 2.3.0

@@ -128,7 +128,23 @@
 																			datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 			<!-- /ko -->
 
-			{{/if}}
+			<!-- ko if: type === 'image' -->
+				<div data-bind="attr: {id: field_id}">
+					<div data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root[field],
+											imageupload: {field: field, size_limit: size_limit, uploading: uploading,
+															upload_percentage: upload_percentage, upload_url: upload_url}">Click to Upload</div>
+					<!-- ko if: uploading -->
+						<div class="uploading" data-bind="text: 'Image Uploading' + upload_percentage() + '%'"></div>
+					<!-- /ko -->
+				</div>
+
+				<!-- ko if: $root[field] -->
+					<div class="image_container">
+						<img data-bind="attr: {src: display_url + $root[field]()}" />
+						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
+					</div>
+				<!-- /ko -->
+			<!-- /ko -->
 			</div>
 		<!-- /ko -->
 	<!-- /ko -->
