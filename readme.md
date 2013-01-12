@@ -637,6 +637,7 @@ d New image field
 d You can now add custom action buttons in the $actions property of a model
 - Removed the before_delete() method. This can be handled by using the "eloquent.delete: {{classname}}" event
 - Migrated from the old string-based jQuery template engine to the faster, smarter Knockout comment bindings
+- Bugfix: BelongsTo filter no longer does a LIKE search (since it's an explicit key)
 
 ### 2.3.0
 - Relationship constraints are now possible if you want to limit one relationship field's options by its relation to another relationship field (only applies when those two fields themselves have a pivot table)
