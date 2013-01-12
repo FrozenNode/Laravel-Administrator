@@ -35,6 +35,7 @@ View::composer('administrator::index', function($view)
 	$view->assetUrl = URL::to('bundles/administrator/');
 	$view->route = $route['path'].'/';
 	$view->expandWidth = ModelHelper::getExpandWidth($modelInstance);
+	$view->rowsPerPage = ModelHelper::getRowsPerPage($modelInstance);
 	$view->modelInstance = $modelInstance;
 	$view->model = isset($view->model) ? $view->model : false;
 

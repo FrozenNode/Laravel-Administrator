@@ -236,6 +236,35 @@ class ModelHelper {
 	}
 
 	/**
+	 * Returns the number of rows per page for this model
+	 *
+	 * @param Eloquent		$model
+	 *
+	 * @return int
+	 */
+	public static function getRowsPerPage($model)
+	{
+		$modelName = static::getModelKey($model);
+		$model_per_page = $model->per_page() ? $model->per_page() : 20;
+		$global_per_page = Config::get('administrator::administrator.global_per_page', NULL);
+		$per_page = \Session::get('administrator_' . $modelName . '_rows_per_page');
+
+		if (!$per_page)
+		{
+			if ($global_per_page && is_numeric($global_per_page))
+			{
+				$per_page = $global_per_page;
+			}
+			else
+			{
+				$per_page = $model_per_page;
+			}
+		}
+
+		return $per_page;
+	}
+
+	/**
 	 * Helper that builds a results array (with results and pagination info)
 	 *
 	 * @param object	$model
@@ -290,14 +319,8 @@ class ModelHelper {
 			$sort->field = $model->table().'.'.$sort->field;
 		}
 
-		//if there is a global per page limit set, make sure the paginator uses that
-		$per_page = $model->per_page() ? $model->per_page() : 20;
-		$global_per_page = Config::get('administrator::administrator.global_per_page', NULL);
-
-		if ($global_per_page && is_numeric($global_per_page))
-		{
-			$per_page = $global_per_page;
-		}
+		//get the rows per page
+		$per_page = static::getRowsPerPage($model);
 
 		/**
 		 * We need to do our own pagination since there is a bug (!!!!!!!!!!!!!!) in the L3 paginator when using groupings :(

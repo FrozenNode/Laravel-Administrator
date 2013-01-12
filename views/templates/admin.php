@@ -7,6 +7,10 @@
 			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 }, value: pagination.page" />
 			<span data-bind="text: 'of ' + pagination.last()"></span>
 		</div>
+		<div class="per_page">
+			<select data-bind="value: rowsPerPage, chosen: true, options: rowsPerPageOptions"></select>
+			<span> items per page</span>
+		</div>
 		<a class="new_item" data-bind="attr: {href: base_url + modelName() + '/new'}, text: 'New ' + modelSingle()"></a>
 	</div>
 	<table class="results" border="0" cellspacing="0" id="customers" cellpadding="0">

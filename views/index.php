@@ -9,6 +9,7 @@
 	var site_url = "<?php echo Url::to('/') ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
+		rows_per_page_url = "<?php echo URL::to_route('admin_rows_per_page', array($modelName)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		adminData = {
@@ -17,6 +18,7 @@
 				id: <?php echo $model->exists ? $model->{$model::$key} : '0'; ?>,
 			<?php } ?>
 			rows: <?php echo json_encode($rows) ?>,
+			rows_per_page: <?php echo $rowsPerPage ?>,
 			sortOptions: <?php echo json_encode($sort) ?>,
 			model_name: "<?php echo $modelName ?>",
 			model_title: "<?php echo $modelTitle ?>",

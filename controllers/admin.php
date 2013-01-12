@@ -258,4 +258,31 @@ class Administrator_Admin_Controller extends Controller
 		return Response::JSON($field->doUpload());
 	}
 
+	/**
+	 * The POST method for setting a user's rows per page
+	 *
+	 * @param string	$modelName
+	 * @param string	$fieldName
+	 *
+	 * @return JSON
+	 */
+	public function action_rows_per_page($modelName)
+	{
+		//get the model
+		$model = ModelHelper::getModel($modelName);
+
+		//get the inputted rows and the model rows
+		$rows = (int) Input::get('rows', 20);
+		$per_page = $model->per_page() ? $model->per_page() : 20;
+
+		if ($rows <= 0 || $rows > 100)
+		{
+			$rows = $per_page;
+		}
+
+		Session::put('administrator_' . $modelName . '_rows_per_page', $rows);
+
+		return Response::JSON(array('success' => true));
+	}
+
 }

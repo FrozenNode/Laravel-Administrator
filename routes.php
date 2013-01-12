@@ -86,4 +86,10 @@ Route::group(array('before' => 'validate_admin|validate_model'), function()
 		'as' => 'admin_image_upload',
 		'uses' => 'administrator::admin@image_upload'
 	));
+
+	//Updating Rows Per Page
+	Route::post('(:bundle)/(:any)/rows_per_page', array(
+		'as' => 'admin_rows_per_page',
+		'uses' => 'administrator::admin@rows_per_page'
+	));
 });

@@ -86,6 +86,16 @@
 			 */
 			rows: ko.observableArray(),
 
+			/* The number of rows per page
+			 * int
+			 */
+			rowsPerPage: ko.observable(20),
+
+			/* The options (1-100 ...set up in init method) for the rows per page
+			 * array
+			 */
+			rowsPerPageOptions: [],
+
 			/* The columns for the current data model
 			 * object
 			 */
@@ -546,6 +556,23 @@
 			},
 
 			/**
+			 * Updates the rows per page for this model when the item is changed
+			 *
+			 * @param int
+			 */
+			updateRowsPerPage: function(rows)
+			{
+				var self = this;
+
+				$.ajax({
+					url: rows_per_page_url,
+					data: {csrf_token: csrf, rows: rows},
+					dataType: 'json',
+					type: 'POST'
+				});
+			},
+
+			/**
 			 * Gets a minimized filters array that can be sent to the server
 			 */
 			getFilters: function()
@@ -681,8 +708,15 @@
 			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.modelSingle(adminData.model_single);
 			this.viewModel.expandWidth(adminData.expand_width);
+			this.viewModel.rowsPerPage(adminData.rows_per_page);
 			this.viewModel.primaryKey = adminData.primary_key;
 			this.viewModel.actions = adminData.actions;
+
+			//set up the rowsPerPageOptions
+			for (var i = 1; i <= 100; i++)
+			{
+				this.viewModel.rowsPerPageOptions.push(i);
+			}
 
 			//now that we have most of our data, we can set up the computed values
 			this.initComputed();
@@ -907,6 +941,12 @@
 			self.viewModel.pagination.page.subscribe(function(val)
 			{
 				self.viewModel.page(val);
+			});
+
+			//subscribe to rows per page change
+			self.viewModel.rowsPerPage.subscribe(function(val)
+			{
+				self.viewModel.updateRowsPerPage(parseInt(val));
 			});
 		},
 
