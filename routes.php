@@ -71,6 +71,13 @@ Route::group(array('before' => 'validate_admin|validate_model|csrf'), function()
 		'uses' => 'administrator::admin@results'
 	));
 
+	//Custom Action
+	Route::post('(:bundle)/(:any)/(:num)/custom_action', array(
+		'as' => 'admin_custom_action',
+		'uses' => 'administrator::admin@custom_action'
+	));
+});
+
 //Standard validation without csrf
 Route::group(array('before' => 'validate_admin|validate_model'), function()
 {

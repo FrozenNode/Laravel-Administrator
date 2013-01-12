@@ -4,6 +4,7 @@ use Admin\Libraries\ModelHelper;
 use Admin\Libraries\Fields\Field;
 use Admin\Libraries\Column;
 use Admin\Libraries\Sort;
+use Admin\Libraries\Action;
 
 //View Composers
 
@@ -27,6 +28,7 @@ View::composer('administrator::index', function($view)
 	$view->sort = Sort::get($modelInstance)->toArray();
 	$view->rows = ModelHelper::getRows($modelInstance, $view->sort);
 	$view->editFields = $editFields['arrayFields'];
+	$view->actions = Action::getActions($modelInstance);
 	$view->dataModel = $editFields['dataModel'];
 	$view->filters = Field::getFilters($modelInstance);
 	$view->baseUrl = $baseUrl;

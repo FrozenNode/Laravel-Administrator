@@ -22,6 +22,7 @@
 			model_title: "<?php echo $modelTitle ?>",
 			model_single: "<?php echo $modelSingle ?>",
 			expand_width: <?php echo $expandWidth ?>,
+			actions: <?php echo json_encode($actions); ?>,
 			filters: <?php echo json_encode($filters); ?>,
 			edit_fields: <?php echo json_encode($editFields); ?>,
 			data_model: <?php echo json_encode($dataModel); ?>,

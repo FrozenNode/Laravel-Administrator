@@ -149,8 +149,16 @@
 		<!-- /ko -->
 	<!-- /ko -->
 
-		{{/if}}
-	{{/each}}
+	<!-- ko if: $root[$root.primaryKey]() && actions.length -->
+		<div class="custom_buttons">
+			<!-- ko foreach: actions -->
+				<!-- ko if: hasPermission -->
+					<input type="button" data-bind="click: function(){$root.customAction(name, messages)}, value: title,
+																	attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+				<!-- /ko -->
+			<!-- /ko -->
+		</div>
+	<!-- /ko -->
 
 	<div class="control_buttons">
 		<!-- ko if: $root[$root.primaryKey]() -->

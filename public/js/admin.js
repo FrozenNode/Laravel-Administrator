@@ -376,13 +376,38 @@
 			},
 
 			/**
-			 * Gets a new data model given a model name
+			 * Performs a custom action
 			 *
-			 * @param object	data
+			 * @param string	action
+			 * @param object	messages
 			 */
-			getNewModel: function(data)
+			customAction: function(action, messages)
 			{
+				var self = this;
 
+				self.statusMessage(messages.active).statusMessageType('');
+				self.freezeForm(true);
+
+				$.ajax({
+					url: base_url + self.modelName() + '/' + self[self.primaryKey]() + '/custom_action',
+					data: {csrf_token: csrf, action_name: action},
+					dataType: 'json',
+					type: 'POST',
+					complete: function()
+					{
+						self.freezeForm(false);
+					},
+					success: function(response)
+					{
+						if (response.success)
+						{
+							self.statusMessage(messages.success).statusMessageType('success');
+							self.updateRows();
+						}
+						else
+							self.statusMessage(response.error).statusMessageType('error');
+					}
+				});
 			},
 
 			/**
@@ -657,6 +682,7 @@
 			this.viewModel.modelSingle(adminData.model_single);
 			this.viewModel.expandWidth(adminData.expand_width);
 			this.viewModel.primaryKey = adminData.primary_key;
+			this.viewModel.actions = adminData.actions;
 
 			//now that we have most of our data, we can set up the computed values
 			this.initComputed();

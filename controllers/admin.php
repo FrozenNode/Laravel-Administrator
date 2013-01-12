@@ -1,6 +1,7 @@
 <?php
 use Admin\Libraries\Column;
 use Admin\Libraries\ModelHelper;
+use Admin\Libraries\Action;
 use Admin\Libraries\Fields\Field;
 
 /**
@@ -154,6 +155,39 @@ class Administrator_Admin_Controller extends Controller
 		else
 		{
 			return Response::json($errorResponse);
+		}
+	}
+
+	/**
+	 * POST method for handling custom actions
+	 *
+	 * @param string	$modelName
+	 * @param int		$id
+	 *
+	 * @return JSON
+	 */
+	public function action_custom_action($modelName, $id)
+	{
+		$model = ModelHelper::getModel($modelName, $id);
+		$actionName = Input::get('action_name', false);
+
+		//get the action and perform the custom action
+		$action = Action::getByName($model, $actionName);
+		$result = $action->perform($model);
+
+		//if the result is a string, return that as an error.
+		if (is_string($result))
+		{
+			return Response::json(array('success' => false, 'error' => $result));
+		}
+		//if it's falsy, return the standard error message
+		else if (!$result)
+		{
+			return Response::json(array('success' => false, 'error' => $action->messages['error']));
+		}
+		else
+		{
+			return Response::json(array('success' => true));
 		}
 	}
 
