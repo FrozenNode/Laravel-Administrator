@@ -145,11 +145,10 @@ class Administrator_Admin_Controller extends Controller
 		}
 
 		//delete the model
-		if (ModelHelper::deleteModel($model))
+		if ($model->delete())
 		{
 			return Response::json(array(
 				'success' => true,
-				'data' => $model->to_array(),
 			));
 		}
 		else

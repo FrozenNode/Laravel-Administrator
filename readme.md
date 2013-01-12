@@ -634,6 +634,7 @@ x - not done
 d - done, but needs documentation
 ### 3.0.0
 d New image field
+- Removed the before_delete() method. This can be handled by using the "eloquent.delete: {{classname}}" event
 - Migrated from the old string-based jQuery template engine to the faster, smarter Knockout comment bindings
 
 ### 2.3.0

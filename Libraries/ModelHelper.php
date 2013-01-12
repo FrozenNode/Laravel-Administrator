@@ -209,25 +209,6 @@ class ModelHelper {
 	}
 
 	/**
-	 * Deletes a model and all of its relationships
-	 *
-	 * @param object		$model
-	 *
-	 * @return bool
-	 */
-	public static function deleteModel(&$model)
-	{
-		//instead of deleting relationships, run the user-supplied before_delete function
-		if (method_exists($model, 'before_delete'))
-		{
-			$model->before_delete();
-		}
-
-		//then delete the model
-		return $model->delete();
-	}
-
-	/**
 	 * Gets the expand width for the model
 	 *
 	 * @param object		$model
