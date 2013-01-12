@@ -260,8 +260,8 @@ body label {
   user-select:none;
   text-shadow:none;
   position:absolute;
-  top:12px;
-  right:13px;
+  top:8px;
+  right:9px;
 }
 #admin_page #content div.table_container div.results_header a.new_item:hover, #admin_page #content div.table_container div.results_header a.new_item:focus {
   background:#929292;

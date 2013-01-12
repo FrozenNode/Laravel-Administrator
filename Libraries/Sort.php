@@ -11,7 +11,7 @@ class Sort {
 	public $field;
 
 	/**
-	 * The field type which matches a $fieldTypes key
+	 * The direction of the sort (either 'asc' or 'desc')
 	 *
 	 * @var string
 	 */
