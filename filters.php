@@ -12,8 +12,6 @@ Route::filter('add_assets', function()
 	 * CSS
 	 */
 
-	$assets->add('bootstrap', 'css/bootstrap.css');
-	$assets->add('bootstrap-responsive', 'css/bootstrap-responsive.css');
 	$assets->add('jquery.ui.css', 'css/ui/jquery-ui-1.9.1.custom.min.css');
 	$assets->add('jquery.ui.timepicker.css', 'css/ui/jquery.ui.timepicker.css');
 	$assets->add('chosen_css', 'css/chosen.css');

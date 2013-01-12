@@ -129,10 +129,10 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'image' -->
-				<div data-bind="attr: {id: field_id}">
-					<div data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root[field],
+				<div class="image_upload_container" data-bind="attr: {id: field_id}">
+					<div class="uploader" data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root[field],
 											imageupload: {field: field, size_limit: size_limit, uploading: uploading,
-															upload_percentage: upload_percentage, upload_url: upload_url}">Click to Upload</div>
+															upload_percentage: upload_percentage, upload_url: upload_url}">Upload Image</div>
 					<!-- ko if: uploading -->
 						<div class="uploading" data-bind="text: 'Image Uploading' + upload_percentage() + '%'"></div>
 					<!-- /ko -->

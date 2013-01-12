@@ -1,5 +1,6 @@
 /* imports */
 @import "common.less";
+@import "elements.less";
 
 
 
@@ -16,7 +17,26 @@ a{ text-decoration: none; }
 	Main Styling
 */
 body{
+	@oxygen;
+	font-size: 13px;
+	line-height: 18px;
+	color: #333333;
 
+	h2 {
+		font-size: 24px;
+		line-height: 36px;
+	}
+
+	textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"],
+	input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"],
+	input[type="color"] {
+		@input;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 5px;
+	}
 }
 
 
@@ -217,17 +237,21 @@ body{
 				margin-bottom: 3px;
 
 				h2 {
-					padding: 10px 15px;
+					padding: 0 15px;
 					display: inline-block;
+					vertical-align: middle;
 				}
 
 				div.paginator {
 					display: inline-block;
 					margin-left: 20px;
+					padding: 10px 15px;
+					vertical-align: middle;
 
 					input {
 						display: inline-block;
 						vertical-align: baseline;
+						margin-bottom: 0;
 
 						&[type=text] {
 							width:30px;
@@ -236,40 +260,11 @@ body{
 				}
 
 				a.new_item {
-					@verticalGradient(#fdfdfd, #e8e8e8);
-					@boxShadow(0, 1px, 0px, rgba(0, 0, 0, 0.1));
-					@borderRadius(200px);
-					display: inline-block;
-					font-weight: bold;
-					font-size: 1.0em;
-					font-family: Helvetica, Arial, sans-serif;
-					line-height: 12px;
-					text-decoration: none;
-					-webkit-font-smoothing: antialiased;
-					border: solid 1px #c7c7c7;
-					border-top-color: #d3d3d3;
-					border-bottom-color: #c2c2c2;
-					text-shadow: white 0 1px 0;
-					color: #777;
-					padding: 12px 17px 10px;
-					margin: 0px;
+					@greyButton;
+					text-shadow: none;
 					position: absolute;
-					top: 10px;
-					right: 25px;
-
-					&:hover {
-						color: #444;
-						@verticalGradient(#fdfdfd, #eaeaea);
-					}
-
-					&:active {
-						@verticalGradient(#fcfcfc, #e5e4e5);
-						-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						-ms-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						-o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-					}
+					top: 12px;
+					right: 13px;
 				}
 			}
 
@@ -490,6 +485,26 @@ body{
 								}
 							}
 
+						}
+						&.image {
+							div.image_upload_container {
+								padding: 4px 0;
+
+								div.uploader {
+									background: url(../img/upload.png) no-repeat;
+									padding-left: 25px;
+								}
+							}
+
+							div.image_container {
+								position: relative;
+
+								input[type=button] {
+									position: absolute;
+									top: 5px;
+									right: 5px;
+								}
+							}
 						}
 					}
 

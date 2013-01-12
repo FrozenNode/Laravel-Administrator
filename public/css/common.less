@@ -110,6 +110,12 @@
 	-webkit-box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
 	box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
 }
+@innerOuterShadow(@inHOffset: 0, @inVOffset: 1px, @inBlurRadius: 2px, @inSpread: 1px, @inColor: #eee,
+					@outHOffset: 0, @outVOffset: 0, @outBlurRadius: 8px, @outColor: rgba(82, 168, 236, 0.6)) {
+	-moz-box-shadow: inset @inHOffset @inVOffset @inBlurRadius @inSpread @inColor, @outHOffset @outVOffset @outBlurRadius @outColor;
+	-webkit-box-shadow: inset @inHOffset @inVOffset @inBlurRadius @inSpread @inColor, @outHOffset @outVOffset @outBlurRadius @outColor;
+	box-shadow: inset @inHOffset @inVOffset @inBlurRadius @inSpread @inColor, @outHOffset @outVOffset @outBlurRadius @outColor;
+}
 @noBoxShadow {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
