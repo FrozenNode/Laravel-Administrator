@@ -630,6 +630,11 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
+x - not done
+d - done, but needs documentation
+### 3.0.0
+- Migrated from the old string-based jQuery template engine to the faster, smarter Knockout comment bindings
+
 ### 2.3.0
 - Relationship constraints are now possible if you want to limit one relationship field's options by its relation to another relationship field (only applies when those two fields themselves have a pivot table)
 - You can now hit the enter key on text/textarea fields to submit the create/edit form

@@ -287,11 +287,11 @@ class Column {
 				//if $toArray is true, add the column as an array. otherwise add the column object
 				if ($toArray)
 				{
-					$return['columns'][$columnObject->field] = $columnObject->toArray();
+					$return['columns'][] = $columnObject->toArray();
 				}
 				else
 				{
-					$return['columns'][$columnObject->field] = $columnObject;
+					$return['columns'][] = $columnObject;
 				}
 
 				//categorize the columns
@@ -336,6 +336,7 @@ class Column {
 	public function toArray()
 	{
 		return array(
+			'field' => $this->field,
 			'title' => $this->title,
 			'sort_field' => $this->sort_field,
 			'relationship' => $this->relationship,

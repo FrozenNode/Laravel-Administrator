@@ -31,9 +31,6 @@ Route::filter('add_assets', function()
 	$assets->add('jquery-chosen', 'js/jquery/jquery.chosen.min.js');
 	$assets->add('jquery-ajax-chosen', 'js/jquery/jquery.ajax-chosen.min.js');
 
-	//jquery template
-	$assets->add('jquery-tmpl', 'js/jquery/jquery.tmpl.min.js');
-
 	//jquery ui
 	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');
 

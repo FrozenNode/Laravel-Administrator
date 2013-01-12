@@ -32,12 +32,12 @@
 			/* The filters for the current result set
 			 * array
 			 */
-			filters: ko.observableArray(),
+			filters: [],
 
 			/* The options lists for any fields
 			 * object
 			 */
-			listOptions: {},
+			listOptions: {}
 		},
 
 		/*
@@ -87,9 +87,9 @@
 			rows: ko.observableArray(),
 
 			/* The columns for the current data model
-			 * array
+			 * object
 			 */
-			columns: ko.observable(),
+			columns: [],
 
 			/* The options lists for any fields
 			 * object
@@ -160,6 +160,11 @@
 			 * bool
 			 */
 			freezeActions: ko.observable(false),
+
+			/* If custom actions are supplied, they are stored here
+			 * array
+			 */
+			actions: [],
 
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
@@ -317,7 +322,7 @@
 						{
 							if (el.relationship && el.autocomplete)
 							{
-								self.listOptions[ind](data[ind + '_options']);
+								self.listOptions[el.field](data[el.field + '_options']);
 							}
 						});
 
@@ -435,24 +440,21 @@
 			 */
 			setSortOptions: function(field)
 			{
-				//if the field is not a valid column
-				if ( !(field in this.columns()) )
+				//check if the field is a valid column
+				var found = false;
+
+				//iterate over the columns to check if it's a valid sort_field or field
+				$.each(this.columns, function(i, col)
 				{
-					var found = false;
-
-					//iterate over the columns to check if it's a valid sort_field
-					$.each(this.columns(), function(i, col)
+					if (field === col.sort_field || field === col.field)
 					{
-						if (field === col.sort_field)
-						{
-							found = true;
-							return false;
-						}
-					})
-
-					if (!found)
+						found = true;
 						return false;
-				}
+					}
+				})
+
+				if (!found)
+					return false;
 
 				//the direction depends on the field
 				if (field == this.sortOptions.field())
@@ -519,14 +521,14 @@
 			},
 
 			/**
-			 * Gets a minimalized filters array that can be sent to the server
+			 * Gets a minimized filters array that can be sent to the server
 			 */
 			getFilters: function()
 			{
 				var filters = [],
 					observables = ['value', 'minValue', 'maxValue'];
 
-				$.each(window.admin.filtersViewModel.filters(), function(ind, el)
+				$.each(window.admin.filtersViewModel.filters, function(ind, el)
 				{
 					var filter = {
 						field: el.field,
@@ -558,11 +560,14 @@
 				var self = this;
 
 				//first we will iterate over the filters and update them if any exist
-				$.each(window.admin.filtersViewModel.filters(), function(ind, filter)
+				$.each(window.admin.filtersViewModel.filters, function(ind, filter)
 				{
+					var fieldIndex = ind,
+						fieldName = filter.field;
+
 					if ((!filter.constraints || !filter.constraints.length) && filter.selfRelationship)
 					{
-						window.admin.filtersViewModel.filters()[filter.field].loadingOptions(true);
+						window.admin.filtersViewModel.filters[fieldIndex].loadingOptions(true);
 
 						$.ajax({
 							url: base_url + self.modelName() + '/update_options/',
@@ -570,17 +575,17 @@
 							dataType: 'json',
 							data: {
 								type: 'filter',
-								field: filter.field,
+								field: fieldName,
 								selectedItems: filter.value()
 							},
 							complete: function()
 							{
-								window.admin.filtersViewModel.filters()[filter.field].loadingOptions(false);
+								window.admin.filtersViewModel.filters[fieldIndex].loadingOptions(false);
 							},
 							success: function(response)
 							{
 								//update the options
-								window.admin.filtersViewModel.listOptions[filter.field](response);
+								window.admin.filtersViewModel.listOptions[fieldName](response);
 							}
 						});
 
@@ -588,12 +593,15 @@
 				});
 
 				//then we'll update the edit fields
-				$.each(self.editFields(), function(ind, field)
+				$.each(self.editFields, function(ind, field)
 				{
+					var fieldIndex = ind,
+						fieldName = field.field;
+
 					//if there are constraints to maintain, set up the subscriptions
 					if ((!field.constraints || !field.constraints.length) && field.selfRelationship)
 					{
-						self.editFields()[ind].loadingOptions(true);
+						self.editFields[fieldIndex].loadingOptions(true);
 
 						$.ajax({
 							url: base_url + self.modelName() + '/update_options/',
@@ -601,17 +609,17 @@
 							dataType: 'json',
 							data: {
 								type: 'edit',
-								field: ind,
-								selectedItems: self[ind]()
+								field: fieldName,
+								selectedItems: self[fieldName]()
 							},
 							complete: function()
 							{
-								self.editFields()[ind].loadingOptions(false);
+								self.editFields[fieldIndex].loadingOptions(false);
 							},
 							success: function(response)
 							{
 								//update the options
-								self.listOptions[ind](response);
+								self.listOptions[fieldName](response);
 							}
 						});
 
@@ -643,7 +651,7 @@
 			this.viewModel.pagination.total(adminData.rows.total);
 			this.viewModel.sortOptions.field(adminData.sortOptions.field);
 			this.viewModel.sortOptions.direction(adminData.sortOptions.direction);
-			this.viewModel.columns(adminData.column_model);
+			this.viewModel.columns = adminData.column_model;
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.modelSingle(adminData.model_single);
@@ -654,10 +662,10 @@
 			this.initComputed();
 
 			//prepare the filters
-			this.filtersViewModel.filters(this.prepareFilters());
+			this.filtersViewModel.filters = this.prepareFilters();
 
 			//prepare the edit fields
-			this.viewModel.editFields(this.prepareEditFields());
+			this.viewModel.editFields = this.prepareEditFields();
 
 			//set up the relationships
 			this.initRelationships();
@@ -686,7 +694,7 @@
 		 */
 		prepareFilters: function()
 		{
-			var filters = {};
+			var filters = [];
 
 			$.each(adminData.filters, function(ind, filter)
 			{
@@ -707,7 +715,9 @@
 					filter.loadingOptions = ko.observable(false);
 				}
 
-				filters[filter.field] = filter;
+				filter.field_id = 'filter_field_' + filter.field;
+
+				filters.push(filter);
 			});
 
 			return filters;
@@ -721,7 +731,7 @@
 		prepareEditFields: function()
 		{
 			var self = this,
-				fields = {};
+				fields = [];
 
 			$.each(adminData.edit_fields, function(ind, field)
 			{
@@ -731,7 +741,9 @@
 					field.loadingOptions = ko.observable(false);
 				}
 
-				fields[ind] = field;
+				field.field_id = 'edit_field_' + ind;
+
+				fields.push(field);
 			});
 
 			return fields;
@@ -771,17 +783,17 @@
 				};
 
 			//iterate over filters
-			$.each(self.filtersViewModel.filters(), function(ind, filter)
+			$.each(self.filtersViewModel.filters, function(ind, filter)
 			{
 				//subscribe to the value field
-				self.filtersViewModel.filters()[ind].value.subscribe(function(val)
+				self.filtersViewModel.filters[ind].value.subscribe(function(val)
 				{
 					//if this is an id field, make sure it's an integer
-					if (self.filtersViewModel.filters()[ind].type === 'key')
+					if (self.filtersViewModel.filters[ind].type === 'key')
 					{
 						var intVal = isNaN(parseInt(val)) ? '' : parseInt(val);
 
-						self.filtersViewModel.filters()[ind].value(intVal);
+						self.filtersViewModel.filters[ind].value(intVal);
 					}
 
 					//update the rows now that we've got new filters
@@ -793,18 +805,18 @@
 				//check if there's a min and max value. if so, subscribe to those as well
 				if ('minValue' in filter)
 				{
-					self.filtersViewModel.filters()[ind].minValue.subscribe(runFilter);
+					self.filtersViewModel.filters[ind].minValue.subscribe(runFilter);
 				}
 				if ('maxValue' in filter)
 				{
-					self.filtersViewModel.filters()[ind].maxValue.subscribe(runFilter);
+					self.filtersViewModel.filters[ind].maxValue.subscribe(runFilter);
 				}
 
 
 			});
 
 			//iterate over the edit fields
-			$.each(self.viewModel.editFields(), function(ind, field)
+			$.each(self.viewModel.editFields, function(ind, field)
 			{
 				//if there are constraints to maintain, set up the subscriptions
 				if (field.constraints && self.getObjectSize(field.constraints))
@@ -812,7 +824,8 @@
 					//we want to subscribe to changes on the OTHER fields since that's what defines changes to this one
 					$.each(field.constraints, function(key, relationshipName)
 					{
-						var fieldName = ind;
+						var fieldIndex = ind,
+							fieldName = field.field;
 
 						self.viewModel[key].subscribe(function(val)
 						{
@@ -828,7 +841,7 @@
 
 							//freeze the actions
 							self.viewModel.freezeActions(true);
-							self.viewModel.editFields()[fieldName].loadingOptions(true);
+							self.viewModel.editFields[fieldIndex].loadingOptions(true);
 
 							$.ajax({
 								url: base_url + self.viewModel.modelName() + '/update_options/',
@@ -843,7 +856,7 @@
 								complete: function()
 								{
 									self.viewModel.freezeActions(false);
-									self.viewModel.editFields()[fieldName].loadingOptions(false);
+									self.viewModel.editFields[fieldIndex].loadingOptions(false);
 								},
 								success: function(response)
 								{

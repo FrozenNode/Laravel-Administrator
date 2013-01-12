@@ -4,9 +4,10 @@
 	 * For the item form transition
 	 */
 	ko.bindingHandlers.itemTransition = {
-		init: function(element, valueAccessor, allBindingsAccessor, viewModel)
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var $element = $(element),
+				viewModel = context.$root,
 				$child = $element.find('.item_edit'),
 				$tableContainer = $('div.table_container'),
 				expandWidth = viewModel.expandWidth();
@@ -25,9 +26,10 @@
 				$child.css('marginLeft', 2);
 			}
 		},
-		update: function(element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var $element = $(element),
+				viewModel = context.$root,
 				$child = $element.find('.item_edit'),
 				$tableContainer = $('div.table_container'),
 				expandWidth = viewModel.expandWidth();
@@ -65,9 +67,10 @@
 
 	//for ajax chosen js
 	ko.bindingHandlers.ajaxChosen = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var options = valueAccessor(),
+				viewModel = context.$root,
 				data = {
 					constraints: {},
 					field: options.field,
@@ -94,7 +97,7 @@
 					//if this is a filter, go through the filters until this one is found and update the value
 					if (options.type === 'filter')
 					{
-						$.each(admin.filtersViewModel.filters(), function(ind, el)
+						$.each(admin.filtersViewModel.filters, function(ind, el)
 						{
 							if (el.field === options.field && el.value())
 							{
@@ -280,9 +283,10 @@
 	 * This ensures that a bool field is always a boolean value
 	 */
 	ko.bindingHandlers.bool = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
-			var modelVal = viewModel[valueAccessor()]();
+			var viewModel = context.$root,
+				modelVal = viewModel[valueAccessor()]();
 
 			if (modelVal === '0')
 				viewModel[valueAccessor()](false);
