@@ -269,6 +269,12 @@ The available options are:
 - **date_format**: default is 'yy-mm-dd'. Use this for 'date' and 'datetime' field types. Uses [jQuery datepicker formatDate](http://docs.jquery.com/UI/Datepicker/formatDate).
 - **time_format**: default is 'HH:mm'. Use this for 'time' and 'datetime' field types. Uses [jQuery timepicker formatting](http://trentrichardson.com/examples/timepicker/#tp-formatting).
 
+##### Image
+- **naming**: default is 'random'. This can be either 'keep' (keeps the file name) or 'random' (randomizes file names...avoids collisions).
+- **location**: this field is currently required. It's where to put the original file that was uploaded.
+- **size_limit**: default is 2. This is the file size in mb for the image. This block is applied in the front-end, not the PHP side.
+- **sizes**: default is empty array(). Provide an array of sizes that the image will be resized to (see example below). In order these are width, height, the resize method ('exact', 'portrait', 'landscape', 'fit', 'auto', or 'crop'), the location to store the resized image, and the image quality (1 - 100)
+
 ```php
 public $edit = array(
 	'email',
@@ -314,6 +320,18 @@ public $edit = array(
 		'type' => 'datetime',
 		'date_format' => 'yy-mm-dd',
 		'time_format' => 'HH:mm',
+	),
+	'image' => array(
+		'title' => 'Image',
+		'type' => 'image',
+		'naming' => 'random', //can be either "keep" or "random"
+		'location' => 'public/uploads/products/originals/', //the location to store the original
+		'size_limit' => 2, //the file size limit in megabytes (only limits the javascript, you still have to set your php limit)
+		'sizes' => array( //alternate sizes to use
+	 		array(65, 57, 'crop', 'public/uploads/products/thumbs/small/', 100),
+	 		array(220, 138, 'landscape', 'public/uploads/products/thumbs/medium/', 100),
+	 		array(383, 276, 'fit', 'public/uploads/products/thumbs/full/', 100)
+	 	)
 	)
 
 );
@@ -619,6 +637,27 @@ The time format supplied has to be a valid timepicker time format. You can see a
 
 Using the datetime type will set the field up as a jQuery UI datetimepicker. The formatters are the same as above.
 
+#### image
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-image.png" />
+
+```php
+'passport_photo' => array(
+	'title' => 'Image',
+	'type' => 'image',
+	'naming' => 'random', //can be either "keep" or "random"
+	'location' => 'public/uploads/products/originals/', //the location to store the original
+	'size_limit' => 2, //the file size limit in megabytes (only limits the javascript, you still have to set your php limit)
+	'sizes' => array( //alternate sizes to use
+ 		array(65, 57, 'crop', 'public/uploads/products/thumbs/small/', 100),
+ 		array(220, 138, 'landscape', 'public/uploads/products/thumbs/medium/', 100),
+ 		array(383, 276, 'fit', 'public/uploads/products/thumbs/full/', 100)
+ 	)
+)
+```
+
+An image field will allow the admin user to upoad images. Administrator saves the image (and its different sizes) to the server and stores the image file name in the database.
+
 
 
 
@@ -635,7 +674,7 @@ x - not done
 d - done, but needs documentation
 ### 3.0.0
 x You can now group together models into menu groups
-d New image field
+- New image field
 - Admin users can now set a custom number of rows in each model's interface
 d You can now add custom action buttons in the $actions property of a model
 x You can now apply per-model permissions for creating, saving, and deleting items
