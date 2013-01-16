@@ -14,15 +14,15 @@ class ModelHelper {
 	 *
 	 * @param string	$modelName
 	 * @param id		$id
-	 * @param bool		$updateRelationships	//if this is true, the model will come back with an extra "[field]_options" attribute
-	 *												for relationships
+	 * @param bool		$updateRelationships	//if true, the model will come back with an extra "[field]_options" attribute for relationships
+	 * @param bool		$includeAllColumns		//if true, all columns will be included (only use for non-saving items)
 	 *
 	 * @return object|null	$model
 	 * object with data => if the id exists
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
 	 */
-	public static function getModel($modelName, $id = 0, $updateRelationships = false)
+	public static function getModel($modelName, $id = 0, $updateRelationships = false, $includeAllColumns = false)
 	{
 		//first instantiate a blank version of this object
 		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');
@@ -49,7 +49,15 @@ class ModelHelper {
 		}
 
 		//get the model
-		$model = $classname::find($id, $columns['includedColumns']);
+		if ($includeAllColumns)
+		{
+			$model = $classname::find($id);
+		}
+		else
+		{
+			$model = $classname::find($id, $columns['includedColumns']);
+		}
+
 		$model = $model ? $model : $emptyModel;
 
 		//now we get the edit fields with the relationships loaded

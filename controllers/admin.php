@@ -168,7 +168,7 @@ class Administrator_Admin_Controller extends Controller
 	 */
 	public function action_custom_action($modelName, $id)
 	{
-		$model = ModelHelper::getModel($modelName, $id);
+		$model = ModelHelper::getModel($modelName, $id, false, true);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
