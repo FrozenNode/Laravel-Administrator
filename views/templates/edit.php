@@ -145,6 +145,11 @@
 					</div>
 				<!-- /ko -->
 			<!-- /ko -->
+
+			<!-- ko if: type === 'color' -->
+				<input type="text" data-type="color" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field]" />
+				<div class="color_preview" data-bind="style: {backgroundColor: $root[field]}, visible: $root[field]"></div>
+			<!-- /ko -->
 			</div>
 		<!-- /ko -->
 	<!-- /ko -->

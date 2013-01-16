@@ -658,6 +658,19 @@ Using the datetime type will set the field up as a jQuery UI datetimepicker. The
 
 An image field will allow the admin user to upoad images. Administrator saves the image (and its different sizes) to the server and stores the image file name in the database.
 
+#### color
+
+<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/field-type-color.png" />
+
+```php
+'hex' => array(
+	'type' => 'color',
+	'title' => 'Color (hex value)',
+)
+```
+
+The color field provides a color picker that lets the admin user pick a hexadecimal color value (e.g. #ffffff for white).
+
 
 
 
@@ -674,6 +687,7 @@ x - not done
 d - done, but needs documentation
 ### 3.0.0
 x You can now group together models into menu groups
+- New color field
 - New image field
 - Admin users can now set a custom number of rows in each model's interface
 d You can now add custom action buttons in the $actions property of a model

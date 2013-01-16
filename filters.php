@@ -15,6 +15,7 @@ Route::filter('add_assets', function()
 	$assets->add('jquery.ui.css', 'css/ui/jquery-ui-1.9.1.custom.min.css');
 	$assets->add('jquery.ui.timepicker.css', 'css/ui/jquery.ui.timepicker.css');
 	$assets->add('chosen_css', 'css/chosen.css');
+	$assets->add('jquery.lw-colorpicker', 'css/jquery.lw-colorpicker.css');
 	$assets->add('main_style', 'css/main.css');
 
 
@@ -58,6 +59,9 @@ Route::filter('add_assets', function()
 
 	//accountingjs
 	$assets->add('accountingjs', 'js/accounting.js');
+
+	//color picker
+	$assets->add('jquery.lw-colorpicker', 'js/jquery/jquery.lw-colorpicker.min.js');
 
 	//historyjs
 	$assets->add('historyjs', 'js/history/native.history.js');

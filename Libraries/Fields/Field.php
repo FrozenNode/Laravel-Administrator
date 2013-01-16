@@ -25,6 +25,7 @@ abstract class Field {
 		'image' => 'Admin\\Libraries\\Fields\\Image',
 		//'multi_image' => 'Admin\\Libraries\\Fields\\MultiImage',
 		'file' => 'Admin\\Libraries\\Fields\\File',
+		'color' => 'Admin\\Libraries\\Fields\\Color',
 
 		//relationships
 		'belongs_to' => 'Admin\\Libraries\\Fields\\Relationships\\BelongsTo',

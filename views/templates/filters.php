@@ -13,6 +13,10 @@
 			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />
 		<!-- /ko -->
 
+		<!-- ko if: type === 'color' -->
+			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />
+		<!-- /ko -->
+
 		<!-- ko if: type === 'number' -->
 			<span class="symbol" data-bind="text: symbol"></span>
 

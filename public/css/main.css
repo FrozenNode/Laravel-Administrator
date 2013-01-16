@@ -185,6 +185,13 @@ body label {
   left:-15px;
 }
 #admin_page div#sidebar div.panel_contents > div.min_max.datetime input[type=text] { font-size:11px; }
+#admin_page div#sidebar div.panel_contents > div.color div.color_preview {
+  height:8px;
+  margin:0 33px 0 1px;
+  -moz-box-shadow:0px 1px 2px #aaaaaa;
+  -webkit-box-shadow:0px 1px 2px #aaaaaa;
+  box-shadow:0px 1px 2px #aaaaaa;
+}
 #admin_page #content div.table_container { position:relative; }
 #admin_page #content div.table_container div.results_header {
   background:#efefef;
@@ -453,6 +460,13 @@ body label {
   position:absolute;
   top:5px;
   right:5px;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.color div.color_preview {
+  height:8px;
+  margin:0 33px 0 1px;
+  -moz-box-shadow:0px 1px 2px #aaaaaa;
+  -webkit-box-shadow:0px 1px 2px #aaaaaa;
+  box-shadow:0px 1px 2px #aaaaaa;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form div.control_buttons {
   margin-top:20px;
