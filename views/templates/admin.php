@@ -37,7 +37,7 @@
 							css: {result: true, even: $index() % 2 == 1, odd: $index() % 2 != 1,
 									selected: $data[$root.primaryKey] == $root.itemLoadingId()}">
 					<!-- ko foreach: $root.columns -->
-						<td data-bind="text: $parentContext.$data[field]"></td>
+						<td data-bind="html: $parentContext.$data[field]"></td>
 					<!-- /ko -->
 				</tr>
 			<!-- /ko -->

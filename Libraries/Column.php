@@ -46,6 +46,13 @@ class Column {
 	public $select = NULL;
 
 	/**
+	 * This holds the rendered output of this column.
+	 *
+	 * @var string
+	 */
+	public $output = '(:value)';
+
+	/**
 	 * Determines if this column is sortable
 	 *
 	 * @var string
@@ -98,6 +105,9 @@ class Column {
 			$column = array();
 		}
 
+		//output value...reorganize this
+		$output = array_get($column, 'output');
+
 		//set the values
 		$this->field = $field;
 		$this->title = array_get($column, 'title', $field);
@@ -108,6 +118,7 @@ class Column {
 		$this->isRelated = array_get($column, 'isRelated', $this->isRelated);
 		$this->isComputed = array_get($column, 'isComputed', $this->isComputed);
 		$this->isIncluded = array_get($column, 'isIncluded', $this->isIncluded);
+		$this->output = is_string($output) ? $output : $this->output;
 		$this->relationshipField = array_get($column, 'relationshipField', $this->relationshipField);
 	}
 
@@ -137,6 +148,7 @@ class Column {
 			'relationship' => array_get($column, 'relationship'),
 			'select' => array_get($column, 'select'),
 			'sortable' => true, //for now...
+			'output' => array_get($column, 'output'),
 		);
 
 		//if the relation option is set, we'll set up the column array using the select
@@ -267,6 +279,7 @@ class Column {
 	 {
 	 	$return = array(
 	 		'columns' => array(),
+	 		'columnObjects' => array(),
 	 		'includedColumns' => array(),
 	 		'computedColumns' => array(),
 	 		'relatedColumns' => array(),
@@ -283,6 +296,9 @@ class Column {
 				{
 					continue;
 				}
+
+				//save the column object
+				$return['columnObjects'][$field] = $columnObject;
 
 				//if $toArray is true, add the column as an array. otherwise add the column object
 				if ($toArray)
@@ -342,6 +358,7 @@ class Column {
 			'relationship' => $this->relationship,
 			'select' => $this->select,
 			'sortable' => $this->sortable,
+			'output' => $this->output,
 		);
 	}
 
@@ -371,5 +388,17 @@ class Column {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Takes a column output string and renders the column with it (replacing '(:value)' with the column's field value)
+	 *
+	 * @param string	$output
+	 *
+	 * @return string
+	 */
+	public function renderOutput($value)
+	{
+		return str_replace('(:value)', $value, $this->output);
 	}
 }

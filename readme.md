@@ -689,6 +689,7 @@ d - done, but needs documentation
 x You can now group together models into menu groups
 - New color field
 - New image field
+d Custom column outputs
 - Admin users can now set a custom number of rows in each model's interface
 d You can now add custom action buttons in the $actions property of a model
 x You can now apply per-model permissions for creating, saving, and deleting items

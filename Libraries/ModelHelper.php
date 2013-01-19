@@ -374,9 +374,17 @@ class ModelHelper {
 
 			foreach ($onTableColumns as $field => $col)
 			{
-				$arr[$field] = $item->get_attribute($field);
+				//if this column is in our objects array, render the output with the given value
+				if (isset($columns['columnObjects'][$field]))
+				{
+					$arr[$field] = $columns['columnObjects'][$field]->renderOutput($item->get_attribute($field));
+				}
+				//otherwise it's likely the primary key column which wasn't included (though it's needed for identification purposes)
+				else
+				{
+					$arr[$field] = $item->get_attribute($field);
+				}
 			}
-
 			//then grab the computed, unsortable columns
 			foreach ($columns['computedColumns'] as $col)
 			{
