@@ -412,8 +412,13 @@
 					//success
 					//iterate over the images until we find it and then set the proper fields
 					viewModel[options.field](data.filename);
-					viewModel[cacheName].splice();
-					viewModel[cacheName].refresh();
+
+					setTimeout(function()
+					{
+						viewModel[cacheName].splice();
+						viewModel[cacheName].refresh();
+						$('div.plupload').css('z-index', 71);
+					}, 200);
 				} else {
 					//error
 					alert('ERRRORRRRR');
