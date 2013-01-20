@@ -2,9 +2,7 @@
 
 use Admin\Libraries\ModelHelper;
 use Admin\Libraries\Fields\Field;
-use Admin\Libraries\Column;
-use Admin\Libraries\Sort;
-use Admin\Libraries\Action;
+use Admin\Libraries\ModelConfig;
 
 //View Composers
 
@@ -12,31 +10,28 @@ use Admin\Libraries\Action;
 View::composer('administrator::index', function($view)
 {
 	//get a model instance that we'll use for constructing stuff
-	$modelInstance = ModelHelper::getModel($view->modelName);
+	$config = $view->config;
+	$model = $config->model;
 	$baseUrl = URL::to_route('admin_index');
 	$route = parse_url($baseUrl);
 
-	$columns = Column::getColumns($modelInstance);
-	$editFields = Field::getEditFields($modelInstance);
+	//get the edit fields
+	$editFields = Field::getEditFields($config);
 
 	//add the view fields
-	$view->modelTitle = Config::get('administrator::administrator.models.'.$view->modelName.'.title', $view->modelName);
-	$view->modelSingle = Config::get('administrator::administrator.models.'.$view->modelName.'.single', $view->modelTitle);
-	$view->columns = $columns['columns'];
-	$view->includedColumns = $columns['includedColumns'];
-	$view->primaryKey = $modelInstance::$key;
-	$view->sort = Sort::get($modelInstance)->toArray();
-	$view->rows = ModelHelper::getRows($modelInstance, $view->sort);
-	$view->editFields = $editFields['arrayFields'];
-	$view->actions = Action::getActions($modelInstance);
-	$view->dataModel = $editFields['dataModel'];
-	$view->filters = Field::getFilters($modelInstance);
+	$view->primaryKey = $model::$key;
+	$view->rows = ModelHelper::getRows($config, $config->sort);
+	$view->editFields = $editFields;
+	$view->actions = $config->actions;
+	$view->filters = Field::getFilters($config);
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = URL::to('bundles/administrator/');
 	$view->route = $route['path'].'/';
-	$view->expandWidth = ModelHelper::getExpandWidth($modelInstance);
-	$view->rowsPerPage = ModelHelper::getRowsPerPage($modelInstance);
-	$view->modelInstance = $modelInstance;
 	$view->model = isset($view->model) ? $view->model : false;
+});
 
+//header view
+View::composer(array('administrator::partials.header', 'administrator::dashboard'), function($view)
+{
+	$view->menu = ModelConfig::getMenu();
 });

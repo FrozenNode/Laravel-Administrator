@@ -102,11 +102,14 @@ abstract class Relationship extends Field {
 	 *
 	 * @param string|int	$field
 	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig 	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
-		parent::__construct($field, $info, $model);
+		parent::__construct($field, $info, $config);
+
+		//put the model into a variable so we can call it statically
+		$model = $config->model;
 
 		//get an instance of the relationship object
 		$relationship = $model->{$field}();

@@ -1,6 +1,6 @@
 <?php
 
-use Admin\Libraries\ModelHelper;
+use Admin\Libraries\ModelConfig;
 
 //Filters
 
@@ -75,9 +75,9 @@ Route::filter('add_assets', function()
 Route::filter('validate_admin', function ()
 {
 	//get the admin check closure that should be supplied in the config
-	$authCheck = Config::get('administrator::administrator.auth_check');
+	$permission = Config::get('administrator::administrator.permission');
 
-	if (!$authCheck())
+	if (!$permission())
 	{
 		$loginUrl = URL::to(Config::get('administrator::administrator.login_path', 'user/login'));
 		$redirectKey = Config::get('administrator::administrator.login_redirect_key', 'redirect');
@@ -90,18 +90,14 @@ Route::filter('validate_admin', function ()
 //validate_model filter
 Route::filter('validate_model', function ()
 {
-	$modelName = URI::segment(2);
-	$model = ModelHelper::getModelInstance($modelName);
+	$modelName = Request::route()->parameters[0];
+	$config = ModelConfig::get($modelName);
 
 	//if the model doesn't exist at all, redirect to 404
-	if (!$model)
+	if (!$config)
 	{
 		return Response::error('404');
 	}
 
-	//if the model does exist, check if this user has permission to access it
-	if (!ModelHelper::checkPermission($modelName))
-	{
-		Redirect::to_route('admin_dashboard');
-	}
+	Request::route()->parameters[0] = $config;
 });

@@ -2,13 +2,20 @@
 	<h2>Dashboard</h2>
 
 	<ul class="models">
-		@foreach (Config::get('administrator::administrator.models') as $key => $model)
-			@if (Admin\Libraries\ModelHelper::checkPermission($key))
-				<?php $key = is_numeric($key) ? $model : $key; ?>
-				<li>
-					{{ HTML::link(URL::to_route('admin_index', array($key)), $model['title']) }}
-				</li>
-			@endif
+		@foreach ($menu as $key => $item)
+			<li>
+				@if (is_array($item))
+					<ul>
+						@foreach ($item as $k => $subitem)
+							<li>
+								{{ HTML::link(URL::to_route('admin_index', array($k)), $subitem) }}
+							</li>
+						@endforeach
+					</ul>
+				@else
+					{{ HTML::link(URL::to_route('admin_index', array($key)), $item) }}
+				@endif
+			</li>
 		@endforeach
 	</ul>
 </div>

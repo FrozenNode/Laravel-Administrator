@@ -94,9 +94,8 @@ class Column {
 	 *
 	 * @param int|string	$field 	//column key
 	 * @param string|array	$column //column model
-	 * @param Eloquent		$model 	//eloquent model
 	 */
-	public function __construct($field, $column, $model)
+	public function __construct($field, $column)
 	{
 		//check if this is a numeric key, then we'll have to set the column model as an empty array
 		if (is_numeric($field))
@@ -127,11 +126,11 @@ class Column {
 	 *
 	 * @param string|int	$field 		//the key of the options array
 	 * @param array|string	$column		//the value of the options array
-	 * @param Eloquent 		$model 		//an instance of the Eloquent model
+	 * @param ModelConfig	$config		//this model's config
 	 *
 	 * @return false|Field object
 	 */
-	public static function get($field, $column, $model)
+	public static function get($field, $column, $config)
 	{
 		//if this is a numeric field, $column holds the field
 		if (is_numeric($field))
@@ -154,13 +153,13 @@ class Column {
 		//if the relation option is set, we'll set up the column array using the select
 		if ($column['relationship'])
 		{
-			if (!method_exists($model, $column['relationship']) || !$column['select'])
+			if (!method_exists($config->model, $column['relationship']) || !$column['select'])
 			{
 				return false;
 			}
 
 			//now we'll need to grab a relation field to see what its foreign table is
-			if (!$relationshipField = Field::get($column['relationship'], array('type' => 'relationship'), $model, false))
+			if (!$relationshipField = Field::get($column['relationship'], array('type' => 'relationship'), $config, false))
 			{
 				return false;
 			}
@@ -180,7 +179,7 @@ class Column {
 			$column['relationshipField'] = $relationshipField;
 		}
 		//if the supplied item is a getter, make this unsortable for the moment
-		else if (method_exists($model, 'get_'.$field) && $field === $column['sort_field'])
+		else if (method_exists($config->model, 'get_'.$field) && $field === $column['sort_field'])
 		{
 			$column['sortable'] = false;
 		}
@@ -188,7 +187,7 @@ class Column {
 		//however, if this is not a relation and the select option was supplied, str_replace the select option and make it sortable again
 		if (!$column['relationship'] && $column['select'])
 		{
-			$column['select'] = str_replace('(:table)', $model->table(), $column['select']);
+			$column['select'] = str_replace('(:table)', $config->model->table(), $column['select']);
 			$column['sortable'] = true;
 		}
 
@@ -197,7 +196,7 @@ class Column {
 		{
 			$column['isRelated'] = true;
 		}
-		else if (method_exists($model, 'get_'.$field) || $column['select'])
+		else if (method_exists($config->model, 'get_'.$field) || $column['select'])
 		{
 			$column['isComputed'] = true;
 		}
@@ -207,7 +206,7 @@ class Column {
 		}
 
 		//now we can instantiate the object
-		return new static($field, $column, $model);
+		return new static($field, $column);
 	}
 
 	/**
@@ -265,50 +264,44 @@ class Column {
 	}
 
 	/**
-	 * Gets the model's columns
+	 * Gets a model's columns given the a model's config
 	 *
-	 * @param object	$model
-	 * @param bool		$toArray
+	 * @param ModelConfig		$config
 	 *
 	 * @return array(
 	 *			'columns' => array(detailed..),
 	 *			'includedColumns' => array(field => full_column_name, ...)),
 	 *			'computedColumns' => array(key, key, key)
 	 */
-	 public static function getColumns($model, $toArray = true)
+	 public static function getColumns($config)
 	 {
+	 	$model = $config->model;
 	 	$return = array(
 	 		'columns' => array(),
+	 		'columnArrays' => array(),
 	 		'columnObjects' => array(),
 	 		'includedColumns' => array(),
 	 		'computedColumns' => array(),
 	 		'relatedColumns' => array(),
 	 	);
 
-	 	if (isset($model->columns) && count($model->columns) > 0)
+	 	//check if there are columns to iterate over
+	 	if (count($config->columns) > 0)
 		{
 			$columns = array();
 
-			foreach ($model->columns as $field => $column)
+			foreach ($config->columns as $field => $column)
 			{
 				//get the column object
-				if (!$columnObject = Column::get($field, $column, $model))
+				if (!$columnObject = Column::get($field, $column, $config))
 				{
 					continue;
 				}
 
-				//save the column object
+				//save the column object with a $field-based key, as a simple array (to use in knockout), and as a simple array of arrays
 				$return['columnObjects'][$field] = $columnObject;
-
-				//if $toArray is true, add the column as an array. otherwise add the column object
-				if ($toArray)
-				{
-					$return['columns'][] = $columnObject->toArray();
-				}
-				else
-				{
-					$return['columns'][] = $columnObject;
-				}
+				$return['columns'][] = $columnObject;
+				$return['columnArrays'][] = $columnObject->toArray();
 
 				//categorize the columns
 				if ($columnObject->isRelated)
@@ -332,7 +325,7 @@ class Column {
 		}
 		else
 		{
-			//throw exception!
+			throw new Exception("Administrator: you must provide a valid 'columns' array in each model's config");
 		}
 
 		//make sure the table key is included

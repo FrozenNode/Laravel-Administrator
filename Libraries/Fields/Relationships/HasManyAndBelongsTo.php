@@ -26,13 +26,13 @@ class HasManyAndBelongsTo extends Relationship {
 	 *
 	 * @param string|int	$field
 	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig 	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
-		parent::__construct($field, $info, $model);
+		parent::__construct($field, $info, $config);
 
-		$relationship = $model->{$field}();
+		$relationship = $config->model->{$field}();
 		$table = $relationship->table->joins[0];
 		$related_model = $relationship->model;
 

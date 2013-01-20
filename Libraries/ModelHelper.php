@@ -4,15 +4,16 @@ namespace Admin\Libraries;
 use \Config;
 use \DateTime;
 use \DB;
+use \Exception;
 use Admin\Libraries\Fields\Field;
 
 class ModelHelper {
 
 
 	/**
-	 * Gets an instance of the supplied model given the id
+	 * Gets a model given an id
 	 *
-	 * @param string	$modelName
+	 * @param string	$config
 	 * @param id		$id
 	 * @param bool		$updateRelationships	//if true, the model will come back with an extra "[field]_options" attribute for relationships
 	 * @param bool		$includeAllColumns		//if true, all columns will be included (only use for non-saving items)
@@ -22,46 +23,35 @@ class ModelHelper {
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
 	 */
-	public static function getModel($modelName, $id = 0, $updateRelationships = false, $includeAllColumns = false)
+	public static function getModel($config, $id = 0, $updateRelationships = false, $includeAllColumns = false)
 	{
-		//first instantiate a blank version of this object
-		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');
-
-		if (!class_exists($classname))
-		{
-			return null;
-		}
-
-		//get an empty model to work with and its included columns
-		$emptyModel = static::getModelInstance($modelName);
-		$columns = Column::getColumns($emptyModel);
-
 		//if we're getting an existing model, we'll want to first get the edit fields without the relationships loaded
-		$editFields = Field::getEditFields($emptyModel, ($id ? false : true));
+		$model = $config->model;
+		$editFields = Field::getEditFields($config, ($id ? false : true));
 
 		//make sure the edit fields are included
 		foreach ($editFields['objectFields'] as $field => $obj)
 		{
-			if (!$obj->relationship && !array_key_exists($field, $columns['includedColumns']))
+			if (!$obj->relationship && !array_key_exists($field, $config->columns['includedColumns']))
 			{
-				$columns['includedColumns'][$field] = $emptyModel->table().'.'.$field;
+				$config->columns['includedColumns'][$field] = $model->table().'.'.$field;
 			}
 		}
 
 		//get the model
 		if ($includeAllColumns)
 		{
-			$model = $classname::find($id);
+			$model = $model::find($id);
 		}
 		else
 		{
-			$model = $classname::find($id, $columns['includedColumns']);
+			$model = $model::find($id, $config->columns['includedColumns']);
 		}
 
-		$model = $model ? $model : $emptyModel;
+		$model = $model ? $model : $config->model;
 
 		//now we get the edit fields with the relationships loaded
-		$editFields = Field::getEditFields($model);
+		$editFields = Field::getEditFields($config);
 
 		//if the model exists, load up the existing related items
 		if ($model->exists)
@@ -105,10 +95,10 @@ class ModelHelper {
 							//unset the relationships so we only get back what we need
 							$model->relationships = array();
 
-							//include the item link if one exists
-							if (method_exists($model, 'create_link'))
+							//include the item link if one was supplied
+							if ($link = $config->getModelLink($model))
 							{
-								$model->set_attribute('admin_item_link', $model->create_link());
+								$model->set_attribute('admin_item_link', $link);
 							}
 						}
 					}
@@ -120,170 +110,46 @@ class ModelHelper {
 	}
 
 	/**
-	 * Gets an instance of the supplied model
+	 * Gets an instance of the supplied model class
 	 *
-	 * @param string		$modelName
+	 * @param string		$className
 	 *
-	 * @return object|null	$model
+	 * @return null | Eloquent instance
 	 */
-	public static function getModelInstance($modelName)
+	public static function getModelInstance($className)
 	{
-		//first instantiate the object
-		$classname = Config::get('administrator::administrator.models.'.$modelName.'.model', '');;
-
-		if (class_exists($classname))
+		//check if the class exists at all
+		if (class_exists($className))
 		{
-			return new $classname();
-		}
-		else
-		{
-			return null;
-		}
-	}
+			$instance = new $className();
 
-	public static function getModelConfig($model)
-	{
-		//Config::get('administrator::administrator.models.'.$modelName.'.model', '');
-		$models = Config::get('administrator::administrator.models', array());
-		$config = false;
-
-		//iterate over the models to found the relevant name
-		foreach ($models as $key => $m)
-		{
-			if (is_a($model, $m['model']))
+			//and if it's an eloquent model
+			if (is_a($instance, 'Eloquent'))
 			{
-				$config = $m;
-				break;
+				return $instance;
 			}
 		}
 
-		return $config;
+		//otherwise throw an exception
+		throw new Exception("Administrator: " . $className . " is not an Eloquent model");
 	}
 
-	public static function getModelKey($model)
-	{
-		//Config::get('administrator::administrator.models.'.$modelName.'.model', '');
-		$models = Config::get('administrator::administrator.models', array());
-		$return = false;
-
-		//iterate over the models to found the relevant name
-		foreach ($models as $key => $m)
-		{
-			if (is_a($model, $m['model']))
-			{
-				$return = $key;
-				break;
-			}
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Checks if a user has permission to access a model
-	 *
-	 * @param string	$modelName
-	 *
-	 * @return bool
-	 */
-	public static function checkPermission($modelName)
-	{
-		//grab the config item if it exists
-		$permissionCheck = Config::get('administrator::administrator.models.'.$modelName.'.permission_check', false);
-
-		return $permissionCheck && !$permissionCheck() ? false : true;
-	}
-
-	/**
-	 * Gets all necessary fields
-	 *
-	 * @param string		$modelName
-	 *
-	 * @return object|null	$model
-	 */
-	public static function getAllModelData($modelName)
-	{
-		//first instantiate the object
-		$classname = static::$namespace.$modelName;
-
-		if (class_exists($classname))
-		{
-			return new $classname();
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Gets the expand width for the model
-	 *
-	 * @param object		$model
-	 *
-	 * @return int
-	 */
-	public static function getExpandWidth(&$model)
-	{
-		$defaultWidth = 285;
-
-		//check if the expand property is set
-		if (isset($model->expand))
-		{
-			if ($model->expand === true)
-			{
-				return 500;
-			}
-			else if (is_int($model->expand) && $model->expand > $defaultWidth)
-			{
-				return $model->expand;
-			}
-		}
-
-		return $defaultWidth;
-	}
-
-	/**
-	 * Returns the number of rows per page for this model
-	 *
-	 * @param Eloquent		$model
-	 *
-	 * @return int
-	 */
-	public static function getRowsPerPage($model)
-	{
-		$modelName = static::getModelKey($model);
-		$model_per_page = $model->per_page() ? $model->per_page() : 20;
-		$global_per_page = Config::get('administrator::administrator.global_per_page', NULL);
-		$per_page = \Session::get('administrator_' . $modelName . '_rows_per_page');
-
-		if (!$per_page)
-		{
-			if ($global_per_page && is_numeric($global_per_page))
-			{
-				$per_page = $global_per_page;
-			}
-			else
-			{
-				$per_page = $model_per_page;
-			}
-		}
-
-		return $per_page;
-	}
 
 	/**
 	 * Helper that builds a results array (with results and pagination info)
 	 *
-	 * @param object	$model
-	 * @param array		$sortOptions (with 'field' and 'direction' keys)
-	 * @param array		$filters (see Field::getFilters method for the value types)
+	 * @param ModelConfig	$config
+	 * @param array			$sort (with 'field' and 'direction' keys)
+	 * @param array			$filters (see Field::getFilters method for the value types)
 	 */
-	public static function getRows($model, $sortOptions, $filters = null)
+	public static function getRows($config, $sort = null, $filters = null)
 	{
-		//get the columns and sort options
-		$columns = Column::getColumns($model, false);
-		$sort = Sort::get($model, $sortOptions['field'], $sortOptions['direction']);
+		//grab the model instance
+		$model = $config->model;
+
+		//update the config sort options
+		$config->setSort($sort);
+		$sort = $config->sort;
 
 		//get things going by grouping the set
 		$query = $model::group_by($model->table().'.'.$model::$key);
@@ -296,7 +162,7 @@ class ModelHelper {
 		{
 			foreach ($filters as $filter)
 			{
-				if (!$fieldObject = Field::get($filter['field'], $filter, $model))
+				if (!$fieldObject = Field::get($filter['field'], $filter, $config))
 				{
 					continue;
 				}
@@ -309,13 +175,13 @@ class ModelHelper {
 		$sortOnTable = true;
 
 		//iterate over the columns to check if we need to join any values or add any extra columns
-		foreach ($columns['columns'] as $field => $column)
+		foreach ($config->columns['columns'] as $field => $column)
 		{
 			//if this is a related column, we'll need to add some joins
 			$column->filterQuery($query, $selects, $model);
 
 			//if this is a related field or
-			if ( ($column->isRelated || $column->select) && $column->field === $sort->field)
+			if ( ($column->isRelated || $column->select) && $column->field === $sort['field'])
 			{
 				$sortOnTable = false;
 			}
@@ -324,16 +190,13 @@ class ModelHelper {
 		//if the sort is on the model's table, prefix the table name to it
 		if ($sortOnTable)
 		{
-			$sort->field = $model->table().'.'.$sort->field;
+			$sort['field'] = $model->table() . '.' . $sort['field'];
 		}
 
-		//get the rows per page
-		$per_page = static::getRowsPerPage($model);
 
 		/**
-		 * We need to do our own pagination since there is a bug (!!!!!!!!!!!!!!) in the L3 paginator when using groupings :(
+		 * We need to do our own pagination since there is a bug in the L3 paginator when using groupings :(
 		 * When L4 is released, this problem will go away and we'll be able to use the paginator again
-		 * Trust me, I understand how ghetto this is. I also understand that it may not work too well on other drivers. Let me know...
 		 */
 
 		//first get the sql sans selects
@@ -349,17 +212,17 @@ class ModelHelper {
 		$results = $query->table->connection->query($sql, $query->table->bindings);
 		$num_rows = $results[0]->aggregate;
 		$page = (int) \Input::get('page', 1);
-		$last = (int) ceil($num_rows/$per_page);
+		$last = (int) ceil($num_rows / $config->rowsPerPage);
 
 		//if the current page is greater than the last page, set the current page to the last page
 		$page = $page > $last ? $last : $page;
 
 		//now we need to limit and offset the rows in remembrance of our dear lost friend paginate()
-		$query->take($per_page);
-		$query->skip($per_page * ($page === 0 ? $page : $page - 1));
+		$query->take($config->rowsPerPage);
+		$query->skip($config->rowsPerPage * ($page === 0 ? $page : $page - 1));
 
 		//order the set by the model table's id
-		$query->order_by($sort->field, $sort->direction);
+		$query->order_by($sort['field'], $sort['direction']);
 
 		//then retrieve the rows
 		$rows = $query->distinct()->get($selects);
@@ -369,15 +232,15 @@ class ModelHelper {
 		foreach ($rows as $item)
 		{
 			//iterate over the included and related columns
-			$onTableColumns = array_merge($columns['includedColumns'], $columns['relatedColumns']);
+			$onTableColumns = array_merge($config->columns['includedColumns'], $config->columns['relatedColumns']);
 			$arr = array();
 
 			foreach ($onTableColumns as $field => $col)
 			{
 				//if this column is in our objects array, render the output with the given value
-				if (isset($columns['columnObjects'][$field]))
+				if (isset($config->columns['columnObjects'][$field]))
 				{
-					$arr[$field] = $columns['columnObjects'][$field]->renderOutput($item->get_attribute($field));
+					$arr[$field] = $config->columns['columnObjects'][$field]->renderOutput($item->get_attribute($field));
 				}
 				//otherwise it's likely the primary key column which wasn't included (though it's needed for identification purposes)
 				else
@@ -386,7 +249,7 @@ class ModelHelper {
 				}
 			}
 			//then grab the computed, unsortable columns
-			foreach ($columns['computedColumns'] as $col)
+			foreach ($config->columns['computedColumns'] as $col)
 			{
 				$arr[$col] = $item->{$col};
 			}
@@ -405,13 +268,14 @@ class ModelHelper {
 	/**
 	 * Prepare a model for saving given a post input array
 	 *
-	 * @param object	$model
+	 * @param ModelConfig	$config
+	 * @param Eloquent		$model
 	 *
 	 * @return false|object
 	 */
-	public static function fillModel(&$model)
+	public static function fillModel($config, &$model)
 	{
-		$editFields = Field::getEditFields($model);
+		$editFields = Field::getEditFields($config);
 
 		//run through the edit fields to see if we need to set relationships
 		foreach ($editFields['objectFields'] as $field => $info)
@@ -430,13 +294,14 @@ class ModelHelper {
 	/**
 	 * After a model has been saved, this is called to save the relationships
 	 *
-	 * @param object	$model
+	 * @param ModelConfig	$config
+	 * @param Eloquent		$model
 	 *
 	 * @return false|object
 	 */
-	public static function saveRelationships(&$model)
+	public static function saveRelationships($config, &$model)
 	{
-		$editFields = Field::getEditFields($model);
+		$editFields = Field::getEditFields($config);
 
 		//run through the edit fields to see if we need to set relationships
 		foreach ($editFields['objectFields'] as $field => $info)
@@ -460,11 +325,12 @@ class ModelHelper {
 	 *
 	 * @return array
 	 */
-	public static function updateRelationshipOptions($model, $field, $type, $constraints, $selectedItems, $term = null)
+	public static function updateRelationshipOptions($config, $field, $type, $constraints, $selectedItems, $term = null)
 	{
 		//first get the related model and fetch the field's options
+		$model = $config->model;
 		$relatedModel = $model->{$field}()->model;
-		$info = Field::getOptions($field, $model, $type);
+		$info = Field::getOptions($field, $config, $type);
 
 		//if we can't find the field, return an empty array
 		if (!$info)
@@ -473,7 +339,7 @@ class ModelHelper {
 		}
 
 		//set up the field object
-		$info = Field::get($field, $info, $model, false);
+		$info = Field::get($field, $info, $config, false);
 
 		//make sure we're grouping by the model's id
 		$query = $relatedModel::with($relatedModel->includes)->group_by($relatedModel->table().'.'.$relatedModel::$key);

@@ -116,9 +116,9 @@ abstract class Field {
 	 *
 	 * @param string|int	$field
 	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig 	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
@@ -133,15 +133,17 @@ abstract class Field {
 	/**
 	 * Takes a the key/value of the options array and the associated model and returns an instance of the field
 	 *
-	 * @param string|int	$field 				//the key of the options array
-	 * @param array|string	$info 				//the value of the options array
-	 * @param Eloquent 		$model 				//an instance of the Eloquent model
-	 * @param bool	 		$loadRelationships	//determines whether or not to load the relationships
+	 * @param string|int			$field 				//the key of the options array
+	 * @param array|string			$info 				//the value of the options array
+	 * @param ModelConfig|Eloquent	$config				//the model's config or an eloquent object (for relationships)
+	 * @param bool	 				$loadRelationships	//determines whether or not to load the relationships
 	 *
 	 * @return false|Field object
 	 */
-	public static function get($field, $info, $model, $loadRelationships = true)
+	public static function get($field, $info, $config, $loadRelationships = true)
 	{
+		//put the model in a variable so we can call it statically
+		$model = is_a($config, 'Admin\\Libraries\\ModelConfig') ? $config->model : $config;
 		$noInfo = is_numeric($field);
 
 		$field = $noInfo ? $info : $field;
@@ -184,7 +186,7 @@ abstract class Field {
 		//now we can instantiate the object
 		$classname = static::$fieldTypes[$info['type']];
 
-		return new $classname($field, $info, $model);
+		return new $classname($field, $info, $config);
 	}
 
 	/**
@@ -324,16 +326,16 @@ abstract class Field {
 	}
 
 	/**
-	 * Given a model instance and a field name, this returns the field object
+	 * Given a model config and a field name, this returns the field object
 	 *
-	 * @param Eloquent	 	$model
+	 * @param ModelConfig 	$config
 	 * @param string	 	$field
 	 *
 	 * @return false|Field object
 	 */
-	public static function findField($model, $field)
+	public static function findField($config, $field)
 	{
-		$fields = static::getEditFields($model, false);
+		$fields = static::getEditFields($config, false);
 
 		//iterate over the object fields until we have our match
 		return isset($fields['objectFields'][$field]) ? $fields['objectFields'][$field] : false;
@@ -342,31 +344,33 @@ abstract class Field {
 	/**
 	 * Gets the model's edit fields
 	 *
-	 * @param object	$model
-	 * @param bool		$loadRelationships
+	 * @param ModelConfig	$config
+	 * @param bool			$loadRelationships
 	 *
 	 * @return array
 	 */
-	public static function getEditFields($model, $loadRelationships = true)
+	public static function getEditFields($config, $loadRelationships = true)
 	{
+		//put the model into a variable so we can call it statically
+		$model = $config->model;
+
+		//this is the return value
 		$return = array(
 			'objectFields' => array(),
 			'arrayFields' => array(),
 			'dataModel' => array(),
 		);
 
-		if (isset($model->edit) && count($model->edit) > 0)
+		//iterate over each supplied edit field
+		foreach ($config->edit as $field => $info)
 		{
-			foreach ($model->edit as $field => $info)
-			{
-				$fieldObject = static::get($field, $info, $model, $loadRelationships);
+			$fieldObject = static::get($field, $info, $config, $loadRelationships);
 
-				//if this field can be properly set up, put it into the edit fields array
-				if ($fieldObject)
-				{
-					$return['objectFields'][$fieldObject->field] = $fieldObject;
-					$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
-				}
+			//if this field can be properly set up, put it into the edit fields array
+			if ($fieldObject)
+			{
+				$return['objectFields'][$fieldObject->field] = $fieldObject;
+				$return['arrayFields'][$fieldObject->field] = $fieldObject->toArray();
 			}
 		}
 
@@ -390,28 +394,30 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets the filters for the given model
+	 * Gets the filters for the given model config
 	 *
-	 * @param object	$model
+	 * @param ModelConfig	$config
 	 *
 	 * @return array
 	 */
-	public static function getFilters($model)
+	public static function getFilters($config)
 	{
-		//get the model's edit fields
+		//get the model's filter fields
 		$filters = array();
 
-		//if the filters option is set, use it
-		if (isset($model->filters) && count($model->filters) > 0)
+		//if there are no filters, exit out early
+		if ($config->filters)
 		{
-			foreach ($model->filters as $field => $info)
+			//iterate over the filters and create field objects for them
+			foreach ($config->filters as $field => $info)
 			{
-				if ($fieldObject = Field::get($field, $info, $model))
+				if ($fieldObject = Field::get($field, $info, $config))
 				{
 					$filters[$fieldObject->field] = $fieldObject->toArray();
 				}
 			}
 		}
+
 
 		return $filters;
 	}
@@ -419,24 +425,24 @@ abstract class Field {
 	/**
 	 * Finds a field's options given a field name, a model, and a type (filter/edit)
 	 *
-	 * @param  string 	$field
-	 * @param  Eloquent $model
-	 * @param  string 	$type
+	 * @param  string 		$field
+	 * @param  ModelConfig	$config
+	 * @param  string 		$type
 	 *
 	 * @return array|false
 	 */
-	public static function getOptions($field, $model, $type)
+	public static function getOptions($field, $config, $type)
 	{
 		$info = false;
 
 		//we want to get the correct options depending on the type of field it is
 		if ($type === 'filter')
 		{
-			$fields = static::getFilters($model);
+			$fields = static::getFilters($config);
 		}
 		else
 		{
-			$editFields = static::getEditFields($model);
+			$editFields = static::getEditFields($config);
 			$fields = $editFields['arrayFields'];
 		}
 

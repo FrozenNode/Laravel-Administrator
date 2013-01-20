@@ -1,5 +1,4 @@
 <?php
-use Admin\Libraries\Column;
 use Admin\Libraries\ModelHelper;
 use Admin\Libraries\Action;
 use Admin\Libraries\Fields\Field;
@@ -16,37 +15,27 @@ class Administrator_Admin_Controller extends Controller
 	/**
 	 * The main view for any of the data models
 	 *
-	 * @param string	$modelName
+	 * @param ModelConfig	$config
 	 *
 	 * @return Response
 	 */
-	public function action_index($modelName)
+	public function action_index($config)
 	{
-		//first we get the data model
-		$model = ModelHelper::getModelInstance($modelName);
-
-		$view = View::make("administrator::index",
-			array(
-				"modelName" => $modelName,
-			)
-		);
-
 		//set the layout content and title
-		$this->layout->modelName = $modelName;
-		$this->layout->content = $view;
+		$this->layout->content = View::make("administrator::index", array('config' => $config));
 	}
 
 
 	/**
 	 * Gets the item edit page / information
 	 *
-	 * @param string	$modelName
-	 * @param mixed		$itemId
+	 * @param ModelConfig	$config
+	 * @param mixed			$itemId
 	 */
-	public function action_item($modelName, $itemId = false)
+	public function action_item($config, $itemId = false)
 	{
 		//try to get the object
-		$model = ModelHelper::getModel($modelName, $itemId, true);
+		$model = ModelHelper::getModel($config, $itemId, true);
 
 		//if it's ajax, we just return the item information as json
 		//otherwise we load up the index page and dump values into
@@ -57,12 +46,11 @@ class Administrator_Admin_Controller extends Controller
 		else
 		{
 			$view = View::make("administrator::index", array(
-				"modelName" => $modelName,
-				"model" => $model,
+				'config' => $config,
+				'model' => $model,
 			));
 
 			//set the layout content and title
-			$this->layout->modelName = $modelName;
 			$this->layout->content = $view;
 		}
 	}
@@ -70,17 +58,17 @@ class Administrator_Admin_Controller extends Controller
 	/**
 	 * POST save method that accepts data via JSON POST and either saves an old item (if id is valid) or creates a new one
 	 *
-	 * @param string	$modelName
-	 * @param int		$id
+	 * @param ModelConfig	$config
+	 * @param int			$id
 	 *
 	 * @return JSON
 	 */
-	public function action_save($modelName, $id = false)
+	public function action_save($config, $id = false)
 	{
-		$model = ModelHelper::getModel($modelName, $id);
+		$model = ModelHelper::getModel($config, $id);
 
 		//fill the model with our input
-		ModelHelper::fillModel($model);
+		ModelHelper::fillModel($config, $model);
 
 		$rules = isset($model::$rules) ? $model::$rules : array();
 
@@ -114,7 +102,7 @@ class Administrator_Admin_Controller extends Controller
 			$model->save();
 
 			//Save the relationships
-			ModelHelper::saveRelationships($model);
+			ModelHelper::saveRelationships($config, $model);
 
 			return Response::json(array(
 				'success' => true,
@@ -126,14 +114,14 @@ class Administrator_Admin_Controller extends Controller
 	/**
 	 * POST delete method that accepts data via JSON POST and either saves an old
 	 *
-	 * @param string	$modelName
-	 * @param int		$id
+	 * @param ModelConfig	$config
+	 * @param int			$id
 	 *
 	 * @return JSON
 	 */
-	public function action_delete($modelName, $id)
+	public function action_delete($config, $id)
 	{
-		$model = ModelHelper::getModel($modelName, $id);
+		$model = ModelHelper::getModel($config, $id);
 		$errorResponse = array(
 			'success' => false,
 			'error' => "There was an error deleting this item. Please reload the page and try again.",
@@ -161,18 +149,18 @@ class Administrator_Admin_Controller extends Controller
 	/**
 	 * POST method for handling custom actions
 	 *
-	 * @param string	$modelName
-	 * @param int		$id
+	 * @param ModelConfig	$config
+	 * @param int			$id
 	 *
 	 * @return JSON
 	 */
-	public function action_custom_action($modelName, $id)
+	public function action_custom_action($config, $id)
 	{
-		$model = ModelHelper::getModel($modelName, $id, false, true);
+		$model = ModelHelper::getModel($config, $id, false, true);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
-		$action = Action::getByName($model, $actionName);
+		$action = Action::getByName($config, $actionName);
 		$result = $action->perform($model);
 
 		//if the result is a string, return that as an error.
@@ -191,45 +179,43 @@ class Administrator_Admin_Controller extends Controller
 		}
 	}
 
+	/**
+	 * Shows the dashboard page
+	 *
+	 * @return Response
+	 */
 	public function action_dashboard()
 	{
 		//set the layout content and title
-		$this->layout->modelName = "";
 		$this->layout->content = View::make("administrator::dashboard");
 	}
 
 	/**
 	 * Gets the item edit page / information
 	 *
-	 * @param string	$modelName
+	 * @param ModelConfig	$config
 	 *
 	 * @return array of rows
 	 */
-	public function action_results($modelName)
+	public function action_results($config)
 	{
-		//try to get the object
-		$model = ModelHelper::getModel($modelName);
-
 		//get the sort options and filters
 		$sortOptions = Input::get('sortOptions', array());
 		$filters = Input::get('filters', array());
 
 		//return the rows
-		return Response::json(ModelHelper::getRows($model, $sortOptions, $filters));
+		return Response::json(ModelHelper::getRows($config, $sortOptions, $filters));
 	}
 
 	/**
 	 * Gets a list of related items given constraints
 	 *
-	 * @param string	$modelName
+	 * @param ModelConfig	$config
 	 *
 	 * @return array of objects [{id: string} ... {1: 'name'}, ...]
 	 */
-	public function action_update_options($modelName)
+	public function action_update_options($config)
 	{
-		//try to get the object
-		$model = ModelHelper::getModel($modelName);
-
 		//get the constraints, the search term, and the currently-selected items
 		$constraints = Input::get('constraints', array());
 		$term = Input::get('term', '');
@@ -238,22 +224,21 @@ class Administrator_Admin_Controller extends Controller
 		$selectedItems = Input::get('selectedItems', false);
 
 		//return the rows
-		return Response::json(ModelHelper::updateRelationshipOptions($model, $field, $type, $constraints, $selectedItems, $term));
+		return Response::json(ModelHelper::updateRelationshipOptions($config->model, $field, $type, $constraints, $selectedItems, $term));
 	}
 
 	/**
 	 * The POST method that runs when a user uploads an image on an image field
 	 *
-	 * @param string	$modelName
+	 * @param ModelConfig	$config
 	 * @param string	$fieldName
 	 *
 	 * @return JSON
 	 */
-	public function action_image_upload($modelName, $fieldName)
+	public function action_image_upload($config, $fieldName)
 	{
 		//get the model and the field object
-		$model = ModelHelper::getModel($modelName);
-		$field = Field::findField($model, $fieldName);
+		$field = Field::findField($config, $fieldName);
 
 		return Response::JSON($field->doUpload());
 	}
@@ -261,26 +246,15 @@ class Administrator_Admin_Controller extends Controller
 	/**
 	 * The POST method for setting a user's rows per page
 	 *
-	 * @param string	$modelName
-	 * @param string	$fieldName
+	 * @param ModelConfig	$config
 	 *
 	 * @return JSON
 	 */
-	public function action_rows_per_page($modelName)
+	public function action_rows_per_page($config)
 	{
-		//get the model
-		$model = ModelHelper::getModel($modelName);
-
 		//get the inputted rows and the model rows
 		$rows = (int) Input::get('rows', 20);
-		$per_page = $model->per_page() ? $model->per_page() : 20;
-
-		if ($rows <= 0 || $rows > 100)
-		{
-			$rows = $per_page;
-		}
-
-		Session::put('administrator_' . $modelName . '_rows_per_page', $rows);
+		$config->setRowsPerPage($rows);
 
 		return Response::JSON(array('success' => true));
 	}

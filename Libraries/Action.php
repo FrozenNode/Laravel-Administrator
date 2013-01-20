@@ -4,6 +4,13 @@ namespace Admin\Libraries;
 class Action {
 
 	/**
+	 * The name of the action
+	 *
+	 * @var string
+	 */
+	public $name;
+
+	/**
 	 * The title of the action button
 	 *
 	 * @var string
@@ -60,13 +67,12 @@ class Action {
 	/**
 	 * Takes the model and an info array of options for the specific action
 	 *
-	 * @param Eloquent 		$model 		//an instance of the Eloquent model
 	 * @param string		$name		//the key name for this action
 	 * @param array			$info 		//the array info provided by the user
 	 *
 	 * @return false|Action object
 	 */
-	public static function create($model, $name, $info)
+	public static function create($name, $info)
 	{
 		//check the permission on this item
 		$info['hasPermission'] = is_callable(array_get($info, 'permission', false)) ? $info['permission']() : true;
@@ -85,28 +91,25 @@ class Action {
 	/**
 	 * Gets an action by name
 	 *
-	 * @param Eloquent		$model
+	 * @param ModelConfig	$config
 	 * @param string		$name
 	 *
 	 * @return false|Action object
 	 */
-	public static function getByName($model, $name)
+	public static function getByName($config, $name)
 	{
-		$config = ModelHelper::getModelConfig($model);
-		$actions = array_get($config, 'actions', array());
-
 		//check if the model has actions
-		if (!$actions || !is_array($actions))
+		if (!$config->actions || !is_array($config->actions))
 		{
 			return false;
 		}
 
 		//loop over the actions to find our culprit
-		foreach ($actions as $i => $info)
+		foreach ($config->actions as $action)
 		{
-			if ($i === $name)
+			if ($action->name === $name)
 			{
-				return static::create($model, $name, $info);
+				return $action;
 			}
 		}
 
@@ -116,30 +119,27 @@ class Action {
 	/**
 	 * Gets all actions
 	 *
-	 * @param Eloquent		$model
-	 * @param string		$toArray
+	 * @param ModelConfig	$config
 	 *
-	 * @return false|array of Action objects or arrays
+	 * @return false|array of Action objects and arrays
 	 */
-	public static function getActions($model, $toArray = true)
+	public static function getActions($config)
 	{
-		$config = ModelHelper::getModelConfig($model);
-		$actions = array_get($config, 'actions', array());
-
 		//check if the model has actions
-		if (!$actions || !is_array($actions))
+		if (!$config->actions || !is_array($config->actions))
 		{
 			return false;
 		}
 
+		//we'll be returning both the objects and the arrays
 		$validActions = array();
 
 		//loop over the actions to build the list
-		foreach ($actions as $name => $info)
+		foreach ($config->actions as $name => $info)
 		{
-			if ($action = static::create($model, $name, $info))
+			if ($action = static::create($name, $info))
 			{
-				$validActions[] = $toArray ? $action->toArray() : $action;
+				$validActions[] = $action;
 			}
 		}
 
@@ -148,6 +148,8 @@ class Action {
 
 	/**
 	 * Performs the callback of the action and returns its result
+	 *
+	 * @param Eloquent	$model
 	 *
 	 * @return array
 	 */

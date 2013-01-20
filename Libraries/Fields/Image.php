@@ -57,17 +57,17 @@ class Image extends Field {
 	 *
 	 * @param string|int	$field
 	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig 	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
-		parent::__construct($field, $info, $model);
+		parent::__construct($field, $info, $config);
 
 		$this->sizes = array_get($info, 'sizes', $this->sizes);
 		$this->naming = array_get($info, 'naming', $this->naming);
 		$this->location = array_get($info, 'location');
 		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
-		$this->uploadUrl = \URL::to_route('admin_image_upload', array(ModelHelper::getModelKey($model), $this->field));
+		$this->uploadUrl = \URL::to_route('admin_image_upload', array($config->name, $this->field));
 
 		$replace = 'public/';
 
