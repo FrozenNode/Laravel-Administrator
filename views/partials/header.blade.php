@@ -3,10 +3,11 @@
 		{{ HTML::link(URL::to_route('admin_dashboard'), Config::get('administrator::administrator.title')) }}
 	</h1>
 
-	<ul id="tabs">
+	<ul id="menu">
 		@foreach ($menu as $key => $item)
-			<li>
-				@if (is_array($item))
+			@if (is_array($item))
+				<li class="menu">
+					<span>{{$key}}</span>
 					<ul>
 						@foreach ($item as $k => $subitem)
 							<li>
@@ -14,10 +15,12 @@
 							</li>
 						@endforeach
 					</ul>
-				@else
+				</li>
+			@else
+				<li class="item">
 					{{ HTML::link(URL::to_route('admin_index', array($key)), $item) }}
-				@endif
-			</li>
+				</li>
+			@endif
 		@endforeach
 	</ul>
 	<p id="utility_nav">

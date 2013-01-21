@@ -5,6 +5,7 @@
 		@foreach ($menu as $key => $item)
 			<li>
 				@if (is_array($item))
+					<span>{{$key}}</span>
 					<ul>
 						@foreach ($item as $k => $subitem)
 							<li>

@@ -687,7 +687,6 @@ x - not done
 d - done, but needs documentation
 ### 3.0.0
 x Added new docs
-x You can now group together models into menu groups
 - New color field
 - New image field
 d Custom column outputs

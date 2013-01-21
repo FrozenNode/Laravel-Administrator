@@ -154,12 +154,40 @@
  */
 
 
-@transition(@property: all, @duration: 0.2s) {
-	-webkit-transition: @property @duration;
-	-moz-transition: @property @duration;
-	-ms-transition: @property @duration;
-	-o-transition: @property @duration;
-	transition: @property @duration;
+@transition(@property: all, @duration: 0.2s, @ease: ease, @delay: 0s) {
+	-webkit-transition: @property @duration @ease @delay;
+	-moz-transition: @property @duration @ease @delay;
+	-ms-transition: @property @duration @ease @delay;
+	-o-transition: @property @duration @ease @delay;
+	transition: @property @duration @ease @delay;
+}
+@transitionProperty(@property) {
+	-webkit-transition-property: @property;
+	-moz-transition-property: @property;
+	-ms-transition-property: @property;
+	-o-transition-property: @property;
+	transition-property: @property;
+}
+@transitionDuration(@duration) {
+	-webkit-transition-duration: @duration;
+	-moz-transition-duration: @duration;
+	-ms-transition-duration: @duration;
+	-o-transition-duration: @duration;
+	transition-duration: @duration;
+}
+@transitionTimingFunction(@timingFunction) {
+	-webkit-transition-timing-function: @timingFunction;
+	-moz-transition-timing-function: @timingFunction;
+	-ms-transition-timing-function: @timingFunction;
+	-o-transition-timing-function: @timingFunction;
+	transition-timing-function: @timingFunction;
+}
+@transitionDelay(@delay) {
+	-webkit-transition-delay: @delay;
+	-moz-transition-delay: @delay;
+	-ms-transition-delay: @delay;
+	-o-transition-delay: @delay;
+	transition-delay: @delay;
 }
 
 

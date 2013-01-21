@@ -44,62 +44,77 @@ body{
 #wrapper {
 
 	header {
-		@verticalGradient(#6a7176, #4d5256);
+		@verticalGradient(#5a6064, #4a4f52);
 		@boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
 		border-bottom: 1px solid #44484b;
 		text-shadow: black 0 1px 0;
-		height: 20px;
+		height: 34px;
 		overflow: visible;
-		padding: 12px 30px 9px;
 		position: relative;
 		z-index: 900;
 
 		h1 {
-			display: inline-block;
-			color: #CDCDCD;
 			float: left;
-			margin-right: 20px;
-			margin-bottom: 0px;
-			font-size: 1.3em;
-			font-weight: normal;
-			line-height: 1;
+			margin: 0;
+			border-right: 1px solid #999;
+
+			a {
+				padding: 8px 15px 9px;
+				font-size: 19px;
+				border-right: 1px solid #555;
+			}
 		}
 
-		a {
-			color: #cdcdcd;
-		}
-
-		ul#tabs {
+		a, span {
+			color: #eee;
 			display: inline-block;
-			height: 100%;
+			cursor: pointer;
+		}
+
+		ul#menu {
+			display: inline-block;
 
 			> li {
 				display: inline-block;
-				margin-right: 4px;
-				font-size: 1.0em;
 				position: relative;
+				@verticalGradient(#5a6064, #4a4f52);
 
-				a {
-					text-decoration: none;
-					padding: 6px 10px 4px 10px;
-					position: relative;
-					-webkit-border-radius: 10px;
-					-moz-border-radius: 10px;
-					border-radius: 10px;
+				a, span {
+					padding: 9px 12px 8px;
 				}
 
-				&.current {
+				&.menu {
+
+				}
+
+				> ul {
+					position: absolute;
+					top: 35px;
+					left: 0;
+					display: none;
+					@verticalGradient(#333, #444);
+					@boxShadow(0, 2px, 3px, #555);
+
 					a {
-						background: #7b8389;
-						color: #fff;
+						display: block;
+						white-space: nowrap;
+						overflow: hidden;
+						border-bottom: 1px solid #666;
+
+						&:hover {
+							color: #fff;
+						}
+					}
+
+					li:last-child {
+						a {
+							border-bottom: none;
+						}
 					}
 				}
 
-				&:hover {
-					> a {
-						background: #7b8389;
-						color: #fff;
-					}
+				&.current, &:hover {
+					@verticalGradient(#444, #333);
 				}
 
 			}
@@ -257,7 +272,7 @@ body{
 				div.paginator {
 					display: inline-block;
 					margin-left: 20px;
-					padding: 10px 15px;
+					padding: 11px 15px 9px;
 					vertical-align: middle;
 
 					input {
@@ -273,7 +288,7 @@ body{
 
 				div.per_page {
 					display: inline-block;
-					padding: 10px 15px;
+					padding: 11px 15px 9px;
 					vertical-align: middle;
 
 					select {

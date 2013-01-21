@@ -66,7 +66,8 @@ Route::filter('add_assets', function()
 	//historyjs
 	$assets->add('historyjs', 'js/history/native.history.js');
 
-	//and finally the admin js file
+	//and finally the site scripts
+	$assets->add('page', 'js/page.js');
 	$assets->add('admin', 'js/admin.js');
 });
 
