@@ -6,7 +6,7 @@
 - [Eloquent](#eloquent)
 - [Installation / Guidance](#installation-guidance)
 
-<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/overview.jpg" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/overview.jpg" />
 
 <a name="overview"></a>
 ##Overview

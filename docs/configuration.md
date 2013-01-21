@@ -72,7 +72,7 @@ This is the directory location of your application's model config files. It's re
 
 The menu option is where you set the menu structure of your site. Each item in the array can either be the name of a model config or an array of model config names with the array index being the title of the sub menu. In the above example, there would need to be, in your `model_config_path`, config files called `collections.php`, `products.php`, `product_images.php`, `orders.php`, `homepage_sliders.php`, `users.php`, `roles.php`, and `colors.php`. The 'E-Commerce' label would be applied to the menu group as seen below:
 
-<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/menu.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/menu.png" />
 
 > For a detailed description of all the model configuration options, see the **[model configuration docs](/docs/model-configuration)**
 
@@ -128,6 +128,6 @@ When a user is redirected to the `login_path`, the redirect path is sent with th
 
 Your admin users have the ability to set the rows per page in each model with this dropdown:
 
-<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/rows-per-page.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/rows-per-page.png" />
 
 This is persistent across until the user's session expires. The `global_rows_per_page` option is the default value for when the user hasn't yet set the number they want for any particular model.
