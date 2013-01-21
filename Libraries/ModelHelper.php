@@ -251,7 +251,7 @@ class ModelHelper {
 			//then grab the computed, unsortable columns
 			foreach ($config->columns['computedColumns'] as $col)
 			{
-				$arr[$col] = $item->{$col};
+				$arr[$col] = $config->columns['columnObjects'][$col]->renderOutput($item->{$col});
 			}
 
 			$results[] = $arr;
