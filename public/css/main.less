@@ -78,6 +78,7 @@ body{
 				display: inline-block;
 				position: relative;
 				@verticalGradient(#5a6064, #4a4f52);
+				margin-left: -3px;
 
 				a, span {
 					padding: 9px 12px 8px;
@@ -115,6 +116,10 @@ body{
 
 				&.current, &:hover {
 					@verticalGradient(#444, #333);
+				}
+
+				&:first-child {
+					margin-left: 0;
 				}
 
 			}
