@@ -33,7 +33,7 @@
 		</thead>
 		<tbody>
 			<!-- ko foreach: rows -->
-				<tr data-bind="click: function() {$root.clickItem($data[$root.primaryKey])},
+				<tr data-bind="click: function() {$root.clickItem($data[$root.primaryKey]); return true},
 							css: {result: true, even: $index() % 2 == 1, odd: $index() % 2 != 1,
 									selected: $data[$root.primaryKey] == $root.itemLoadingId()}">
 					<!-- ko foreach: $root.columns -->
