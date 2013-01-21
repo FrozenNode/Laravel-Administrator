@@ -40,150 +40,6 @@ Then add this to your `bundles.php` array:
 
 Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created.
 
-### Config
-
-The configuration is detailed below. The models array requires a 'title' and a 'model' key, both of which are strings, and the latter being the fully-qualified class name of your admin model. It also accepts an optional 'permission_check' property which should be a function that returns a boolean which Administrator uses to determine if the current user is allowed to access this model. This runs after the auth_check function, so you don't need to check for general authentication again in the model's permission_check. If the model can be accessed by all users who pass the auth_check, then you don't need to provide a permission_check for that model.
-
-```php
-/**
- * Page title
- *
- * @type string
- */
-'title' => 'Admin',
-
-/**
- * Models
- *
- * @type array
- *
- * Each item in the array should itself be an array with two required items inside it (title, model) and two optional items (single, permission_check).
- * The key will be what the user sees as the URI for this model.
- *
- * 'user' => array(
- * 		'title' => 'Users', //The title that will be used when displaying the model's page
- * 		'single' => 'user', //The name used for singular items. Film model would be 'film'. BoxOffice model might be 'take'
- * 		'model' => 'AdminModels\\User', //The string class name of the model you will be using. If you wish to extend your app models directly, you can just pass in 'User'. Beware, though: your model will need to have the required properties on it for Administrator to recognize it.
- *  	'permission_check' => function() { ... }, //[OPTIONAL] Return bool true if the current user is allowed to access this model. False otherwise
- * )
- */
-'models' => array(
-	'user' => array(
-		'title' => 'Users',
-		'single' => 'user',
-		'model' => 'AdminModels\\User', //This is just a fully-qualified classname. Here I've namespaced my admin models to AdminModels so I can reuse the "User" classname.
-	),
-	'role' => array(
-		'title' => 'Roles',
-		'single' => 'role',
-		'model' => 'AdminModels\\Role',
-		'permission_check' => function()
-		{
-			//An example permission check using the Authority bundle:
-			return Auth::user()->has_role('superadmin');
-		}
-	),
-	'hat' => array(
-		'title' => 'Hats',
-		'single' => 'hat',
-		'model' => 'Hat', //In this case I'm just using the un-namespaced "Hat" class/model.
-	),
-	'film' => array(
-		'title' => 'Films',
-		'single' => 'film',
-		'model' => 'Film',
-	),
-),
-
-/**
- * Auth Check
- *
- * @type closure
- *
- * This is a closure that should return true if the current user is allowed to view the admin section. If this fails, it will redirect the user to the login_path. This is run prior to the model's permission_check closure (if provided). Consider this a catch-all for the entire admin section.
- */
-'auth_check'=> function()
-{
-	//An example auth check using the Authority bundle:
-	return Auth::check() && Auth::user()->has_role('admin');
-},
-
-/**
- * Login Path
- *
- * @type string
- *
- * This is the path where Administrator will send the user if the the auth_check fails
- */
-'login_path' => 'user/login',
-
-/**
- * Redirect key
- *
- * @type string
- *
- * This comes with the redirection to your login_action. Input::get('redirect') will hold the return URL.
- */
-'login_redirect_key' => 'redirect',
-
-/**
- * Global items per page
- *
- * @type NULL|int
- *
- * If you set this to an integer value greater than 0, it will override the $per_page static property in ALL of your models
- * If you set this to false/NULL/0, each model's $per_page property will be used
- */
-'global_per_page' => NULL,
-```
-
-
-### Data Models
-
-This bundle was designed to take advantage of the data models that already exist on your site (normally in `application/models`). Administrator data models should ultimately extend from an Eloquent data model with several additional required properties ($columns, $filters, $edit ...see below for info on these). As long as you provide the fully-qualified class name in the config (see above), Administrator will be able to use the model. This means that you have several organizational options:
-
-- Use your existing Eloquent models and add the required properties
-
-- Create new models that extend your existing Eloquent models and prefix them with something like `Admin_` so there are no namespace collisions. This would allow you to keep your Administrator properties separated from your regular models.
-
-- (preferred) Create new models that extend your existing Eloquent models and namespace them to something like `AdminModels`. This also would separate your Administrator properties from your base model.
-
-The last option has (in my opinion) the best of all worlds: it would allow you to retain your clear model names, avoid namespace collisions, and keep your Administrator properties separated from your regular Eloquent models.
-
-What I like to do is create a directory under my models directory called `admin`. Each of the models in this directory can extend any Eloquent-based class (which means Eloquent, Aware, or your base models)
-
-#### Extending from Eloquent
-
-```php
-namespace AdminModels;
-
-class User extends \Eloquent
-{ .. }
-```
-
-#### Extending from Aware
-```php
-namespace AdminModels;
-
-class User extends \Aware
-{ .. }
-```
-
-#### Extending from an existing User model
-```php
-namespace AdminModels;
-
-class User extends \User
-{ .. }
-```
-
-If you're using the namespace approach as I did above, make sure you add that backslash in front of the class you're extending. This tells PHP to look in the base namespace.
-
-In the first two examples, you need to set up the model as if it were any other Eloquent/Aware model. You will need to make a `$rules` array that works just like Aware's.
-
-Now let's take a look at the properties that you can set on Administrator models and what they mean. Keep in mind that since these are Eloquent models, all of the traditional properties apply (e.g. $per_page, $table).
-
-
 #### $columns
 
 <img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/columns.png" />
@@ -403,41 +259,6 @@ public $filters = array(
 
 The relationship type behaves just like it does in the $edit array.
 
-#### $sortOptions (not required)
-
-<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/sorting.png" />
-
-The $sortOptions array has these options:
-
-```php
-public $sortOptions = array(
-	'field' => 'id', 		//can be any of the supplied keys in the $columns array
-	'direction' => 'asc', 	//either 'asc' or 'desc'
-)
-```
-
-Naturally, this is only the initial sort. As the user interacts with the table, it will change.
-
-#### $expand (not required)
-
-The $expand property, when used, determines how wide the edit area should be for a model. It can either be set to boolean true to accept the default expand (which is 500px), or it can be set to an integer above 285 (which is the size of the filter area that the edit box covers). This is useful if you want some extra space for a textarea type, a has_many_and_belongs_to relationship with many possible items, etc.
-
-```php
-public $expand = 400;
-```
-
-
-#### before_delete()
-
-The before_delete() method will always be run before an item is deleted. It's important to know that **Administrator does not automatically delete relationships**. This is done because some people have cascading deletes built into their database, others might want to only delete some related data, and others might want to delete all of it. So if you have a users relationship (has_many_and_belongs_to) on your Role model, you might want to do something like this:
-
-```php
-public function before_delete()
-{
-	//delete the users relationship
-	$this->users()->delete();
-}
-```
 
 #### create_link()
 
@@ -686,14 +507,20 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 x - not done
 d - done, but needs documentation
 ### 3.0.0
-x Added new docs
+- Model configuration must now be done in model config files instead of in an Eloquent model
+x Revamped the docs to make it more accessible/readable
+x
+d You can now group together models into menu groups
 - New color field
 - New image field
 d Custom column outputs
 - Admin users can now set a custom number of rows in each model's interface
 d You can now add custom action buttons in the $actions property of a model
 x You can now apply per-model permissions for creating, saving, and deleting items
-x Renamed 'permission_check' to 'permission'
+- Renamed 'permission_check' and 'auth_check' to the uniform 'permission'
+- Renamed 'global_per_page' to 'global_rows_per_page'
+- The $edit property is now the 'edit_fields' option in the model config
+- The $expand property is now the 'form_width' option in the model config
 - Removed the before_delete() method. This can be handled by using the "eloquent.delete: {{classname}}" event
 - Migrated from the old string-based jQuery template engine to the faster, smarter Knockout comment bindings
 - Bugfix: BelongsTo filter no longer does a LIKE search (since it's an explicit key)

@@ -108,7 +108,7 @@ class ModelConfig {
 		$this->model = array_get($config, 'model');
 		$this->columns = array_get($config, 'columns');
 		$this->actions = array_get($config, 'actions');
-		$this->edit = array_get($config, 'edit');
+		$this->edit = array_get($config, 'edit_fields');
 		$this->filters = array_get($config, 'filters', array());
 		$this->name = array_get($config, 'model_name');
 
@@ -193,9 +193,9 @@ class ModelConfig {
 		}
 
 		//check if the edit fields array was provided
-		if (!is_array(array_get($config, 'edit')))
+		if (!is_array(array_get($config, 'edit_fields')))
 		{
-			throw new Exception("Administrator: You must provide a valid 'edit' array in each model's config");
+			throw new Exception("Administrator: You must provide a valid 'edit_fields' array in each model's config");
 		}
 
 		//now we can instantiate the object

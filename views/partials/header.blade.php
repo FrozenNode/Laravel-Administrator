@@ -1,6 +1,6 @@
 <header>
 	<h1>
-		{{ HTML::link(URL::to_route('admin_dashboard'), Config::get('administrator::administrator.title')) }}
+		<a href="{{URL::to_route('admin_dashboard')}}">{{Config::get('administrator::administrator.title')}}</a>
 	</h1>
 
 	<ul id="menu">
@@ -11,19 +11,18 @@
 					<ul>
 						@foreach ($item as $k => $subitem)
 							<li>
-								{{ HTML::link(URL::to_route('admin_index', array($k)), $subitem) }}
+								<a href="{{URL::to_route('admin_index', array($k))}}">{{$subitem}}</a>
 							</li>
 						@endforeach
 					</ul>
 				</li>
 			@else
 				<li class="item">
-					{{ HTML::link(URL::to_route('admin_index', array($key)), $item) }}
+					<a href="{{URL::to_route('admin_index', array($key))}}">{{$item}}</a>
 				</li>
 			@endif
 		@endforeach
 	</ul>
-	<p id="utility_nav">
-		{{ HTML::link(URL::base(), "Back to Site") }}
-	</p>
+
+	<a href="{{URL::base()}}" id="back_to_site">Back to Site</a>
 </header>

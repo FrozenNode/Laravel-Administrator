@@ -21,6 +21,7 @@ body{
 	font-size: 13px;
 	line-height: 18px;
 	color: #333333;
+	min-width: 1020px;
 
 	h2 {
 		font-size: 24px;
@@ -62,6 +63,9 @@ body{
 				padding: 8px 15px 9px;
 				font-size: 19px;
 				border-right: 1px solid #555;
+				&:hover {
+					@verticalGradient(#444, #333);
+				}
 			}
 		}
 
@@ -69,6 +73,10 @@ body{
 			color: #eee;
 			display: inline-block;
 			cursor: pointer;
+		}
+
+		@headerButtonPadding {
+			padding: 9px 12px 8px;
 		}
 
 		ul#menu {
@@ -81,7 +89,7 @@ body{
 				margin-left: -3px;
 
 				a, span {
-					padding: 9px 12px 8px;
+					@headerButtonPadding;
 				}
 
 				&.menu {
@@ -95,6 +103,7 @@ body{
 					display: none;
 					@verticalGradient(#333, #444);
 					@boxShadow(0, 2px, 3px, #555);
+					@borderRadiusBottom(2px);
 
 					a {
 						display: block;
@@ -125,18 +134,15 @@ body{
 			}
 		}
 
-		#utility_nav {
-			color: #aaa;
-			float: right;
-			display: inline-block;
+		a#back_to_site {
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+			@headerButtonPadding;
 
-			a {
-				margin-left: 10px;
-				text-decoration: none;
-
-				:hover {
-					color: #fff;
-				}
+			&:hover {
+				@verticalGradient(#444, #333);
 			}
 		}
 	}

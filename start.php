@@ -1,6 +1,5 @@
 <?php
 
-
 Autoloader::directories(array(
     Bundle::path('administrator').'Libraries',
 ));
@@ -8,8 +7,6 @@ Autoloader::directories(array(
 Autoloader::namespaces(array(
 	'Admin'   => Bundle::path('administrator'),
 ));
-
-
 
 //set the config items if a user has provided an application config
 foreach (Config::get('administrator::administrator', array()) as $key => $option)
