@@ -13,8 +13,6 @@
     - [Relationships](/docs/relationship-columns)
 - Fields
     - [Overview](/docs/fields)
-    - [Edit Fields](/docs/edit-fields)
-    - [Filters](/docs/filters)
 - Field Types
     - [Text](/docs/field-type-text)
     - [TextArea](/docs/field-type-textarea)

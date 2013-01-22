@@ -91,7 +91,7 @@ Here the `good` key will be the column's alias, so you can name it anything you 
 <a name="relationship-columns"></a>
 ## Relationship Columns
 
-> For a more in-depth look at relationship columns, check out the [relationship columns docs](/docs/column-relationships)
+> For a more in-depth look at relationship columns, check out the [relationship columns docs](/docs/relationship-columns)
 
 In any moderately complex database, a table might have columns that represent an ID on another table. Most of the time it's fairly useless to display this ID to an admin user because numbers mean more to a computer than to a human. Alternatively, a relationship may not be represented on a model's table at all, but instead on a pivot table that connects two tables, or as a column on another model's table.
 
@@ -103,7 +103,7 @@ If you want to display related columns, you can provide a `relationship` option.
 		'select' => "COUNT((:table).id)",
 	)
 
-Any SQL grouping function will work in the `select` statement. Much more is possible with the `relationship` option, so check out the [relationship columns docs](/docs/column-relationships) for more detail.
+Any SQL grouping function will work in the `select` statement. Much more is possible with the `relationship` option, so check out the [relationship columns docs](/docs/relationship-columns) for more detail.
 
 <a name="custom-outputs"></a>
 ## Custom Outputs
