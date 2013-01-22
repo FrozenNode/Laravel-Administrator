@@ -17,13 +17,14 @@ class ModelHelper {
 	 * @param id		$id
 	 * @param bool		$updateRelationships	//if true, the model will come back with an extra "[field]_options" attribute for relationships
 	 * @param bool		$includeAllColumns		//if true, all columns will be included (only use for non-saving items)
+	 * @param bool		$saving					//if true, don't include the admin_item_link
 	 *
 	 * @return object|null	$model
 	 * object with data => if the id exists
 	 * new object => if id doesn't exist
 	 * null => if there is no model by that name
 	 */
-	public static function getModel($config, $id = 0, $updateRelationships = false, $includeAllColumns = false)
+	public static function getModel($config, $id = 0, $updateRelationships = false, $includeAllColumns = false, $saving = false)
 	{
 		//if we're getting an existing model, we'll want to first get the edit fields without the relationships loaded
 		$model = $config->model;
@@ -100,7 +101,9 @@ class ModelHelper {
 			}
 
 			//include the item link if one was supplied
-			if ($link = $config->getModelLink($model))
+			$link = $config->getModelLink($model);
+
+			if (!$saving && $link)
 			{
 				$model->set_attribute('admin_item_link', $link);
 			}

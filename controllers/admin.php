@@ -65,7 +65,7 @@ class Administrator_Admin_Controller extends Controller
 	 */
 	public function action_save($config, $id = false)
 	{
-		$model = ModelHelper::getModel($config, $id);
+		$model = ModelHelper::getModel($config, $id, false, false, true);
 
 		//fill the model with our input
 		ModelHelper::fillModel($config, $model);
