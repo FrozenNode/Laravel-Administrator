@@ -31,6 +31,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Custom Actions](#custom-actions)
 - [Sort](#sort)
 - [Form Width](#form-width)
+- [Link](#link)
 
 <a name="title"></a>
 ### Title *(required)*
@@ -261,3 +262,18 @@ The `sort` option should be an array with two keys: `field` and `direction`. `fi
 	'form_width' => 400,
 
 If you set this to any integer value above 285, it will expand the edit field and shrink the columns to fit it. If you set this to `true`, it will default to 500. Playing around with this will let you find the perfect fit for your models.
+
+<a name="link"></a>
+## Link
+
+	/**
+	 * If provided, this is run to construct the front-end link for your model
+	 *
+	 * @type function
+	 */
+	'link' => function($model)
+	{
+		return URL::to_route('product', array($model->collection()->first()->uri, $model->uri));
+	},
+
+If your model has a front-end link, you might want to have a "view item" link at the top of the edit form that pops out to that page. The relevant `$model` is passed into the function so that you can use it to construct the URL. You should return a valid URL string.

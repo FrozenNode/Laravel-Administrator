@@ -94,15 +94,15 @@ class ModelHelper {
 
 							//unset the relationships so we only get back what we need
 							$model->relationships = array();
-
-							//include the item link if one was supplied
-							if ($link = $config->getModelLink($model))
-							{
-								$model->set_attribute('admin_item_link', $link);
-							}
 						}
 					}
 				}
+			}
+
+			//include the item link if one was supplied
+			if ($link = $config->getModelLink($model))
+			{
+				$model->set_attribute('admin_item_link', $link);
 			}
 		}
 

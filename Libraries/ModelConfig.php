@@ -87,11 +87,11 @@ class ModelConfig {
 	public $actions;
 
 	/**
-	 * If provided, this holds the front-end link pattern to use for a model
+	 * If provided, this holds the callback for creating the link for an item
 	 *
-	 * @var string
+	 * @var function
 	 */
-	public $linkPattern;
+	public $linkCallback;
 
 
 
@@ -140,8 +140,8 @@ class ModelConfig {
 		$this->setRowsPerPage();
 
 		//grab the model link pattern
-		$linkPattern = array_get($config, 'link_pattern');
-		$this->linkPattern = is_string($linkPattern) ? $linkPattern : null;
+		$linkCallback = array_get($config, 'link');
+		$this->linkCallback = is_callable($linkCallback) ? $linkCallback : null;
 	}
 
 	/**
@@ -393,9 +393,11 @@ class ModelConfig {
 	 */
 	public function getModelLink($model)
 	{
-		if ($this->linkPattern)
+		if ($this->linkCallback)
 		{
-			return false;
+			$linkCallback = $this->linkCallback;
+
+			return $linkCallback($model);
 		}
 		else
 		{
