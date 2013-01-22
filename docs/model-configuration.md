@@ -95,7 +95,7 @@ This must be the fully-qualified class name of your Eloquent model. In this case
 		)
 	),
 
-This is the columns that will be displayed in your result set. As you can see above, you can customize this fairly extensively by modifying the output, performing custom SQL selects, or by pulling in relational information for this field based on its Eloquent relationships.
+These are the columns that will be displayed in your result set. As you can see above, you can customize this fairly extensively by modifying the output, performing custom SQL selects, or by pulling in relational information for this field based on its Eloquent relationships.
 
 > For a detailed description of all the column options, see the **[column docs](/docs/columns)**
 

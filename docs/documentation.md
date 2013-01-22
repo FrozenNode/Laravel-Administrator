@@ -6,6 +6,7 @@
     - [Installation](/docs/installation)
     - [Configuration](/docs/configuration)
     - [Model Configuration](/docs/model-configuration)
+    - [Validation](/docs/validation)
     - [Tutorials](/docs/tutorials)
 - Columns
     - [Overview](/docs/columns)
