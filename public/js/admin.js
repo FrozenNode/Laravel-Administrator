@@ -176,6 +176,11 @@
 			 */
 			actions: [],
 
+			/* Holds the per-action permissions
+			 * array
+			 */
+			actionsPermissions: {},
+
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
 			 */
@@ -224,7 +229,10 @@
 							}, 200);
 						}
 						else
-							self.statusMessage(response.errors.join(' ')).statusMessageType('error');
+						{
+							var error = typeof response.errors == 'string' ? response.errors : response.errors.join(' ');
+							self.statusMessage(error).statusMessageType('error');
+						}
 					}
 				});
 			},
@@ -715,6 +723,7 @@
 			this.viewModel.rowsPerPage(adminData.rows_per_page);
 			this.viewModel.primaryKey = adminData.primary_key;
 			this.viewModel.actions = adminData.actions;
+			this.viewModel.actionPermissions = adminData.action_permissions;
 
 			//set up the rowsPerPageOptions
 			for (var i = 1; i <= 100; i++)

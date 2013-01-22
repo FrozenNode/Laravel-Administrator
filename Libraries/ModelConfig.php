@@ -87,6 +87,17 @@ class ModelConfig {
 	public $actions;
 
 	/**
+	 * Holds the action permissions info
+	 *
+	 * @var array
+	 */
+	public $actionPermissions = array(
+		'create' => true,
+		'delete' => true,
+		'update' => true,
+	);
+
+	/**
 	 * If provided, this holds the callback for creating the link for an item
 	 *
 	 * @var function
@@ -139,9 +150,19 @@ class ModelConfig {
 		//get the rows per page
 		$this->setRowsPerPage();
 
-		//grab the model link pattern
+		//grab the model link callback
 		$linkCallback = array_get($config, 'link');
 		$this->linkCallback = is_callable($linkCallback) ? $linkCallback : null;
+
+		//grab the action permissions, if supplied
+		$actionPermissions = array_get($config, 'action_permissions', array());
+		$create = array_get($actionPermissions, 'create');
+		$delete = array_get($actionPermissions, 'delete');
+		$update = array_get($actionPermissions, 'update');
+
+		$this->actionPermissions['create'] = is_callable($create) ? $create() : true;
+		$this->actionPermissions['delete'] = is_callable($delete) ? $delete() : true;
+		$this->actionPermissions['update'] = is_callable($update) ? $update() : true;
 	}
 
 	/**

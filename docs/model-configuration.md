@@ -28,6 +28,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Edit Fields](#edit-fields) *(required)*
 - [Filters](#filters)
 - [Permission](#permission)
+- [Action Permissions](#action-permissions)
 - [Custom Actions](#custom-actions)
 - [Sort](#sort)
 - [Form Width](#form-width)
@@ -174,6 +175,23 @@ The `filters` array lets you define filters for a model. These work just like th
 	},
 
 The permission option lets you define a closure that determines whether or not the current user can access this model. If this field is provided (it isn't required), the user will only be given access if this resolves to a truthy value. If this fails, the user will be given a 404.
+
+<a name="action-permissions"></a>
+## Action Permissions
+
+	/**
+	 * The action_permissions option lets you define permissions on the three primary actions: 'create', 'update', and 'delete'.
+	 *
+	 * @type array
+	 */
+	'action_permissions'=> array(
+		'delete' => function()
+		{
+			return Auth::user()->has_role('developer');
+		}
+	),
+
+Action permissions can be supplied to give you access control over the three primary actions: `create`, `update`, and `delete`. `read` access is assumed if the user passes the [`permission`](#permission) check. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should be an anonymous function that returns either true or false.
 
 <a name="custom-actions"></a>
 ## Custom Actions

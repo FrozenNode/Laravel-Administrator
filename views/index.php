@@ -28,7 +28,8 @@
 			filters: <?php echo json_encode($filters); ?>,
 			edit_fields: <?php echo json_encode($editFields['arrayFields']); ?>,
 			data_model: <?php echo json_encode($editFields['dataModel']); ?>,
-			column_model: <?php echo json_encode($config->columns['columns']); ?>
+			column_model: <?php echo json_encode($config->columns['columns']); ?>,
+			action_permissions: <?php echo json_encode($config->actionPermissions); ?>
 		};
 </script>
 

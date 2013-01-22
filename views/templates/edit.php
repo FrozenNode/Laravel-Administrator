@@ -168,13 +168,21 @@
 	<div class="control_buttons">
 		<!-- ko if: $root[$root.primaryKey]() -->
 			<input type="button" value="Close" data-bind="click: closeItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
-			<input type="button" value="Delete" data-bind="click: deleteItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
-			<input type="submit" value="Save" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+
+			<!-- ko if: actionPermissions.delete -->
+				<input type="button" value="Delete" data-bind="click: deleteItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+			<!-- /ko -->
+
+			<!-- ko if: actionPermissions.update -->
+				<input type="submit" value="Save" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+			<!-- /ko -->
 		<!-- /ko -->
 
 		<!-- ko ifnot: $root[$root.primaryKey]() -->
 			<input type="button" value="Cancel" data-bind="click: closeItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
-			<input type="submit" value="Create" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+			<!-- ko if: actionPermissions.create -->
+				<input type="submit" value="Create" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+			<!-- /ko -->
 		<!-- /ko -->
 		<span class="message" data-bind="css: { error: statusMessageType() == 'error', success: statusMessageType() == 'success' },
 										notification: statusMessage "></span>

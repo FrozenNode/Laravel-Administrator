@@ -11,7 +11,9 @@
 			<select data-bind="value: rowsPerPage, chosen: true, options: rowsPerPageOptions"></select>
 			<span> items per page</span>
 		</div>
-		<a class="new_item" data-bind="attr: {href: base_url + modelName() + '/new'}, text: 'New ' + modelSingle()"></a>
+		<!-- ko if: actionPermissions.create -->
+			<a class="new_item" data-bind="attr: {href: base_url + modelName() + '/new'}, text: 'New ' + modelSingle()"></a>
+		<!-- /ko -->
 	</div>
 	<table class="results" border="0" cellspacing="0" id="customers" cellpadding="0">
 		<thead>

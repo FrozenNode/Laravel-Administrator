@@ -45,6 +45,13 @@ class Administrator_Admin_Controller extends Controller
 		}
 		else
 		{
+			//if the $itemId is false, we can assume this is a request for /new
+			//if the user doesn't have the proper permissions to create, redirect them back to the model page
+			if (!$itemId && !$config->actionPermissions['create'])
+			{
+				return Redirect::to_route('admin_index', array($config->name));
+			}
+
 			$view = View::make("administrator::index", array(
 				'config' => $config,
 				'model' => $model,
@@ -75,6 +82,15 @@ class Administrator_Admin_Controller extends Controller
 		//if the model exists, this is an update
 		if ($model->exists)
 		{
+			//check if the user has permission to update
+			if (!$config->actionPermissions['update'])
+			{
+				return Response::json(array(
+					'success' => false,
+					'errors' => 'There was an error updating this item. Please reload the page and try again.',
+				));
+			}
+
 			//so only include dirty fields
 			$data = $model->get_dirty();
 
@@ -83,6 +99,15 @@ class Administrator_Admin_Controller extends Controller
 		}
 		else
 		{
+			//check if the user has permission to create
+			if (!$config->actionPermissions['create'])
+			{
+				return Response::json(array(
+					'success' => false,
+					'errors' => 'There was an error creating this item. Please reload the page and try again.',
+				));
+			}
+
 			//otherwise validate everything
 			$data = $model->attributes;
 		}
@@ -128,7 +153,7 @@ class Administrator_Admin_Controller extends Controller
 		);
 
 		//if the model or the id don't exist, send back 404
-		if (!$model->exists)
+		if (!$model->exists || !$config->actionPermissions['delete'])
 		{
 			return Response::json($errorResponse);
 		}
