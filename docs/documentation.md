@@ -10,8 +10,7 @@
     - [Tutorials](/docs/tutorials)
 - Columns
     - [Overview](/docs/columns)
-    - [Relationships](/docs/column-relationships)
-    - [Custom Outputs](/docs/column-custom-outputs)
+    - [Relationships](/docs/relationship-columns)
 - Fields
     - [Overview](/docs/fields)
     - [Edit Fields](/docs/edit-fields)

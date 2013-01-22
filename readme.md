@@ -12,79 +12,10 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 The initial inspiration for this project came from the [Lara Admin](https://github.com/chalien/lara_admin) bundle by chalien. In between then and the initial release of this bundle, pretty much the entire codebase has been changed. Still, some of the design elements of Lara Admin remain (for the time being), partially as a testament to chalien's work!
 
-## Tutorials/Guides
 
-I'm currently working on expanding this section. So far I've only got the one overview video. More to come soon!
+## Documentation
 
-###Videos
-
-[Administrator Bundle Overview](https://vimeo.com/54058030)
-
-
-## Installation / Documentation
-
-You can either create a bundle directory called `administrator` and manually copy the bundle contents into it, or you can run the artisan command:
-
-```php
-php artisan bundle:install administrator
-```
-
-Then add this to your `bundles.php` array:
-
-```php
-'administrator' => array(
-	'handles' => 'admin', //determines what URI this bundle will use
-	'auto' => true,
-),
-```
-
-Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`administrator/config/administrator.php`) and put it into the application config file you just created.
-
-#### $columns
-
-<img src="https://github.com/FrozenNode/Laravel-Administrator/raw/master/examples/images/columns.png" />
-
-This property tells Administrator what columns to use when displaying the tabular result set. You can either pass it a simple string which will be used as the data key (i.e. if your database column is called `potato_farming_score`, put that in), or you can pass it a key-indexed array of options. In this case, the array key will be `potato_farming_score` and it would contain an array of options.
-
-When defining relational or getter columns, you have several extra options.
-
-If you want to make a column have the value of a getter, you can do that easily. However, if you do so without setting a valid `sort_field` value, the column won't be sortable. The sort_field should be used when you're using a getter as a column key so that Administrator knows which column to sort.
-
-If you want to get a field from another table through a relationship, you'll have to set the `relationship` option to the *method name* of the relationship and provide a valid select statement for your SQL driver. Since the result set is grouped by the current data model's primary key, this means you can use any of the grouping functions (like COUNT, AVG, MIN, MAX, etc.).
-
-The available options are:
-
-- **title**: default is column name
-- **sort_field**: default is the field key (i.e. if you do 'name' like below, it will look for the 'name' column). If this column is derived from a getter, it won't be sortable until you define a sort_field
-- **relationship**: default is null. Set this to the method name of the relationship. Only set this if you need to pull this field from another table
-- **select**: default is null. This can be used for relationship columns or on-table columns. If it's an on-table column, you can use any regular SQL select function (e.g. IF, CONCAT, etc.). If you've set the relationship, this has to be set as well. It is the SQL command to use to select this field. So if you want to count the related items, you'd do 'COUNT((:table).id)' where (:table) is substituted for the adjoining table. If you don't include the (:table), SQL will likely throw an ambiguous field error. You can use any of the SQL grouping functions or you can simply provide the name of the field you'd like to use.
-
-```php
-public $columns = array(
-	'id',
-	'name',
-	'price',
-	'formatted_salary' => array(
-		'title' => 'Salary',
-		'sort_field' => 'salary', //must be a valid field on the model's table
-	),
-	'is_good' => array(
-		'title' => 'Is Good',
-		'select' => "IF((:table).is_good, 'yes', 'no')", //here using a select for items on this table
-	),
-	'num_films' => array(
-		'title' => '# films',
-		'relationship' => 'films', //must be the relationship method name
-		'select' => 'COUNT((:table).id)', //the (:table) is replaced with the relevant relationship table
-	),
-	'created_at' => array(
-		'title' => 'Created', //the header title of the column
-	),
-	'updated_at' => array(
-		'title' => 'Updated',
-	),
-);
-```
+See the [installation instructions](http://administrator.frozennode.com/docs/installation).
 
 
 #### $edit
