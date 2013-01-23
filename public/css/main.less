@@ -1,5 +1,6 @@
 /* imports */
 @import "common.less";
+@import "elements.less";
 
 
 
@@ -16,7 +17,27 @@ a{ text-decoration: none; }
 	Main Styling
 */
 body{
+	@oxygen;
+	font-size: 13px;
+	line-height: 18px;
+	color: #333333;
+	min-width: 1020px;
 
+	h2 {
+		font-size: 24px;
+		line-height: 36px;
+	}
+
+	textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"],
+	input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"],
+	input[type="color"] {
+		@input;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 5px;
+	}
 }
 
 
@@ -24,79 +45,104 @@ body{
 #wrapper {
 
 	header {
-		@verticalGradient(#6a7176, #4d5256);
+		@verticalGradient(#5a6064, #4a4f52);
 		@boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
 		border-bottom: 1px solid #44484b;
 		text-shadow: black 0 1px 0;
-		height: 20px;
+		height: 34px;
 		overflow: visible;
-		padding: 12px 30px 9px;
 		position: relative;
 		z-index: 900;
 
 		h1 {
-			display: inline-block;
-			color: #CDCDCD;
 			float: left;
-			margin-right: 20px;
-			margin-bottom: 0px;
-			font-size: 1.3em;
-			font-weight: normal;
-			line-height: 1;
+			margin: 0;
+			border-right: 1px solid #999;
+
+			a {
+				padding: 8px 15px 9px;
+				font-size: 19px;
+				border-right: 1px solid #555;
+				&:hover {
+					@verticalGradient(#444, #333);
+				}
+			}
 		}
 
-		a {
-			color: #cdcdcd;
-		}
-
-		ul#tabs {
+		a, span {
+			color: #eee;
 			display: inline-block;
-			height: 100%;
+			cursor: pointer;
+		}
+
+		@headerButtonPadding {
+			padding: 9px 12px 8px;
+		}
+
+		ul#menu {
+			display: inline-block;
 
 			> li {
 				display: inline-block;
-				margin-right: 4px;
-				font-size: 1.0em;
 				position: relative;
+				@verticalGradient(#5a6064, #4a4f52);
+				margin-left: -3px;
 
-				a {
-					text-decoration: none;
-					padding: 6px 10px 4px 10px;
-					position: relative;
-					-webkit-border-radius: 10px;
-					-moz-border-radius: 10px;
-					border-radius: 10px;
+				a, span {
+					@headerButtonPadding;
 				}
 
-				&.current {
+				&.menu {
+
+				}
+
+				> ul {
+					position: absolute;
+					top: 35px;
+					left: 0;
+					display: none;
+					@verticalGradient(#333, #444);
+					@boxShadow(0, 2px, 3px, #555);
+					@borderRadiusBottom(2px);
+
 					a {
-						background: #7b8389;
-						color: #fff;
+						display: block;
+						white-space: nowrap;
+						overflow: hidden;
+						border-bottom: 1px solid #666;
+
+						&:hover {
+							color: #fff;
+						}
+					}
+
+					li:last-child {
+						a {
+							border-bottom: none;
+						}
 					}
 				}
 
-				&:hover {
-					> a {
-						background: #7b8389;
-						color: #fff;
-					}
+				&.current, &:hover {
+					@verticalGradient(#444, #333);
+				}
+
+				&:first-child {
+					margin-left: 0;
 				}
 
 			}
 		}
 
-		#utility_nav {
-			color: #aaa;
-			float: right;
-			display: inline-block;
+		a#back_to_site {
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+			@headerButtonPadding;
 
-			a {
-				margin-left: 10px;
-				text-decoration: none;
-
-				:hover {
-					color: #fff;
-				}
+			&:hover {
+				@verticalGradient(#444, #333);
 			}
 		}
 	}
@@ -164,6 +210,10 @@ body{
 				margin-bottom: 10px;
 				position: relative;
 
+				select {
+					width: 225px;
+				}
+
 				div.loader {
 					position: absolute;
 					top: 26px;
@@ -192,6 +242,14 @@ body{
 						}
 					}
 				}
+
+				&.color {
+					div.color_preview {
+						height: 8px;
+						margin: 0 33px 0 1px;
+						@boxShadow(0px, 1px, 2px, #aaa);
+					}
+				}
 			}
 		}
 	}
@@ -217,17 +275,21 @@ body{
 				margin-bottom: 3px;
 
 				h2 {
-					padding: 10px 15px;
+					padding: 0 15px;
 					display: inline-block;
+					vertical-align: middle;
 				}
 
 				div.paginator {
 					display: inline-block;
 					margin-left: 20px;
+					padding: 11px 15px 9px;
+					vertical-align: middle;
 
 					input {
 						display: inline-block;
 						vertical-align: baseline;
+						margin-bottom: 0;
 
 						&[type=text] {
 							width:30px;
@@ -235,41 +297,22 @@ body{
 					}
 				}
 
-				a.new_item {
-					@verticalGradient(#fdfdfd, #e8e8e8);
-					@boxShadow(0, 1px, 0px, rgba(0, 0, 0, 0.1));
-					@borderRadius(200px);
+				div.per_page {
 					display: inline-block;
-					font-weight: bold;
-					font-size: 1.0em;
-					font-family: Helvetica, Arial, sans-serif;
-					line-height: 12px;
-					text-decoration: none;
-					-webkit-font-smoothing: antialiased;
-					border: solid 1px #c7c7c7;
-					border-top-color: #d3d3d3;
-					border-bottom-color: #c2c2c2;
-					text-shadow: white 0 1px 0;
-					color: #777;
-					padding: 12px 17px 10px;
-					margin: 0px;
+					padding: 11px 15px 9px;
+					vertical-align: middle;
+
+					select {
+						width: 60px;
+					}
+				}
+
+				a.new_item {
+					@greyButton;
+					text-shadow: none;
 					position: absolute;
-					top: 10px;
-					right: 25px;
-
-					&:hover {
-						color: #444;
-						@verticalGradient(#fdfdfd, #eaeaea);
-					}
-
-					&:active {
-						@verticalGradient(#fcfcfc, #e5e4e5);
-						-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						-ms-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						-o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-						box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) inset, 0 1px 0 0px #eeeeee;
-					}
+					top: 8px;
+					right: 9px;
 				}
 			}
 
@@ -490,6 +533,35 @@ body{
 								}
 							}
 
+						}
+
+						&.image {
+							div.image_upload_container {
+								padding: 4px 0;
+
+								div.uploader {
+									background: url(../img/upload.png) no-repeat;
+									padding-left: 25px;
+								}
+							}
+
+							div.image_container {
+								position: relative;
+
+								input[type=button] {
+									position: absolute;
+									top: 5px;
+									right: 5px;
+								}
+							}
+						}
+
+						&.color {
+							div.color_preview {
+								height: 8px;
+								margin: 0 33px 0 1px;
+								@boxShadow(0px, 1px, 2px, #aaa);
+							}
 						}
 					}
 

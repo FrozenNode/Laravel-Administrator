@@ -70,4 +70,26 @@ Route::group(array('before' => 'validate_admin|validate_model|csrf'), function()
 		'as' => 'admin_get_results',
 		'uses' => 'administrator::admin@results'
 	));
+
+	//Custom Action
+	Route::post('(:bundle)/(:any)/(:num)/custom_action', array(
+		'as' => 'admin_custom_action',
+		'uses' => 'administrator::admin@custom_action'
+	));
+});
+
+//Standard validation without csrf
+Route::group(array('before' => 'validate_admin|validate_model'), function()
+{
+	//Image Uploads
+	Route::post('(:bundle)/(:any)/(:any)/image_upload', array(
+		'as' => 'admin_image_upload',
+		'uses' => 'administrator::admin@image_upload'
+	));
+
+	//Updating Rows Per Page
+	Route::post('(:bundle)/(:any)/rows_per_page', array(
+		'as' => 'admin_rows_per_page',
+		'uses' => 'administrator::admin@rows_per_page'
+	));
 });

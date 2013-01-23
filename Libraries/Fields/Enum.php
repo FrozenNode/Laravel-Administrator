@@ -14,12 +14,11 @@ class Enum extends Field {
 	 * Constructor function
 	 *
 	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig 	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
-		parent::__construct($field, $info, $model);
+		parent::__construct($field, $info, $config);
 
 		$this->value = $this->value === '' ? null : $this->value;
 		$options = array_get($info, 'options', $this->options);

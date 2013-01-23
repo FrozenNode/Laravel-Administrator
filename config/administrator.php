@@ -10,62 +10,56 @@ return array(
 	'title' => 'Admin',
 
 	/**
-	 * Models
+	 * The path to your model config directory
+	 *
+	 * @type string
+	 */
+	'model_config_path' => path('app') . 'config/administrator',
+
+	/**
+	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
+	 * By doing the latter, you can group certain models together. Each name needs to have a config file in your model config path with the same
+	 * name. So 'users' would require a 'users.php' file in your model config path.
 	 *
 	 * @type array
 	 *
-	 * Each item in the array should itself be an array with two required items inside it (title, model) and two optional items (single, permission_check).
-	 * The key will be what the user sees as the URI for this model.
-	 * This should look something like this:
-	 *
-	 * 'user' => array(
-	 * 		'title' => 'Users', //the title that will be used when displaying the model's page
-	 *		'single' => 'user', //The name used for singular items. Film model would be 'film'. BoxOffice model might be 'take'
-	 * 		'model' => 'AdminModels\\User', //the string class name of the model you will be using. if you wish to extend your app models directly, you can just pass in 'User'
-	 *  	'permission_check' => function() { ... }, //[OPTIONAL] Return bool true if the current user is allowed to access this model. False otherwise
-	 * )
+	 * 	array(
+	 *		'Products' => array('products', 'product_images', 'orders'),
+	 *		'users',
+	 *	)
 	 */
-	'models' => array(),
+	'menu' => array(),
 
 	/**
-	 * Auth Check
+	 * The permission option is the highest-level authentication check that lets you define a closure that should return true if the current user
+	 * is allowed to view the admin section. Any "falsey" response will send the user back to the 'login_path' defined below.
 	 *
 	 * @type closure
-	 *
-	 * This is a closure that should return true if the current user is allowed to view the admin section.
-	 * If this fails, it will redirect the user to the login_path.
-	 * This is run prior to the model's permission_check closure (if provided). Consider this a catch-all for the entire admin section.
 	 */
-	'auth_check'=> function()
+	'permission'=> function()
 	{
 		return Auth::check();
 	},
 
 	/**
-	 * Login Path
+	 * The login path is the path where Administrator will send the user if they fail a permission check
 	 *
 	 * @type string
-	 *
-	 * This is the path where Administrator will send the user if they are not logged in (!Auth::check())
 	 */
 	'login_path' => 'user/login',
 
 	/**
-	 * Redirect key
+	 * This is the key of the return path that is sent with the redirection to your login_action. Input::get('redirect') will hold the return URL.
 	 *
 	 * @type string
-	 *
-	 * This comes with the redirection to your login_action. Input::get('redirect') will hold the return URL.
 	 */
 	'login_redirect_key' => 'redirect',
 
 	/**
-	 * Global items per page
+	 * Global default rows per page
 	 *
 	 * @type NULL|int
-	 *
-	 * If you set this to an integer value greater than 0, it will override the $per_page static property in ALL of your models
 	 */
-	'global_per_page' => NULL,
+	'global_rows_per_page' => 20,
 
 );
