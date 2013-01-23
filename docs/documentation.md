@@ -14,6 +14,7 @@
 - Fields
     - [Overview](/docs/fields)
 - Field Types
+    - [Key](/docs/field-type-key)
     - [Text](/docs/field-type-text)
     - [TextArea](/docs/field-type-textarea)
     - [WYSIWYG](/docs/field-type-wysiwyg)
