@@ -4,9 +4,10 @@
 	 * For the item form transition
 	 */
 	ko.bindingHandlers.itemTransition = {
-		init: function(element, valueAccessor, allBindingsAccessor, viewModel)
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var $element = $(element),
+				viewModel = context.$root,
 				$child = $element.find('.item_edit'),
 				$tableContainer = $('div.table_container'),
 				expandWidth = viewModel.expandWidth();
@@ -25,9 +26,10 @@
 				$child.css('marginLeft', 2);
 			}
 		},
-		update: function(element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var $element = $(element),
+				viewModel = context.$root,
 				$child = $element.find('.item_edit'),
 				$tableContainer = $('div.table_container'),
 				expandWidth = viewModel.expandWidth();
@@ -65,9 +67,10 @@
 
 	//for ajax chosen js
 	ko.bindingHandlers.ajaxChosen = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var options = valueAccessor(),
+				viewModel = context.$root,
 				data = {
 					constraints: {},
 					field: options.field,
@@ -94,7 +97,7 @@
 					//if this is a filter, go through the filters until this one is found and update the value
 					if (options.type === 'filter')
 					{
-						$.each(admin.filtersViewModel.filters(), function(ind, el)
+						$.each(admin.filtersViewModel.filters, function(ind, el)
 						{
 							if (el.field === options.field && el.value())
 							{
@@ -280,9 +283,10 @@
 	 * This ensures that a bool field is always a boolean value
 	 */
 	ko.bindingHandlers.bool = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
-			var modelVal = viewModel[valueAccessor()]();
+			var viewModel = context.$root,
+				modelVal = viewModel[valueAccessor()]();
 
 			if (modelVal === '0')
 				viewModel[valueAccessor()](false);
@@ -298,6 +302,7 @@
 		init: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			var value = ko.utils.unwrapObservable(valueAccessor()),
+				//cacheName = options.field + '_ckeditor',
 				$element = $(element);
 
 			$element.html(value);
@@ -325,8 +330,12 @@
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			//handle programmatic updates to the observable
-			var value = ko.utils.unwrapObservable(valueAccessor());
-			$(element).html(value);
+			var value = ko.utils.unwrapObservable(valueAccessor()),
+				$element = $(element),
+				editor = $element.ckeditorGet();
+
+			$element.html(value);
+			editor.setData(value);
 		}
 	};
 
@@ -349,4 +358,106 @@
 			}
 		}
 	 };
+
+
+	/**
+	 * File uploader using plupload
+	 */
+	ko.bindingHandlers.imageupload = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
+		{
+			var options = valueAccessor(),
+				cacheName = options.field + '_uploader',
+				viewModel = context.$root;
+
+			viewModel[cacheName] = new plupload.Uploader({
+				runtimes: 'html5,flash,silverlight,gears,browserplus',
+				browse_button: cacheName,
+				container: 'edit_field_' + options.field,
+				drop_element: cacheName,
+				multi_selection: false,
+				max_file_size: options.size_limit + 'mb',
+				url: options.upload_url,
+				flash_swf_url: asset_url + 'js/plupload/js/plupload.flash.swf',
+				silverlight_xap_url: asset_url + 'js/plupload/js/plupload.silverlight.xap',
+				filters: [
+					{title: 'Image files', extensions: 'jpg,jpeg,gif,png'}
+				]
+			});
+
+			viewModel[cacheName].init();
+
+			viewModel[cacheName].bind('FilesAdded', function(up, files) {
+
+				$(files).each(function(i, file) {
+					//parent.uploader.removeFile(file);
+
+				});
+
+				options.upload_percentage(0);
+				options.uploading(true);
+
+				viewModel[cacheName].start();
+			});
+
+			viewModel[cacheName].bind('UploadProgress', function(up, file) {
+				options.upload_percentage(file.percent);
+			});
+
+			viewModel[cacheName].bind('Error', function(up, err) {
+				alert(err.message);
+			});
+
+			viewModel[cacheName].bind('FileUploaded', function(up, file, response) {
+				var data = JSON.parse(response.response);
+
+				options.uploading(false);
+
+				if (!data.errors.length) {
+					//success
+					//iterate over the images until we find it and then set the proper fields
+					viewModel[options.field](data.filename);
+
+					setTimeout(function()
+					{
+						viewModel[cacheName].splice();
+						viewModel[cacheName].refresh();
+						$('div.plupload').css('z-index', 71);
+					}, 200);
+				} else {
+					//error
+					alert('ERRRORRRRR');
+				}
+			});
+
+			$('#' + cacheName).bind('dragenter', function(e)
+			{
+				$(this).addClass('drag');
+			});
+
+			$('#' + cacheName).bind('dragleave drop', function(e)
+			{
+				$(this).removeClass('drag');
+			});
+
+			//destroy the existing editor if the DOM node is removed
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+				viewModel[cacheName].destroy();
+			});
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
+		{
+			var options = valueAccessor(),
+				cacheName = options.field + '_uploader',
+				viewModel = context.$root;
+
+			//hack to get the z-index properly set up
+			setTimeout(function()
+			{
+				viewModel[cacheName].refresh();
+				$('div.plupload').css('z-index', 71);
+			}, 200);
+		}
+	}
+
 })(jQuery);

@@ -1,80 +1,99 @@
 <h2>Filters</h2>
 <div class="panel_contents">
-	{{each filters}}
-		<div class="${type} ${minMax ? 'min_max' : ''}">
-			<label for="filter_field_${ field }">${title}:</label>
-		{{if type === 'key'}}
-			<input type="text" id="filter_field_${ field }" data-bind="value: value, valueUpdate: 'afterkeydown'" />
-		{{/if}}
-		{{if type === 'text'}}
-			<input type="text" id="filter_field_${ field }" data-bind="value: value, valueUpdate: 'afterkeydown'" />
-		{{/if}}
-		{{if type === 'number'}}
-			<span class="symbol">${symbol}</span>
 
-			<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, number: {decimals: decimals, key: field,
+	<!-- ko foreach: $root.filters -->
+		<div data-bind="attr: {class: type + ' ' + (minMax ? 'min_max' : '')}">
+			<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
+
+		<!-- ko if: type === 'key' -->
+			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />
+		<!-- /ko -->
+
+		<!-- ko if: type === 'text' -->
+			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />
+		<!-- /ko -->
+
+		<!-- ko if: type === 'color' -->
+			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />
+		<!-- /ko -->
+
+		<!-- ko if: type === 'number' -->
+			<span class="symbol" data-bind="text: symbol"></span>
+
+			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, number: {decimals: decimals, key: field,
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
 			<span>to</span>
-			<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, number: {decimals: decimals, key: field,
+			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, number: {decimals: decimals, key: field,
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
-		{{/if}}
-		{{if type === 'bool'}}
-			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: ['true', 'false'],
+		<!-- /ko -->
+
+		<!-- ko if: type === 'bool' -->
+			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: ['true', 'false'],
 															optionsCaption: 'All'"></select>
-		{{/if}}
-		{{if type === 'enum'}}
-			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: options, optionsCaption: 'All',
+		<!-- /ko -->
+
+		<!-- ko if: type === 'enum' -->
+			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: options, optionsCaption: 'All',
 															optionsValue: function(item) {return item.value},
 															optionsText: function(item) {return item.text}"></select>
-		{{/if}}
-		{{if type === 'date'}}
-			<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, datepicker: {dateFormat: date_format}" />
+		<!-- /ko -->
+
+		<!-- ko if: type === 'date' -->
+			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, datepicker: {dateFormat: date_format}" />
 			<span>to</span>
-			<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, datepicker: {dateFormat: date_format}" />
-		{{/if}}
-		{{if type === 'time'}}
-			<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue, timepicker: {timeFormat: time_format}" />
+			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, datepicker: {dateFormat: date_format}" />
+		<!-- /ko -->
+
+		<!-- ko if: type === 'time' -->
+			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, timepicker: {timeFormat: time_format}" />
 			<span>to</span>
-			<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue, timepicker: {timeFormat: time_format}" />
-		{{/if}}
-		{{if type === 'datetime'}}
-			<input type="text" id="filter_field_min_${ field }" data-bind="value: minValue,
+			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, timepicker: {timeFormat: time_format}" />
+		<!-- /ko -->
+
+		<!-- ko if: type === 'datetime' -->
+			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 			<span>to</span>
-			<input type="text" id="filter_field_max_${ field }" data-bind="value: maxValue,
+			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
-		{{/if}}
-		{{if type === 'belongs_to'}}
+		<!-- /ko -->
+
+		<!-- ko if: type === 'belongs_to' -->
 			<div class="loader" data-bind="visible: loadingOptions"></div>
-			{{if autocomplete}}
-			<select id="filter_field_${ field }" data-bind="value: value, ajaxChosen: {field: field, type: 'filter'},
+
+			<!-- ko if: autocomplete -->
+			<select data-bind="value: value, attr: {id: field_id}, ajaxChosen: {field: field, type: 'filter'},
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'All'"></select>
-			{{else}}
-			<select id="filter_field_${ field }" data-bind="value: value, chosen: true, options: $root.listOptions[field],
+			<!-- /ko -->
+			<!-- ko ifnot: autocomplete -->
+			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: 'All'"></select>
-			{{/if}}
-		{{/if}}
-		{{if type === 'has_many_and_belongs_to'}}
+			<!-- /ko -->
+		<!-- /ko -->
+
+		<!-- ko if: type === 'has_many_and_belongs_to' -->
 			<div class="loader" data-bind="visible: loadingOptions"></div>
-			{{if autocomplete}}
-			<select id="filter_field_${ field }" size="7" multiple="true" data-bind="ajaxChosen: {field: field, type: 'filter'},
+
+			<!-- ko if: autocomplete -->
+			<select size="7" multiple="true" data-bind="ajaxChosen: {field: field, type: 'filter'}, attr: {id: field_id},
 													options: $root.listOptions[field], selectedOptions: value,
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]} "></select>
-			{{else}}
-			<select id="filter_field_${ field }" size="7" multiple="true" data-bind="chosen: true,
+			<!-- /ko -->
+			<!-- ko ifnot: autocomplete -->
+			<select size="7" multiple="true" data-bind="chosen: true, attr: {id: field_id},
 													options: $root.listOptions[field], selectedOptions: value,
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]} "></select>
-			{{/if}}
-		{{/if}}
+			<!-- /ko -->
+		<!-- /ko -->
 		</div>
-	{{/each}}
+	<!-- /ko -->
 </div>

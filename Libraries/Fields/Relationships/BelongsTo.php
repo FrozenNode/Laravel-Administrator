@@ -22,13 +22,13 @@ class BelongsTo extends Relationship {
 	 *
 	 * @param string|int	$field
 	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig 	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
-		parent::__construct($field, $info, $model);
+		parent::__construct($field, $info, $config);
 
-		$relationship = $model->{$field}();
+		$relationship = $config->model->{$field}();
 		$otherModel = $relationship->model;
 
 		$this->table = $otherModel->table();
@@ -69,7 +69,7 @@ class BelongsTo extends Relationship {
 			return;
 		}
 
-		$query->where($this->foreignKey, 'LIKE', '%'.$this->value.'%');
+		$query->where($this->foreignKey, '=', $this->value);
 	}
 
 }

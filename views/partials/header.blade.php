@@ -1,19 +1,28 @@
 <header>
 	<h1>
-		{{ HTML::link(URL::to_route('admin_dashboard'), Config::get('administrator::administrator.title')) }}
+		<a href="{{URL::to_route('admin_dashboard')}}">{{Config::get('administrator::administrator.title')}}</a>
 	</h1>
 
-	<ul id="tabs">
-		@foreach (Config::get('administrator::administrator.models') as $key => $model)
-			@if (Admin\Libraries\ModelHelper::checkPermission($key))
-				<?php $key = is_numeric($key) ? $model : $key; ?>
-				<li class="@if ($modelName == $key) current @endif">
-					{{ HTML::link(URL::to_route('admin_index', array($key)), $model['title']) }}
+	<ul id="menu">
+		@foreach ($menu as $key => $item)
+			@if (is_array($item))
+				<li class="menu">
+					<span>{{$key}}</span>
+					<ul>
+						@foreach ($item as $k => $subitem)
+							<li>
+								<a href="{{URL::to_route('admin_index', array($k))}}">{{$subitem}}</a>
+							</li>
+						@endforeach
+					</ul>
+				</li>
+			@else
+				<li class="item">
+					<a href="{{URL::to_route('admin_index', array($key))}}">{{$item}}</a>
 				</li>
 			@endif
 		@endforeach
 	</ul>
-	<p id="utility_nav">
-		{{ HTML::link(URL::base(), "Back to Site") }}
-	</p>
+
+	<a href="{{URL::base()}}" id="back_to_site">Back to Site</a>
 </header>

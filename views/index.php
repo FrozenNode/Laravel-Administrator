@@ -6,7 +6,10 @@
 </div>
 
 <script type="text/javascript">
-	var base_url = "<?php echo $baseUrl ?>/",
+	var site_url = "<?php echo Url::to('/') ?>",
+		base_url = "<?php echo $baseUrl ?>/",
+		asset_url = "<?php echo $assetUrl ?>",
+		rows_per_page_url = "<?php echo URL::to_route('admin_rows_per_page', array($config->name)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		adminData = {
@@ -15,40 +18,48 @@
 				id: <?php echo $model->exists ? $model->{$model::$key} : '0'; ?>,
 			<?php } ?>
 			rows: <?php echo json_encode($rows) ?>,
-			sortOptions: <?php echo json_encode($sort) ?>,
-			model_name: "<?php echo $modelName ?>",
-			model_title: "<?php echo $modelTitle ?>",
-			model_single: "<?php echo $modelSingle ?>",
-			expand_width: <?php echo $expandWidth ?>,
+			rows_per_page: <?php echo $config->rowsPerPage ?>,
+			sortOptions: <?php echo json_encode($config->sort) ?>,
+			model_name: "<?php echo $config->name ?>",
+			model_title: "<?php echo $config->title ?>",
+			model_single: "<?php echo $config->single ?>",
+			expand_width: <?php echo $config->formWidth ?>,
+			actions: <?php echo json_encode($config->actions); ?>,
 			filters: <?php echo json_encode($filters); ?>,
-			edit_fields: <?php echo json_encode($editFields); ?>,
-			data_model: <?php echo json_encode($dataModel); ?>,
-			column_model: <?php echo json_encode($columns); ?>
+			edit_fields: <?php echo json_encode($editFields['arrayFields']); ?>,
+			data_model: <?php echo json_encode($editFields['dataModel']); ?>,
+			column_model: <?php echo json_encode($config->columns['columns']); ?>,
+			action_permissions: <?php echo json_encode($config->actionPermissions); ?>
 		};
 </script>
 
 <style type="text/css">
 
 	div.item_edit form.edit_form select {
-		width: <?php echo $expandWidth - 65 ?>px;
+		width: <?php echo $config->formWidth - 65 ?>px;
 	}
 
 	div.item_edit form.edit_form .cke {
-		width: <?php echo $expandWidth - 67 ?>px;
+		width: <?php echo $config->formWidth - 67 ?>px;
 	}
 
 	div.item_edit form.edit_form div.markdown textarea {
-		width: <?php echo intval(($expandWidth - 75) / 2) - 12 ?>px;
-		max-width: <?php echo intval(($expandWidth - 75) / 2) - 12 ?>px;
+		width: <?php echo intval(($config->formWidth - 75) / 2) - 12 ?>px;
+		max-width: <?php echo intval(($config->formWidth - 75) / 2) - 12 ?>px;
 	}
 
 	div.item_edit form.edit_form div.markdown div.preview {
-		width: <?php echo intval(($expandWidth - 75) / 2) ?>px;
+		width: <?php echo intval(($config->formWidth - 75) / 2) ?>px;
 	}
 
 	div.item_edit form.edit_form input[type="text"], div.item_edit form.edit_form textarea {
-		max-width: <?php echo $expandWidth - 75 ?>px;
-		width: <?php echo $expandWidth - 75 ?>px;
+		max-width: <?php echo $config->formWidth - 75 ?>px;
+		width: <?php echo $config->formWidth - 75 ?>px;
+	}
+
+	div.item_edit form.edit_form > div.image img, div.item_edit form.edit_form > div.image div.image_container {
+		max-width: <?php echo $config->formWidth - 65 ?>px;
+		width: <?php echo $config->formWidth - 65 ?>px;
 	}
 
 </style>
