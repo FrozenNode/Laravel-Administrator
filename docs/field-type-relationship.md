@@ -81,15 +81,15 @@ If your relationship field points at another model whose data set is potentially
 		'title' => 'Actors',
 		'name_field' => 'full_name',
 		'autocomplete' => true,
-		'num_options' => 5,
-		'search_fields' => array("CONCAT(first_name, ' ', last_name)"),
+		'num_options' => 5, //default is 10
+		'search_fields' => array("CONCAT(first_name, ' ', last_name)"), //default is array([name_field])
 	)
 
 A relationship field with `autocomplete` set to `true` will wait for a user to type in a value.
 
 Once a value is typed in, the `num_options` option determines how many results are returned to the user for each search.
 
-The `search_fields` option should be an array of valid SQL select fields that can be searched with the `LIKE` operator. In the above example, the admin user will be able to search for "Liam N" and get "Liam Neeson" back.
+The `search_fields` option should be an array of valid SQL select fields that can be searched with the `LIKE` operator. In the above example, the admin user will be able to search for "Liam N" and get "Liam Neeson" back. The default value for this field is just the name_field supplied in all relationship fields.
 
 <a name="constraining-relationships"></a>
 ## Constraining Relationships
