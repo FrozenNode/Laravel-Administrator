@@ -302,6 +302,7 @@
 		init: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			var value = ko.utils.unwrapObservable(valueAccessor()),
+				//cacheName = options.field + '_ckeditor',
 				$element = $(element);
 
 			$element.html(value);
@@ -329,8 +330,12 @@
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			//handle programmatic updates to the observable
-			var value = ko.utils.unwrapObservable(valueAccessor());
-			$(element).html(value);
+			var value = ko.utils.unwrapObservable(valueAccessor()),
+				$element = $(element),
+				editor = $element.ckeditorGet();
+
+			$element.html(value);
+			editor.setData(value);
 		}
 	};
 
