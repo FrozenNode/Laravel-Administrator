@@ -69,7 +69,8 @@ class Image extends Field {
 		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
 		$this->uploadUrl = \URL::to_route('admin_image_upload', array($config->name, $this->field));
 
-		$replace = 'public/';
+		$replace = path('public');
+
 
 		if (strpos($this->location, $replace) === 0)
 		{
