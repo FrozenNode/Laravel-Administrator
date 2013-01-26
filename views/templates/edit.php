@@ -1,15 +1,15 @@
-<div data-bind="visible: loadingItem" class="loading">Loading...</div>
+<div data-bind="visible: loadingItem" class="loading"><?php echo __('administrator::administrator.loading'); ?></div>
 
 <form class="edit_form" data-bind="visible: !loadingItem(), submit: saveItem">
-	<h2 data-bind="text: $root[$root.primaryKey]() ? 'Edit' : 'Create New'"></h2>
+	<h2 data-bind="text: $root[$root.primaryKey]() ? '<?php echo __('administrator::administrator.edit'); ?>' : '<?php echo __('administrator::administrator.createnew'); ?>'"></h2>
 
 	<!-- ko if: $root[$root.primaryKey]() -->
 		<!-- ko if: $root.itemLink() -->
-			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()}">View Item</a>
+			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()}"><?php echo __('administrator::administrator.viewitem'); ?></a>
 		<!-- /ko -->
 
 		<div class="key">
-			<label>ID:</label>
+			<label><?php echo __('administrator::administrator.id'); ?>:</label>
 			<span data-bind="text: $root[$root.primaryKey]"></span>
 		</div>
 	<!-- /ko -->
@@ -63,7 +63,7 @@
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: 'None'"></select>
+													optionsCaption: '<?php echo __('administrator::administrator.none'); ?>'"></select>
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
@@ -71,7 +71,7 @@
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: 'None'"></select>
+													optionsCaption: '<?php echo __('administrator::administrator.none'); ?>'"></select>
 				<!-- /ko -->
 			<!-- /ko -->
 
@@ -110,7 +110,7 @@
 				<select data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field], chosen: true, options: options,
 																optionsValue: function(item) {return item.value},
 																optionsText: function(item) {return item.text},
-																optionsCaption: 'None'"></select>
+																optionsCaption: '<?php echo __('administrator::administrator.none'); ?>'"></select>
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->
@@ -132,14 +132,15 @@
 				<div class="image_upload_container" data-bind="attr: {id: field_id}">
 					<div class="uploader" data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root.activeItem,
 											imageupload: {field: field, size_limit: size_limit, uploading: uploading,
-															upload_percentage: upload_percentage, upload_url: upload_url}">Upload Image</div>
+															upload_percentage: upload_percentage, upload_url: upload_url}"><?php echo __('administrator::administrator.uploadimage'); ?></div>
 					<!-- ko if: uploading -->
-						<div class="uploading" data-bind="text: 'Image Uploading' + upload_percentage() + '%'"></div>
+						<div class="uploading" data-bind="text: '<?php echo __('administrator::administrator.imageuploading'); ?>' + upload_percentage() + '%'"></div>
 					<!-- /ko -->
 				</div>
 
 				<!-- ko if: $root[field] -->
 					<div class="image_container">
+						<span data-bind="text : display_url">aaaaa</span>
 						<img data-bind="attr: {src: display_url + $root[field]()}" />
 						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
 					</div>
@@ -167,21 +168,21 @@
 
 	<div class="control_buttons">
 		<!-- ko if: $root[$root.primaryKey]() -->
-			<input type="button" value="Close" data-bind="click: closeItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+			<input type="button" value="<?php echo __('administrator::administrator.close'); ?>" data-bind="click: closeItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 
 			<!-- ko if: actionPermissions.delete -->
-				<input type="button" value="Delete" data-bind="click: deleteItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+				<input type="button" value="<?php echo __('administrator::administrator.delete'); ?>" data-bind="click: deleteItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 			<!-- /ko -->
 
 			<!-- ko if: actionPermissions.update -->
-				<input type="submit" value="Save" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+				<input type="submit" value="<?php echo __('administrator::administrator.save'); ?>" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 			<!-- /ko -->
 		<!-- /ko -->
 
 		<!-- ko ifnot: $root[$root.primaryKey]() -->
-			<input type="button" value="Cancel" data-bind="click: closeItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+			<input type="button" value="<?php echo __('administrator::administrator.cancel'); ?>" data-bind="click: closeItem, attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 			<!-- ko if: actionPermissions.create -->
-				<input type="submit" value="Create" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+				<input type="submit" value="<?php echo __('administrator::administrator.create'); ?>" data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 			<!-- /ko -->
 		<!-- /ko -->
 		<span class="message" data-bind="css: { error: statusMessageType() == 'error', success: statusMessageType() == 'success' },
