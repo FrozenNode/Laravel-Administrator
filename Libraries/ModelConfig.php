@@ -193,7 +193,7 @@ class ModelConfig {
 		//if the title or single names are provided, throw an exception
 		if (!is_string(array_get($config, 'title')) || !is_string(array_get($config, 'single')))
 		{
-			throw new Exception("Administrator: You must provide a valid title and single name in each model's config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_title'));
 		}
 
 		//get an instance of the model
@@ -201,7 +201,7 @@ class ModelConfig {
 
 		if (!is_string($modelName))
 		{
-			throw new Exception("Administrator: You must provide a 'model' option in each model's config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_model'));
 		}
 
 		//grab an instance of the Eloquent model
@@ -210,13 +210,13 @@ class ModelConfig {
 		//check if the required columns array was provided
 		if (!is_array(array_get($config, 'columns')))
 		{
-			throw new Exception("Administrator: You must provide a valid 'columns' array in each model's config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_columns'));
 		}
 
 		//check if the edit fields array was provided
 		if (!is_array(array_get($config, 'edit_fields')))
 		{
-			throw new Exception("Administrator: You must provide a valid 'edit_fields' array in each model's config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_edit'));
 		}
 
 		//now we can instantiate the object
@@ -239,13 +239,13 @@ class ModelConfig {
 		//if the menu option isn't an array or if it doesn't have any values, throw an exception since it's a required option
 		if (!is_array($menu) || !sizeof($menu))
 		{
-			throw new Exception("Administrator: You must provide a valid 'menu' option in the administrator.php config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_menu'));
 		}
 
 		//if the model config path isn't a string or if the directory doesn't exist, throw an exception
 		if (!is_string($modelConfigPath) || !is_dir($modelConfigPath))
 		{
-			throw new Exception("Administrator: You must provide a valid 'model_config_path' in the administrator.php config. The directory must also exist and be readable.");
+			throw new Exception("Administrator: " .  __('administrator::administrator.config_path'));
 		}
 
 		//now we loop through the menu and try to find our guy

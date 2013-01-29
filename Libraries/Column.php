@@ -325,7 +325,7 @@ class Column {
 		}
 		else
 		{
-			throw new Exception("Administrator: you must provide a valid 'columns' array in each model's config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_columns'));
 		}
 
 		//make sure the table key is included
