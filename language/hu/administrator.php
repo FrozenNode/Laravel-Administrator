@@ -39,11 +39,11 @@ return array(
 	'success' => 'Sikeres művelet!',
 	'error' => 'Hiba történt a művelet végrahajtása közben',
 
-	'valid_columns' => "You must provide a valid 'columns' array in each model's config",
-	'valid_title' => "You must provide a valid title and single name in each model's config",
-	'valid_model' => "You must provide a 'model' option in each model's config",
-	'valid_edit' => "You must provide a valid 'edit_fields' array in each model's config",
-	'valid_menu' => "You must provide a valid 'menu' option in the administrator.php config",
-	'valid_config_path' => "You must provide a valid 'model_config_path' in the administrator.php config. The directory must also exist and be readable.",
-	'not_eloquent' => " is not an Eloquent model",
+	'valid_columns' => "Minden model konfigurációjában biztosítania kell érvényes 'columns' tömböt",
+	'valid_title' => "Minden model konfigurációjában biztosítania kell érvényes 'title' és 'single name' értékeket",
+	'valid_model' => "Minden model konfigurációjában biztosítania kell érvényes model opciót",
+	'valid_edit' => "Minden model konfigurációjában biztosítania kell érvényes 'edit_fields' tömböt",
+	'valid_menu' => "Az administrator.php konfigurációjában biztosítania kell érvényes 'menu' opciót",
+	'valid_config_path' => "Az administrator.php konfigurációjában biztosítania kell érvényes 'model_config_path' értéket. Léteznie kell ennek a könyvtárnak, és írhatónak kell lennie.",
+	'not_eloquent' => " nem egy Eloquent model",
 );

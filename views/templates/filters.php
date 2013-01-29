@@ -23,7 +23,7 @@
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, number: {decimals: decimals, key: field,
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, number: {decimals: decimals, key: field,
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
@@ -42,20 +42,20 @@
 
 		<!-- ko if: type === 'date' -->
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, datepicker: {dateFormat: date_format}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, datepicker: {dateFormat: date_format}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'time' -->
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, timepicker: {timeFormat: time_format}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, timepicker: {timeFormat: time_format}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'datetime' -->
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 		<!-- /ko -->

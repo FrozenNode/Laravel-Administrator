@@ -22,21 +22,24 @@
 				</li>
 			@endif
 		@endforeach
-
-		@if (count(Config::get('application.languages')))
+	</ul>
+	@if (count(Config::get('application.languages')) > 0)
+		<ul id="lang_menu">
 			<li class="menu">
 			<span>{{Config::get('application.language')}}</span>
-				<ul>
-					@foreach (Config::get('application.languages') as $key => $lang)
-						@if (Config::get('application.language') != $lang)
-							<li>
-								<a href="{{URL::base() . '/' . $lang . '/admin' }}">{{$lang}}</a>
-							</li>
-						@endif
-					@endforeach
-				</ul>
+				@if (count(Config::get('application.languages')) > 1)
+					<ul>
+						@foreach (Config::get('application.languages') as $lang)
+							@if (Config::get('application.language') != $lang)
+								<li>
+									<a href="{{str_replace('/' . Config::get('application.language') . '/', '/' . $lang . '/', URL::full())}}">{{$lang}}</a>
+								</li>
+							@endif
+						@endforeach
+					</ul>
+				@endif
 			</li>
-		@endif
-	</ul>
+		</ul>
+	@endif
 	<a href="{{URL::base()}}" id="back_to_site">Back to Site</a>
 </header>
