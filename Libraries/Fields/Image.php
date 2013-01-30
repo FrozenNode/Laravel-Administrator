@@ -72,7 +72,7 @@ class Image extends Field {
 
 		$this->sizes = array_get($info, 'sizes', $this->sizes);
 		$this->naming = array_get($info, 'naming', $this->naming);
-		$this->naming = array_get($info, 'length', $this->length);
+		$this->length = array_get($info, 'length', $this->length);
 		$this->location = array_get($info, 'location');
 		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
 		$this->uploadUrl = \URL::to_route('admin_image_upload', array($config->name, $this->field));
