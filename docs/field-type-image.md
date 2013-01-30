@@ -14,6 +14,7 @@ The `image` field type should be a text-like type in your database. The image's 
 		'type' => 'image',
 		'location' => path('public') . 'uploads/products/originals/',
 		'naming' => 'random',
+		'length' => 20,
 		'size_limit' => 2,
 		'sizes' => array(
 			array(65, 57, 'crop', path('public') . 'uploads/products/thumbs/small/', 100),
@@ -27,6 +28,8 @@ In the edit form, an admin user will be presented with an image uploader. For th
 The required `location` option lets you define where the original image should be stored.
 
 The optional `naming` option lets you define whether to `keep` the file's name or to make the file name `random`. By default this is set to `random` in order to avoid naming collisions, but setting this to `keep` lets you keep your image's file names.
+
+The optional `length` option lets you define size of file name in case `random` is supplied as `naming` option method.  
 
 The optional `size_limit` option lets you set an integer size limit counted in megabytes. This only affects the JavaScript file uploading dialog, it doesn't limit your PHP upload sizes.
 
