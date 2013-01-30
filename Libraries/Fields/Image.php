@@ -13,6 +13,13 @@ class Image extends Field {
 	public $naming = 'random';
 
 	/**
+	 * Length of file name if naming is set to random
+	 *
+	 * @var int
+	 */
+	public $length = 32;
+	
+	/**
 	 * The directory location used to store the original
 	 *
 	 * @var string
@@ -65,6 +72,7 @@ class Image extends Field {
 
 		$this->sizes = array_get($info, 'sizes', $this->sizes);
 		$this->naming = array_get($info, 'naming', $this->naming);
+		$this->naming = array_get($info, 'length', $this->length);
 		$this->location = array_get($info, 'location');
 		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
 		$this->uploadUrl = \URL::to_route('admin_image_upload', array($config->name, $this->field));
@@ -79,6 +87,9 @@ class Image extends Field {
 
 		//make sure the naming is one of the two accepted values
 		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
+
+		// Satisfy params for Multup, for keep we return false so we don't random filename
+		$this->naming = ($this->naming == 'keep') ? false : true;
 	}
 
 	/**
@@ -89,8 +100,9 @@ class Image extends Field {
 	public function doUpload()
 	{
 		//use the multup library to perform the upload
-		$result = \Admin\Libraries\Includes\Multup::open('file', 'image|max:' . $this->sizeLimit * 1000 . '|mimes:jpg,gif,png', $this->location, true)
+		$result = \Admin\Libraries\Includes\Multup::open('file', 'image|max:' . $this->sizeLimit * 1000 . '|mimes:jpg,gif,png', $this->location, $this->naming)
 			->sizes($this->sizes)
+			->set_length($this->length)
 			->upload();
 
 		return $result[0];
