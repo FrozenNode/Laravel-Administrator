@@ -140,7 +140,6 @@
 
 				<!-- ko if: $root[field] -->
 					<div class="image_container">
-						<span data-bind="text : display_url">aaaaa</span>
 						<img data-bind="attr: {src: display_url + $root[field]()}" />
 						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
 					</div>
