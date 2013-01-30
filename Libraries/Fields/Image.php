@@ -79,6 +79,9 @@ class Image extends Field {
 
 		//make sure the naming is one of the two accepted values
 		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
+
+		// Satisfy params for Multup, for keep we return false so we don't random filename
+		$this->naming = ($this->naming == 'keep') ? false : true;
 	}
 
 	/**
@@ -89,7 +92,7 @@ class Image extends Field {
 	public function doUpload()
 	{
 		//use the multup library to perform the upload
-		$result = \Admin\Libraries\Includes\Multup::open('file', 'image|max:' . $this->sizeLimit * 1000 . '|mimes:jpg,gif,png', $this->location, true)
+		$result = \Admin\Libraries\Includes\Multup::open('file', 'image|max:' . $this->sizeLimit * 1000 . '|mimes:jpg,gif,png', $this->location, $this->naming)
 			->sizes($this->sizes)
 			->upload();
 
