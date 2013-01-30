@@ -17,11 +17,25 @@ class ModelConfig {
 	public $title;
 
 	/**
+	 * The model's localization titles
+	 *
+	 * @var string
+	 */
+	public $titles;
+
+	/**
 	 * The singular name
 	 *
 	 * @var string
 	 */
 	public $single;
+
+	/**
+	 * Localization singular names
+	 *
+	 * @var string
+	 */
+	public $singles;
 
 	/**
 	 * The model name
@@ -115,13 +129,18 @@ class ModelConfig {
 	{
 		//set the class properties for the items which we know to exist
 		$this->title = array_get($config, 'title');
+		$this->titles = array_get($config, 'titles');
 		$this->single = array_get($config, 'single');
+		$this->singles = array_get($config, 'singles');
 		$this->model = array_get($config, 'model');
 		$this->columns = array_get($config, 'columns');
 		$this->actions = array_get($config, 'actions');
 		$this->edit = array_get($config, 'edit_fields');
 		$this->filters = array_get($config, 'filters', array());
 		$this->name = array_get($config, 'model_name');
+
+		//localization for title and single
+		$this->setLocalization();
 
 		//fetch the meaningful information for columns and actions
 		//we won't do the same for edit fields and filters because that information is not always persistent across a request
@@ -302,6 +321,33 @@ class ModelConfig {
 	}
 
 	/**
+	 * Helper method to set up the localization fot title and single
+	 *
+	 * @param array		$sort
+	 */
+	public function setLocalization()
+	{
+		//title localization
+		if ($this->titles != '')
+		{
+			if (\Lang::has($this->titles))
+			{
+				$this->title = (string)\Lang::line($this->titles);
+			}
+		}
+
+		//single localization
+		if ($this->singles != '')
+		{
+			if (\Lang::has($this->singles))
+			{
+				$this->single = (string)\Lang::line($this->singles);
+			}
+		}
+
+	}
+
+	/**
 	 * Helper method to set up the sort options
 	 *
 	 * @param array		$sort
@@ -394,7 +440,18 @@ class ModelConfig {
 						continue;
 					}
 
-					$menu[$item] = array_get($config, 'title', $item);
+					$title = array_get($config, 'title', $item);
+					$titles = array_get($config, 'titles', '');
+					if ($titles != '')
+					{
+						$titles = (string) \Lang::line($titles);
+						$menu[$item] = $titles;
+					}
+					else
+					{
+						$menu[$item] = $title;
+					}
+
 				}
 			}
 			//if the item is an array, recursively run this method on it
