@@ -57,21 +57,29 @@ Administrator uses several plugins, and those use their own localization setup f
 
 ### CKEditor
 Used in the wysiwyg field type.
+
 Folder in Administrator: /public/js/ckeditor/lang/
+
 Web page: [CKEditor](http://ckeditor.com/)
 
 ### jQuery date picker:
 Used in date field type.
+
 Folder in Administrator: /public/js/jquery/i18n/
+
 Web page: [jQueryUI](http://jqueryui.com/datepicker/)
 
 ### jQuery time picker:
 Used in time field type.
+
 Folder in Administrator: /public/js/jquery/localization/
+
 GitHub page: [jQuery TimePicker](http://jonthornton.github.com/jquery-timepicker/)
 
 ### plupload:
 Used for file upload.
+
 Folder in Administrator: /public/js/plupload/js/i18n/
+
 Web page: [Plupload](http://www.plupload.com/)
 
