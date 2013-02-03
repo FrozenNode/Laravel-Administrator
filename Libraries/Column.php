@@ -25,13 +25,6 @@ class Column {
 	public $title;
 
 	/**
-	 * The column titles
-	 *
-	 * @var string
-	 */
-	public $titles;
-
-	/**
 	 * The sort field that the column will use if it is sortable
 	 *
 	 * @var string
@@ -116,8 +109,7 @@ class Column {
 
 		//set the values
 		$this->field = $field;
-		$this->title = array_get($column, 'title', $field);
-		$this->titles = array_get($column, 'titles', '');
+		$this->title = ModelConfig::getValueLocalization($column, 'title', $field);
 		$this->sort_field = array_get($column, 'sort_field', $field);
 		$this->sortable = array_get($column, 'sortable', $this->sortable);
 		$this->relationship = array_get($column, 'relationship');
@@ -127,9 +119,6 @@ class Column {
 		$this->isIncluded = array_get($column, 'isIncluded', $this->isIncluded);
 		$this->output = is_string($output) ? $output : $this->output;
 		$this->relationshipField = array_get($column, 'relationshipField', $this->relationshipField);
-
-		//localization for title
-		$this->setLocalization();
 	}
 
 	/**
@@ -150,17 +139,28 @@ class Column {
 			$column = array();
 		}
 
+		//localization part1
+//		$lang = \Config::get('application.language');
+//		$title_lang = array_get($column, 'title_' . $lang, '');
+
 		//set up the $column array with the supplied or default values
 		$column = array
 		(
-			'title' => array_get($column, 'title', $field),
-			'titles' => array_get($column, 'titles', $field),
+//			'title' => array_get($column, 'title', $field),
+			'title' => ModelConfig::getValueLocalization($column, 'title', $field),
+//			'titles' => array_get($column, 'titles', $field),
 			'sort_field' => array_get($column, 'sort_field', $field),
 			'relationship' => array_get($column, 'relationship'),
 			'select' => array_get($column, 'select'),
 			'sortable' => true, //for now...
 			'output' => array_get($column, 'output'),
 		);
+
+		//localization part2
+//		if ($title_lang != '')
+//		{
+//			$column['title_' . $lang] = $title_lang;
+//		}
 
 		//if the relation option is set, we'll set up the column array using the select
 		if ($column['relationship'])
@@ -359,7 +359,6 @@ class Column {
 		return array(
 			'field' => $this->field,
 			'title' => $this->title,
-			'titles' => $this->titles,
 			'sort_field' => $this->sort_field,
 			'relationship' => $this->relationship,
 			'select' => $this->select,
@@ -394,22 +393,6 @@ class Column {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Helper method to set up the localization fot title
-	 *
-	 */
-	public function setLocalization()
-	{
-		//title localization
-		if ($this->titles != '')
-		{
-			if (\Lang::has($this->titles))
-			{
-				$this->title = (string)\Lang::line($this->titles);
-			}
-		}
 	}
 
 	/**

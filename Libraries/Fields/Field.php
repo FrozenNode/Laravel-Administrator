@@ -83,13 +83,6 @@ abstract class Field {
 	public $title = '';
 
 	/**
-	 * When a field is instantiated, it is give its field type which matches a $fieldTypes key
-	 *
-	 * @var string
-	 */
-	public $titles = '';
-
-	/**
 	 * The value (used in filter)
 	 *
 	 * @var string
@@ -128,16 +121,12 @@ abstract class Field {
 	public function __construct($field, $info, $config)
 	{
 		$this->type = $info['type'];
-		$this->title = array_get($info, 'title', $field);
-		$this->titles = array_get($info, 'titles', '');
+		$this->title = \Admin\Libraries\ModelConfig::getValueLocalization($info, 'title', $field);
 		//$this->editable = array_get($info, 'editable', $this->editable);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));
 		$this->field = $field;
-
-		//localization for title
-		$this->setLocalization();
 	}
 
 
@@ -470,19 +459,4 @@ abstract class Field {
 		return $info;
 	}
 
-	/**
-	 * Helper method to set up the localization fot title
-	 *
-	 */
-	public function setLocalization()
-	{
-		//title localization
-		if ($this->titles != '')
-		{
-			if (\Lang::has($this->titles))
-			{
-				$this->title = (string)\Lang::line($this->titles);
-			}
-		}
-	}
 }

@@ -17,25 +17,11 @@ class ModelConfig {
 	public $title;
 
 	/**
-	 * The model's localization titles
-	 *
-	 * @var string
-	 */
-	public $titles;
-
-	/**
 	 * The singular name
 	 *
 	 * @var string
 	 */
 	public $single;
-
-	/**
-	 * Localization singular names
-	 *
-	 * @var string
-	 */
-	public $singles;
 
 	/**
 	 * The model name
@@ -128,19 +114,14 @@ class ModelConfig {
 	public function __construct($config)
 	{
 		//set the class properties for the items which we know to exist
-		$this->title = array_get($config, 'title');
-		$this->titles = array_get($config, 'titles');
-		$this->single = array_get($config, 'single');
-		$this->singles = array_get($config, 'singles');
+		$this->title = self::getValueLocalization($config, 'title');
+		$this->single = self::getValueLocalization($config, 'single');
 		$this->model = array_get($config, 'model');
 		$this->columns = array_get($config, 'columns');
 		$this->actions = array_get($config, 'actions');
 		$this->edit = array_get($config, 'edit_fields');
 		$this->filters = array_get($config, 'filters', array());
 		$this->name = array_get($config, 'model_name');
-
-		//localization for title and single
-		$this->setLocalization();
 
 		//fetch the meaningful information for columns and actions
 		//we won't do the same for edit fields and filters because that information is not always persistent across a request
@@ -321,33 +302,6 @@ class ModelConfig {
 	}
 
 	/**
-	 * Helper method to set up the localization fot title and single
-	 *
-	 * @param array		$sort
-	 */
-	public function setLocalization()
-	{
-		//title localization
-		if ($this->titles != '')
-		{
-			if (\Lang::has($this->titles))
-			{
-				$this->title = (string)\Lang::line($this->titles);
-			}
-		}
-
-		//single localization
-		if ($this->singles != '')
-		{
-			if (\Lang::has($this->singles))
-			{
-				$this->single = (string)\Lang::line($this->singles);
-			}
-		}
-
-	}
-
-	/**
 	 * Helper method to set up the sort options
 	 *
 	 * @param array		$sort
@@ -417,10 +371,26 @@ class ModelConfig {
 	public static function getMenu($configMenu = null)
 	{
 		$menu = array();
+		$is_menus = false;
 
 		if (!$configMenu)
 		{
-			$configMenu = Config::get('administrator::administrator.menu', null);
+			//look for optional language menu defined like menu_en
+			$lang = Config::get('application.language');
+			$configMenu = Config::get('administrator.menu_' . $lang, null);
+
+			//look for optional language menu defined as menus
+			if (!$configMenu)
+			{
+				$configMenu = Config::get('administrator.menus', null);
+				if ($configMenu) $is_menus = true;
+			}
+
+			//set default menu config
+			if (!$configMenu)
+			{
+				$configMenu = Config::get('administrator::administrator.menu', null);
+			}
 		}
 
 		//iterate over the menu to build the
@@ -440,28 +410,50 @@ class ModelConfig {
 						continue;
 					}
 
-					$title = array_get($config, 'title', $item);
-					$titles = array_get($config, 'titles', '');
-					if ($titles != '')
-					{
-						$titles = (string) \Lang::line($titles);
-						$menu[$item] = $titles;
-					}
-					else
-					{
-						$menu[$item] = $title;
-					}
-
+					$menu[$item] = self::getValueLocalization($config, 'title');
 				}
 			}
 			//if the item is an array, recursively run this method on it
 			else if (is_array($item))
 			{
-				$menu[$key] = static::getMenu($item);
+				if ($is_menus)
+				{
+					$key_lang = (string)\Lang::line($key);
+					$menu[$key_lang] = static::getMenu($item);
+				}
+				else
+				{
+					$menu[$key] = static::getMenu($item);
+				}
 			}
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Gets the menu main title
+	 *
+	 * @return string
+	 */
+	public static function getMainTitle()
+	{
+		$lang = Config::get('application.language');
+
+		$title = Config::get('administrator.title_' . $lang, null);
+
+		if (!$title) {
+			$titles = Config::get('administrator.titles', null);
+			if ($titles) {
+				$title = (string)\Lang::line($titles);
+			}
+		}
+
+		if (!$title) {
+			$title = Config::get('administrator::administrator.title', null);
+		}
+
+		return $title;
 	}
 
 	/**
@@ -482,4 +474,48 @@ class ModelConfig {
 			return false;
 		}
 	}
+
+	/**
+	 * Gets the localized version of the value if there is any. First look for value_en,
+	 * where _en is replaced with current languge's tag. After look for values, and the
+	 * language line it stands for. After we look for the original value. If no success,
+	 * we return the given array default_value.
+	 *
+	 * @param array		$config
+	 * @param string	$value_name
+	 * @param array		$default_value
+	 *
+	 * @return string
+	 */
+	public static function getValueLocalization($config, $value_name, $default_value = array())
+	{
+		$lang = Config::get('application.language');
+
+		$value = array_get($config, $value_name, '');
+		$values = array_get($config, $value_name . 's', '');
+		$value_lang = array_get($config, $value_name . '_' . $lang, '');
+
+		if ($value_lang != '')
+		{
+			$return_value = $value_lang;
+		}
+		else if ($values != '')
+		{
+			if (\Lang::has($values))
+			{
+				$return_value = (string)\Lang::line($values);
+			}
+		}
+
+		if (!isset($return_value)) {
+			$return_value = $value;
+		}
+
+		if (!isset($return_value)) {
+			$return_value = $default_value;
+		}
+
+		return $return_value;
+	}
+
 }

@@ -25,6 +25,7 @@ return array(
 	'all' => 'All',
 	'itemsperpage' => 'items per page',
 	'noresults' => 'No Results',
+	'backtosite' => 'Back to Site',
 
 	'previous' => 'prev',
 	'next' => 'next',

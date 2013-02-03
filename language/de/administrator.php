@@ -19,12 +19,13 @@ return array(
 	'new' => 'Neu',
 	'viewitem' => 'Element ansehen',
 	'id' => 'ID',
-	'uploadimage' => 'Bild Hochladen',
+	'uploadimage' => 'Bild hochladen',
 	'imageuploading' => 'Bild hochladen',
 	'none' => 'Keiner',
 	'all' => 'Alles',
 	'itemsperpage' => 'Artikel pro Seite',
 	'noresults' => 'Keine Resultate',
+	'backtosite' => 'Zurück zur Website',
 
 	'previous' => 'Zurück',
 	'next' => 'Weiter',
@@ -44,6 +45,6 @@ return array(
 	'valid_model' => "Sie müssen eine 'model' option in jedem model config bieten",
 	'valid_edit' => "Sie müssen eine gültige 'edit_fields' in jedem model config bieten",
 	'valid_menu' => "Sie müssen einen gültigen 'menu' option in der administrator.php config bieten",
-	'valid_config_path' => "Sie müssen einen gültigen 'model_config_path' option in der administrator.php config bieten. The directory must also exist and be readable. Das Verzeichnis muss ebenfalls vorhanden und lesbar sein.",
+	'valid_config_path' => "Sie müssen einen gültigen 'model_config_path' option in der administrator.php config bieten. Das Verzeichnis muss ebenfalls vorhanden und lesbar sein.",
 	'not_eloquent' => " ist kein Eloquent model",
 );

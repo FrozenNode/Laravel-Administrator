@@ -25,19 +25,20 @@ return array(
 	'all' => 'Mind',
 	'itemsperpage' => 'sor oldalanként',
 	'noresults' => 'Nincs eredmény',
+	'backtosite' => 'Vissza az oldalra',
 
 	'previous' => 'előző',
 	'next' => 'következő',
 
 	'close' => 'Bezár',
-	'delete' => 'Törés',
+	'delete' => 'Törlés',
 	'save' => 'Mentés',
 	'create' => 'Létrehoz',
 	'cancel' => 'Mégsem',
 
 	'active' => 'Egy pillanat...',
 	'success' => 'Sikeres művelet!',
-	'error' => 'Hiba történt a művelet végrahajtása közben',
+	'error' => 'Hiba történt a művelet végrehajtása közben',
 
 	'valid_columns' => "Minden model konfigurációjában biztosítania kell érvényes 'columns' tömböt",
 	'valid_title' => "Minden model konfigurációjában biztosítania kell érvényes 'title' és 'single name' értékeket",

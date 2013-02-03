@@ -5,7 +5,7 @@
 			<input type="button" value="<?php echo __('administrator::administrator.previous'); ?>" data-bind="attr: {disabled: pagination.isFirst() || !pagination.last() }, click: function() {page('prev')}" />
 			<input type="button" value="<?php echo __('administrator::administrator.next'); ?>" data-bind="attr: {disabled: pagination.isLast() || !pagination.last() }, click: function() {page('next')}" />
 			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 }, value: pagination.page" />
-			<span data-bind="text: 'of ' + pagination.last()"></span>
+			<span data-bind="text: ' / ' + pagination.last()"></span>
 		</div>
 		<div class="per_page">
 			<select data-bind="value: rowsPerPage, chosen: true, options: rowsPerPageOptions"></select>

@@ -1,6 +1,6 @@
 <header>
 	<h1>
-		<a href="{{URL::to_route('admin_dashboard')}}">{{Config::get('administrator::administrator.title')}}</a>
+		<a href="{{URL::to_route('admin_dashboard')}}">{{$title}}</a>
 	</h1>
 
 	<ul id="menu">
@@ -41,5 +41,5 @@
 			</li>
 		</ul>
 	@endif
-	<a href="{{URL::base()}}" id="back_to_site">Back to Site</a>
+	<a href="{{URL::base()}}" id="back_to_site">{{__('administrator::administrator.backtosite')}}</a>
 </header>
