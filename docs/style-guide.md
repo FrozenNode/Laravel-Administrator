@@ -2,6 +2,7 @@
 
 - [Introduction](#introduction)
 - [Starting Braces](#starting-braces)
+- [Tabs Instead of Spaces](#tabs-instead-of-spaces)
 - [Inline Comments](#inline-comments)
 - [Function/Method Comments](#function-method-comments)
 - [Camel Case](#camel-case)
@@ -45,6 +46,11 @@ The only exception to this rule is for class names:
 	class Someting {
 
 	}
+
+<a name="tabs-instead-of-spaces"></a>
+## Tabs Instead of Spaces
+
+Your code should use tabs instead of spaces.
 
 <a name="inline-comments"></a>
 ## Inline Comments
