@@ -88,17 +88,17 @@ If there are no params, you can just put a single line between the description a
 
 For the most part, Administrator uses the camelCase style in both PHP and JavaScript. The general exceptions to this rule are in CSS class names and config files where snake case is used. An example of this in PHP would be:
 
-/**
- * Example of camelCase
- */
-public function writeTheNameLikeThis()
-{
-	//correct
-	$varName = 'something';
+	/**
+	 * Example of camelCase
+	 */
+	public function writeTheNameLikeThis()
+	{
+		//correct
+		$varName = 'something';
 
-	//incorrect
-	$var_name = 'something_else';
-}
+		//incorrect
+		$var_name = 'something_else';
+	}
 
 <a name="line-breaks"></a>
 ## Line Breaks
