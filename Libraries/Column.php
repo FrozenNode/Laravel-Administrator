@@ -109,7 +109,7 @@ class Column {
 
 		//set the values
 		$this->field = $field;
-		$this->title = array_get($column, 'title', $field);
+		$this->title = ModelConfig::getValueLocalization($column, 'title', $field);
 		$this->sort_field = array_get($column, 'sort_field', $field);
 		$this->sortable = array_get($column, 'sortable', $this->sortable);
 		$this->relationship = array_get($column, 'relationship');
@@ -139,16 +139,28 @@ class Column {
 			$column = array();
 		}
 
+		//localization part1
+//		$lang = \Config::get('application.language');
+//		$title_lang = array_get($column, 'title_' . $lang, '');
+
 		//set up the $column array with the supplied or default values
 		$column = array
 		(
-			'title' => array_get($column, 'title', $field),
+//			'title' => array_get($column, 'title', $field),
+			'title' => ModelConfig::getValueLocalization($column, 'title', $field),
+//			'titles' => array_get($column, 'titles', $field),
 			'sort_field' => array_get($column, 'sort_field', $field),
 			'relationship' => array_get($column, 'relationship'),
 			'select' => array_get($column, 'select'),
 			'sortable' => true, //for now...
 			'output' => array_get($column, 'output'),
 		);
+
+		//localization part2
+//		if ($title_lang != '')
+//		{
+//			$column['title_' . $lang] = $title_lang;
+//		}
 
 		//if the relation option is set, we'll set up the column array using the select
 		if ($column['relationship'])
@@ -325,7 +337,7 @@ class Column {
 		}
 		else
 		{
-			throw new Exception("Administrator: you must provide a valid 'columns' array in each model's config");
+			throw new Exception("Administrator: " .  __('administrator::administrator.valid_columns'));
 		}
 
 		//make sure the table key is included
