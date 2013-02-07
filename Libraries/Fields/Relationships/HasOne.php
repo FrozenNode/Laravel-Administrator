@@ -21,6 +21,7 @@ class HasOne extends Relationship {
 	 */
 	public function __construct($field, $info, $config)
 	{
+		parent::__construct($field, $info, $config);
 		$relationship = $config->model->{$field}();
 
 		$this->table = $relationship->table->from;

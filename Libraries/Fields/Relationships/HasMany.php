@@ -35,7 +35,7 @@ class HasMany extends Relationship {
 	 */
 	public function __construct($field, $info, $config)
 	{
-		parent::__construct($field, $info, $model);
+		parent::__construct($field, $info, $config);
 
 		$relationship = $config->model->{$field}();
 		$table = $relationship->table->joins[0];
