@@ -1,7 +1,8 @@
 ## Changelog
 
 ### 3.1.0
-- Bugfix: HasOne and HasMany relationship columns weren't being constructed properly.
+- Bugfix: BelongsTo edit fields now load even if they aren't specified in the columns list
+- Bugfix: HasOne and HasMany relationship columns weren't being constructed properly
 
 ### 3.0.0
 - Model configuration must now be done in model config files instead of in an Eloquent model
