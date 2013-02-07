@@ -17,11 +17,11 @@ class HasOne extends Relationship {
 	 *
 	 * @param string|int	$field
 	 * @param array|string	$info
-	 * @param Eloquent 		$model
+	 * @param ModelConfig	$config
 	 */
-	public function __construct($field, $info, $model)
+	public function __construct($field, $info, $config)
 	{
-		$relationship = $model->{$field}();
+		$relationship = $config->model->{$field}();
 
 		$this->table = $relationship->table->from;
 		$this->column = $relationship->table->wheres[0]['column'];
