@@ -181,11 +181,6 @@
 			 */
 			actionsPermissions: {},
 
-			/* The languages array holds text for the current language
-			 * array
-			 */
-			languages: ko.observableArray(),
-
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
 			 */
@@ -206,7 +201,7 @@
 				if (!saveData[self.primaryKey])
 					delete saveData[self.primaryKey];
 
-				self.statusMessage(self.languages['saving']).statusMessageType('');
+				self.statusMessage('Saving...').statusMessageType('');
 				self.freezeForm(true);
 
 				$.ajax({
@@ -222,7 +217,7 @@
 					{
 						if (response.success) {
 							//$('#users_list').trigger('reloadGrid');
-							self.statusMessage(self.languages['saved']).statusMessageType('success');
+							self.statusMessage('Item saved.').statusMessageType('success');
 							self[self.primaryKey](response.data[self.primaryKey]);
 							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
@@ -248,12 +243,12 @@
 			deleteItem: function()
 			{
 				var self = this,
-					conf = confirm(self.languages['delete_active_item']);
+					conf = confirm("Are you sure you want to delete this item? This cannot be reversed.");
 
 				if (!conf)
 					return false;
 
-				self.statusMessage(self.languages['deleting']).statusMessageType('');
+				self.statusMessage('Deleting...').statusMessageType('');
 				self.freezeForm(true);
 
 				$.ajax({
@@ -265,7 +260,7 @@
 					{
 						if (response.success)
 						{
-							self.statusMessage(self.languages['deleted']).statusMessageType('success');
+							self.statusMessage('Item deleted.').statusMessageType('success');
 							self.updateRows();
 							self.updateSelfRelationships();
 
@@ -729,7 +724,6 @@
 			this.viewModel.primaryKey = adminData.primary_key;
 			this.viewModel.actions = adminData.actions;
 			this.viewModel.actionPermissions = adminData.action_permissions;
-			this.viewModel.languages = adminData.languages;
 
 			//set up the rowsPerPageOptions
 			for (var i = 1; i <= 100; i++)

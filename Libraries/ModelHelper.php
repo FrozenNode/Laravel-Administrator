@@ -134,7 +134,7 @@ class ModelHelper {
 		}
 
 		//otherwise throw an exception
-		throw new Exception("Administrator: " . $className  .  __('administrator::administrator.not_eloquent'));
+		throw new Exception("Administrator: " . $className . " is not an Eloquent model");
 	}
 
 

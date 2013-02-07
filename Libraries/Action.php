@@ -55,9 +55,9 @@ class Action {
 		$this->hasPermission = $info['hasPermission'];
 
 		//run through the messages
-		$this->messages['active'] = array_get($info['messages'], 'active', __('administrator::administrator.active'));
-		$this->messages['success'] = array_get($info['messages'], 'success', __('administrator::administrator.success'));
-		$this->messages['error'] = array_get($info['messages'], 'error', __('administrator::administrator.error'));
+		$this->messages['active'] = array_get($info['messages'], 'active', $this->messages['active']);
+		$this->messages['success'] = array_get($info['messages'], 'success', $this->messages['success']);
+		$this->messages['error'] = array_get($info['messages'], 'error', $this->messages['error']);
 
 		//set up the action
 		$this->action = $info['action'];

@@ -273,9 +273,7 @@
 				val = '';
 
 			left = limit - val.length;
-
-//			text = ' character' + (left !== 1 ? 's' : '') + ' left';
-			text = (left !== 1 ? adminData.languages['characters_left'] : adminData.languages['character_left']);
+			text = ' character' + (left !== 1 ? 's' : '') + ' left';
 
 			$(element).text(left + text);
 		}
@@ -308,7 +306,7 @@
 				$element = $(element);
 
 			$element.html(value);
-			$element.ckeditor({ language : language });
+			$element.ckeditor();
 
 			var editor = $element.ckeditorGet();
 

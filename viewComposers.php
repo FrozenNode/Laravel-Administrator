@@ -33,6 +33,5 @@ View::composer('administrator::index', function($view)
 //header view
 View::composer(array('administrator::partials.header', 'administrator::dashboard'), function($view)
 {
-	$view->title = ModelConfig::getMainTitle();
 	$view->menu = ModelConfig::getMenu();
 });

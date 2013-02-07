@@ -32,11 +32,9 @@ Route::filter('add_assets', function()
 
 	//jquery ui
 	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');
-	$assets->add('jquery.ui-lang', 'js/jquery/i18n/jquery.ui.datepicker-'.Config::get('application.language').'.js');
 
 	//jquery timepicker addon
 	$assets->add('jquery.ui.timepicker', 'js/jquery/jquery-ui-timepicker-addon.js');
-	$assets->add('jquery.ui.timepicker-lang', 'js/jquery/localization/jquery-ui-timepicker-'.Config::get('application.language').'.js');
 
 	//ckeditor and jquery adapter
 	$assets->add('ckeditor', 'js/ckeditor/ckeditor.js');
@@ -47,9 +45,6 @@ Route::filter('add_assets', function()
 
 	//plupload
 	$assets->add('plupload-js', 'js/plupload/js/plupload.full.js');
-	if (Config::get('application.language') != "en")
-		$assets->add('plupload-lang-js', 'js/plupload/js/i18n/'.Config::get('application.language').'.js');
-
 
 	//knockout
 	$assets->add('knockout', 'js/knockout/knockout-2.2.0.js');

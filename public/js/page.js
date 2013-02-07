@@ -6,7 +6,7 @@
 	$(function()
 	{
 		//set the menu hover and hoverout states
-		$menu = $('ul#menu, ul#lang_menu');
+		$menu = $('ul#menu');
 
 		$menu.find('li.menu').each(function()
 		{

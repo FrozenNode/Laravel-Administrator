@@ -121,7 +121,7 @@ abstract class Field {
 	public function __construct($field, $info, $config)
 	{
 		$this->type = $info['type'];
-		$this->title = \Admin\Libraries\ModelConfig::getValueLocalization($info, 'title', $field);
+		$this->title = array_get($info, 'title', $field);
 		//$this->editable = array_get($info, 'editable', $this->editable);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
@@ -458,5 +458,4 @@ abstract class Field {
 		//if we can't find the field, return an empty array
 		return $info;
 	}
-
 }

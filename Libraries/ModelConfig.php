@@ -114,8 +114,8 @@ class ModelConfig {
 	public function __construct($config)
 	{
 		//set the class properties for the items which we know to exist
-		$this->title = self::getValueLocalization($config, 'title');
-		$this->single = self::getValueLocalization($config, 'single');
+		$this->title = array_get($config, 'title');
+		$this->single = array_get($config, 'single');
 		$this->model = array_get($config, 'model');
 		$this->columns = array_get($config, 'columns');
 		$this->actions = array_get($config, 'actions');
@@ -193,7 +193,7 @@ class ModelConfig {
 		//if the title or single names are provided, throw an exception
 		if (!is_string(array_get($config, 'title')) || !is_string(array_get($config, 'single')))
 		{
-			throw new Exception("Administrator: " .  __('administrator::administrator.valid_title'));
+			throw new Exception("Administrator: You must provide a valid title and single name in each model's config");
 		}
 
 		//get an instance of the model
@@ -201,7 +201,7 @@ class ModelConfig {
 
 		if (!is_string($modelName))
 		{
-			throw new Exception("Administrator: " .  __('administrator::administrator.valid_model'));
+			throw new Exception("Administrator: You must provide a 'model' option in each model's config");
 		}
 
 		//grab an instance of the Eloquent model
@@ -210,13 +210,13 @@ class ModelConfig {
 		//check if the required columns array was provided
 		if (!is_array(array_get($config, 'columns')))
 		{
-			throw new Exception("Administrator: " .  __('administrator::administrator.valid_columns'));
+			throw new Exception("Administrator: You must provide a valid 'columns' array in each model's config");
 		}
 
 		//check if the edit fields array was provided
 		if (!is_array(array_get($config, 'edit_fields')))
 		{
-			throw new Exception("Administrator: " .  __('administrator::administrator.valid_edit'));
+			throw new Exception("Administrator: You must provide a valid 'edit_fields' array in each model's config");
 		}
 
 		//now we can instantiate the object
@@ -239,13 +239,13 @@ class ModelConfig {
 		//if the menu option isn't an array or if it doesn't have any values, throw an exception since it's a required option
 		if (!is_array($menu) || !sizeof($menu))
 		{
-			throw new Exception("Administrator: " .  __('administrator::administrator.valid_menu'));
+			throw new Exception("Administrator: You must provide a valid 'menu' option in the administrator.php config");
 		}
 
 		//if the model config path isn't a string or if the directory doesn't exist, throw an exception
 		if (!is_string($modelConfigPath) || !is_dir($modelConfigPath))
 		{
-			throw new Exception("Administrator: " .  __('administrator::administrator.config_path'));
+			throw new Exception("Administrator: You must provide a valid 'model_config_path' in the administrator.php config. The directory must also exist and be readable.");
 		}
 
 		//now we loop through the menu and try to find our guy
@@ -371,26 +371,10 @@ class ModelConfig {
 	public static function getMenu($configMenu = null)
 	{
 		$menu = array();
-		$is_menus = false;
 
 		if (!$configMenu)
 		{
-			//look for optional language menu defined like menu_en
-			$lang = Config::get('application.language');
-			$configMenu = Config::get('administrator.menu_' . $lang, null);
-
-			//look for optional language menu defined as menus
-			if (!$configMenu)
-			{
-				$configMenu = Config::get('administrator.menus', null);
-				if ($configMenu) $is_menus = true;
-			}
-
-			//set default menu config
-			if (!$configMenu)
-			{
-				$configMenu = Config::get('administrator::administrator.menu', null);
-			}
+			$configMenu = Config::get('administrator::administrator.menu', null);
 		}
 
 		//iterate over the menu to build the
@@ -410,50 +394,17 @@ class ModelConfig {
 						continue;
 					}
 
-					$menu[$item] = self::getValueLocalization($config, 'title');
+					$menu[$item] = array_get($config, 'title', $item);
 				}
 			}
 			//if the item is an array, recursively run this method on it
 			else if (is_array($item))
 			{
-				if ($is_menus)
-				{
-					$key_lang = (string)\Lang::line($key);
-					$menu[$key_lang] = static::getMenu($item);
-				}
-				else
-				{
-					$menu[$key] = static::getMenu($item);
-				}
+				$menu[$key] = static::getMenu($item);
 			}
 		}
 
 		return $menu;
-	}
-
-	/**
-	 * Gets the menu main title
-	 *
-	 * @return string
-	 */
-	public static function getMainTitle()
-	{
-		$lang = Config::get('application.language');
-
-		$title = Config::get('administrator.title_' . $lang, null);
-
-		if (!$title) {
-			$titles = Config::get('administrator.titles', null);
-			if ($titles) {
-				$title = (string)\Lang::line($titles);
-			}
-		}
-
-		if (!$title) {
-			$title = Config::get('administrator::administrator.title', null);
-		}
-
-		return $title;
 	}
 
 	/**
@@ -474,48 +425,4 @@ class ModelConfig {
 			return false;
 		}
 	}
-
-	/**
-	 * Gets the localized version of the value if there is any. First look for value_en,
-	 * where _en is replaced with current languge's tag. After look for values, and the
-	 * language line it stands for. After we look for the original value. If no success,
-	 * we return the given array default_value.
-	 *
-	 * @param array		$config
-	 * @param string	$value_name
-	 * @param array		$default_value
-	 *
-	 * @return string
-	 */
-	public static function getValueLocalization($config, $value_name, $default_value = array())
-	{
-		$lang = Config::get('application.language');
-
-		$value = array_get($config, $value_name, '');
-		$values = array_get($config, $value_name . 's', '');
-		$value_lang = array_get($config, $value_name . '_' . $lang, '');
-
-		if ($value_lang != '')
-		{
-			$return_value = $value_lang;
-		}
-		else if ($values != '')
-		{
-			if (\Lang::has($values))
-			{
-				$return_value = (string)\Lang::line($values);
-			}
-		}
-
-		if (!isset($return_value)) {
-			$return_value = $value;
-		}
-
-		if (!isset($return_value)) {
-			$return_value = $default_value;
-		}
-
-		return $return_value;
-	}
-
 }

@@ -82,9 +82,7 @@ class Image extends Field {
 
 		if (strpos($this->location, $replace) === 0)
 		{
-//			$this->displayUrl = \URL::to('/' . substr_replace($this->location, '', 0, strlen($replace)));
-			$language_code_clean_url = str_replace(\Url::to('/'), '/' . \Config::get('language') . '/', '');
-			$this->displayUrl = $language_code_clean_url . '/' . substr_replace($this->location, '', 0, strlen($replace));
+			$this->displayUrl = \URL::to('/' . substr_replace($this->location, '', 0, strlen($replace)));
 		}
 
 		//make sure the naming is one of the two accepted values
