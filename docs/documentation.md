@@ -1,6 +1,7 @@
 - Overview
     - [Introduction](/docs/introduction)
     - [Contributing](/docs/contributing)
+    - [Style Guide](/docs/style-guide)
     - [License](/docs/license)
 - Getting Started
     - [Installation](/docs/installation)
