@@ -335,7 +335,7 @@
 				editor = $element.ckeditorGet();
 
 			$element.html(value);
-			editor.setData(value);
+			editor.setData(value, null, true);
 		}
 	};
 
