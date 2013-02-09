@@ -23,23 +23,25 @@
 			@endif
 		@endforeach
 	</ul>
-	@if (count(Config::get('application.languages')) > 0)
-		<ul id="lang_menu">
-			<li class="menu">
-			<span>{{Config::get('application.language')}}</span>
-				@if (count(Config::get('application.languages')) > 1)
-					<ul>
-						@foreach (Config::get('application.languages') as $lang)
-							@if (Config::get('application.language') != $lang)
-								<li>
-									<a href="{{str_replace('/' . Config::get('application.language') . '/', '/' . $lang . '/', URL::full())}}">{{$lang}}</a>
-								</li>
-							@endif
-						@endforeach
-					</ul>
-				@endif
-			</li>
-		</ul>
-	@endif
-	<a href="{{URL::base()}}" id="back_to_site">{{__('administrator::administrator.backtosite')}}</a>
+	<div id="right_nav">
+		@if (count(Config::get('application.languages')) > 0)
+			<ul id="lang_menu">
+				<li class="menu">
+				<span>{{Config::get('application.language')}}</span>
+					@if (count(Config::get('application.languages')) > 1)
+						<ul>
+							@foreach (Config::get('application.languages') as $lang)
+								@if (Config::get('application.language') != $lang)
+									<li>
+										<a href="{{str_replace('/' . Config::get('application.language') . '/', '/' . $lang . '/', URL::full())}}">{{$lang}}</a>
+									</li>
+								@endif
+							@endforeach
+						</ul>
+					@endif
+				</li>
+			</ul>
+		@endif
+		<a href="{{URL::base()}}" id="back_to_site">{{__('administrator::administrator.backtosite')}}</a>
+	</div>
 </header>

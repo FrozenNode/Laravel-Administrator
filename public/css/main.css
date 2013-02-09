@@ -32,7 +32,8 @@ body h2 {
 body textarea, body input[type="text"], body input[type="password"], body input[type="datetime"], body input[type="datetime-local"], body input[type="date"], body input[type="month"], body input[type="time"], body input[type="week"], body input[type="number"], body input[type="email"], body input[type="url"], body input[type="search"], body input[type="tel"], body input[type="color"] {
   display:inline-block;
   vertical-align:middle;
-  height:18px ;
+  height:18px;
+  font-family:'Oxygen', sans-serif;
   -moz-box-shadow:inset 0px 1px 2px 1px #eeeeee;
   -webkit-box-shadow:inset 0px 1px 2px 1px #eeeeee;
   box-shadow:inset 0px 1px 2px 1px #eeeeee;
@@ -164,19 +165,22 @@ body label {
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #wrapper header ul#menu > li:first-child, #wrapper header ul#lang_menu > li:first-child { margin-left:0; }
-#wrapper header ul#lang_menu {
-  margin-left:20px;
-  border-left:1px solid #999999;
-  border-right:1px solid #999999;
-}
-#wrapper header a#back_to_site {
+#wrapper header div#right_nav {
   display:block;
   position:absolute;
   top:0;
   right:0;
+}
+#wrapper header div#right_nav ul#lang_menu {
+  display:inline-block;
+  border-right:1px solid #999999;
+}
+#wrapper header div#right_nav a#back_to_site {
+  display:inline-block;
+  margin-left:-3px;
   padding:9px 12px 8px;
 }
-#wrapper header a#back_to_site:hover {
+#wrapper header div#right_nav a#back_to_site:hover {
   background:#444444;
   background:-moz-linear-gradient(top,#444444 0%,#333333 100%);
   background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#333333),color-stop(100%,#333333));

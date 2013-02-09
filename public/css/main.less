@@ -133,22 +133,25 @@ body{
 			}
 		}
 
-		ul#lang_menu {
-			margin-left: 20px;
-			border-left:1px solid #999999;
-			border-right:1px solid #999999;
-		}
-
-
-		a#back_to_site {
+		div#right_nav {
 			display: block;
 			position: absolute;
 			top: 0;
 			right: 0;
-			@headerButtonPadding;
 
-			&:hover {
-				@verticalGradient(#444, #333);
+			ul#lang_menu {
+				display: inline-block;
+				border-right:1px solid #999999;
+			}
+
+			a#back_to_site {
+				display: inline-block;
+				margin-left: -3px;
+				@headerButtonPadding;
+
+				&:hover {
+					@verticalGradient(#444, #333);
+				}
 			}
 		}
 	}
