@@ -45,6 +45,9 @@ Route::filter('add_assets', function()
 
 	//plupload
 	$assets->add('plupload-js', 'js/plupload/js/plupload.full.js');
+	if (Config::get('application.language') != "en")
+		$assets->add('plupload-lang-js', 'js/plupload/js/i18n/'.Config::get('application.language').'.js');
+
 
 	//knockout
 	$assets->add('knockout', 'js/knockout/knockout-2.2.0.js');
