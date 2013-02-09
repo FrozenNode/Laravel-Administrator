@@ -38,7 +38,7 @@
 <style type="text/css">
 
 	div.item_edit form.edit_form select {
-		width: <?php echo $config->formWidth - 65 ?>px;
+		width: <?php echo $config->formWidth - 59 ?>px;
 	}
 
 	div.item_edit form.edit_form .cke {

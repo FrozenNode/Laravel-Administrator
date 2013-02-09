@@ -1,6 +1,9 @@
 ## Changelog
 
 ### 3.1.0
+- Bugfix: If a relationship has no value for a field, the previously-selected item's relationships will be cleared out
+- Bugfix: Bool field now doesn't revert back to false on edit if checked
+- Bugfix: CKEditor no longer has funny cursor behavior when editing
 - Bugfix: BelongsTo edit fields now load even if they aren't specified in the columns list
 - Bugfix: HasOne and HasMany relationship columns weren't being constructed properly
 
