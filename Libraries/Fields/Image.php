@@ -82,8 +82,17 @@ class Image extends Field {
 
 		if (strpos($this->location, $replace) === 0)
 		{
-			$this->displayUrl = \URL::to('/' . substr_replace($this->location, '', 0, strlen($replace)));
-		}
+			if (count(\Config::get('application.languages')) > 0)
+			{
+				// a nasty fix to correct url for the multi language version (beacuse we don't want to have the language code in image public url)
+				$language_code_clean_url = str_replace(\Url::to('/'), '/' . \Config::get('application.language') . '/', '');
+				$this->displayUrl = $language_code_clean_url . '/' . substr_replace($this->location, '', 0, strlen($replace));
+			}
+			else
+			{
+				$this->displayUrl = \URL::to('/' . substr_replace($this->location, '', 0, strlen($replace)));
+			}
+	}
 
 		//make sure the naming is one of the two accepted values
 		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
