@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 3.1.0
+- Image field originals can now be stored in any location (not just the public directory)
 - Bugfix: If a relationship has no value for a field, the previously-selected item's relationships will be cleared out
 - Bugfix: Bool field now doesn't revert back to false on edit if checked
 - Bugfix: CKEditor no longer has funny cursor behavior when editing

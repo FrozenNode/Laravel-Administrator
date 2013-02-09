@@ -9,6 +9,7 @@
 	var site_url = "<?php echo Url::to('/') ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
+		image_url = "<?php echo URL::to_route('admin_display_image', array($config->name)) ?>",
 		rows_per_page_url = "<?php echo URL::to_route('admin_rows_per_page', array($config->name)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",

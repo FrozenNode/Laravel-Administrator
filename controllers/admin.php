@@ -253,6 +253,27 @@ class Administrator_Admin_Controller extends Controller
 	}
 
 	/**
+	 * The GET method that displays an image field's image
+	 *
+	 * @param ModelConfig	$config
+	 *
+	 * @return Image
+	 */
+	public function action_display_image($config)
+	{
+		//get the stored path of the original
+		$path = Input::get('path');
+		$image = File::get($path);
+
+		$headers = array(
+			'Content-Type' => File::mime(File::extension($path)),
+			'Content-Length' => File::size($path),
+		);
+
+		return Response::make($image, 200, $headers);
+	}
+
+	/**
 	 * The POST method that runs when a user uploads an image on an image field
 	 *
 	 * @param ModelConfig	$config

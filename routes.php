@@ -48,6 +48,12 @@ Route::group(array('before' => 'validate_admin|validate_model|add_assets'), func
 		'as' => 'admin_update_options',
 		'uses' => 'administrator::admin@update_options'
 	));
+
+	//Display an image field's image
+	Route::get('(:bundle)/(:any)/image', array(
+		'as' => 'admin_display_image',
+		'uses' => 'administrator::admin@display_image'
+	));
 });
 
 //CSRF protection in forms
