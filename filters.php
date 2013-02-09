@@ -102,3 +102,7 @@ Route::filter('validate_model', function ()
 
 	Request::route()->parameters[0] = $config;
 });
+
+Route::filter('disable_profiler',function(){
+	Event::override('laravel.done', function(){});
+});
