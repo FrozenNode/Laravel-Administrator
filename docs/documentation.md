@@ -8,6 +8,7 @@
     - [Configuration](/docs/configuration)
     - [Model Configuration](/docs/model-configuration)
     - [Validation](/docs/validation)
+    - [Localization](/docs/localization)
     - [Tutorials](/docs/tutorials)
 - Columns
     - [Overview](/docs/columns)
