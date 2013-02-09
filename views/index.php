@@ -12,6 +12,7 @@
 		rows_per_page_url = "<?php echo URL::to_route('admin_rows_per_page', array($config->name)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
+		language = "<?php echo Config::get('application.language'); ?>",
 		adminData = {
 			primary_key: "<?php echo $primaryKey; ?>",
 			<?php if ($model) {?>
@@ -29,7 +30,8 @@
 			edit_fields: <?php echo json_encode($editFields['arrayFields']); ?>,
 			data_model: <?php echo json_encode($editFields['dataModel']); ?>,
 			column_model: <?php echo json_encode($config->columns['columns']); ?>,
-			action_permissions: <?php echo json_encode($config->actionPermissions); ?>
+			action_permissions: <?php echo json_encode($config->actionPermissions); ?>,
+			languages: <?php echo json_encode(Lang::file('administrator', Config::get('application.language'), 'knockout')); ?>
 		};
 </script>
 
