@@ -362,6 +362,7 @@
 						setTimeout(function()
 						{
 							ko.mapping.updateData(self, self.model, data);
+							window.admin.resizePage();
 						}, 50);
 					}
 				});
@@ -984,7 +985,6 @@
 
 			//resizing the window
 			$(window).resize(self.resizePage);
-			self.resizePage();
 
 			//set up the history event callback
 			History.Adapter.bind(window,'statechange',function() {
@@ -1088,7 +1088,7 @@
 				itemEditHeight = $('div.item_edit').height() + 50,
 				usedHeight = winHeight > itemEditHeight ? winHeight : itemEditHeight;
 
-			$('#admin_page').css({minHeight: usedHeight - 45});
+			$('#admin_page').css({minHeight: usedHeight});
 		}
 	};
 
