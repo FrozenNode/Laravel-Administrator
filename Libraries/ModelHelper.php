@@ -97,6 +97,11 @@ class ModelHelper {
 							$model->relationships = array();
 						}
 					}
+					//if there are no values, then just set an empty array
+					else
+					{
+						$model->{$field} = array();
+					}
 				}
 			}
 
