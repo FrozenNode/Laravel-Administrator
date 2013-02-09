@@ -13,11 +13,11 @@
 		rows_per_page_url = "<?php echo URL::to_route('admin_rows_per_page', array($config->name)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
-		language = "<?php echo Config::get('application.language'); ?>",
+		language = "<?php echo Config::get('application.language') ?>",
 		adminData = {
-			primary_key: "<?php echo $primaryKey; ?>",
+			primary_key: "<?php echo $primaryKey ?>",
 			<?php if ($model) {?>
-				id: <?php echo $model->exists ? $model->{$model::$key} : '0'; ?>,
+				id: <?php echo $model->exists ? $model->{$model::$key} : '0' ?>,
 			<?php } ?>
 			rows: <?php echo json_encode($rows) ?>,
 			rows_per_page: <?php echo $config->rowsPerPage ?>,
@@ -26,13 +26,13 @@
 			model_title: "<?php echo $config->title ?>",
 			model_single: "<?php echo $config->single ?>",
 			expand_width: <?php echo $config->formWidth ?>,
-			actions: <?php echo json_encode($config->actions); ?>,
-			filters: <?php echo json_encode($filters); ?>,
-			edit_fields: <?php echo json_encode($editFields['arrayFields']); ?>,
-			data_model: <?php echo json_encode($editFields['dataModel']); ?>,
-			column_model: <?php echo json_encode($config->columns['columns']); ?>,
-			action_permissions: <?php echo json_encode($config->actionPermissions); ?>,
-			languages: <?php echo json_encode(Lang::file('administrator', Config::get('application.language'), 'knockout')); ?>
+			actions: <?php echo json_encode($config->actions) ?>,
+			filters: <?php echo json_encode($filters) ?>,
+			edit_fields: <?php echo json_encode($editFields['arrayFields']) ?>,
+			data_model: <?php echo json_encode($editFields['dataModel']) ?>,
+			column_model: <?php echo json_encode($config->columns['columns']) ?>,
+			action_permissions: <?php echo json_encode($config->actionPermissions) ?>,
+			languages: <?php echo json_encode(Lang::file('administrator', Config::get('application.language'), 'knockout')) ?>
 		};
 </script>
 

@@ -1,4 +1,4 @@
-<h2><?php echo __('administrator::administrator.filters'); ?></h2>
+<h2><?php echo __('administrator::administrator.filters') ?></h2>
 <div class="panel_contents">
 
 	<!-- ko foreach: $root.filters -->
@@ -31,13 +31,14 @@
 
 		<!-- ko if: type === 'bool' -->
 			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: ['true', 'false'],
-															optionsCaption: '<?php echo __('administrator::administrator.all'); ?>'"></select>
+															optionsCaption: '<?php echo __('administrator::administrator.all') ?>'"></select>
 		<!-- /ko -->
 
 		<!-- ko if: type === 'enum' -->
-			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: options, optionsCaption: '<?php echo __('administrator::administrator.all'); ?>',
-															optionsValue: function(item) {return item.value},
-															optionsText: function(item) {return item.text}"></select>
+			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: options,
+										optionsCaption: '<?php echo __('administrator::administrator.all') ?>',
+										optionsValue: function(item) {return item.value},
+										optionsText: function(item) {return item.text}"></select>
 		<!-- /ko -->
 
 		<!-- ko if: type === 'date' -->
@@ -68,13 +69,13 @@
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.all'); ?>'"></select>
+													optionsCaption: '<?php echo __('administrator::administrator.all') ?>'"></select>
 			<!-- /ko -->
 			<!-- ko ifnot: autocomplete -->
 			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.all'); ?>'"></select>
+													optionsCaption: '<?php echo __('administrator::administrator.all') ?>'"></select>
 			<!-- /ko -->
 		<!-- /ko -->
 

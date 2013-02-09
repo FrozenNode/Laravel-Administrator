@@ -177,14 +177,14 @@
 			actions: [],
 
 			/* Holds the per-action permissions
-			 * array
+			 * object
 			 */
 			actionsPermissions: {},
 
 			/* The languages array holds text for the current language
-			 * array
+			 * object
 			 */
-			languages: ko.observableArray(),
+			languages: {},
 
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
