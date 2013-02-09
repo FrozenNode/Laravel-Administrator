@@ -23,6 +23,5 @@
 			@endif
 		@endforeach
 	</ul>
-
-	<a href="{{URL::base()}}" id="back_to_site">Back to Site</a>
+	<a href="{{URL::base()}}" id="back_to_site">{{__('administrator::administrator.backtosite')}}</a>
 </header>

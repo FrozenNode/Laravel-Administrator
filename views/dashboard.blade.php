@@ -1,5 +1,5 @@
 <div id="dashboard">
-	<h2>Dashboard</h2>
+	<h2>{{ __('administrator::administrator.dashboard') }}</h2>
 
 	<ul class="models">
 		@foreach ($menu as $key => $item)

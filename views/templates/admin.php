@@ -2,17 +2,17 @@
 	<div class="results_header">
 		<h2 data-bind="text: modelTitle"></h2>
 		<div class="paginator">
-			<input type="button" value="prev" data-bind="attr: {disabled: pagination.isFirst() || !pagination.last() }, click: function() {page('prev')}" />
-			<input type="button" value="next" data-bind="attr: {disabled: pagination.isLast() || !pagination.last() }, click: function() {page('next')}" />
+			<input type="button" value="<?php echo __('administrator::administrator.previous'); ?>" data-bind="attr: {disabled: pagination.isFirst() || !pagination.last() }, click: function() {page('prev')}" />
+			<input type="button" value="<?php echo __('administrator::administrator.next'); ?>" data-bind="attr: {disabled: pagination.isLast() || !pagination.last() }, click: function() {page('next')}" />
 			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 }, value: pagination.page" />
-			<span data-bind="text: 'of ' + pagination.last()"></span>
+			<span data-bind="text: ' / ' + pagination.last()"></span>
 		</div>
 		<div class="per_page">
 			<select data-bind="value: rowsPerPage, chosen: true, options: rowsPerPageOptions"></select>
-			<span> items per page</span>
+			<span> <?php echo __('administrator::administrator.itemsperpage'); ?></span>
 		</div>
 		<!-- ko if: actionPermissions.create -->
-			<a class="new_item" data-bind="attr: {href: base_url + modelName() + '/new'}, text: 'New ' + modelSingle()"></a>
+			<a class="new_item" data-bind="attr: {href: base_url + modelName() + '/new'}, text: '<?php echo __('administrator::administrator.new'); ?> ' + modelSingle()"></a>
 		<!-- /ko -->
 	</div>
 	<table class="results" border="0" cellspacing="0" id="customers" cellpadding="0">
@@ -47,11 +47,11 @@
 	</table>
 
 	<div class="loading_rows" data-bind="visible: loadingRows">
-		<div>Loading...</div>
+		<div><?php echo __('administrator::administrator.loading'); ?></div>
 	</div>
 
 	<div class="no_results" data-bind="visible: pagination.last() === 0">
-		<div>No Results</div>
+		<div><?php echo __('administrator::administrator.noresults'); ?></div>
 	</div>
 </div>
 

@@ -1,4 +1,4 @@
-<h2>Filters</h2>
+<h2><?php echo __('administrator::administrator.filters'); ?></h2>
 <div class="panel_contents">
 
 	<!-- ko foreach: $root.filters -->
@@ -23,7 +23,7 @@
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, number: {decimals: decimals, key: field,
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, number: {decimals: decimals, key: field,
 																					thousandsSeparator: thousandsSeparator,
 																					decimalSeparator: decimalSeparator}" />
@@ -31,31 +31,31 @@
 
 		<!-- ko if: type === 'bool' -->
 			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: ['true', 'false'],
-															optionsCaption: 'All'"></select>
+															optionsCaption: '<?php echo __('administrator::administrator.all'); ?>'"></select>
 		<!-- /ko -->
 
 		<!-- ko if: type === 'enum' -->
-			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: options, optionsCaption: 'All',
+			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: options, optionsCaption: '<?php echo __('administrator::administrator.all'); ?>',
 															optionsValue: function(item) {return item.value},
 															optionsText: function(item) {return item.text}"></select>
 		<!-- /ko -->
 
 		<!-- ko if: type === 'date' -->
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, datepicker: {dateFormat: date_format}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, datepicker: {dateFormat: date_format}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'time' -->
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, timepicker: {timeFormat: time_format}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, timepicker: {timeFormat: time_format}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'datetime' -->
 			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
-			<span>to</span>
+			<span>-</span>
 			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 		<!-- /ko -->
@@ -68,13 +68,13 @@
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: 'All'"></select>
+													optionsCaption: '<?php echo __('administrator::administrator.all'); ?>'"></select>
 			<!-- /ko -->
 			<!-- ko ifnot: autocomplete -->
 			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: $root.listOptions[field],
 													optionsValue: function(item) {return item.id},
 													optionsText: function(item) {return item[name_field]},
-													optionsCaption: 'All'"></select>
+													optionsCaption: '<?php echo __('administrator::administrator.all'); ?>'"></select>
 			<!-- /ko -->
 		<!-- /ko -->
 
