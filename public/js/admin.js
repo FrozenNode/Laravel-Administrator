@@ -747,7 +747,6 @@
 			ko.applyBindings(this.viewModel, $('#main_content')[0]);
 			ko.applyBindings(this.filtersViewModel, $('#filters_sidebar_section')[0]);
 
-
 			//set up pushstate history
 			this.initHistory();
 
@@ -977,6 +976,9 @@
 				History.pushState({modelName: self.viewModel.modelName(), id: 0}, null, route + self.viewModel.modelName() + '/new');
 			});
 
+			//resizing the window
+			$(window).resize(self.resizePage);
+			self.resizePage();
 
 			//set up the history event callback
 			History.Adapter.bind(window,'statechange',function() {
@@ -1069,6 +1071,18 @@
 			}
 
 			return size;
+		},
+
+		/**
+		 * Handles a window resize to make sure the admin area is always
+		 */
+		resizePage: function()
+		{
+			var winHeight = $(window).height(),
+				itemEditHeight = $('div.item_edit').height() + 50,
+				usedHeight = winHeight > itemEditHeight ? winHeight : itemEditHeight;
+
+			$('#admin_page').css({minHeight: usedHeight - 45});
 		}
 	};
 
