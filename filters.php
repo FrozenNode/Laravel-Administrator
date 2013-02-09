@@ -35,6 +35,7 @@ Route::filter('add_assets', function()
 
 	//jquery timepicker addon
 	$assets->add('jquery.ui.timepicker', 'js/jquery/jquery-ui-timepicker-addon.js');
+	$assets->add('jquery.ui.timepicker-lang', 'js/jquery/localization/jquery-ui-timepicker-'.Config::get('application.language').'.js');
 
 	//ckeditor and jquery adapter
 	$assets->add('ckeditor', 'js/ckeditor/ckeditor.js');
