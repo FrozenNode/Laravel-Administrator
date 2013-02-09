@@ -246,7 +246,9 @@
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
 			var limit = valueAccessor(),
-				val = allBindingsAccessor().value() + '';
+				val = allBindingsAccessor().value();
+
+			val = val === null ? '' : val + '';
 
 			if (!limit || val === null)
 				return;
@@ -266,7 +268,9 @@
 		{
 			var options = valueAccessor(),
 				limit = options.limit,
-				val = options.value() + '';
+				val = options.value();
+
+			val = val === null ? '' : val + '';
 
 			//if the limit is zero, there is no limit
 			if (!limit)
