@@ -32,6 +32,7 @@ Route::filter('add_assets', function()
 
 	//jquery ui
 	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');
+	$assets->add('jquery.ui-lang', 'js/jquery/i18n/jquery.ui.datepicker-'.Config::get('application.language').'.js');
 
 	//jquery timepicker addon
 	$assets->add('jquery.ui.timepicker', 'js/jquery/jquery-ui-timepicker-addon.js');
