@@ -220,6 +220,7 @@ body label {
   position:relative;
 }
 #admin_page div#sidebar div.panel_contents > div select { width:225px; }
+#admin_page div#sidebar div.panel_contents > div ul.chzn-choices { border:1px solid #cccccc; }
 #admin_page div#sidebar div.panel_contents > div div.loader {
   position:absolute;
   top:26px;
@@ -231,7 +232,7 @@ body label {
   filter:1;
   opacity:0.3;
 }
-#admin_page div#sidebar div.panel_contents > div.min_max input[type=text] { width:90px; }
+#admin_page div#sidebar div.panel_contents > div.min_max input[type=text] { width:87px; }
 #admin_page div#sidebar div.panel_contents > div.min_max span.symbol {
   position:absolute;
   top:27px;
@@ -406,7 +407,7 @@ body label {
 #admin_page #content div.table_container table.results tr.result:hover { outline:1px solid #dddddd; }
 #admin_page #content div.table_container div.loading_rows {
   position:absolute;
-  top:60px;
+  top:51px;
   left:0;
   right:0;
   bottom:0;
@@ -484,7 +485,11 @@ body label {
   filter:1;
   opacity:0.3;
 }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div select, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div textarea, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div input { margin-bottom:0; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div select, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div textarea, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div input {
+  margin-bottom:0;
+  vertical-align:top;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div ul.chzn-choices { border:1px solid #cccccc; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.characters_left {
   position:absolute;
   top:1px;
@@ -498,11 +503,18 @@ body label {
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key { margin-right:100px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.bool label { display:inline-block; }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.preview {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown { padding-bottom:10px; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container { position:relative; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container div.preview {
   display:inline-block;
   margin-left:10px;
+  height:100%;
+  vertical-align:top;
+  overflow-y:auto;
+  padding:4px 0 5px;
 }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.preview p { margin-bottom:7px; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container div.preview p { margin-bottom:7px; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container textarea { height:100%; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_upload_container { padding:4px 0; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_upload_container div.uploader {
   background:url(../img/upload.png) no-repeat;

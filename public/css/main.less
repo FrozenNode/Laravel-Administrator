@@ -214,6 +214,10 @@ body{
 					width: 225px;
 				}
 
+				ul.chzn-choices {
+					border: 1px solid #cccccc;
+				}
+
 				div.loader {
 					position: absolute;
 					top: 26px;
@@ -227,7 +231,7 @@ body{
 				&.min_max {
 
 					input[type=text] {
-						width: 90px;
+						width: 87px;
 					}
 
 					span.symbol {
@@ -408,7 +412,7 @@ body{
 
 			div.loading_rows {
 				position: absolute;
-				top: 60px;
+				top: 51px;
 				left: 0;
 				right: 0;
 				bottom: 0;
@@ -496,6 +500,11 @@ body{
 
 						select, textarea, input {
 							margin-bottom:0;
+							vertical-align: top;
+						}
+
+						ul.chzn-choices {
+							border: 1px solid #cccccc;
 						}
 
 						div.characters_left {
@@ -524,12 +533,26 @@ body{
 						}
 
 						&.markdown {
-							div.preview {
-								display: inline-block;
-								margin-left: 10px;
+							padding-bottom: 10px;
 
-								p {
-									margin-bottom: 7px;
+							div.markdown_container {
+								position: relative;
+
+								div.preview {
+									display: inline-block;
+									margin-left: 10px;
+									height: 100%;
+									vertical-align: top;
+									overflow-y: auto;
+									padding: 4px 0 5px;
+
+									p {
+										margin-bottom: 7px;
+									}
+								}
+
+								textarea {
+									height: 100%;
 								}
 							}
 

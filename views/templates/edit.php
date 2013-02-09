@@ -47,11 +47,12 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'markdown' -->
-				<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
-				<textarea data-bind="attr: {disabled: $root.freezeForm, id: field_id}, characterLimit: limit,
-																value: $root[field], valueUpdate: 'afterkeydown',
-																style: {height: height + 'px'}"></textarea>
-				<div class="preview" data-bind="markdown: $root[field]"></div>
+				<div class="markdown_container" data-bind="style: {height: height + 'px'}">
+					<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
+					<textarea data-bind="attr: {disabled: $root.freezeForm, id: field_id}, characterLimit: limit,
+																	value: $root[field], valueUpdate: 'afterkeydown'"></textarea>
+					<div class="preview" data-bind="markdown: $root[field]"></div>
+				</div>
 			<!-- /ko -->
 
 			<!-- ko if: type === 'belongs_to' -->
