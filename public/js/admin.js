@@ -763,6 +763,9 @@
 			//set up the events
 			this.initEvents();
 
+			//run an initial page resize
+			this.resizePage();
+
 			return this;
 		},
 
@@ -1086,7 +1089,7 @@
 		{
 			var winHeight = $(window).height(),
 				itemEditHeight = $('div.item_edit').height() + 50,
-				usedHeight = winHeight > itemEditHeight ? winHeight : itemEditHeight;
+				usedHeight = winHeight > itemEditHeight ? winHeight - 45 : itemEditHeight;
 
 			$('#admin_page').css({minHeight: usedHeight});
 		}
