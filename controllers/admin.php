@@ -249,7 +249,7 @@ class Administrator_Admin_Controller extends Controller
 		$selectedItems = Input::get('selectedItems', false);
 
 		//return the rows
-		return Response::json(ModelHelper::updateRelationshipOptions($config->model, $field, $type, $constraints, $selectedItems, $term));
+		return Response::json(ModelHelper::updateRelationshipOptions($config, $field, $type, $constraints, $selectedItems, $term));
 	}
 
 	/**
