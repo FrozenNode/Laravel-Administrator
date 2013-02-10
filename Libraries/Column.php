@@ -25,6 +25,13 @@ class Column {
 	public $title;
 
 	/**
+	 * The column info
+	 *
+	 * @var string
+	 */
+	public $info;
+
+	/**
 	 * The sort field that the column will use if it is sortable
 	 *
 	 * @var string
@@ -110,6 +117,7 @@ class Column {
 		//set the values
 		$this->field = $field;
 		$this->title = array_get($column, 'title', $field);
+		$this->info = array_get($column, 'info', $field);
 		$this->sort_field = array_get($column, 'sort_field', $field);
 		$this->sortable = array_get($column, 'sortable', $this->sortable);
 		$this->relationship = array_get($column, 'relationship');
@@ -143,6 +151,7 @@ class Column {
 		$column = array
 		(
 			'title' => array_get($column, 'title', $field),
+			'info' => array_get($column, 'info', ''),
 			'sort_field' => array_get($column, 'sort_field', $field),
 			'relationship' => array_get($column, 'relationship'),
 			'select' => array_get($column, 'select'),
@@ -358,6 +367,7 @@ class Column {
 		return array(
 			'field' => $this->field,
 			'title' => $this->title,
+			'info' => $this->info,
 			'sort_field' => $this->sort_field,
 			'relationship' => $this->relationship,
 			'select' => $this->select,

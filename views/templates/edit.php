@@ -19,7 +19,7 @@
 	<!-- ko foreach: editFields -->
 		<!-- ko if: $data && ( $root[$root.primaryKey]() || editable ) -->
 			<div data-bind="attr: {class: type}">
-				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
+				<label data-bind="attr: {for: field_id<?php if (Config::get('administrator::administrator.tooltip')) echo ", title: info" ?>}, text: title + ':'"></label>
 
 			<!-- ko if: type === 'text' -->
 				<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>

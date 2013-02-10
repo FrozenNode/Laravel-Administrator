@@ -14,6 +14,7 @@
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		language = "<?php echo Config::get('application.language') ?>",
+		tooltip = "<?php if (is_string(Config::get('administrator::administrator.tooltip'))) echo Config::get('administrator::administrator.tooltip'); else echo 'default'; ?>",
 		adminData = {
 			primary_key: "<?php echo $primaryKey ?>",
 			<?php if ($model) {?>

@@ -62,4 +62,16 @@ return array(
 	 */
 	'global_rows_per_page' => 20,
 
+	/**
+	 * Set tooltip to show additional tooltip style info of field, defined as 'info' in config model:
+	 * - false: show no tooltip
+	 * - true: shows basic html title tooltip for 'info' config property
+	 * - 'administrator': shows basic administrator jQueryUI tooltip
+	 * - '(:string)': shows costum jQueryUI tooltip defined in /public/js/tooltip.js as 'tooltip' case
+	 * - 'default': shows default jQueryUI tooltip, also a fallback to unrecognized string value
+	 *
+	 * @type boolean|string
+	 */
+	'tooltip' => false,
+
 );
