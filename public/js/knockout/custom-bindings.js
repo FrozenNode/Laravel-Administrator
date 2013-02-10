@@ -63,7 +63,7 @@
 	ko.bindingHandlers.chosen = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			$(element).chosen();
+			$(element).chosen({no_results_text: adminData.languages['no_results'], placeholder_text: adminData.languages['select_options']});
 
 			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
 		}
