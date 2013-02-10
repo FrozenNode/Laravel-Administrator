@@ -3,7 +3,7 @@
 
 	<!-- ko foreach: $root.filters -->
 		<div data-bind="attr: {class: type + ' ' + (minMax ? 'min_max' : '')}">
-			<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
+			<label data-bind="attr: {for: field_id<?php if (Config::get('administrator::administrator.tooltip')) echo ", title: info" ?>}, text: title + ':'"></label>
 
 		<!-- ko if: type === 'key' -->
 			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />

@@ -23,7 +23,7 @@
 		<thead>
 			<tr>
 				<!-- ko foreach: columns -->
-					<th data-bind="css: {sortable: sortable,
+					<th data-bind="<?php if (Config::get('administrator::administrator.tooltip')) echo "attr: {title: info}, " ?>css: {sortable: sortable,
 											'sorted-asc': field == $root.sortOptions.field() && $root.sortOptions.direction() === 'asc',
 											'sorted-desc': field == $root.sortOptions.field() && $root.sortOptions.direction() === 'desc'}">
 						<!-- ko if: sortable -->

@@ -83,6 +83,13 @@ abstract class Field {
 	public $title = '';
 
 	/**
+	 * Text information describing the given field
+	 *
+	 * @var string
+	 */
+	public $info = '';
+
+	/**
 	 * The value (used in filter)
 	 *
 	 * @var string
@@ -122,6 +129,7 @@ abstract class Field {
 	{
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
+		$this->info = array_get($info, 'info', '');
 		//$this->editable = array_get($info, 'editable', $this->editable);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
@@ -260,6 +268,7 @@ abstract class Field {
 			'type' => $this->type,
 			'field' => $this->field,
 			'title' => $this->title,
+			'info' => $this->info,
 			'value' => $this->value,
 			'minMax' => $this->minMax,
 			'minValue' => $this->minValue,
