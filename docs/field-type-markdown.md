@@ -5,7 +5,7 @@
 <a name="usage"></a>
 ## Usage
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-markdown.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-markdown.png" />
 
 The `markdown` field type should be any text-like type in your database.
 

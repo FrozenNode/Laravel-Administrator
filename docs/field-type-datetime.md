@@ -6,7 +6,7 @@
 <a name="usage"></a>
 ## Usage
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-datetime.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-datetime.png" />
 
 The `datetime` field type should be a DATETIME type in your database.
 
@@ -26,6 +26,6 @@ The `time_format` option lets you define how the time is displayed. This uses th
 <a name="filter"></a>
 ## Filter
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-datetime-filter.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-datetime-filter.png" />
 
 The `datetime` field filter comes with a start and end datetime. This allows you to narrow down the result set to a range, set only a minimum datetime, or set only a maximum datetime.

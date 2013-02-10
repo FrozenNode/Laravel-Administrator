@@ -6,7 +6,7 @@
 <a name="usage"></a>
 ## Usage
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-number.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-number.png" />
 
 The `number` field type should be a numeric type in your database.
 
@@ -32,6 +32,6 @@ The `decimal_separator` option lets you define the character to use as a decimal
 <a name="filter"></a>
 ## Filter
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-number-filter.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-number-filter.png" />
 
 The `number` filter comes with a minimum and maximum value. This lets you either set a maximum and a minimum to narrow the result set to a range, only a minimum, or only a maximum.
