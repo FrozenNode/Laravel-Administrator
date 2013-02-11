@@ -16,7 +16,7 @@ Relationship field types allow you to manage the `belongs_to` and `has_many_and_
 <a name="belongs-to"></a>
 ## Belongs To
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-relation-single.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single.png" />
 
 	'user' => array(
 		'type' => 'relationship',
@@ -37,14 +37,14 @@ The `name_field` option lets you define which column on the other table will be 
 <a name="belongs-to-filter"></a>
 ## Belongs To Filter
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-relation-single-filter.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single-filter.png" />
 
 The `belongs_to` filter lets you filter a result set for items that are related to the selection you make.
 
 <a name="has-many-and-belongs-to"></a>
 ## Has Many And Belongs To
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-relation-multi.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi.png" />
 
 	'actors' => array(
 		'type' => 'relationship',
@@ -67,7 +67,7 @@ With this setup, the user will be presented with a multi-select field to choose 
 <a name="has-many-and-belongs-to-filter"></a>
 ## Has Many And Belongs To Filter
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-relation-multi-filter.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi-filter.png" />
 
 The `has_many_and_belongs_to` filter lets you filter a result set for items that are related to the selection you make. This is an inclusive filter, not a progressively exclusive filter.
 

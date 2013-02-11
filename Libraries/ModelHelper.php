@@ -97,6 +97,11 @@ class ModelHelper {
 							$model->relationships = array();
 						}
 					}
+					//if there are no values, then just set an empty array
+					else
+					{
+						$model->{$field} = array();
+					}
 				}
 			}
 
@@ -134,7 +139,7 @@ class ModelHelper {
 		}
 
 		//otherwise throw an exception
-		throw new Exception("Administrator: " . $className . " is not an Eloquent model");
+		throw new Exception("Administrator: " . $className  .  __('administrator::administrator.not_eloquent'));
 	}
 
 

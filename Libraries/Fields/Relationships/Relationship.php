@@ -109,7 +109,7 @@ abstract class Relationship extends Field {
 		parent::__construct($field, $info, $config);
 
 		//put the model into a variable so we can call it statically
-		$model = $config->model;
+		$model = is_a($config, 'Admin\\Libraries\\ModelConfig') ? $config->model : $config;
 
 		//get an instance of the relationship object
 		$relationship = $model->{$field}();

@@ -29,6 +29,7 @@ class Text extends Field {
 		parent::__construct($field, $info, $config);
 
 		$this->limit = array_get($info, 'limit', $this->limit);
+		$this->height = array_get($info, 'height', $this->height);
 	}
 
 	/**

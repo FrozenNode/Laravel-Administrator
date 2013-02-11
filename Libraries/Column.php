@@ -334,6 +334,17 @@ class Column {
 			$return['includedColumns'][$model::$key] = $model->table().'.'.$model::$key;
 		}
 
+		//make sure any belongs_to fields that aren't on the columns list are included
+		$editFields = Field::getEditFields($config);
+
+		foreach ($editFields['objectFields'] as $field => $info)
+		{
+			if (is_a($info, 'Admin\\Libraries\\Fields\\Relationships\\BelongsTo'))
+			{
+				$return['includedColumns'][$info->foreignKey] = $model->table().'.'.$info->foreignKey;
+			}
+		}
+
 		return $return;
 	}
 
