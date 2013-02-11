@@ -312,22 +312,12 @@
 		init: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			var value = ko.utils.unwrapObservable(valueAccessor()),
-				//cacheName = options.field + '_ckeditor',
 				$element = $(element);
 
 			$element.html(value);
 			$element.ckeditor({ language : language });
 
 			var editor = $element.ckeditorGet();
-
-			//handle edits made in the editor
-			editor.on('change', function (e)
-			{
-				if (ko.isWriteableObservable(this))
-				{
-					this($(e.listenerData).val());
-				}
-			}, valueAccessor(), element);
 
 			//destroy the existing editor if the DOM node is removed
 			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
@@ -336,6 +326,16 @@
 				if (existingEditor)
 					existingEditor.destroy(true);
 			});
+
+			//wire up the blur event to ensure our observable is properly updated
+			editor.focusManager.blur = function()
+			{
+				var observable = valueAccessor();
+
+				observable($element.val());
+			}
+
+			editor.setData(value);
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
@@ -345,7 +345,7 @@
 				editor = $element.ckeditorGet();
 
 			$element.html(value);
-			editor.setData(value, null, true);
+			editor.setData(value);
 		}
 	};
 
