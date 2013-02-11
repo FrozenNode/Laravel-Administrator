@@ -28,7 +28,7 @@
 																			valueUpdate: 'afterkeydown', characterLimit: limit" />
 				<!-- /ko -->
 				<!-- ko ifnot: editable -->
-					<div data-bind="text: $root[field]()"></div>
+					<div class="uneditable" data-bind="text: $root[field]()"></div>
 				<!-- /ko -->
 			<!-- /ko -->
 
@@ -40,28 +40,38 @@
 																		style: {height: height + 'px'}"></textarea>
 				<!-- /ko -->
 				<!-- ko ifnot: editable -->
-					<div data-bind="text: $root[field]()"></div>
+					<div class="uneditable" data-bind="text: $root[field]"></div>
 				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'wysiwyg' -->
-				<textarea data-bind="attr: {disabled: $root.freezeForm, id: field_id}, wysiwyg: $root[field]"></textarea>
+				<!-- ko if: editable -->
+					<textarea data-bind="attr: {disabled: $root.freezeForm, id: field_id}, wysiwyg: $root[field]"></textarea>
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="html: $root[field]"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'markdown' -->
-				<div class="markdown_container" data-bind="style: {height: height + 'px'}">
-					<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
-					<textarea data-bind="attr: {disabled: $root.freezeForm, id: field_id}, characterLimit: limit,
-																	value: $root[field], valueUpdate: 'afterkeydown'"></textarea>
-					<div class="preview" data-bind="markdown: $root[field]"></div>
-				</div>
+				<!-- ko if: editable -->
+					<div class="markdown_container" data-bind="style: {height: height + 'px'}">
+						<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
+						<textarea data-bind="attr: {disabled: $root.freezeForm, id: field_id}, characterLimit: limit,
+																		value: $root[field], valueUpdate: 'afterkeydown'"></textarea>
+						<div class="preview" data-bind="markdown: $root[field]"></div>
+					</div>
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="markdown: $root[field]"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'belongs_to' -->
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
-				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions(), id: field_id}, value: $root[field],
+				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id}, value: $root[field],
 													ajaxChosen: {field: field, type: 'edit'},
 													options: $root.listOptions[field],
 													optionsValue: function(item) {return item[column]},
@@ -70,8 +80,8 @@
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions(), id: field_id}, value: $root[field], chosen: true,
-													options: $root.listOptions[field],
+				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id}, value: $root[field],
+													chosen: true, options: $root.listOptions[field],
 													optionsValue: function(item) {return item[column]},
 													optionsText: function(item) {return item[name_field]},
 													optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
@@ -82,7 +92,7 @@
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
-				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions(), id: field_id},
+				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
 													ajaxChosen: {field: field, type: 'edit'},
 													selectedOptions: $root[field], options: $root.listOptions[field],
 													optionsValue: function(item) {return item[foreignKey]},
@@ -90,23 +100,35 @@
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions(), id: field_id}, chosen: true,
-													selectedOptions: $root[field], options: $root.listOptions[field],
+				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+													chosen: true, selectedOptions: $root[field], options: $root.listOptions[field],
 													optionsValue: function(item) {return item[foreignKey]},
 													optionsText: function(item) {return item[name_field]} "></select>
 				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'number' -->
-				<span class="symbol" data-bind="text: symbol"></span>
-				<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
-																	number: {decimals: decimals, key: field,
-																			thousandsSeparator: thousandsSeparator,
-																			decimalSeparator: decimalSeparator}" />
+				<!-- ko if: editable -->
+					<span class="symbol" data-bind="text: symbol"></span>
+					<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+												number: {decimals: decimals, key: field, thousandsSeparator: thousandsSeparator,
+														decimalSeparator: decimalSeparator}" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<span data-bind="text: symbol"></span>
+					<span class="uneditable" data-bind="value: $root[field], number: {decimals: decimals, key: field,
+																					thousandsSeparator: thousandsSeparator,
+																					decimalSeparator: decimalSeparator}"></span>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'bool' -->
-				<input type="checkbox" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, bool: field, checked: $root[field]" />
+				<!-- ko if: editable -->
+					<input type="checkbox" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, bool: field, checked: $root[field]" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<span data-bind="text: $root[field]() ? 'yes' : 'no'"></span>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
@@ -117,18 +139,34 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->
-				<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
-																			datepicker: {dateFormat: date_format}" />
+				<!-- ko if: editable -->
+					<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+																				datepicker: {dateFormat: date_format}" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="formatDate: {dateFormat: date_format, value: $root[field]()}"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'time' -->
-				<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+				<!-- ko if: editable -->
+					<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
 																			timepicker: {timeFormat: time_format}" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="formatTime: {timeFormat: time_format, value: $root[field]()}"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'datetime' -->
-				<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+				<!-- ko if: editable -->
+					<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
 																		datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="formatDateTime: {timeFormat: time_format, dateFormat: date_format,
+																		value: $root[field]()}"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'image' -->

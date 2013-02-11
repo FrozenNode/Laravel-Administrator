@@ -2,6 +2,7 @@
 
 ### 3.1.0
 - Localization support! Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this
+- New editable option for most edit fields lets you disable field editing
 - Image field originals can now be stored in any location (not just the public directory)
 - Bugfix: If a relationship has no value for a field, the previously-selected item's relationships will be cleared out
 - Bugfix: Bool field now doesn't revert back to false on edit if checked

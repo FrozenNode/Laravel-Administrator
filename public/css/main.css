@@ -540,6 +540,8 @@ body label {
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key { margin-right:100px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.bool label { display:inline-block; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.uneditable { margin-right:32px; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.uneditable p { margin-bottom:7px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown { padding-bottom:10px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container { position:relative; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container div.preview {

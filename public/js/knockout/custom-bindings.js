@@ -167,7 +167,8 @@
 		{
 			var options = valueAccessor(),
 				value = allBindingsAccessor().value(),
-				floatVal;
+				floatVal,
+				$element = $(element);
 
 			//if this is a null or false value, run a parseFloat on it so we can check for isNaN later
 			if (value === null || value === false)
@@ -185,13 +186,23 @@
 			{
 				if (value !== '')
 				{
-					$(element).val('');
+					//if this is an uneditable field, set the text
+					if ($element.hasClass('uneditable'))
+						$element.text('');
+					//otherwise we know it's an input
+					else
+						$element.val('');
 				}
 			}
 			//else set up the value up using the accounting library with the user-supplied separators
 			else
 			{
-				$(element).val(accounting.formatMoney(floatVal, "", options.decimals, options.thousandsSeparator, options.decimalSeparator));
+				//if this is an uneditable field, set the text
+				if ($element.hasClass('uneditable'))
+					$element.text(accounting.formatMoney(floatVal, "",options.decimals, options.thousandsSeparator, options.decimalSeparator));
+				//otherwise we know it's an input
+				else
+					$element.val(accounting.formatMoney(floatVal, "", options.decimals, options.thousandsSeparator, options.decimalSeparator));
 			}
 		}
 	};
@@ -211,16 +222,55 @@
 	};
 
 	/**
+	 * The formatDate binding transforms a date string into a formatted date
+	 */
+	ko.bindingHandlers.formatDate = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var options = valueAccessor(),
+				dateVal = options.value.length === 10 ? options.val + ' 00:00' : options.val;
+
+			$(element).text($.datepicker.formatDate(options.dateFormat, new Date(options.value)));
+		}
+	};
+
+	/**
 	 * The timepicker binding makes sure the jQuery UI timepicker is set for this item
 	 */
 	ko.bindingHandlers.timepicker = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			var options = valueAccessor();
+			var options = valueAccessor(),
+				val = allBindingsAccessor().value(),
+				date = new Date('01/01/2013 ' + val),
+				timeObject = {
+					hour: date.getHours(),
+					minute: date.getMinutes()
+				};
+
+			if (val)
+				$(element).val($.datepicker.formatTime(options.timeFormat, timeObject));
 
 			$(element).timepicker({
 				timeFormat: options.timeFormat
 			});
+		}
+	};
+
+	/**
+	 * The formatTime binding transforms a time string into a formatted time
+	 */
+	ko.bindingHandlers.formatTime = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var options = valueAccessor(),
+				date = new Date('01/01/2012 ' + options.value),
+				timeObject = {
+					hour: date.getHours(),
+					minute: date.getMinutes()
+				};
+
+			$(element).text($.datepicker.formatTime(options.timeFormat, timeObject));
 		}
 	};
 
@@ -230,12 +280,50 @@
 	ko.bindingHandlers.datetimepicker = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			var options = valueAccessor();
+			var options = valueAccessor(),
+				val = allBindingsAccessor().value(),
+				date = new Date(val),
+				timeObject = {
+					hour: date.getHours(),
+					minute: date.getMinutes()
+				};
+
+			if (val && !isNaN(date.getHours()))
+			{
+
+				var formattedDate = $.datepicker.formatDate(options.dateFormat, date),
+					formattedTime = $.datepicker.formatTime(options.timeFormat, timeObject);
+
+				$(element).val(formattedDate + ' ' + formattedTime);
+			}
 
 			$(element).datetimepicker({
 				dateFormat: options.dateFormat,
 				timeFormat: options.timeFormat
 			});
+		}
+	};
+
+	/**
+	 * The formatTime binding transforms a datetime string into a formatted datetime
+	 */
+	ko.bindingHandlers.formatDateTime = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var options = valueAccessor(),
+				date = new Date(options.value),
+				timeObject = {
+					hour: date.getHours(),
+					minute: date.getMinutes()
+				};
+
+			if (!isNaN(date.getHours()))
+			{
+				var formattedDate = $.datepicker.formatDate(options.dateFormat, date),
+					formattedTime = $.datepicker.formatTime(options.timeFormat, timeObject);
+
+				$(element).text(formattedDate + ' ' + formattedTime);
+			}
 		}
 	};
 

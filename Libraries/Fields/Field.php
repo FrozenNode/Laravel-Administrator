@@ -122,7 +122,7 @@ abstract class Field {
 	{
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
-		//$this->editable = array_get($info, 'editable', $this->editable);
+		$this->editable = array_get($info, 'editable', $this->editable);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));
@@ -260,6 +260,7 @@ abstract class Field {
 			'type' => $this->type,
 			'field' => $this->field,
 			'title' => $this->title,
+			'editable' => $this->editable,
 			'value' => $this->value,
 			'minMax' => $this->minMax,
 			'minValue' => $this->minValue,
