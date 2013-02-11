@@ -6,7 +6,7 @@
 <a name="usage"></a>
 ## Usage
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-date.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-date.png" />
 
 The `date` field type should be a DATE or DATETIME type in your database.
 
@@ -23,6 +23,6 @@ The `date_format` option lets you define how the date is displayed. This uses th
 <a name="filter"></a>
 ## Filter
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/field-type-date-filter.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-date-filter.png" />
 
 The `date` field filter comes with a start and end date. This allows you to narrow down the result set to a range, set only a minimum date, or set only a maximum date.

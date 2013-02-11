@@ -2,6 +2,8 @@
 namespace Admin\Libraries\Fields;
 
 use Admin\Libraries\ModelHelper;
+use Admin\Libraries\Includes\Multup;
+use \URL;
 
 class Image extends Field {
 
@@ -18,7 +20,7 @@ class Image extends Field {
 	 * @var int
 	 */
 	public $length = 32;
-	
+
 	/**
 	 * The directory location used to store the original
 	 *
@@ -32,13 +34,6 @@ class Image extends Field {
 	 * @var string
 	 */
 	public $uploadUrl;
-
-	/**
-	 * The display url for this field
-	 *
-	 * @var string
-	 */
-	public $displayUrl;
 
 	/**
 	 * The file size limit in MB
@@ -75,15 +70,7 @@ class Image extends Field {
 		$this->length = array_get($info, 'length', $this->length);
 		$this->location = array_get($info, 'location');
 		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
-		$this->uploadUrl = \URL::to_route('admin_image_upload', array($config->name, $this->field));
-
-		$replace = path('public');
-
-
-		if (strpos($this->location, $replace) === 0)
-		{
-			$this->displayUrl = \URL::to('/' . substr_replace($this->location, '', 0, strlen($replace)));
-		}
+		$this->uploadUrl = URL::to_route('admin_image_upload', array($config->name, $this->field));
 
 		//make sure the naming is one of the two accepted values
 		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
@@ -100,7 +87,7 @@ class Image extends Field {
 	public function doUpload()
 	{
 		//use the multup library to perform the upload
-		$result = \Admin\Libraries\Includes\Multup::open('file', 'image|max:' . $this->sizeLimit * 1000 . '|mimes:jpg,gif,png', $this->location, $this->naming)
+		$result = Multup::open('file', 'image|max:' . $this->sizeLimit * 1000 . '|mimes:jpg,gif,png', $this->location, $this->naming)
 			->sizes($this->sizes)
 			->set_length($this->length)
 			->upload();
@@ -120,7 +107,6 @@ class Image extends Field {
 		$arr['location'] = $this->location;
 		$arr['size_limit'] = $this->sizeLimit;
 		$arr['upload_url'] = $this->uploadUrl;
-		$arr['display_url'] = $this->displayUrl;
 
 		return $arr;
 	}

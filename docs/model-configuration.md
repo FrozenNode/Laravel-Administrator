@@ -133,7 +133,7 @@ These are the columns that will be displayed in your result set. As you can see 
 
 The `edit_fields` array lets you define the editable fields for a model. There are many types of fields, but these include most primitive types and more complex fields like relationships. If you want to represent a field on the model's table, the item's key in the `edit_fields` array should be the attribute name. If the column you want to show is either a custom select or a relationship column, the item's key will be the column's alias.
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/edit-form.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/edit-form.png" />
 
 > For a detailed description of all the edit field types and options, see the **[edit field docs](/docs/edit-fields)**
 
@@ -246,7 +246,7 @@ Action permissions can be supplied to give you access control over the three pri
 
 You can define custom actions for your model if you want to provide the administrative user buttons to perform custom code. In the above example, there will be two buttons produced that look like this:
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/custom-actions.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/custom-actions.png" />
 
 When the user clicks on either button, the `action` property above is called and passed the relevant Eloquent model.
 
@@ -267,7 +267,7 @@ When the user clicks on either button, the `action` property above is called and
 
 The `sort` option should be an array with two keys: `field` and `direction`. `field` must be a column in the `columns` array. `direction` must be either `asc` or `desc`.
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.0.0/examples/images/sorting.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/sorting.png" />
 
 <a name="form-width"></a>
 ## Form Width

@@ -1,5 +1,15 @@
 ## Changelog
 
+### 3.1.0
+- Localization support. Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this
+- New editable option for most edit fields lets you disable field editing
+- Image field originals can now be stored in any location (not just the public directory)
+- Bugfix: If a relationship has no value for a field, the previously-selected item's relationships will be cleared out
+- Bugfix: Bool field now doesn't revert back to false on edit if checked
+- Bugfix: CKEditor no longer has funny cursor behavior when editing
+- Bugfix: BelongsTo edit fields now load even if they aren't specified in the columns list
+- Bugfix: HasOne and HasMany relationship columns weren't being constructed properly
+
 ### 3.0.0
 - Model configuration must now be done in model config files instead of in an Eloquent model
 - Revamped the docs to make it more accessible/readable

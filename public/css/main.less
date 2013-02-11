@@ -12,7 +12,6 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,addre
 ul,li{ list-style: none;}
 a{ text-decoration: none; }
 
-
 /*
 	Main Styling
 */
@@ -79,7 +78,7 @@ body{
 			padding: 9px 12px 8px;
 		}
 
-		ul#menu {
+		ul#menu, ul#lang_menu {
 			display: inline-block;
 
 			> li {
@@ -134,15 +133,25 @@ body{
 			}
 		}
 
-		a#back_to_site {
+		div#right_nav {
 			display: block;
 			position: absolute;
 			top: 0;
 			right: 0;
-			@headerButtonPadding;
 
-			&:hover {
-				@verticalGradient(#444, #333);
+			ul#lang_menu {
+				display: inline-block;
+				border-right:1px solid #999999;
+			}
+
+			a#back_to_site {
+				display: inline-block;
+				margin-left: -3px;
+				@headerButtonPadding;
+
+				&:hover {
+					@verticalGradient(#444, #333);
+				}
 			}
 		}
 	}
@@ -214,6 +223,19 @@ body{
 					width: 225px;
 				}
 
+				ul.chzn-choices {
+					border: 1px solid #cccccc;
+					@transition;
+				}
+
+				div.chzn-container-active {
+					ul.chzn-choices {
+						border-color: rgba(82, 168, 236, 0.8);
+						@innerOuterShadow;
+						outline: 0;
+					}
+				}
+
 				div.loader {
 					position: absolute;
 					top: 26px;
@@ -227,7 +249,7 @@ body{
 				&.min_max {
 
 					input[type=text] {
-						width: 90px;
+						width: 87px;
 					}
 
 					span.symbol {
@@ -408,7 +430,7 @@ body{
 
 			div.loading_rows {
 				position: absolute;
-				top: 60px;
+				top: 51px;
 				left: 0;
 				right: 0;
 				bottom: 0;
@@ -451,6 +473,7 @@ body{
 		div.item_edit_container {
 			position: absolute;
 			top: 0;
+			bottom: 0;
 			right: 0;
 			width: 285px;
 			overflow: hidden;
@@ -496,6 +519,20 @@ body{
 
 						select, textarea, input {
 							margin-bottom:0;
+							vertical-align: top;
+						}
+
+						ul.chzn-choices {
+							border: 1px solid #cccccc;
+							@transition;
+						}
+
+						div.chzn-container-active {
+							ul.chzn-choices {
+								border-color: rgba(82, 168, 236, 0.8);
+								@innerOuterShadow;
+								outline: 0;
+							}
 						}
 
 						div.characters_left {
@@ -523,13 +560,35 @@ body{
 							}
 						}
 
-						&.markdown {
-							div.preview {
-								display: inline-block;
-								margin-left: 10px;
+						div.uneditable {
+							margin-right: 32px;
 
-								p {
-									margin-bottom: 7px;
+							p {
+								margin-bottom: 7px;
+							}
+						}
+
+						&.markdown {
+							padding-bottom: 10px;
+
+							div.markdown_container {
+								position: relative;
+
+								div.preview {
+									display: inline-block;
+									margin-left: 10px;
+									height: 100%;
+									vertical-align: top;
+									overflow-y: auto;
+									padding: 4px 0 5px;
+
+									p {
+										margin-bottom: 7px;
+									}
+								}
+
+								textarea {
+									height: 100%;
 								}
 							}
 

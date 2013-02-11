@@ -177,9 +177,14 @@
 			actions: [],
 
 			/* Holds the per-action permissions
-			 * array
+			 * object
 			 */
 			actionsPermissions: {},
+
+			/* The languages array holds text for the current language
+			 * object
+			 */
+			languages: {},
 
 			/* The status message and the type ('', 'success', 'error')
 			 * strings
@@ -201,7 +206,7 @@
 				if (!saveData[self.primaryKey])
 					delete saveData[self.primaryKey];
 
-				self.statusMessage('Saving...').statusMessageType('');
+				self.statusMessage(self.languages['saving']).statusMessageType('');
 				self.freezeForm(true);
 
 				$.ajax({
@@ -217,7 +222,7 @@
 					{
 						if (response.success) {
 							//$('#users_list').trigger('reloadGrid');
-							self.statusMessage('Item saved.').statusMessageType('success');
+							self.statusMessage(self.languages['saved']).statusMessageType('success');
 							self[self.primaryKey](response.data[self.primaryKey]);
 							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
@@ -243,12 +248,12 @@
 			deleteItem: function()
 			{
 				var self = this,
-					conf = confirm("Are you sure you want to delete this item? This cannot be reversed.");
+					conf = confirm(self.languages['delete_active_item']);
 
 				if (!conf)
 					return false;
 
-				self.statusMessage('Deleting...').statusMessageType('');
+				self.statusMessage(self.languages['deleting']).statusMessageType('');
 				self.freezeForm(true);
 
 				$.ajax({
@@ -260,7 +265,7 @@
 					{
 						if (response.success)
 						{
-							self.statusMessage('Item deleted.').statusMessageType('success');
+							self.statusMessage(self.languages['deleted']).statusMessageType('success');
 							self.updateRows();
 							self.updateSelfRelationships();
 
@@ -357,6 +362,7 @@
 						setTimeout(function()
 						{
 							ko.mapping.updateData(self, self.model, data);
+							window.admin.resizePage();
 						}, 50);
 					}
 				});
@@ -724,6 +730,7 @@
 			this.viewModel.primaryKey = adminData.primary_key;
 			this.viewModel.actions = adminData.actions;
 			this.viewModel.actionPermissions = adminData.action_permissions;
+			this.viewModel.languages = adminData.languages;
 
 			//set up the rowsPerPageOptions
 			for (var i = 1; i <= 100; i++)
@@ -747,7 +754,6 @@
 			ko.applyBindings(this.viewModel, $('#main_content')[0]);
 			ko.applyBindings(this.filtersViewModel, $('#filters_sidebar_section')[0]);
 
-
 			//set up pushstate history
 			this.initHistory();
 
@@ -756,6 +762,9 @@
 
 			//set up the events
 			this.initEvents();
+
+			//run an initial page resize
+			this.resizePage();
 
 			return this;
 		},
@@ -977,6 +986,8 @@
 				History.pushState({modelName: self.viewModel.modelName(), id: 0}, null, route + self.viewModel.modelName() + '/new');
 			});
 
+			//resizing the window
+			$(window).resize(self.resizePage);
 
 			//set up the history event callback
 			History.Adapter.bind(window,'statechange',function() {
@@ -1069,6 +1080,18 @@
 			}
 
 			return size;
+		},
+
+		/**
+		 * Handles a window resize to make sure the admin area is always
+		 */
+		resizePage: function()
+		{
+			var winHeight = $(window).height(),
+				itemEditHeight = $('div.item_edit').height() + 50,
+				usedHeight = winHeight > itemEditHeight ? winHeight - 45 : itemEditHeight;
+
+			$('#admin_page').css({minHeight: usedHeight});
 		}
 	};
 

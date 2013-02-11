@@ -32,7 +32,9 @@ class HasManyAndBelongsTo extends Relationship {
 	{
 		parent::__construct($field, $info, $config);
 
-		$relationship = $config->model->{$field}();
+		$model = is_a($config, 'Admin\\Libraries\\ModelConfig') ? $config->model : $config;
+
+		$relationship = $model->{$field}();
 		$table = $relationship->table->joins[0];
 		$related_model = $relationship->model;
 
@@ -117,6 +119,8 @@ class HasManyAndBelongsTo extends Relationship {
 		{
 			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->column2);
 		}
+
+		$constraints = is_array($constraints) ? $constraints : array($constraints);
 
 		$query->where_in($this->column, $constraints);
 	}
