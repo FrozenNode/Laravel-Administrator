@@ -390,7 +390,7 @@ class ModelHelper {
 				if (isset($constraints[$key]) && $constraints[$key] && sizeof($constraints[$key]))
 				{
 					//constrain the query
-					$info->applyConstraints($query, $model, $key, $relationshipName, $constraints);
+					$info->applyConstraints($query, $model, $key, $relationshipName, $constraints[$key]);
 				}
 			}
 		}
