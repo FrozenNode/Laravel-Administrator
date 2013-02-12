@@ -62,6 +62,13 @@ abstract class Field {
 	public $editable = true;
 
 	/**
+	 * Determines if the field is visible
+	 *
+	 * @var bool
+	 */
+	public $visible = true;
+
+	/**
 	 * The name of the field
 	 *
 	 * @var string
@@ -261,6 +268,7 @@ abstract class Field {
 			'field' => $this->field,
 			'title' => $this->title,
 			'editable' => $this->editable,
+			'visible' => $this->visible,
 			'value' => $this->value,
 			'minMax' => $this->minMax,
 			'minValue' => $this->minValue,
@@ -376,7 +384,19 @@ abstract class Field {
 		}
 
 		//add the id field, which will be uneditable, but part of the data model
-		$return['arrayFields'][$model::$key] = 0;
+		if (!isset($return['arrayFields'][$model::$key]))
+		{
+			$keyField = static::get($model::$key, array('visible' => false), $config);
+
+			if ($keyField)
+			{
+				$return['arrayFields'][$model::$key] = $keyField->toArray();
+			}
+			else
+			{
+				$return['arrayFields'][$model::$key] = 0;
+			}
+		}
 
 		//set up the data model
 		foreach ($return['arrayFields'] as $field => $info)
