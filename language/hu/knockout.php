@@ -18,5 +18,7 @@ return array(
 	'deleted' => 'Sikeres törlés.',
 	'character_left' => ' karakter maradt',
 	'characters_left' => ' karakter maradt',
+	'no_results' => 'Nincs egyező találat',
+	'select_options' => 'Válasszon az opciókból',
 
 );
