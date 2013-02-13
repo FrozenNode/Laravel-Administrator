@@ -401,7 +401,12 @@ abstract class Field {
 		//set up the data model
 		foreach ($return['arrayFields'] as $field => $info)
 		{
-			if (is_array($info) || is_a($info, 'Field'))
+			//if this is a key, set it to 0
+			if ($info['type'] === 'key')
+			{
+				$return['dataModel'][$field] = 0;
+			}
+			else if (is_array($info) || is_a($info, 'Field'))
 			{
 				$return['dataModel'][$field] = $model->$field;
 			}
