@@ -18,5 +18,7 @@ return array(
 	'deleted' => 'Ítem eliminado.',
 	'character_left' => ' carácter restante',
 	'characters_left' => ' caracteres restantes',
+	'no_results' => 'No se han encontrado resultados',
+	'select_options' => 'Seleccione Algunas Opciones',
 
 );
