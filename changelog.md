@@ -2,7 +2,7 @@
 
 ### 3.2.0
 - Primary key fields are now hidden by default in the edit window unless you put them in your edit array
-- New languages: Spanish (sp), Basque (eu)
+- New languages: Spanish (es), Basque (eu)
 - Bugfix: Multiple constraints now work properly
 
 ### 3.1.0
