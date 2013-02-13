@@ -18,5 +18,7 @@ return array(
 	'deleted' => 'Item-a ezabatu da.',
 	'character_left' => ' karaktere faltan',
 	'characters_left' => ' karaktere faltan',
+	'no_results' => 'Emaitzik ez',
+	'select_options' => 'Hautatu Aukera Batzuk',
 
 );
