@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo Config::get('application.language') ?>">
 <head>
 	<meta charset="utf-8">
 	<title>{{ Config::get('administrator::administrator.title') }}</title>
