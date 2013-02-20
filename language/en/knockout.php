@@ -18,5 +18,7 @@ return array(
 	'deleted' => 'Item deleted.',
 	'character_left' => ' character left',
 	'characters_left' => ' characters left',
+	'no_results' => 'No results matched',
+	'select_options' => 'Select Some Options',
 
 );

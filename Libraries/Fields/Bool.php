@@ -6,7 +6,7 @@ class Bool extends Field {
 	/**
 	 * The value (used in filter)
 	 *
-	 * @var string
+	 * @var bool
 	 */
 	public $value = false;
 
