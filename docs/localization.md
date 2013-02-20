@@ -86,7 +86,7 @@ There are no special exceptions in the model config files...so you can localize 
 
 Administrator currently supports the following languages:
 
-> de en es eu hu nl
+> de en es eu hu nl pl
 
 If you don't see the language you want, [contributing a new language is crazy easy](#contributing)!
 
