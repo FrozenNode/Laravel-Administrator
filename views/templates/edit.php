@@ -9,17 +9,16 @@
 			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()}">
 				<?php echo __('administrator::administrator.viewitem') ?></a>
 		<!-- /ko -->
-
-		<div class="key">
-			<label><?php echo __('administrator::administrator.id') ?>:</label>
-			<span data-bind="text: $root[$root.primaryKey]"></span>
-		</div>
 	<!-- /ko -->
 
 	<!-- ko foreach: editFields -->
-		<!-- ko if: $data && ( $root[$root.primaryKey]() || editable ) -->
+		<!-- ko if: $data && ( $root[$root.primaryKey]() || editable ) && visible -->
 			<div data-bind="attr: {class: type}">
 				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
+
+			<!-- ko if: type === 'key' -->
+				<span data-bind="text: $root[$root.primaryKey]"></span>
+			<!-- /ko -->
 
 			<!-- ko if: type === 'text' -->
 				<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>

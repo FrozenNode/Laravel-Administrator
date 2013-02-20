@@ -120,8 +120,6 @@ class HasManyAndBelongsTo extends Relationship {
 			$query->join($this->table, $model->table().'.'.$model::$key, '=', $this->column2);
 		}
 
-		$constraints = is_array($constraints) ? $constraints : array($constraints);
-
-		$query->where_in($this->column, $constraints);
+		$query->where($this->column, '=', $constraints);
 	}
 }

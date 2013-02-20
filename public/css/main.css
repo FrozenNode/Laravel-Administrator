@@ -490,7 +490,7 @@ body label {
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form a.item_link {
   position:absolute;
-  top:75px;
+  top:38px;
   right:41px;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div {
@@ -538,7 +538,6 @@ body label {
   top:27px;
   left:-15px;
 }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key { margin-right:100px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.bool label { display:inline-block; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.uneditable { margin-right:32px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.uneditable p { margin-bottom:7px; }
@@ -581,4 +580,24 @@ body label {
   top:200px;
   left:100px;
   font-size:20px;
+}
+
+
+/* 
+TODO
+No idea which way to go styling a button, so I used jquery ui, but that looked awfull.
+This is a fix that worked for me, but this is not really the way to go
+*/
+.ui-buttonfix {
+  display: inline-block;
+  margin-right: .1em;
+  vertical-align: middle;
+  text-align: center;
+  width: 60px;
+  color: #333;
+  background: transparent;
+  border: 0;
+}
+.ui-buttonfix span.ui-button-icon-primary{
+  position: absolute;
 }

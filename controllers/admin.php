@@ -25,7 +25,49 @@ class Administrator_Admin_Controller extends Controller
 		$this->layout->content = View::make("administrator::index", array('config' => $config));
 	}
 
+	/**
+	 * A csv file for any of the data models
+	 *
+	 * @param ModelConfig	$config
+	 * 
+	 * @return Response
+	 */
+	public function action_csv($config)
+	{
+		//TODO how to get the filter options here...
+		//sortOptions not relevant for csv?
+		$filters = Input::get('filters', array());
+		$sortOptions = Input::get('sortOptions', array());
 
+		//overwrite rowsPerPage, to get a 'full' resultset
+		$config->rowsPerPage = 5000;
+
+		$table = ModelHelper::getRows($config, $sortOptions, $filters);
+
+		//create file
+		$filename = $config->title.'.csv';
+		header( 'Content-Type: text/csv' );
+		header( 'Content-Disposition: attachment;filename='.$filename);
+		$fp = fopen('php://output', 'w');
+
+		$results = $table['results'];
+
+		//get the first row and use keys to print column names in the header
+		$head = array_keys($results[0]);
+		fputcsv($fp, $head);
+
+		//parse the result values
+		foreach ($results as $row) 
+		{
+			fputcsv($fp, $row);
+		}
+
+		fclose($fp);
+
+		//dirty ending, but I see no other way in Laravel
+		exit;
+	}
+	
 	/**
 	 * Gets the item edit page / information
 	 *
