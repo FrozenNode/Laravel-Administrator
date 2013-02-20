@@ -31,6 +31,12 @@ Route::group(array('before' => 'validate_admin|validate_model|add_assets'), func
 		'uses' => 'administrator::admin@index'
 	));
 
+	//Model Index csv
+	Route::get('(:bundle)/(:any)/csv', array(
+		'as' => 'admin_index',
+		'uses' => 'administrator::admin@csv'
+	));
+	
 	//Get Item
 	Route::get('(:bundle)/(:any)/(:num)', array(
 		'as' => 'admin_get_item',
