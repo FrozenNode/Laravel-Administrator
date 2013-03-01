@@ -490,7 +490,7 @@ body label {
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form a.item_link {
   position:absolute;
-  top:75px;
+  top:38px;
   right:41px;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div {
@@ -538,7 +538,6 @@ body label {
   top:27px;
   left:-15px;
 }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key { margin-right:100px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.key label, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.bool label { display:inline-block; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.uneditable { margin-right:32px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.uneditable p { margin-bottom:7px; }
