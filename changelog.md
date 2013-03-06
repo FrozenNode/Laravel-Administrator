@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 3.2.0
+- You can now select nested belongs_to relationships in the columns array
 - Primary key fields are now hidden by default in the edit window unless you put them in your edit array
 - New languages: Spanish (es), Basque (eu), Dutch (nl), Polish (pl)
 - Bugfix: Multiple constraints now work properly
