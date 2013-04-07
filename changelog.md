@@ -5,6 +5,7 @@
 - Primary key fields are now hidden by default in the edit window unless you put them in your edit array
 - New languages: Spanish (es), Basque (eu), Dutch (nl), Polish (pl)
 - Bugfix: Multiple constraints now work properly
+- Bugfix: Character limits on text fields no longer limit the string on every keystroke
 
 ### 3.1.0
 - Localization support. Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this

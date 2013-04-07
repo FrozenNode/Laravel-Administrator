@@ -338,7 +338,7 @@
 
 			val = val === null ? '' : val + '';
 
-			if (!limit || val === null)
+			if (!limit || val === null || val.length < limit)
 				return;
 
 			val = val.substr(0, limit);
