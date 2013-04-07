@@ -1,5 +1,7 @@
 <?php
 use Admin\Libraries\ModelHelper;
+use Admin\Libraries\ModelConfig;
+use Admin\Libraries\SettingsConfig;
 use Admin\Libraries\Action;
 use Admin\Libraries\Fields\Field;
 
@@ -218,8 +220,31 @@ class Administrator_Admin_Controller extends Controller
 	 */
 	public function action_dashboard()
 	{
-		//set the layout content and title
-		$this->layout->content = View::make("administrator::dashboard");
+		//if the dev has chosen to use a dashboard
+		if (Config::get('administrator::administrator.use_dashboard'))
+		{
+			//set the layout content
+			$this->layout->content = View::make(Config::get('administrator::administrator.dashboard_view'));
+		}
+		//else we should redirect to the menu item
+		else
+		{
+			$home = Config::get('administrator::administrator.home_page');
+
+			//first try to find it if it's a model config item
+			if ($config = ModelConfig::get($home))
+			{
+				return Redirect::to_route('admin_index', array($config->name));
+			}
+			else if ($config = SettingsConfig::get($home))
+			{
+				return Redirect::to_route('admin_settings', array($config->name));
+			}
+			else
+			{
+				throw new Exception("Administrator: " .  __('administrator::administrator.valid_home_page'));
+			}
+		}
 	}
 
 	/**

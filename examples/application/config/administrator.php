@@ -55,6 +55,28 @@ return array(
 	},
 
 	/**
+	 * This determines if you will have a dashboard (whose view you provide in the dashboard_view option) or a non-dashboard home
+	 * page (whose menu item you provide in the home_page option)
+	 *
+	 * @type bool
+	 */
+	'use_dashboard' => false,
+
+	/**
+	 * If you want to create a dashboard view, provide the view string here.
+	 *
+	 * @type string
+	 */
+	'dashboard_view' => '',
+
+	/**
+	 * The menu item that should be used as the default landing page of the administrative section
+	 *
+	 * @type string
+	 */
+	'home_page' => 'settings.site',
+
+	/**
 	 * This is the path where Administrator will send the user if they are not logged in (!Auth::check())
 	 *
 	 * @type string

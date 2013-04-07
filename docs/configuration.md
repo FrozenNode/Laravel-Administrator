@@ -20,6 +20,9 @@ Below is a list of all the available options:
 - [Settings Config Path](#settings-config-path)
 - [Menu](#menu)
 - [Permission](#permission)
+- [Use Dashboard](#use-dashboard)
+- [Dashboard View](#dashboard-view)
+- [Home Page](#home-page)
 - [Login Path](#login-path)
 - [Redirect Key](#redirect-key)
 - [Global Rows Per Page](#global-rows-per-page)
@@ -99,6 +102,49 @@ If you want to have a submenu, instead of passing in a string, pass in an array 
 > For a detailed description of all the model configuration options, see the **[model configuration docs](/docs/model-configuration)**
 
 > For a detailed description of all the settings configuration options, see the **[settings configuration docs](/docs/settings-configuration)**
+
+<a name="use-dashboard"></a>
+### Use Dashboard
+
+	/**
+	 * This determines if you will have a dashboard (whose view you provide in the dashboard_view option) or a non-dashboard home
+	 * page (whose menu item you provide in the home_page option)
+	 *
+	 * @type bool
+	 */
+	'use_dashboard' => false,
+
+Administrator doesn't pretend that it can solve all of your dashboard needs. Sometimes it makes sense to have a bunch of widget-type modules in a dashboard, sometimes it makes sense to have a bunch of buttons, and other times it doesn't make any sense to even have a dashboard. There are two general options: you can either create a dashboard view in your application where you can set up the dashboard however you like, or you can use a location from the `menu` option as your general "home" page.
+
+If you set `use_dashboard` to **true**, it will look for the value in the `dashboard_view` option below and load that view into the Administrator content area.
+
+If you set `use_dashboard` to **false**, it will look for the value in the `home_page` option below and load up that page when a user goes to the Administrator home.
+
+In either case, if the value (either the view or the menu item) can't be found, an error will be raised.
+
+<a name="dashboard-view"></a>
+### Dashboard View
+
+	/**
+	 * If you want to create a dashboard view, provide the view string here.
+	 *
+	 * @type string
+	 */
+	'dashboard_view' => 'administrator.dashboard',
+
+If the `use_dashboard` option is set to true, Administrator will attempt to load up this view into the Administrator content area. You can set this up however you like, and by using [View Composers](http://laravel.com/docs/views#view-composers), you can insert any data into this view that you need.
+
+<a name="home-page"></a>
+### Home Page
+
+	/**
+	 * The menu item that should be used as the default landing page of the administrative section
+	 *
+	 * @type string
+	 */
+	'home_page' => 'products',
+
+If the `use_dashboard` option is set to false, Administrator will redirect the user to the above page when they visit the Administrator base URL. This must match an item in the `menu` option.
 
 <a name="permission"></a>
 ### Permission
