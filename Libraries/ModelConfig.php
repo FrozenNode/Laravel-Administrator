@@ -166,11 +166,11 @@ class ModelConfig {
 	}
 
 	/**
-	 * Takes a the key/value of the columns array and the associated model and returns an instance of the column or false
+	 * Takes a model menu name and returns a ModelConfig instance if it can be found, or false otherwise
 	 *
 	 * @param string|int	$modelName 		//the model config/uri name
 	 *
-	 * @return false|Field object
+	 * @return false|ModelConfig object
 	 */
 	public static function get($modelName)
 	{
