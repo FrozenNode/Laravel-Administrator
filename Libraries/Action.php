@@ -91,14 +91,14 @@ class Action {
 	/**
 	 * Gets an action by name
 	 *
-	 * @param ModelConfig	$config
-	 * @param string		$name
+	 * @param ModelConfig|SettingsConfig	$config
+	 * @param string						$name
 	 *
 	 * @return false|Action object
 	 */
 	public static function getByName($config, $name)
 	{
-		//check if the model has actions
+		//check if the config has actions
 		if (!$config->actions || !is_array($config->actions))
 		{
 			return false;
@@ -149,13 +149,14 @@ class Action {
 	/**
 	 * Performs the callback of the action and returns its result
 	 *
-	 * @param Eloquent	$model
+	 * @param Eloquent|Settings Data	$data
 	 *
 	 * @return array
 	 */
-	public function perform($model)
+	public function perform(&$data)
 	{
-		return call_user_func($this->action, $model);
+		$action = $this->action;
+		return $action($data);
 	}
 
 	/**

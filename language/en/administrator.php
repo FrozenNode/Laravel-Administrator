@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -47,4 +47,5 @@ return array(
 	'valid_menu' => "You must provide a valid 'menu' option in the administrator.php config",
 	'valid_config_path' => "You must provide a valid 'model_config_path' in the administrator.php config. The directory must also exist and be readable.",
 	'not_eloquent' => " is not an Eloquent model",
+	'storage_path_permissions' => "You must make your storage path writable in order to make a settings page",
 );

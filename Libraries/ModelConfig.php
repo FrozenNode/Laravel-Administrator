@@ -230,7 +230,7 @@ class ModelConfig {
 	 *
 	 * @return false|array	//If found, an array of (unvalidated) config options will returned
 	 */
-	private static function find($modelName)
+	public static function find($modelName)
 	{
 		//first let's grab the menu and model_config_path options
 		$menu = Config::get('administrator::administrator.menu', null);
@@ -359,52 +359,6 @@ class ModelConfig {
 		}
 
 		$this->rowsPerPage = $perPage;
-	}
-
-	/**
-	 * Gets the menu items indexed by their name with a value of the title
-	 *
-	 * @param array		$configMenu (used for recursion)
-	 *
-	 * @return array
-	 */
-	public static function getMenu($configMenu = null)
-	{
-		$menu = array();
-
-		if (!$configMenu)
-		{
-			$configMenu = Config::get('administrator::administrator.menu', null);
-		}
-
-		//iterate over the menu to build the
-		foreach ($configMenu as $key => $item)
-		{
-			//if the item is a string, find its config
-			if (is_string($item))
-			{
-				$config = static::find($item);
-
-				if ($config)
-				{
-					$permission = array_get($config, 'permission');
-
-					if (is_callable($permission) && !$permission())
-					{
-						continue;
-					}
-
-					$menu[$item] = array_get($config, 'title', $item);
-				}
-			}
-			//if the item is an array, recursively run this method on it
-			else if (is_array($item))
-			{
-				$menu[$key] = static::getMenu($item);
-			}
-		}
-
-		return $menu;
 	}
 
 	/**

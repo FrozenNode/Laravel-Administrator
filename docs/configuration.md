@@ -17,6 +17,7 @@ Below is a list of all the available options:
 
 - [Title](#title)
 - [Model Config Path](#model-config-path)
+- [Settings Config Path](#settings-config-path)
 - [Menu](#menu)
 - [Permission](#permission)
 - [Login Path](#login-path)
@@ -47,13 +48,27 @@ This is the title of the administrative interface displayed to the user at the t
 
 This is the directory location of your application's model config files. It's recommended to use a subdirectory of your application config called `administrator`, but you can put it anywhere you like.
 
+<a name="settings-config-path"></a>
+### Settings Config Path
+
+	/**
+	 * The path to your settings config directory
+	 *
+	 * @type string
+	 */
+	'settings_config_path' => path('app') . 'config/administrator/settings',
+
+This is the directory location of your application's settings config files. If you want to create settings pages for your admins, you'll store each settings config file in the path above. As with the `model_config_path`, it's up to you how to organize this. The recommended approach is above, but you may just find a more sensible way to organize your config directories.
+
 <a name="menu"></a>
 ### Menu
 
 	/**
-	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
-	 * By doing the latter, you can group certain models together. Each name needs to have a config file in your model config path with the same
-	 * name. So 'users' would require a 'users.php' file in your model config path.
+	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
+	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. By providing an
+	 * array of names, you can group certain models or settings pages together. Each name needs to either have a config file in your model
+	 * config path or settings config path with the same name. So 'users' would require a 'users.php' file in your model config path.
+	 * 'settings.site' would require a 'site.php' file in your settings config path.
 	 *
 	 * @type array
 	 *
@@ -68,17 +83,22 @@ This is the directory location of your application's model config files. It's re
 		'users',
 		'roles',
 		'colors',
+		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
 	),
 
-The menu option is where you set the menu structure of the site. If you don't want any submenus, simply provide the name of your model config. The value has to be exactly equal (if you're using Linux, that means case-sensitive) to the name of the model config php file.
+The menu option is where you set the menu structure of the site. If you don't want any submenus, simply provide the name of your model or settings config file. The value has to be exactly equal (if you're using Linux, that means case-sensitive) to the name of the model or settings config php file.
 
 So in the above example, there would need to be (in the directory you specified in the `model_config_path`), config files called `collections.php`, `products.php`, `product_images.php`, `orders.php`, `homepage_sliders.php`, `users.php`, `roles.php`, and `colors.php`.
+
+There would also need to be (in the directory you specified in the `settings_config_path`), config files called `site.php`, `ecommerce.php`, and `social.php`.
 
 If you want to have a submenu, instead of passing in a string, pass in an array of strings. The index of this slot will be the submenu's title in the UI.
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/menu.png" />
 
 > For a detailed description of all the model configuration options, see the **[model configuration docs](/docs/model-configuration)**
+
+> For a detailed description of all the settings configuration options, see the **[settings configuration docs](/docs/settings-configuration)**
 
 <a name="permission"></a>
 ### Permission

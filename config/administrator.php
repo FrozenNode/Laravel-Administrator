@@ -17,15 +17,28 @@ return array(
 	'model_config_path' => path('app') . 'config/administrator',
 
 	/**
-	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
-	 * By doing the latter, you can group certain models together. Each name needs to have a config file in your model config path with the same
-	 * name. So 'users' would require a 'users.php' file in your model config path.
+	 * The path to your settings config directory
+	 *
+	 * @type string
+	 */
+	'settings_config_path' => path('app') . 'config/administrator/settings',
+
+	/**
+	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
+	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. By providing an
+	 * array of names, you can group certain models or settings pages together. Each name needs to either have a config file in your model
+	 * config path or settings config path with the same name. So 'users' would require a 'users.php' file in your model config path.
+	 * 'settings.site' would require a 'site.php' file in your settings config path.
 	 *
 	 * @type array
 	 *
 	 * 	array(
-	 *		'Products' => array('products', 'product_images', 'orders'),
+	 *		'E-Commerce' => array('collections', 'products', 'product_images', 'orders'),
+	 *		'homepage_sliders',
 	 *		'users',
+	 *		'roles',
+	 *		'colors',
+	 *		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
 	 *	)
 	 */
 	'menu' => array(),

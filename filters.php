@@ -1,6 +1,7 @@
 <?php
 
 use Admin\Libraries\ModelConfig;
+use Admin\Libraries\SettingsConfig;
 
 //Filters
 
@@ -77,6 +78,7 @@ Route::filter('add_assets', function()
 	//and finally the site scripts
 	$assets->add('page', 'js/page.js');
 	$assets->add('admin', 'js/admin.js');
+	$assets->add('settings', 'js/settings.js');
 });
 
 
@@ -110,6 +112,21 @@ Route::filter('validate_model', function ()
 {
 	$modelName = Request::route()->parameters[0];
 	$config = ModelConfig::get($modelName);
+
+	//if the model doesn't exist at all, redirect to 404
+	if (!$config)
+	{
+		return Response::error('404');
+	}
+
+	Request::route()->parameters[0] = $config;
+});
+
+//validate_settings filter
+Route::filter('validate_settings', function ()
+{
+	$settingsName = Request::route()->parameters[0];
+	$config = SettingsConfig::get(SettingsConfig::$prefix . $settingsName);
 
 	//if the model doesn't exist at all, redirect to 404
 	if (!$config)

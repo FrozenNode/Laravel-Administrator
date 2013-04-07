@@ -7,9 +7,11 @@
 <a name="introduction"></a>
 ## Introduction
 
-Any Eloquent model (or any object that ultimately extends from an Eloquent model) can be represented by a model configuration file. These files can be kept anywhere in your application directory structure and you provide the path to their location in the main `administrator.php` config with the `model_config_path` option. The names of these files correspond to the values supplied in the `menu` option in the `administrator.php` config. These will also be the uris for each model in the admin interface.
+Any Eloquent model (or any object that ultimately extends from an Eloquent model) can be represented by a model configuration file. These files can be kept anywhere in your application directory structure and you provide the path to their location in the main `administrator.php` config with the [`model_config_path`](/docs/configuration#model-config-path) option. The names of these files correspond to the values supplied in the [`menu`](/docs/configuration#menu) option in the `administrator.php` config.
 
-There are several required fields that must be supplied in order for a model config file to work. Apart from that you can also define a number of optional fields that help you customize your admin interface on a per-model basis. For instance, if one of your models needs a WYSIWYG field, you'll probably want the edit form to be wider than the default width. All you would have to do is set the `form_width` option in that model's config.
+> **Note**: These are also the uris for each model in the admin interface.
+
+There are several required fields that must be supplied in order for a model config file to work. Apart from those, you can also define a number of optional fields that help you customize your admin interface on a per-model basis. For instance, if one of your models needs a WYSIWYG field, you'll probably want the edit form to be wider than the default width. All you would have to do is set the `form_width` option in that model's config.
 
 <a name="examples"></a>
 ## Examples
@@ -131,11 +133,11 @@ These are the columns that will be displayed in your result set. As you can see 
 		)
 	),
 
-The `edit_fields` array lets you define the editable fields for a model. There are many types of fields, but these include most primitive types and more complex fields like relationships. If you want to represent a field on the model's table, the item's key in the `edit_fields` array should be the attribute name. If the column you want to show is either a custom select or a relationship column, the item's key will be the column's alias.
+The `edit_fields` array lets you define the editable fields for a model. There are many types of fields, including most primitive types and more complex fields like relationships. If you want to represent a field on the model's table, the item's key in the `edit_fields` array should be the attribute name. If the column you want to show is either a custom select or a relationship column, the item's key will be the column's alias.
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/edit-form.png" />
 
-> For a detailed description of all the edit field types and options, see the **[edit field docs](/docs/edit-fields)**
+> For a detailed description of all the edit field types and options, see the **[field docs](/docs/fields)**
 
 <a name="filters"></a>
 ### Filters

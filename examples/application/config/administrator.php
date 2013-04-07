@@ -17,6 +17,13 @@ return array(
 	'model_config_path' => path('app') . 'config/administrator',
 
 	/**
+	 * The path to your settings config directory
+	 *
+	 * @type string
+	 */
+	'settings_config_path' => path('app') . 'config/administrator/settings',
+
+	/**
 	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
 	 * By doing the latter, you can group certain models together. Each name needs to have a config file in your model config path with the same
 	 * name. So 'users' would require a 'users.php' file in your model config path.
@@ -33,6 +40,7 @@ return array(
 		'actors',
 		'directors',
 		'theaters',
+		'Settings' => array('settings.site'),
 	),
 
 	/**
