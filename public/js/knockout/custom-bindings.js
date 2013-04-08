@@ -63,7 +63,7 @@
 	ko.bindingHandlers.chosen = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			$(element).chosen();
+			$(element).chosen({no_results_text: adminData.languages['no_results'], placeholder_text: adminData.languages['select_options']});
 
 			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
 		}
@@ -338,7 +338,7 @@
 
 			val = val === null ? '' : val + '';
 
-			if (!limit || val === null)
+			if (!limit || val === null || val.length < limit)
 				return;
 
 			val = val.substr(0, limit);

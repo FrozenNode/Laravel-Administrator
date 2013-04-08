@@ -17,6 +17,13 @@ return array(
 	'model_config_path' => path('app') . 'config/administrator',
 
 	/**
+	 * The path to your settings config directory
+	 *
+	 * @type string
+	 */
+	'settings_config_path' => path('app') . 'config/administrator/settings',
+
+	/**
 	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
 	 * By doing the latter, you can group certain models together. Each name needs to have a config file in your model config path with the same
 	 * name. So 'users' would require a 'users.php' file in your model config path.
@@ -33,6 +40,7 @@ return array(
 		'actors',
 		'directors',
 		'theaters',
+		'Settings' => array('settings.site'),
 	),
 
 	/**
@@ -45,6 +53,28 @@ return array(
 	{
 		return Auth::check();
 	},
+
+	/**
+	 * This determines if you will have a dashboard (whose view you provide in the dashboard_view option) or a non-dashboard home
+	 * page (whose menu item you provide in the home_page option)
+	 *
+	 * @type bool
+	 */
+	'use_dashboard' => false,
+
+	/**
+	 * If you want to create a dashboard view, provide the view string here.
+	 *
+	 * @type string
+	 */
+	'dashboard_view' => '',
+
+	/**
+	 * The menu item that should be used as the default landing page of the administrative section
+	 *
+	 * @type string
+	 */
+	'home_page' => 'settings.site',
 
 	/**
 	 * This is the path where Administrator will send the user if they are not logged in (!Auth::check())

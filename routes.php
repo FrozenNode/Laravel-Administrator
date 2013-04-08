@@ -99,3 +99,40 @@ Route::group(array('before' => 'validate_admin|validate_model|disable_profiler')
 		'uses' => 'administrator::admin@rows_per_page'
 	));
 });
+
+//Settings Pages
+Route::get('(:bundle)/settings/(:any)', array(
+	'as' => 'admin_settings',
+	'before' => 'validate_admin|validate_settings|add_assets',
+	'uses' => 'administrator::admin@settings'
+));
+
+//Settings POSTs
+Route::group(array('before' => 'validate_admin|validate_settings|csrf'), function()
+{
+	//Save Item
+	Route::post('(:bundle)/settings/(:any)/save', array(
+		'as' => 'admin_settings_save',
+		'uses' => 'administrator::admin@settings_save'
+	));
+
+	//Custom Action
+	Route::post('(:bundle)/settings/(:any)/custom_action', array(
+		'as' => 'admin_settings_custom_action',
+		'uses' => 'administrator::admin@custom_action'
+	));
+});
+
+//Settings image upload
+Route::post('(:bundle)/settings/(:any)/(:any)/image_upload', array(
+	'before' => 'validate_admin|validate_settings|disable_profiler',
+	'as' => 'admin_settings_image_upload',
+	'uses' => 'administrator::admin@image_upload'
+));
+
+//Display a settings image
+Route::get('(:bundle)/settings/(:any)/image', array(
+	'before' => 'validate_admin|validate_settings',
+	'as' => 'admin_settings_display_image',
+	'uses' => 'administrator::admin@display_image'
+));

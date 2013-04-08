@@ -1,5 +1,14 @@
 ## Changelog
 
+### 3.2.0
+- You can now choose to provide a custom dashboard or a default home page from your menu
+- Settings pages are now available
+- You can now select nested belongs_to relationships in the columns array
+- Primary key fields are now hidden by default in the edit window unless you put them in your edit array
+- New languages: Spanish (es), Basque (eu), Dutch (nl), Polish (pl)
+- Bugfix: Multiple constraints now work properly
+- Bugfix: Character limits on text fields no longer limit the string on every keystroke
+
 ### 3.1.0
 - Localization support. Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this
 - New editable option for most edit fields lets you disable field editing

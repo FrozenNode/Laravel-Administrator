@@ -1,5 +1,7 @@
 <?php
 use Admin\Libraries\ModelHelper;
+use Admin\Libraries\ModelConfig;
+use Admin\Libraries\SettingsConfig;
 use Admin\Libraries\Action;
 use Admin\Libraries\Fields\Field;
 
@@ -179,14 +181,15 @@ class Administrator_Admin_Controller extends Controller
 	 *
 	 * @return JSON
 	 */
-	public function action_custom_action($config, $id)
+	public function action_custom_action($config, $id = null)
 	{
-		$model = ModelHelper::getModel($config, $id, false, true);
+		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
+		$data = $isSettings ? $config->data : ModelHelper::getModel($config, $id, false, true);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
 		$action = Action::getByName($config, $actionName);
-		$result = $action->perform($model);
+		$result = $action->perform($data);
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
@@ -200,7 +203,13 @@ class Administrator_Admin_Controller extends Controller
 		}
 		else
 		{
-			return Response::json(array('success' => true));
+			//if this is a settings config, we want to save the data before returning
+			if ($isSettings)
+			{
+				$config->putToJSON($data);
+			}
+
+			return Response::json(array('success' => true, 'data' => $isSettings ? $data : null));
 		}
 	}
 
@@ -211,8 +220,31 @@ class Administrator_Admin_Controller extends Controller
 	 */
 	public function action_dashboard()
 	{
-		//set the layout content and title
-		$this->layout->content = View::make("administrator::dashboard");
+		//if the dev has chosen to use a dashboard
+		if (Config::get('administrator::administrator.use_dashboard'))
+		{
+			//set the layout content
+			$this->layout->content = View::make(Config::get('administrator::administrator.dashboard_view'));
+		}
+		//else we should redirect to the menu item
+		else
+		{
+			$home = Config::get('administrator::administrator.home_page');
+
+			//first try to find it if it's a model config item
+			if ($config = ModelConfig::get($home))
+			{
+				return Redirect::to_route('admin_index', array($config->name));
+			}
+			else if ($config = SettingsConfig::get($home))
+			{
+				return Redirect::to_route('admin_settings', array($config->name));
+			}
+			else
+			{
+				throw new Exception("Administrator: " .  __('administrator::administrator.valid_home_page'));
+			}
+		}
 	}
 
 	/**
@@ -255,11 +287,9 @@ class Administrator_Admin_Controller extends Controller
 	/**
 	 * The GET method that displays an image field's image
 	 *
-	 * @param ModelConfig	$config
-	 *
 	 * @return Image
 	 */
-	public function action_display_image($config)
+	public function action_display_image()
 	{
 		//get the stored path of the original
 		$path = Input::get('path');
@@ -303,6 +333,63 @@ class Administrator_Admin_Controller extends Controller
 		$config->setRowsPerPage($rows);
 
 		return Response::JSON(array('success' => true));
+	}
+
+	/**
+	 * The main view for any of the settings pages
+	 *
+	 * @param SetingsConfig		$config
+	 *
+	 * @return Response
+	 */
+	public function action_settings($config)
+	{
+		//set the layout content and title
+		$this->layout->content = View::make("administrator::settings", array('config' => $config));
+	}
+
+	/**
+	 * POST save settings method that accepts data via JSON POST and either saves an old item (if id is valid) or creates a new one
+	 *
+	 * @param SettingsConfig	$config
+	 *
+	 * @return JSON
+	 */
+	public function action_settings_save($config)
+	{
+		return $config->save();
+	}
+
+	/**
+	 * POST method for handling custom actions on the settings page
+	 *
+	 * @param SettingsConfig	$config
+	 *
+	 * @return JSON
+	 */
+	public function action_settings_custom_action($config)
+	{
+		$model = ModelHelper::getModel($config, $id, false, true);
+		$actionName = Input::get('action_name', false);
+
+		//get the action and perform the custom action
+		$action = Action::getByName($config, $actionName);
+		$result = $action->perform($model);
+
+		//if the result is a string, return that as an error.
+		if (is_string($result))
+		{
+			return Response::json(array('success' => false, 'error' => $result));
+		}
+		//if it's falsy, return the standard error message
+		else if (!$result)
+		{
+			return Response::json(array('success' => false, 'error' => $action->messages['error']));
+		}
+		else
+		{
+			return Response::json(array('success' => true));
+		}
 	}
 
 }
