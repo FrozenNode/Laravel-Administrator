@@ -47,4 +47,6 @@ return array(
 	'valid_menu' => "Morate uneti ispravnu 'menu' opciju u administrator.php konfiguracionom fajlu",
 	'valid_config_path' => "Morate uneti ispravnu 'model_config_path' putanju u administrator.php konfiguracionom fajlu. Direktorijum mora postojati i biti čitljiv.",
 	'not_eloquent' => " nije Eloquent model",
+	'storage_path_permissions' => "Vaša 'storage' putanja mora imati atribut 'writable' ukoliko želite da kreirate 'settings' stranicu",
+	'valid_home_page' => "Morate uneti važeću 'menu item' stavku u opciji 'home_page' u konfiguracionom fajlu",
 );
