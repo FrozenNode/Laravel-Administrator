@@ -18,5 +18,7 @@ return array(
 	'deleted' => 'Stavka izbrisana.',
 	'character_left' => ' karakter ostao',
 	'characters_left' => ' karaktera ostalo',
+	'no_results' => 'Nema rezultata',
+	'select_options' => 'Izaberite opcije',
 
 );
