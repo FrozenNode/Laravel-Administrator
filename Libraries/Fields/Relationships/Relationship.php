@@ -129,7 +129,7 @@ abstract class Relationship extends Field {
 
 		if (array_get($info, 'load_relationships', false))
 		{
-			$options = $relationship->model->all();
+			$options = $relationship->model->order_by($this->nameField)->get();
 		}
 		//otherwise if there are relationship items, we need them in the initial options list
 		else if ($relationshipItems = $relationship->get())
@@ -142,9 +142,10 @@ abstract class Relationship extends Field {
 		//map the options to the options property where array([key]: int, [name_field]: string)
 		$this->options = array_map(function($m) use ($nameField, $model)
 		{
+			//we hardcode the 'id' and 'text' values to play nicely with select2
 			return array(
-				$m::$key => $m->{$m::$key},
-				$nameField => $m->{$nameField},
+				'id' => $m->{$m::$key},
+				'text' => $m->{$nameField},
 			);
 		}, $options);
 	}

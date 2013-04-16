@@ -10,7 +10,8 @@
 			<span data-bind="text: ' / ' + pagination.last()"></span>
 		</div>
 		<div class="per_page">
-			<select data-bind="value: rowsPerPage, chosen: true, options: rowsPerPageOptions"></select>
+			<input type="hidden" data-bind="value: rowsPerPage, select2: {minimumResultsForSearch: -1, data: {results: rowsPerPageOptions},
+											allowClear: false}" />
 			<span> <?php echo __('administrator::administrator.itemsperpage') ?></span>
 		</div>
 		<!-- ko if: actionPermissions.create -->

@@ -69,7 +69,7 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$input = $input && is_array($input) ? $input : array();
+		$input = $input ? explode(',', $input) : array();
 
 		$model->{$this->field}()->sync($input);
 		unset($model->attributes[$this->field]);

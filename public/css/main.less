@@ -4,7 +4,6 @@
 @import "settings.less";
 
 
-
 /* CSS Resets */
 html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,address,cite,code,del,dfn,em,img,ins,q,small,strong,sub,sup,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;margin:0;padding:0}article,aside,figure,figure img,figcaption,hgroup,footer,header,nav,section,video,object{display:block}a img{border:0}figure{position:relative}figure img{width:100%}
 
@@ -162,38 +161,10 @@ body{
 	}
 }
 
-/*
- * 	Admin dashboard
- */
-#dashboard {
-	padding-left: 30px;
-	padding-top: 25px;
-
-	h2 {
-		color: #444;
-		text-shadow: #DDD 0 1px 0;
-	}
-
-	ul.models {
-		margin-top: 20px;
-
-		li {
-			display: inline-block;
-			margin-right: 15px;
-
-			a {
-				padding: 5px 10px;
-				font-size: 18px;
-			}
-		}
-	}
-}
-
 
 /*
  * Admin page
  */
-
 #admin_page {
 
 	position: relative;
@@ -220,7 +191,7 @@ body{
 				margin-bottom: 10px;
 				position: relative;
 
-				select {
+				select, input[type=hidden] {
 					width: 225px;
 				}
 
@@ -325,8 +296,8 @@ body{
 					padding: 11px 15px 9px;
 					vertical-align: middle;
 
-					select {
-						width: 60px;
+					input[type=hidden] {
+						width: 70px;
 					}
 				}
 

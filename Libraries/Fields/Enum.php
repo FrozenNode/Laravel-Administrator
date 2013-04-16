@@ -27,8 +27,8 @@ class Enum extends Field {
 		foreach ($options as $val => $text)
 		{
 			$this->options[] = array(
+				'id' => is_numeric($val) ? $text : $val,
 				'text' => $text,
-				'value' => is_numeric($val) ? $text : $val,
 			);
 		}
 	}

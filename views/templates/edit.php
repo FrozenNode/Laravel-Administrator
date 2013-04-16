@@ -70,20 +70,13 @@
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
-				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id}, value: $root[field],
-													ajaxChosen: {field: field, type: 'edit'},
-													options: $root.listOptions[field],
-													optionsValue: function(item) {return item[column]},
-													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+													value: $root[field], select2Remote: {field: field, type: 'edit', constraints: constraints}" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id}, value: $root[field],
-													chosen: true, options: $root.listOptions[field],
-													optionsValue: function(item) {return item[column]},
-													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+											value: $root[field], select2: {data:{results: $root.listOptions[field]}}" />
 				<!-- /ko -->
 			<!-- /ko -->
 
@@ -91,18 +84,13 @@
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
-				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
-													ajaxChosen: {field: field, type: 'edit'},
-													selectedOptions: $root[field], options: $root.listOptions[field],
-													optionsValue: function(item) {return item[foreignKey]},
-													optionsText: function(item) {return item[name_field]} "></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+									select2Remote: {field: field, type: 'edit', multiple: true, constraints: constraints}, value: $root[field]" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
-													chosen: true, selectedOptions: $root[field], options: $root.listOptions[field],
-													optionsValue: function(item) {return item[foreignKey]},
-													optionsText: function(item) {return item[name_field]} "></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+													select2: {data:{results: $root.listOptions[field]}, multiple: true}, value: $root[field]" />
 				<!-- /ko -->
 			<!-- /ko -->
 
@@ -131,10 +119,8 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
-				<select data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field], chosen: true, options: options,
-															optionsValue: function(item) {return item.value},
-															optionsText: function(item) {return item.text},
-															optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+												select2: {data: {results: options}}"></select>
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->

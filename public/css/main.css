@@ -306,23 +306,6 @@ body label {
   background:linear-gradient(top,#444444 0%,#333333 100%);
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
-#dashboard {
-  padding-left:30px;
-  padding-top:25px;
-}
-#dashboard h2 {
-  color:#444444;
-  text-shadow:#dddddd 0 1px 0;
-}
-#dashboard ul.models { margin-top:20px; }
-#dashboard ul.models li {
-  display:inline-block;
-  margin-right:15px;
-}
-#dashboard ul.models li a {
-  padding:5px 10px;
-  font-size:18px;
-}
 #admin_page { position:relative; }
 #admin_page label {
   margin-bottom:3px;
@@ -343,7 +326,7 @@ body label {
   margin-bottom:10px;
   position:relative;
 }
-#admin_page div#sidebar div.panel_contents > div select { width:225px; }
+#admin_page div#sidebar div.panel_contents > div select, #admin_page div#sidebar div.panel_contents > div input[type=hidden] { width:225px; }
 #admin_page div#sidebar div.panel_contents > div ul.chzn-choices {
   border:1px solid #cccccc;
   -webkit-transition:all 0.2s ease 0s;
@@ -431,7 +414,7 @@ body label {
   padding:11px 15px 9px;
   vertical-align:middle;
 }
-#admin_page #content div.table_container div.results_header div.per_page select { width:60px; }
+#admin_page #content div.table_container div.results_header div.per_page input[type=hidden] { width:70px; }
 #admin_page #content div.table_container div.results_header a.new_item {
   padding:7px 13px;
   margin:0;

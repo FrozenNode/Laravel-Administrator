@@ -59,104 +59,171 @@
 		}
 	};
 
-	//for chosen js
-	ko.bindingHandlers.chosen = {
+	var select2Defaults = {
+			placeholder: adminData.languages['select_options'],
+			formatNoMatches: function(term)
+			{
+				return adminData.languages['no_results'];
+			},
+			width: 'resolve',
+			allowClear: true
+		};
+
+	//for select2
+	ko.bindingHandlers.select2 = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			$(element).chosen({no_results_text: adminData.languages['no_results'], placeholder_text: adminData.languages['select_options']});
+			var options = valueAccessor(),
+				defaults = $.extend({}, select2Defaults),
+				data;
 
-			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
+			if (options && typeof options === 'object')
+			{
+				$.extend(defaults, options);
+			}
+
+			//pull the latest from the list
+			if (defaults.data)
+			{
+				if ($.isFunction(defaults.data.results))
+				{
+					defaults.data.results = options.data.results();
+				}
+
+				$(element).data('list_data', defaults.data.results);
+
+				defaults.data = function()
+				{
+					return {results: $(element).data('list_data')};
+				}
+			}
+
+			//init select2 if it isn't already set up
+			if ($(element).data("select2") === undefined || $(element).data("select2") === null)
+			{
+				$(element).select2(defaults);
+			}
+
+			setTimeout(function()
+			{
+				$(element).trigger('change');
+			}, 50);
 		}
 	};
 
-	//for ajax chosen js
-	ko.bindingHandlers.ajaxChosen = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel, context)
-		{
-			var options = valueAccessor(),
-				viewModel = context.$root,
-				data = {
-					constraints: {},
-					field: options.field,
-					type: options.type
-				};
-
-			//figure out if there are any constraints that we need to send over
-			$(options.constraints).each(function(ind, el)
-			{
-				data.constraints[ind] = viewModel[ind]();
-			});
-
-			$(element).ajaxChosen({
-				minTermLength: 1,
-				afterTypeDelay: 50,
-				data: data,
-				type: 'POST',
-				url: base_url + adminData.model_name + '/update_options/',
-				dataType: 'json',
-				fillData: function()
-				{
-					var data = {};
-
-					//if this is a filter, go through the filters until this one is found and update the value
-					if (options.type === 'filter')
+	var select2RemoteHandler = function (element, valueAccessor, allBindingsAccessor, viewModel, context)
+	{
+		var options = valueAccessor(),
+			defaults = $.extend({
+				minimumInputLength: 1,
+				allowClear: true,
+				ajax: {
+					url: base_url + adminData.model_name + '/update_options/',
+					dataType: 'json',
+					quietMillis: 100,
+					type: 'POST',
+					data: function(term, page)
 					{
-						$.each(admin.filtersViewModel.filters, function(ind, el)
+						var data = {
+								term: term,
+								page: page,
+								field: options.field,
+								type: options.type,
+								constraints: {}
+							};
+
+						if (data.type === 'edit')
 						{
-							if (el.field === options.field && el.value())
+							data.selectedItems = admin.viewModel[data.field]();
+						}
+						else if (data.type === 'filter')
+						{
+							data.selectedItems = admin.filtersViewModel.filters[parseInt(options.filterIndex)].value();
+						}
+
+						//figure out if there are any constraints that we need to send over
+						if (options.constraints)
+						{
+							$.each(options.constraints, function(ind, el)
 							{
-								data.selectedItems = el.value();
-							}
-						});
-					}
-					else
+								data.constraints[ind] = admin.viewModel[ind]();
+							});
+						}
+
+						return data;
+					},
+					results: function(returndata, page)
 					{
-						if (admin.viewModel[options.field]())
+						var data = {},
+							val = $(element).val();
+
+						//we want to update the autocomplete index so we can show all possibly-selected items
+						if (val)
 						{
-							data.selectedItems = admin.viewModel[options.field]();
+							$(val.split(',')).each(function(ind, el)
+							{
+								data[this] = {id: this, text: admin.viewModel[options.field + '_autocomplete'][this].text};
+							});
+						}
+
+						//iterate over the results and put them in the autocomplete array
+						$.each(returndata, function(ind, el)
+						{
+							data[el.id] = el;
+						});
+
+						admin.viewModel[options.field + '_autocomplete'] = data;
+
+						return {
+							results: returndata
 						}
 					}
+				},
+				initSelection: function(element, callback) {
+					var data = [],
+						val = $(element).val();
 
-					return data;
-				}
-			}, function(data, term, select)
-			{
-				var $chosen = select.next(),
-					$single = $chosen.find('div.chzn-search input'),
-					$multi = $chosen.find('ul.chzn-choices'),
-					$multiInput = $multi.find('li.search-field input'),
-					singleVal = $single.val(),
-					multiVal = $multiInput.val();
+					if (!val)
+						return callback(null);
 
-				if (options.type === 'filter')
-				{
-					admin.filtersViewModel.listOptions[options.field](data);
-				}
-				else
-				{
-					admin.viewModel.listOptions[options.field](data);
-				}
-
-				setTimeout(function()
-				{
-					//reset the search and focus
-					if ($single.length)
+					//if this is a multi-select, set up the data as an array
+					if (options.multiple)
 					{
-						$single.val(singleVal);
-						$single.focus();
+						$(element.val().split(',')).each(function(ind, el)
+						{
+							data.push({id: this, text: admin.viewModel[options.field + '_autocomplete'][this].text});
+						});
 					}
+					//otherwise make the data a simple object
 					else
 					{
-						$multiInput.val(multiVal);
-						$multiInput.focus();
+						data = {id: val, text: admin.viewModel[options.field + '_autocomplete'][val].text};
 					}
-				}, 50);
 
-				return false;
-			});
+					callback(data);
+				}
+			}, select2Defaults);
 
-			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
+		if (options && typeof options === 'object')
+		{
+			$.extend(defaults, options);
 		}
+
+		//init select2 if it isn't already set up
+		if ($(element).data("select2") === undefined || $(element).data("select2") === null)
+		{
+			$(element).select2(defaults);
+		}
+
+		setTimeout(function()
+		{
+			$(element).trigger('change');
+		}, 50);
+	}
+
+	//for ajax/remote select2
+	ko.bindingHandlers.select2Remote = {
+		update: select2RemoteHandler
 	};
 
 	/**
