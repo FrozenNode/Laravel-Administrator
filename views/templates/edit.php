@@ -85,12 +85,14 @@
 
 				<!-- ko if: autocomplete -->
 				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
-									select2Remote: {field: field, type: 'edit', multiple: true, constraints: constraints}, value: $root[field]" />
+									select2Remote: {field: field, type: 'edit', multiple: true, constraints: constraints, sort: sort_field},
+									value: $root[field]" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
 				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
-													select2: {data:{results: $root.listOptions[field]}, multiple: true}, value: $root[field]" />
+													select2: {data:{results: $root.listOptions[field]}, multiple: true, sort: sort_field},
+													value: $root[field]" />
 				<!-- /ko -->
 			<!-- /ko -->
 
