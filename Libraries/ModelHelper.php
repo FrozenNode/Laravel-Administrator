@@ -62,8 +62,26 @@ class ModelHelper {
 			{
 				if ($info->relationship)
 				{
+					//if this is a hmabt, we want to sort our initial values
+					if ($info->multipleValues)
+					{
+						//if a sort_field is provided, use it, otherwise sort by the name field
+						if ($info->sortField)
+						{
+							$relatedItems = $model->{$field}()->order_by($info->sortField)->get();
+						}
+						else
+						{
+							$relatedItems = $model->{$field}()->order_by($info->nameField)->get();
+						}
+					}
+					else
+					{
+						$relatedItems = $model->{$field}()->get();
+					}
+
 					//get all existing values for this relationship
-					if ($relatedItems = $model->{$field}()->get())
+					if ($relatedItems)
 					{
 						//the array that holds all the ids of the currently-related items
 						$relationsArray = array();
@@ -388,6 +406,18 @@ class ModelHelper {
 			if (sizeof($selectedItems))
 			{
 				$query->where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
+
+				//if this is a hmabt and a sort field is set, order it by the sort field
+				if ($info->multipleValues && $info->sortField)
+				{
+					$query->order_by($info->sortField);
+				}
+				//otherwise order it by the name field
+				else
+				{
+					$query->order_by($info->nameField);
+				}
+
 				return static::formatOptions($relatedModel, $info, $query->get($selects));
 			}
 			else

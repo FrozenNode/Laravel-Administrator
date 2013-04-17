@@ -101,7 +101,55 @@
 			//init select2 if it isn't already set up
 			if ($(element).data("select2") === undefined || $(element).data("select2") === null)
 			{
+				//set the original list data in case we need it for sorting
+				$(element).data('original_list_data', [].concat($(element).data('list_data')));
+
 				$(element).select2(defaults);
+
+				//if the sort option is set, set up jquery ui sortable
+				if (options.sort)
+				{
+					$(element).select2('container').find('ul.select2-choices').sortable({
+						containment: 'parent',
+						start: function() { $(element).select2("onSortStart") },
+						update: function() { $(element).select2("onSortEnd") }
+					});
+				}
+			}
+
+			//it's necessary to reorder the options array if the sort is set
+			if (options.sort)
+			{
+				var listData = $(element).data('list_data'),
+					val = $(element).val();
+
+				//initially we want to reset the list data so we can work with a fresh, alphabetized sort
+				$(element).data('list_data', [].concat($(element).data('original_list_data')));
+
+				//if there is a value for this field, split it and find the relevant items in the array
+				if (val)
+				{
+					var vals = val.split(','),
+						topItems = [],
+						allItems = $(element).data('list_data');
+
+					//iterate over the values
+					$.each(vals, function(ind, el)
+					{
+						//iterate over all the items to find our value
+						$.each(allItems, function(i, e)
+						{
+							if (e.id == el)
+							{
+								topItems.push(e);
+								allItems.splice(i, 1);
+								return false;
+							}
+						});
+					});
+
+					$(element).data('list_data', topItems.concat(allItems));
+				}
 			}
 
 			setTimeout(function()
@@ -213,6 +261,16 @@
 		if ($(element).data("select2") === undefined || $(element).data("select2") === null)
 		{
 			$(element).select2(defaults);
+
+			//if the sort option is set, set up jquery ui sortable
+			if (options.sort)
+			{
+				$(element).select2('container').find('ul.select2-choices').sortable({
+					containment: 'parent',
+					start: function() { $(element).select2("onSortStart") },
+					update: function() { $(element).select2("onSortEnd") }
+				});
+			}
 		}
 
 		setTimeout(function()

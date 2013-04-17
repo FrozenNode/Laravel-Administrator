@@ -772,7 +772,7 @@
 			this.initRelationships();
 
 			//set up the KO bindings
-			ko.applyBindings(this.viewModel, $('#main_content')[0]);
+			ko.applyBindings(this.viewModel, $('#content')[0]);
 			ko.applyBindings(this.filtersViewModel, $('#filters_sidebar_section')[0]);
 
 			//set up pushstate history
@@ -878,7 +878,7 @@
 			$.each(adminData.edit_fields, function(ind, el)
 			{
 				if (el.relationship)
-					self.viewModel.listOptions[ind] = ko.observableArray(el.options);
+					self.viewModel.listOptions[ind] = el.options;
 			});
 		},
 

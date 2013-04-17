@@ -20,6 +20,13 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public $multipleValues = true;
 
+	/**
+	 * If provided, the sort field is used to reorder values in the UI and then saved to the intermediate relationship table
+	 *
+	 * @var bool
+	 */
+	public $sortField = false;
+
 
 	/**
 	 * Constructor function
@@ -43,6 +50,7 @@ class HasManyAndBelongsTo extends Relationship {
 		$this->column = $relationship->table->wheres[0]['column'];
 		$this->column2 = $table->clauses[0]['column2'];
 		$this->foreignKey = $related_model::$key;
+		$this->sortField = array_get($info, 'sort_field', $this->sortField);
 	}
 
 
@@ -56,6 +64,7 @@ class HasManyAndBelongsTo extends Relationship {
 		$arr = parent::toArray();
 
 		$arr['column2'] = $this->column2;
+		$arr['sort_field'] = $this->sortField;
 
 		return $arr;
 	}
@@ -71,7 +80,23 @@ class HasManyAndBelongsTo extends Relationship {
 	{
 		$input = $input ? explode(',', $input) : array();
 
-		$model->{$this->field}()->sync($input);
+		//if this field is sortable, delete all the old records and insert the new ones one at a time
+		if ($this->sortField)
+		{
+			//first delete all the old records
+			$model->{$this->field}()->delete();
+
+			foreach ($input as $i => $item)
+			{
+				$model->{$this->field}()->attach($item, array($this->sortField => $i));
+			}
+		}
+		else
+		{
+			$model->{$this->field}()->sync($input);
+		}
+
+		//then attach all of the new records
 		unset($model->attributes[$this->field]);
 	}
 

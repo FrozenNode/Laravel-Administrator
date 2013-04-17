@@ -3,6 +3,7 @@
 ### 3.2.0
 - You can now choose to provide a custom dashboard or a default home page from your menu
 - Settings pages are now available
+- It is now possible to set a sort_field on HMABT relationships for inline reordering of related values
 - You can now select nested belongs_to relationships in the columns array
 - Primary key fields are now hidden by default in the edit window unless you put them in your edit array
 - New languages: Spanish (es), Basque (eu), French (fr), Dutch (nl), Polish (pl), Serbian (sr)

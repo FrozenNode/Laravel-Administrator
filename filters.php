@@ -31,7 +31,7 @@ Route::filter('add_assets', function()
 	$assets->add('jquery-select2', 'js/jquery/select2/select2.js');
 
 	//jquery ui
-	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.9.1.custom.min.js');
+	$assets->add('jquery.ui', 'js/jquery/jquery-ui-1.10.2.custom.min.js');
 
 	//jquery timepicker addon
 	$assets->add('jquery.ui.timepicker', 'js/jquery/jquery-ui-timepicker-addon.js');
