@@ -5,7 +5,7 @@
 - Settings pages are now available
 - You can now select nested belongs_to relationships in the columns array
 - Primary key fields are now hidden by default in the edit window unless you put them in your edit array
-- New languages: Spanish (es), Basque (eu), Dutch (nl), Polish (pl)
+- New languages: Spanish (es), Basque (eu), French (fr), Dutch (nl), Polish (pl), Serbian (sr)
 - Moved from Chosen select boxes to Select2
 - Bugfix: Constraints on autocomplete fields now constrain the autocomplete search
 - Bugfix: Multiple constraints now work properly
