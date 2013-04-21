@@ -25,8 +25,8 @@
 			<tr>
 				<!-- ko foreach: columns -->
 					<th data-bind="css: {sortable: sortable,
-											'sorted-asc': field == $root.sortOptions.field() && $root.sortOptions.direction() === 'asc',
-											'sorted-desc': field == $root.sortOptions.field() && $root.sortOptions.direction() === 'desc'}">
+		'sorted-asc': (field == $root.sortOptions.field() || sort_field == $root.sortOptions.field()) && $root.sortOptions.direction() === 'asc',
+		'sorted-desc': (field == $root.sortOptions.field() || sort_field == $root.sortOptions.field()) && $root.sortOptions.direction() === 'desc'}">
 						<!-- ko if: sortable -->
 							<div data-bind="click: function() {$root.setSortOptions(sort_field ? sort_field : field)}, text: title"></div>
 						<!-- /ko -->
