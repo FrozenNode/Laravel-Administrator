@@ -42,7 +42,10 @@
 					$element.hide();
 				});
 
-				$tableContainer.stop().animate({marginRight: 290}, 150);
+				$tableContainer.stop().animate({marginRight: 290}, 150, function()
+				{
+					window.admin.resizePage();
+				});
 			}
 			else
 			{
@@ -547,6 +550,15 @@
 
 				observable($element.val());
 			}
+
+			//when the editor is loaded, we want to resize our page
+			editor.on('loaded', function()
+			{
+				setTimeout(function()
+				{
+					window.admin.resizePage();
+				}, 50)
+			})
 
 			editor.setData(value);
 		},

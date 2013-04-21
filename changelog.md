@@ -15,6 +15,7 @@
 - Bugfix: Character limits on text fields no longer limit the string on every keystroke
 - Bugfix: Relationship options now sort by the name field
 - Bugfix: Getter columns now visibly show if they're being sorted
+- Bugfix: Fixed some issues with the page not resizing properly
 
 ### 3.1.0
 - Localization support. Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this
