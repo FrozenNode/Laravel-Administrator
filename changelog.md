@@ -9,6 +9,7 @@
 - Primary key fields are now hidden by default in the edit window unless you put them in your edit array
 - New languages: Spanish (es), Basque (eu), French (fr), Dutch (nl), Polish (pl), Serbian (sr)
 - Moved from Chosen select boxes to Select2
+- The item link now uses the single name of the model instead of "item"
 - Bugfix: Constraints on autocomplete fields now constrain the autocomplete search
 - Bugfix: Multiple constraints now work properly
 - Bugfix: Character limits on text fields no longer limit the string on every keystroke

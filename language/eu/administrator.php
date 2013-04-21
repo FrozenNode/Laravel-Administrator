@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -17,7 +17,7 @@ return array(
 	'loading' => 'Kargatzen...',
 	'createnew' => 'Berria Sortu',
 	'new' => 'Berria',
-	'viewitem' => 'Item-a ikusi',
+	'viewitem' => ':single-a ikusi',
 	'id' => 'ID',
 	'uploadimage' => 'Irudia Igo',
 	'imageuploading' => 'Irudia Igotzen',

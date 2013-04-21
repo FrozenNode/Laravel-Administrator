@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -17,7 +17,7 @@ return array(
 	'loading' => 'Chargement...',
 	'createnew' => 'Créer nouveau',
 	'new' => 'Ajouter',
-	'viewitem' => 'Afficher l\'élement',
+	'viewitem' => 'Afficher :single',
 	'id' => 'ID',
 	'uploadimage' => 'Charge image',
 	'imageuploading' => 'Chargement image',

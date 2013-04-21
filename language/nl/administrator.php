@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -17,7 +17,7 @@ return array(
 	'loading' => 'Laden...',
 	'createnew' => 'Nieuwe aanmaken',
 	'new' => 'Nieuwe',
-	'viewitem' => 'Bekijk Item',
+	'viewitem' => 'Bekijk :single',
 	'id' => 'ID',
 	'uploadimage' => 'Upload Afbeelding',
 	'imageuploading' => 'Afbeelding Uploading',

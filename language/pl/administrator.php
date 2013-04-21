@@ -17,7 +17,7 @@ return array(
 	'loading'        => 'Ładuje...',
 	'createnew'      => 'Stwórz nowy',
 	'new'            => 'Nowy',
-	'viewitem'       => 'wyświetl element',
+	'viewitem'       => 'wyświetl :single',
 	'id'             => 'ID',
 	'uploadimage'    => 'Dodaj zdjęcie',
 	'imageuploading' => 'Ładuje zdjęcie',

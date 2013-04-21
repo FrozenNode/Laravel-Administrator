@@ -73,7 +73,7 @@
 </script>
 
 <script id="itemFormTemplate" type="text/html">
-	<?php echo View::make("administrator::templates.edit")?>
+	<?php echo View::make("administrator::templates.edit", array('config' => $config))?>
 </script>
 
 <script id="filtersTemplate" type="text/html">

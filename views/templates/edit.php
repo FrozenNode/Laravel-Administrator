@@ -7,7 +7,7 @@
 	<!-- ko if: $root[$root.primaryKey]() -->
 		<!-- ko if: $root.itemLink() -->
 			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()},
-											text: '<?php echo __('administrator::administrator.viewitem') ?>'"></a>
+										text: '<?php echo __('administrator::administrator.viewitem', array('single' => $config->single)) ?>'"></a>
 		<!-- /ko -->
 	<!-- /ko -->
 
