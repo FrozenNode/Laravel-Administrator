@@ -536,7 +536,7 @@
 			var editor = $element.ckeditorGet();
 
 			//destroy the existing editor if the DOM node is removed
-			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
 				var existingEditor = CKEDITOR.instances[element.name];
 
 				if (existingEditor)
@@ -568,6 +568,8 @@
 			var value = ko.utils.unwrapObservable(valueAccessor()),
 				$element = $(element),
 				editor = $element.ckeditorGet();
+
+			value = value ? value : '';
 
 			$element.html(value);
 			editor.setData(value);

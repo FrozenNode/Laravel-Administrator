@@ -16,6 +16,7 @@
 - Bugfix: Relationship options now sort by the name field
 - Bugfix: Getter columns now visibly show if they're being sorted
 - Bugfix: Fixed some issues with the page not resizing properly
+- Bugfix: WYSIWYG editor now resets properly after saving and then creating a new item
 
 ### 3.1.0
 - Localization support. Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this
