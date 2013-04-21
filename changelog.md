@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 3.2.0
+- Added support for a file field
 - You can now choose to provide a custom dashboard or a default home page from your menu
 - Settings pages are now available
 - It is now possible to set a sort_field on HMABT relationships for inline reordering of related values

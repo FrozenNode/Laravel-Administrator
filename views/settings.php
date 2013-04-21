@@ -8,7 +8,7 @@
 		asset_url = "<?php echo $assetUrl ?>",
 		save_url = "<?php echo URL::to_route('admin_settings_save', array($config->name)) ?>",
 		custom_action_url = "<?php echo URL::to_route('admin_settings_custom_action', array($config->name)) ?>",
-		image_url = "<?php echo URL::to_route('admin_settings_display_image', array($config->name)) ?>",
+		file_url = "<?php echo URL::to_route('admin_settings_display_file', array($config->name)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		language = "<?php echo Config::get('application.language') ?>",

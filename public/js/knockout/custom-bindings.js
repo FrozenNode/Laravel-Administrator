@@ -586,12 +586,13 @@
 	/**
 	 * File uploader using plupload
 	 */
-	ko.bindingHandlers.imageupload = {
+	ko.bindingHandlers.fileupload = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var options = valueAccessor(),
 				cacheName = options.field + '_uploader',
-				viewModel = context.$root;
+				viewModel = context.$root,
+				filters = options.image ? [{title: 'Image files', extensions: 'jpg,jpeg,gif,png'}] : [];
 
 			viewModel[cacheName] = new plupload.Uploader({
 				runtimes: 'html5,flash,silverlight,gears,browserplus',
@@ -603,9 +604,7 @@
 				url: options.upload_url,
 				flash_swf_url: asset_url + 'js/plupload/js/plupload.flash.swf',
 				silverlight_xap_url: asset_url + 'js/plupload/js/plupload.silverlight.xap',
-				filters: [
-					{title: 'Image files', extensions: 'jpg,jpeg,gif,png'}
-				]
+				filters: filters
 			});
 
 			viewModel[cacheName].init();
@@ -636,21 +635,22 @@
 
 				options.uploading(false);
 
-				if (!data.errors.length) {
+				if (data.errors.length === 0) {
 					//success
-					//iterate over the images until we find it and then set the proper fields
+					//iterate over the files until we find it and then set the proper fields
 					viewModel[options.field](data.filename);
-
-					setTimeout(function()
-					{
-						viewModel[cacheName].splice();
-						viewModel[cacheName].refresh();
-						$('div.plupload').css('z-index', 71);
-					}, 200);
 				} else {
 					//error
-					alert('ERRRORRRRR');
+					alert(data.errors.messages.file[0]);
 				}
+
+				setTimeout(function()
+				{
+					viewModel[cacheName].splice();
+					viewModel[cacheName].refresh();
+					$('div.plupload').css('z-index', 71);
+					admin.resizePage();
+				}, 200);
 			});
 
 			$('#' + cacheName).bind('dragenter', function(e)
@@ -681,6 +681,6 @@
 				$('div.plupload').css('z-index', 71);
 			}, 200);
 		}
-	}
+	};
 
 })(jQuery);

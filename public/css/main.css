@@ -74,16 +74,24 @@
 }
 #settings_page form.settings_form > div.markdown div.markdown_container div.preview p { margin-bottom:7px; }
 #settings_page form.settings_form > div.markdown div.markdown_container textarea { height:100%; }
-#settings_page form.settings_form > div.image div.image_upload_container { padding:4px 0; }
-#settings_page form.settings_form > div.image div.image_upload_container div.uploader {
+#settings_page form.settings_form > div.image div.upload_container, #settings_page form.settings_form > div.file div.upload_container { padding:4px 0; }
+#settings_page form.settings_form > div.image div.upload_container div.uploader, #settings_page form.settings_form > div.file div.upload_container div.uploader {
   background:url(../img/upload.png) no-repeat;
   padding-left:25px;
 }
-#settings_page form.settings_form > div.image div.image_container { position:relative; }
-#settings_page form.settings_form > div.image div.image_container input[type=button] {
+#settings_page form.settings_form > div.image div.image_container, #settings_page form.settings_form > div.file div.image_container { position:relative; }
+#settings_page form.settings_form > div.image div.image_container input[type=button], #settings_page form.settings_form > div.file div.image_container input[type=button] {
   position:absolute;
   top:5px;
-  right:5px;
+  right:-5px;
+}
+#settings_page form.settings_form > div.image div.file_container a, #settings_page form.settings_form > div.image div.file_container input, #settings_page form.settings_form > div.file div.file_container a, #settings_page form.settings_form > div.file div.file_container input { vertical-align:middle; }
+#settings_page form.settings_form > div.image div.file_container a, #settings_page form.settings_form > div.file div.file_container a {
+  display:inline-block;
+  max-width:83%;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
 }
 #settings_page form.settings_form > div.color div.color_preview {
   height:8px;
@@ -652,16 +660,24 @@ body label {
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container div.preview p { margin-bottom:7px; }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.markdown div.markdown_container textarea { height:100%; }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_upload_container { padding:4px 0; }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_upload_container div.uploader {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.upload_container, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.upload_container { padding:4px 0; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.upload_container div.uploader, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.upload_container div.uploader {
   background:url(../img/upload.png) no-repeat;
   padding-left:25px;
 }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container { position:relative; }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container input[type=button] {
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.image_container { position:relative; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container input[type=button], #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.image_container input[type=button] {
   position:absolute;
   top:5px;
-  right:5px;
+  right:-5px;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.file_container a, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.file_container input, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.file_container a, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.file_container input { vertical-align:middle; }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.file_container a, #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.file_container a {
+  display:inline-block;
+  max-width:83%;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.color div.color_preview {
   height:8px;

@@ -149,8 +149,8 @@
 
 		}
 
-		&.image {
-			div.image_upload_container {
+		&.image, &.file {
+			div.upload_container {
 				padding: 4px 0;
 
 				div.uploader {
@@ -165,7 +165,21 @@
 				input[type=button] {
 					position: absolute;
 					top: 5px;
-					right: 5px;
+					right: -5px;
+				}
+			}
+
+			div.file_container {
+				a, input {
+					vertical-align: middle;
+				}
+
+				a {
+					display: inline-block;
+					max-width: 83%;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
 				}
 			}
 		}

@@ -6,8 +6,8 @@
 
 	<!-- ko if: $root[$root.primaryKey]() -->
 		<!-- ko if: $root.itemLink() -->
-			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()}">
-				<?php echo __('administrator::administrator.viewitem') ?></a>
+			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()},
+											text: '<?php echo __('administrator::administrator.viewitem') ?>'"></a>
 		<!-- /ko -->
 	<!-- /ko -->
 
@@ -157,9 +157,9 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'image' -->
-				<div class="image_upload_container" data-bind="attr: {id: field_id}">
+				<div class="upload_container" data-bind="attr: {id: field_id}">
 					<div class="uploader" data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root.activeItem,
-											imageupload: {field: field, size_limit: size_limit, uploading: uploading,
+											fileupload: {field: field, size_limit: size_limit, uploading: uploading, image: true,
 														upload_percentage: upload_percentage, upload_url: upload_url}">
 															<?php echo __('administrator::administrator.uploadimage') ?></div>
 					<!-- ko if: uploading -->
@@ -170,7 +170,28 @@
 
 				<!-- ko if: $root[field] -->
 					<div class="image_container">
-						<img data-bind="attr: {src: image_url + '?path=' + location + $root[field]()}" />
+						<img data-bind="attr: {src: file_url + '?path=' + location + $root[field]()}" />
+						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
+					</div>
+				<!-- /ko -->
+			<!-- /ko -->
+
+			<!-- ko if: type === 'file' -->
+				<div class="upload_container" data-bind="attr: {id: field_id}">
+					<div class="uploader" data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root.activeItem,
+											fileupload: {field: field, size_limit: size_limit, uploading: uploading,
+														upload_percentage: upload_percentage, upload_url: upload_url}">
+															<?php echo __('administrator::administrator.uploadfile') ?></div>
+					<!-- ko if: uploading -->
+						<div class="uploading"
+						data-bind="text: '<?php echo __('administrator::administrator.fileuploading') ?>' + upload_percentage() + '%'"></div>
+					<!-- /ko -->
+				</div>
+
+				<!-- ko if: $root[field] -->
+					<div class="file_container">
+						<a data-bind="attr: {href: file_url + '?path=' + location + $root[field](), title: $root[field]},
+							text: $root[field]"></a>
 						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
 					</div>
 				<!-- /ko -->

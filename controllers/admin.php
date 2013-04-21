@@ -285,33 +285,35 @@ class Administrator_Admin_Controller extends Controller
 	}
 
 	/**
-	 * The GET method that displays an image field's image
+	 * The GET method that displays an file field's file
 	 *
-	 * @return Image
+	 * @return Image / File
 	 */
-	public function action_display_image()
+	public function action_display_file()
 	{
 		//get the stored path of the original
 		$path = Input::get('path');
-		$image = File::get($path);
+		$file = File::get($path);
+		$path_info = pathinfo($path);
 
 		$headers = array(
 			'Content-Type' => File::mime(File::extension($path)),
 			'Content-Length' => File::size($path),
+			'Content-Disposition' => 'attachment; filename="' . $path_info['filename'] . '"'
 		);
 
-		return Response::make($image, 200, $headers);
+		return Response::make($file, 200, $headers);
 	}
 
 	/**
-	 * The POST method that runs when a user uploads an image on an image field
+	 * The POST method that runs when a user uploads a file on a file field
 	 *
 	 * @param ModelConfig	$config
 	 * @param string	$fieldName
 	 *
 	 * @return JSON
 	 */
-	public function action_image_upload($config, $fieldName)
+	public function action_file_upload($config, $fieldName)
 	{
 		//get the model and the field object
 		$field = Field::findField($config, $fieldName);

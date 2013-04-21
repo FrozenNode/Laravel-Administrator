@@ -1,46 +1,10 @@
 <?php
 namespace Admin\Libraries\Fields;
 
-use Admin\Libraries\ModelHelper;
 use Admin\Libraries\Includes\Multup;
 use \URL;
 
-class Image extends Field {
-
-	/**
-	 * The naming mechanism for the image (can be either 'keep' or 'random').
-	 *
-	 * @var string
-	 */
-	public $naming = 'random';
-
-	/**
-	 * Length of file name if naming is set to random
-	 *
-	 * @var int
-	 */
-	public $length = 32;
-
-	/**
-	 * The directory location used to store the original
-	 *
-	 * @var string
-	 */
-	public $location;
-
-	/**
-	 * The upload url for this field
-	 *
-	 * @var string
-	 */
-	public $uploadUrl;
-
-	/**
-	 * The file size limit in MB
-	 *
-	 * @var int
-	 */
-	public $sizeLimit = 2;
+class Image extends File {
 
 	/**
 	 * If provided, the user can specify thumbnail sizes and locations. Example:
@@ -64,28 +28,8 @@ class Image extends Field {
 	public function __construct($field, $info, $config)
 	{
 		parent::__construct($field, $info, $config);
-		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
 
 		$this->sizes = array_get($info, 'sizes', $this->sizes);
-		$this->naming = array_get($info, 'naming', $this->naming);
-		$this->length = array_get($info, 'length', $this->length);
-		$this->location = array_get($info, 'location');
-		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
-
-		if ($isSettings)
-		{
-			$this->uploadUrl = URL::to_route('admin_settings_image_upload', array($config->name, $this->field));
-		}
-		else
-		{
-			$this->uploadUrl = URL::to_route('admin_image_upload', array($config->name, $this->field));
-		}
-
-		//make sure the naming is one of the two accepted values
-		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
-
-		// Satisfy params for Multup, for keep we return false so we don't random filename
-		$this->naming = ($this->naming == 'keep') ? false : true;
 	}
 
 	/**
@@ -102,21 +46,5 @@ class Image extends Field {
 			->upload();
 
 		return $result[0];
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['location'] = $this->location;
-		$arr['size_limit'] = $this->sizeLimit;
-		$arr['upload_url'] = $this->uploadUrl;
-
-		return $arr;
 	}
 }

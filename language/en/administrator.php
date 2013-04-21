@@ -21,6 +21,8 @@ return array(
 	'id' => 'ID',
 	'uploadimage' => 'Upload Image',
 	'imageuploading' => 'Image Uploading',
+	'uploadfile' => 'Upload File',
+	'fileuploading' => 'File Uploading',
 	'none' => 'None',
 	'all' => 'All',
 	'itemsperpage' => 'items per page',

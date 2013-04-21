@@ -49,10 +49,10 @@ Route::group(array('before' => 'validate_admin|validate_model|add_assets'), func
 		'uses' => 'administrator::admin@update_options'
 	));
 
-	//Display an image field's image
-	Route::get('(:bundle)/(:any)/image', array(
-		'as' => 'admin_display_image',
-		'uses' => 'administrator::admin@display_image'
+	//Display an image or file field's image or file
+	Route::get('(:bundle)/(:any)/file', array(
+		'as' => 'admin_display_file',
+		'uses' => 'administrator::admin@display_file'
 	));
 });
 
@@ -87,10 +87,10 @@ Route::group(array('before' => 'validate_admin|validate_model|csrf'), function()
 //Standard validation without csrf
 Route::group(array('before' => 'validate_admin|validate_model|disable_profiler'), function()
 {
-	//Image Uploads
-	Route::post('(:bundle)/(:any)/(:any)/image_upload', array(
-		'as' => 'admin_image_upload',
-		'uses' => 'administrator::admin@image_upload'
+	//File Uploads
+	Route::post('(:bundle)/(:any)/(:any)/file_upload', array(
+		'as' => 'admin_file_upload',
+		'uses' => 'administrator::admin@file_upload'
 	));
 
 	//Updating Rows Per Page
@@ -123,16 +123,16 @@ Route::group(array('before' => 'validate_admin|validate_settings|csrf'), functio
 	));
 });
 
-//Settings image upload
-Route::post('(:bundle)/settings/(:any)/(:any)/image_upload', array(
+//Settings file upload
+Route::post('(:bundle)/settings/(:any)/(:any)/file_upload', array(
 	'before' => 'validate_admin|validate_settings|disable_profiler',
-	'as' => 'admin_settings_image_upload',
-	'uses' => 'administrator::admin@image_upload'
+	'as' => 'admin_settings_file_upload',
+	'uses' => 'administrator::admin@file_upload'
 ));
 
-//Display a settings image
-Route::get('(:bundle)/settings/(:any)/image', array(
+//Display a settings file
+Route::get('(:bundle)/settings/(:any)/file', array(
 	'before' => 'validate_admin|validate_settings',
-	'as' => 'admin_settings_display_image',
-	'uses' => 'administrator::admin@display_image'
+	'as' => 'admin_settings_display_file',
+	'uses' => 'administrator::admin@display_file'
 ));
