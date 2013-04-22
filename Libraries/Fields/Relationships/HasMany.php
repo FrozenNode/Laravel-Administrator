@@ -37,7 +37,10 @@ class HasMany extends Relationship {
 	{
 		parent::__construct($field, $info, $config);
 
-		$relationship = $config->model->{$field}();
+		//set up the model depending on what's passed in
+		$model = is_a($config, 'Admin\\Libraries\\ModelConfig') ? $config->model : $config;
+
+		$relationship = $model->{$field}();
 		$table = $relationship->table->joins[0];
 		$related_model = $relationship->model;
 

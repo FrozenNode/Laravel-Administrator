@@ -9,7 +9,7 @@
 	var site_url = "<?php echo Url::to('/') ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
-		image_url = "<?php echo URL::to_route('admin_display_image', array($config->name)) ?>",
+		file_url = "<?php echo URL::to_route('admin_display_file', array($config->name)) ?>",
 		rows_per_page_url = "<?php echo URL::to_route('admin_rows_per_page', array($config->name)) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
@@ -38,7 +38,7 @@
 
 <style type="text/css">
 
-	div.item_edit form.edit_form select {
+	div.item_edit form.edit_form select, div.item_edit form.edit_form input[type=hidden], div.item_edit form.edit_form .select2-container {
 		width: <?php echo $config->formWidth - 59 ?>px;
 	}
 
@@ -62,7 +62,6 @@
 
 	div.item_edit form.edit_form > div.image img, div.item_edit form.edit_form > div.image div.image_container {
 		max-width: <?php echo $config->formWidth - 65 ?>px;
-		width: <?php echo $config->formWidth - 65 ?>px;
 	}
 
 </style>
@@ -74,7 +73,7 @@
 </script>
 
 <script id="itemFormTemplate" type="text/html">
-	<?php echo View::make("administrator::templates.edit")?>
+	<?php echo View::make("administrator::templates.edit", array('config' => $config))?>
 </script>
 
 <script id="filtersTemplate" type="text/html">

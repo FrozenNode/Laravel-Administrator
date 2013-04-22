@@ -30,15 +30,11 @@
 		<!-- /ko -->
 
 		<!-- ko if: type === 'bool' -->
-			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: ['true', 'false'],
-															optionsCaption: '<?php echo __('administrator::administrator.all') ?>'"></select>
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2: {data: {results: $root.boolOptions}}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'enum' -->
-			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: options,
-										optionsCaption: '<?php echo __('administrator::administrator.all') ?>',
-										optionsValue: function(item) {return item.value},
-										optionsText: function(item) {return item.text}"></select>
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2: {data: {results: options}}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'date' -->
@@ -65,17 +61,10 @@
 			<div class="loader" data-bind="visible: loadingOptions"></div>
 
 			<!-- ko if: autocomplete -->
-			<select data-bind="value: value, attr: {id: field_id}, ajaxChosen: {field: field, type: 'filter'},
-													options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
-													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.all') ?>'"></select>
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2Remote: {field: field, type: 'filter', filterIndex: $index()}"/>
 			<!-- /ko -->
 			<!-- ko ifnot: autocomplete -->
-			<select data-bind="value: value, attr: {id: field_id}, chosen: true, options: $root.listOptions[field],
-													optionsValue: function(item) {return item.id},
-													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.all') ?>'"></select>
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2: {data: {results: $root.listOptions[field]}}" />
 			<!-- /ko -->
 		<!-- /ko -->
 
@@ -83,16 +72,12 @@
 			<div class="loader" data-bind="visible: loadingOptions"></div>
 
 			<!-- ko if: autocomplete -->
-			<select size="7" multiple="true" data-bind="ajaxChosen: {field: field, type: 'filter'}, attr: {id: field_id},
-													options: $root.listOptions[field], selectedOptions: value,
-													optionsValue: function(item) {return item.id},
-													optionsText: function(item) {return item[name_field]} "></select>
+			<input type="hidden" size="7" data-bind="select2Remote: {field: field, type: 'filter', multiple: true, filterIndex: $index()},
+													attr: {id: field_id}, value: value" />
 			<!-- /ko -->
 			<!-- ko ifnot: autocomplete -->
-			<select size="7" multiple="true" data-bind="chosen: true, attr: {id: field_id},
-													options: $root.listOptions[field], selectedOptions: value,
-													optionsValue: function(item) {return item.id},
-													optionsText: function(item) {return item[name_field]} "></select>
+			<input type="hidden" size="7" multiple="true" data-bind="select2: {data:{results: $root.listOptions[field]}, multiple: true},
+													attr: {id: field_id}, value: value" />
 			<!-- /ko -->
 		<!-- /ko -->
 		</div>

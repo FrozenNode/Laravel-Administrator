@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -17,7 +17,7 @@ return array(
 	'loading' => 'Töltés...',
 	'createnew' => 'Új készítése',
 	'new' => 'Új',
-	'viewitem' => 'Elem megtekintése',
+	'viewitem' => ':single megtekintése',
 	'id' => 'Azonosító',
 	'uploadimage' => 'Kép feltöltése',
 	'imageuploading' => 'Képfeltöltés',

@@ -17,8 +17,12 @@ Below is a list of all the available options:
 
 - [Title](#title)
 - [Model Config Path](#model-config-path)
+- [Settings Config Path](#settings-config-path)
 - [Menu](#menu)
 - [Permission](#permission)
+- [Use Dashboard](#use-dashboard)
+- [Dashboard View](#dashboard-view)
+- [Home Page](#home-page)
 - [Login Path](#login-path)
 - [Redirect Key](#redirect-key)
 - [Global Rows Per Page](#global-rows-per-page)
@@ -47,13 +51,27 @@ This is the title of the administrative interface displayed to the user at the t
 
 This is the directory location of your application's model config files. It's recommended to use a subdirectory of your application config called `administrator`, but you can put it anywhere you like.
 
+<a name="settings-config-path"></a>
+### Settings Config Path
+
+	/**
+	 * The path to your settings config directory
+	 *
+	 * @type string
+	 */
+	'settings_config_path' => path('app') . 'config/administrator/settings',
+
+This is the directory location of your application's settings config files. If you want to create settings pages for your admins, you'll store each settings config file in the path above. As with the `model_config_path`, it's up to you how to organize this. The recommended approach is above, but you may just find a more sensible way to organize your config directories.
+
 <a name="menu"></a>
 ### Menu
 
 	/**
-	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
-	 * By doing the latter, you can group certain models together. Each name needs to have a config file in your model config path with the same
-	 * name. So 'users' would require a 'users.php' file in your model config path.
+	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
+	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. By providing an
+	 * array of names, you can group certain models or settings pages together. Each name needs to either have a config file in your model
+	 * config path or settings config path with the same name. So 'users' would require a 'users.php' file in your model config path.
+	 * 'settings.site' would require a 'site.php' file in your settings config path.
 	 *
 	 * @type array
 	 *
@@ -68,13 +86,65 @@ This is the directory location of your application's model config files. It's re
 		'users',
 		'roles',
 		'colors',
+		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
 	),
 
-The menu option is where you set the menu structure of your site. Each item in the array can either be the name of a model config or an array of model config names with the array index being the title of the sub menu. In the above example, there would need to be, in your `model_config_path`, config files called `collections.php`, `products.php`, `product_images.php`, `orders.php`, `homepage_sliders.php`, `users.php`, `roles.php`, and `colors.php`. The 'E-Commerce' label would be applied to the menu group as seen below:
+The menu option is where you set the menu structure of the site. If you don't want any submenus, simply provide the name of your model or settings config file. The value has to be exactly equal (if you're using Linux, that means case-sensitive) to the name of the model or settings config php file.
+
+So in the above example, there would need to be (in the directory you specified in the `model_config_path`), config files called `collections.php`, `products.php`, `product_images.php`, `orders.php`, `homepage_sliders.php`, `users.php`, `roles.php`, and `colors.php`.
+
+There would also need to be (in the directory you specified in the `settings_config_path`), config files called `site.php`, `ecommerce.php`, and `social.php`.
+
+If you want to have a submenu, instead of passing in a string, pass in an array of strings. The index of this slot will be the submenu's title in the UI.
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/menu.png" />
 
 > For a detailed description of all the model configuration options, see the **[model configuration docs](/docs/model-configuration)**
+
+> For a detailed description of all the settings configuration options, see the **[settings configuration docs](/docs/settings-configuration)**
+
+<a name="use-dashboard"></a>
+### Use Dashboard
+
+	/**
+	 * This determines if you will have a dashboard (whose view you provide in the dashboard_view option) or a non-dashboard home
+	 * page (whose menu item you provide in the home_page option)
+	 *
+	 * @type bool
+	 */
+	'use_dashboard' => false,
+
+Administrator doesn't pretend that it can solve all of your dashboard needs. Sometimes it makes sense to have a bunch of widget-type modules in a dashboard, sometimes it makes sense to have a bunch of buttons, and other times it doesn't make any sense to even have a dashboard. There are two general options: you can either create a dashboard view in your application where you can set up the dashboard however you like, or you can use a location from the `menu` option as your general "home" page.
+
+If you set `use_dashboard` to **true**, it will look for the value in the `dashboard_view` option below and load that view into the Administrator content area.
+
+If you set `use_dashboard` to **false**, it will look for the value in the `home_page` option below and load up that page when a user goes to the Administrator home.
+
+In either case, if the value (either the view or the menu item) can't be found, an error will be raised.
+
+<a name="dashboard-view"></a>
+### Dashboard View
+
+	/**
+	 * If you want to create a dashboard view, provide the view string here.
+	 *
+	 * @type string
+	 */
+	'dashboard_view' => 'administrator.dashboard',
+
+If the `use_dashboard` option is set to true, Administrator will attempt to load up this view into the Administrator content area. You can set this up however you like, and by using [View Composers](http://laravel.com/docs/views#view-composers), you can insert any data into this view that you need.
+
+<a name="home-page"></a>
+### Home Page
+
+	/**
+	 * The menu item that should be used as the default landing page of the administrative section
+	 *
+	 * @type string
+	 */
+	'home_page' => 'products',
+
+If the `use_dashboard` option is set to false, Administrator will redirect the user to the above page when they visit the Administrator base URL. This must match an item in the `menu` option.
 
 <a name="permission"></a>
 ### Permission

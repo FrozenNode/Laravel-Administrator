@@ -49,10 +49,10 @@ Route::group(array('before' => 'validate_admin|validate_model|add_assets'), func
 		'uses' => 'administrator::admin@update_options'
 	));
 
-	//Display an image field's image
-	Route::get('(:bundle)/(:any)/image', array(
-		'as' => 'admin_display_image',
-		'uses' => 'administrator::admin@display_image'
+	//Display an image or file field's image or file
+	Route::get('(:bundle)/(:any)/file', array(
+		'as' => 'admin_display_file',
+		'uses' => 'administrator::admin@display_file'
 	));
 });
 
@@ -87,10 +87,10 @@ Route::group(array('before' => 'validate_admin|validate_model|csrf'), function()
 //Standard validation without csrf
 Route::group(array('before' => 'validate_admin|validate_model|disable_profiler'), function()
 {
-	//Image Uploads
-	Route::post('(:bundle)/(:any)/(:any)/image_upload', array(
-		'as' => 'admin_image_upload',
-		'uses' => 'administrator::admin@image_upload'
+	//File Uploads
+	Route::post('(:bundle)/(:any)/(:any)/file_upload', array(
+		'as' => 'admin_file_upload',
+		'uses' => 'administrator::admin@file_upload'
 	));
 
 	//Updating Rows Per Page
@@ -99,3 +99,40 @@ Route::group(array('before' => 'validate_admin|validate_model|disable_profiler')
 		'uses' => 'administrator::admin@rows_per_page'
 	));
 });
+
+//Settings Pages
+Route::get('(:bundle)/settings/(:any)', array(
+	'as' => 'admin_settings',
+	'before' => 'validate_admin|validate_settings|add_assets',
+	'uses' => 'administrator::admin@settings'
+));
+
+//Settings POSTs
+Route::group(array('before' => 'validate_admin|validate_settings|csrf'), function()
+{
+	//Save Item
+	Route::post('(:bundle)/settings/(:any)/save', array(
+		'as' => 'admin_settings_save',
+		'uses' => 'administrator::admin@settings_save'
+	));
+
+	//Custom Action
+	Route::post('(:bundle)/settings/(:any)/custom_action', array(
+		'as' => 'admin_settings_custom_action',
+		'uses' => 'administrator::admin@custom_action'
+	));
+});
+
+//Settings file upload
+Route::post('(:bundle)/settings/(:any)/(:any)/file_upload', array(
+	'before' => 'validate_admin|validate_settings|disable_profiler',
+	'as' => 'admin_settings_file_upload',
+	'uses' => 'administrator::admin@file_upload'
+));
+
+//Display a settings file
+Route::get('(:bundle)/settings/(:any)/file', array(
+	'before' => 'validate_admin|validate_settings',
+	'as' => 'admin_settings_display_file',
+	'uses' => 'administrator::admin@display_file'
+));

@@ -1,5 +1,23 @@
 ## Changelog
 
+### 3.2.0
+- Added support for a file field
+- You can now choose to provide a custom dashboard or a default home page from your menu
+- Settings pages are now available
+- It is now possible to set a sort_field on HMABT relationships for inline reordering of related values
+- You can now select nested belongs_to relationships in the columns array
+- Primary key fields are now hidden by default in the edit window unless you put them in your edit array
+- New languages: Spanish (es), Basque (eu), French (fr), Dutch (nl), Polish (pl), Serbian (sr)
+- Moved from Chosen select boxes to Select2
+- The item link now uses the single name of the model instead of "item"
+- Bugfix: Constraints on autocomplete fields now constrain the autocomplete search
+- Bugfix: Multiple constraints now work properly
+- Bugfix: Character limits on text fields no longer limit the string on every keystroke
+- Bugfix: Relationship options now sort by the name field
+- Bugfix: Getter columns now visibly show if they're being sorted
+- Bugfix: Fixed some issues with the page not resizing properly
+- Bugfix: WYSIWYG editor now resets properly after saving and then creating a new item
+
 ### 3.1.0
 - Localization support. Big thanks to [Andrew Dworn](https://github.com/andrewdworn) for all the work he put into this
 - New editable option for most edit fields lets you disable field editing

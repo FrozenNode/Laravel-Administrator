@@ -64,6 +64,17 @@ In this case, the `name_field` supplied is a getter on the `User` model that com
 
 With this setup, the user will be presented with a multi-select field to choose all of the actors in the film.
 
+If you want to let your admin users reorder the selected values, you can create an integer-based sorting column on your intermediate relationship table and then specify that column as an option in the field. In our example above, we may wish to reorder the actors arbitrarily by dragging and dropping them in the UI. In order to do this, you would need to add an integer field (let's call it `ordering`) to the `films_actors` table. Then in your model config, you would provide that column name in the `sort_field` option:
+
+	'actors' => array(
+		'type' => 'relationship',
+		'title' => 'Actors',
+		'name_field' => 'full_name', 	//using the get_full_name getter
+		'sort_field' => 'ordering', 	//this will look for a numerical column at films_actors.ordering
+	)
+
+Now the individual items in the multi-select box will be sortable via drag and drop.
+
 <a name="has-many-and-belongs-to-filter"></a>
 ## Has Many And Belongs To Filter
 

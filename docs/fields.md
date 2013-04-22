@@ -5,11 +5,12 @@
 - [Type Option](#type-option)
 - [Editable Option](#editable-option)
 - [Filters](#filters)
+- [Settings Page](#settings-page)
 
 <a name="introduction"></a>
 ## Introduction
 
-As you're [setting up your model's config](/docs/model-configuration), you'll have to create an `edit_fields` option for your model. This is an array of fields that represents what will be shown to the admin user in your model's edit form. Each field can either be one of your model's attributes or one of its relationships. The order in which they are given is the order in which the admin user will see them.
+As you're [setting up your model config](/docs/model-configuration) or your [settings config](/docs/settings-configuration), you'll have to supply an `edit_fields` option. This is an array of fields that represents what will be shown to the admin user in your model or settings edit form. For model's, each field should be one of your model's SQL columns or one of its [Eloquent relationships](/docs/field-type-relationship). The order in which they are given is the order in which the admin user will see them.
 
 	/**
 	 * The editable fields
@@ -85,7 +86,7 @@ The `editable` option determines whether or not a field can be edited. By defaul
 <a name="filters"></a>
 ## Filters
 
-The `filters` option in your [model's config](/docs/model-configuration) lets you use certain field types as filters for your model's result set. The filterable field types are [`key`](/docs/field-type-key), [`text`](/docs/field-type-text), [`number`](/docs/field-type-number), [`bool`](/docs/field-type-bool), [`enum`](/docs/field-type-enum), [`date`](/docs/field-type-date), [`time`](/docs/field-type-time), [`datetime`](/docs/field-type-datetime), and [`relationship`](/docs/field-type-relationship). Each field type's filter works slightly different. For a detailed look at how the filter works for each field type, check out each field type's docs page in the menu on the left.
+The `filters` option in your [model config](/docs/model-configuration) lets you use certain field types as filters for your model's result set. The filterable field types are [`key`](/docs/field-type-key), [`text`](/docs/field-type-text), [`number`](/docs/field-type-number), [`bool`](/docs/field-type-bool), [`enum`](/docs/field-type-enum), [`date`](/docs/field-type-date), [`time`](/docs/field-type-time), [`datetime`](/docs/field-type-datetime), and [`relationship`](/docs/field-type-relationship). Each field type's filter works slightly different. For a detailed look at how the filter works for each field type, check out each field type's docs page in the menu on the left.
 
 	/**
 	 * The filterable fields
@@ -115,3 +116,8 @@ The `filters` option in your [model's config](/docs/model-configuration) lets yo
 	),
 
 Just as with all fields, if you provide a simple string instead of an array, the default behavior is to make it a `text` field with a title equal to the attribute name. When you provide an array of options with an index equal to the name of the attribute or the relationship method name, you can control the interface more.
+
+<a name="settings-page"></a>
+## Settings Page
+
+If you're creating a settings page, you can use all of the field types except for [`key`](/docs/field-type-key) and [`relationship`](/docs/field-type-relationship).

@@ -10,7 +10,8 @@
 			<span data-bind="text: ' / ' + pagination.last()"></span>
 		</div>
 		<div class="per_page">
-			<select data-bind="value: rowsPerPage, chosen: true, options: rowsPerPageOptions"></select>
+			<input type="hidden" data-bind="value: rowsPerPage, select2: {minimumResultsForSearch: -1, data: {results: rowsPerPageOptions},
+											allowClear: false}" />
 			<span> <?php echo __('administrator::administrator.itemsperpage') ?></span>
 		</div>
 		<!-- ko if: actionPermissions.create -->
@@ -24,8 +25,8 @@
 			<tr>
 				<!-- ko foreach: columns -->
 					<th data-bind="css: {sortable: sortable,
-											'sorted-asc': field == $root.sortOptions.field() && $root.sortOptions.direction() === 'asc',
-											'sorted-desc': field == $root.sortOptions.field() && $root.sortOptions.direction() === 'desc'}">
+		'sorted-asc': (field == $root.sortOptions.field() || sort_field == $root.sortOptions.field()) && $root.sortOptions.direction() === 'asc',
+		'sorted-desc': (field == $root.sortOptions.field() || sort_field == $root.sortOptions.field()) && $root.sortOptions.direction() === 'desc'}">
 						<!-- ko if: sortable -->
 							<div data-bind="click: function() {$root.setSortOptions(sort_field ? sort_field : field)}, text: title"></div>
 						<!-- /ko -->
