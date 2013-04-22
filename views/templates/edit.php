@@ -6,20 +6,19 @@
 
 	<!-- ko if: $root[$root.primaryKey]() -->
 		<!-- ko if: $root.itemLink() -->
-			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()}">
-				<?php echo __('administrator::administrator.viewitem') ?></a>
+			<a class="item_link" target="_blank" data-bind="attr: {href: $root.itemLink()},
+										text: '<?php echo __('administrator::administrator.viewitem', array('single' => $config->single)) ?>'"></a>
 		<!-- /ko -->
-
-		<div class="key">
-			<label><?php echo __('administrator::administrator.id') ?>:</label>
-			<span data-bind="text: $root[$root.primaryKey]"></span>
-		</div>
 	<!-- /ko -->
 
 	<!-- ko foreach: editFields -->
-		<!-- ko if: $data && ( $root[$root.primaryKey]() || editable ) -->
+		<!-- ko if: $data && ( $root[$root.primaryKey]() || editable ) && visible -->
 			<div data-bind="attr: {class: type}">
 				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
+
+			<!-- ko if: type === 'key' -->
+				<span data-bind="text: $root[$root.primaryKey]"></span>
+			<!-- /ko -->
 
 			<!-- ko if: type === 'text' -->
 				<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
@@ -71,20 +70,13 @@
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
-				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id}, value: $root[field],
-													ajaxChosen: {field: field, type: 'edit'},
-													options: $root.listOptions[field],
-													optionsValue: function(item) {return item[column]},
-													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+													value: $root[field], select2Remote: {field: field, type: 'edit', constraints: constraints}" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<select data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id}, value: $root[field],
-													chosen: true, options: $root.listOptions[field],
-													optionsValue: function(item) {return item[column]},
-													optionsText: function(item) {return item[name_field]},
-													optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+											value: $root[field], select2: {data:{results: $root.listOptions[field]}}" />
 				<!-- /ko -->
 			<!-- /ko -->
 
@@ -92,18 +84,15 @@
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
-				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
-													ajaxChosen: {field: field, type: 'edit'},
-													selectedOptions: $root[field], options: $root.listOptions[field],
-													optionsValue: function(item) {return item[foreignKey]},
-													optionsText: function(item) {return item[name_field]} "></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+									select2Remote: {field: field, type: 'edit', multiple: true, constraints: constraints, sort: sort_field},
+									value: $root[field]" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<select multiple="true" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
-													chosen: true, selectedOptions: $root[field], options: $root.listOptions[field],
-													optionsValue: function(item) {return item[foreignKey]},
-													optionsText: function(item) {return item[name_field]} "></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+													select2: {data:{results: $root.listOptions[field]}, multiple: true, sort: sort_field},
+													value: $root[field]" />
 				<!-- /ko -->
 			<!-- /ko -->
 
@@ -132,10 +121,8 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
-				<select data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field], chosen: true, options: options,
-															optionsValue: function(item) {return item.value},
-															optionsText: function(item) {return item.text},
-															optionsCaption: '<?php echo __('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+												select2: {data: {results: options}}"></select>
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->
@@ -170,9 +157,9 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'image' -->
-				<div class="image_upload_container" data-bind="attr: {id: field_id}">
+				<div class="upload_container" data-bind="attr: {id: field_id}">
 					<div class="uploader" data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root.activeItem,
-											imageupload: {field: field, size_limit: size_limit, uploading: uploading,
+											fileupload: {field: field, size_limit: size_limit, uploading: uploading, image: true,
 														upload_percentage: upload_percentage, upload_url: upload_url}">
 															<?php echo __('administrator::administrator.uploadimage') ?></div>
 					<!-- ko if: uploading -->
@@ -183,7 +170,28 @@
 
 				<!-- ko if: $root[field] -->
 					<div class="image_container">
-						<img data-bind="attr: {src: image_url + '?path=' + location + $root[field]()}" />
+						<img data-bind="attr: {src: file_url + '?path=' + location + $root[field]()}" />
+						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
+					</div>
+				<!-- /ko -->
+			<!-- /ko -->
+
+			<!-- ko if: type === 'file' -->
+				<div class="upload_container" data-bind="attr: {id: field_id}">
+					<div class="uploader" data-bind="attr: {disabled: $root.freezeForm, id: field + '_uploader'}, value: $root.activeItem,
+											fileupload: {field: field, size_limit: size_limit, uploading: uploading,
+														upload_percentage: upload_percentage, upload_url: upload_url}">
+															<?php echo __('administrator::administrator.uploadfile') ?></div>
+					<!-- ko if: uploading -->
+						<div class="uploading"
+						data-bind="text: '<?php echo __('administrator::administrator.fileuploading') ?>' + upload_percentage() + '%'"></div>
+					<!-- /ko -->
+				</div>
+
+				<!-- ko if: $root[field] -->
+					<div class="file_container">
+						<a data-bind="attr: {href: file_url + '?path=' + location + $root[field](), title: $root[field]},
+							text: $root[field]"></a>
 						<input type="button" class="remove_button" data-bind="click: function() {$root[field](null)}" value="x" />
 					</div>
 				<!-- /ko -->

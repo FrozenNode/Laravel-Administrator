@@ -4,6 +4,7 @@
 - [Setting Up the Eloquent Relationship](#setting-up-the-eloquent-relationship)
 - [Simple Select](#simple-select)
 - [More Complex Selects](#more-complex-selects)
+- [Nested Relationships](#nested-relationships)
 
 <a name="introduction"></a>
 ## Introduction
@@ -78,3 +79,36 @@ If you are in your `Film` model and you want to show a formatted total of all th
 	)
 
 As long as you provide a valid SQL SELECT statement into the `select` option, you have a lot of power to display your columns however you like.
+
+<a name="nested-relationships"></a>
+## Nested Relationships
+
+Sometimes you might want to display a column value of a distantly-related model. In particular, when you have a series of `belongs_to` relationships. Imagine, for example, that you have a `cart` table. On it you have `inventory_id`, which points to the `inventory` table. The `inventory` table has `product_id`, which points to the `products` table. Your models migth look like:
+
+### Cart Model
+	public function inventory()
+	{
+		return $this->belongs_to('Inventory');
+	}
+
+### Inventory Model
+	public function product()
+	{
+		return $this->belongs_to('Product');
+	}
+
+Each product has a name and we want to select it for rows in our `cart` admin. In order to do this, you can use the dot syntax that [Eloquent uses when eager loading nested relationships](http://laravel.com/docs/database/eloquent#eager).
+
+	'product_name' => array(
+		'title' => 'Product Name',
+		'relationship' => 'inventory.product',
+		'select' => '(:table).name', //would select products.name
+	)
+
+There is no limit to this nesting, so if you wanted to get the product's category name, you could do:
+
+	'category_name' => array(
+		'title' => 'Category Name',
+		'relationship' => 'inventory.product.category',
+		'select' => '(:table).name', //would select categories.name
+	)

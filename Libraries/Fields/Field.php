@@ -62,6 +62,13 @@ abstract class Field {
 	public $editable = true;
 
 	/**
+	 * Determines if the field is visible
+	 *
+	 * @var bool
+	 */
+	public $visible = true;
+
+	/**
 	 * The name of the field
 	 *
 	 * @var string
@@ -135,7 +142,7 @@ abstract class Field {
 	 *
 	 * @param string|int			$field 				//the key of the options array
 	 * @param array|string			$info 				//the value of the options array
-	 * @param ModelConfig|Eloquent	$config				//the model's config or an eloquent object (for relationships)
+	 * @param ModelConfig|Eloquent	$config				//the model or settings config or an eloquent object (for relationships)
 	 * @param bool	 				$loadRelationships	//determines whether or not to load the relationships
 	 *
 	 * @return false|Field object
@@ -143,14 +150,16 @@ abstract class Field {
 	public static function get($field, $info, $config, $loadRelationships = true)
 	{
 		//put the model in a variable so we can call it statically
-		$model = is_a($config, 'Admin\\Libraries\\ModelConfig') ? $config->model : $config;
+		$isModel = is_a($config, 'Admin\\Libraries\\ModelConfig');
+		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
+		$model = $isModel ? $config->model : $config;
 		$noInfo = is_numeric($field);
 
 		$field = $noInfo ? $info : $field;
 		$info = $noInfo ? array() : $info;
 
 		//first we check if the field is the same as the primary key. if so it will be a key type
-		if ($field === $model::$key)
+		if ($isModel && $field === $model::$key)
 		{
 			$info['type'] = 'key';
 		}
@@ -158,10 +167,20 @@ abstract class Field {
 		//get the type key from the info array if it exists
 		$info['type'] = array_get($info, 'type', 'text');
 
+		//the key field isn't allowed in the settings config
+		if ($isSettings && $info['type'] === 'key')
+		{
+			return false;
+		}
+
 		//if this is a relationship, get the right key based on the supplied model
 		if ($info['type'] === 'relationship')
 		{
-			if ($relationshipKey = static::getRelationshipKey($field, $model))
+			if ($isSettings)
+			{
+				return false;
+			}
+			else if ($relationshipKey = static::getRelationshipKey($field, $model))
 			{
 				$info['type'] = $relationshipKey;
 			}
@@ -178,7 +197,7 @@ abstract class Field {
 		}
 
 		//now we check if the remaining type is valid
-		if (!static::typeCheck($info['type']))
+		if (!static::typeCheck($info['type'], $isSettings))
 		{
 			return false;
 		}
@@ -261,6 +280,7 @@ abstract class Field {
 			'field' => $this->field,
 			'title' => $this->title,
 			'editable' => $this->editable,
+			'visible' => $this->visible,
 			'value' => $this->value,
 			'minMax' => $this->minMax,
 			'minValue' => $this->minValue,
@@ -343,17 +363,23 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets the model's edit fields
+	 * Gets the formatted edit fields
 	 *
-	 * @param ModelConfig	$config
-	 * @param bool			$loadRelationships
+	 * @param ModelConfig|SettingsConfig	$config
+	 * @param bool							$loadRelationships
 	 *
 	 * @return array
 	 */
 	public static function getEditFields($config, $loadRelationships = true)
 	{
+		$isModel = is_a($config, 'Admin\\Libraries\\ModelConfig');
+		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
+
 		//put the model into a variable so we can call it statically
-		$model = $config->model;
+		if ($isModel)
+		{
+			$model = $config->model;
+		}
 
 		//this is the return value
 		$return = array(
@@ -376,18 +402,38 @@ abstract class Field {
 		}
 
 		//add the id field, which will be uneditable, but part of the data model
-		$return['arrayFields'][$model::$key] = 0;
-
-		//set up the data model
-		foreach ($return['arrayFields'] as $field => $info)
+		if (!$isSettings && !isset($return['arrayFields'][$model::$key]))
 		{
-			if (is_array($info) || is_a($info, 'Field'))
+			$keyField = static::get($model::$key, array('visible' => false), $config);
+
+			if ($keyField)
 			{
-				$return['dataModel'][$field] = $model->$field;
+				$return['arrayFields'][$model::$key] = $keyField->toArray();
 			}
 			else
 			{
-				$return['dataModel'][$field] = $info;
+				$return['arrayFields'][$model::$key] = 0;
+			}
+		}
+
+		//set up the data model
+		if (!$isSettings)
+		{
+			foreach ($return['arrayFields'] as $field => $info)
+			{
+				//if this is a key, set it to 0
+				if ($info['type'] === 'key')
+				{
+					$return['dataModel'][$field] = 0;
+				}
+				else if (is_array($info) || is_a($info, 'Field'))
+				{
+					$return['dataModel'][$field] = $model->$field;
+				}
+				else
+				{
+					$return['dataModel'][$field] = $info;
+				}
 			}
 		}
 

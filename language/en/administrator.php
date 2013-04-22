@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -17,10 +17,12 @@ return array(
 	'loading' => 'Loading...',
 	'createnew' => 'Create New',
 	'new' => 'New',
-	'viewitem' => 'View Item',
+	'viewitem' => 'View :single',
 	'id' => 'ID',
 	'uploadimage' => 'Upload Image',
 	'imageuploading' => 'Image Uploading',
+	'uploadfile' => 'Upload File',
+	'fileuploading' => 'File Uploading',
 	'none' => 'None',
 	'all' => 'All',
 	'itemsperpage' => 'items per page',
@@ -47,4 +49,6 @@ return array(
 	'valid_menu' => "You must provide a valid 'menu' option in the administrator.php config",
 	'valid_config_path' => "You must provide a valid 'model_config_path' in the administrator.php config. The directory must also exist and be readable.",
 	'not_eloquent' => " is not an Eloquent model",
+	'storage_path_permissions' => "You must make your storage path writable in order to make a settings page",
+	'valid_home_page' => "You must provide a valid menu item in the home_page option of your config",
 );

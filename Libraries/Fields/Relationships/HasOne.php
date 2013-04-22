@@ -22,7 +22,11 @@ class HasOne extends Relationship {
 	public function __construct($field, $info, $config)
 	{
 		parent::__construct($field, $info, $config);
-		$relationship = $config->model->{$field}();
+
+		//set up the model depending on what's passed in
+		$model = is_a($config, 'Admin\\Libraries\\ModelConfig') ? $config->model : $config;
+
+		$relationship = $model->{$field}();
 
 		$this->table = $relationship->table->from;
 		$this->column = $relationship->table->wheres[0]['column'];

@@ -64,6 +64,12 @@ class Resize{
 				$this->new_height = $size[1]; //$new_height;
 				$this->option = $size[2]; //crop type
 
+				//ensure that the directory path exists
+				if (!is_dir($size[3]))
+				{
+					mkdir($size[3]);
+				}
+
 				$resized[] = $this->do_resize( $path.$filename, $size[3].$filename, $size[4] );
 			}
 		}

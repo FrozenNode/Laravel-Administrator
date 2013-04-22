@@ -11,14 +11,22 @@
 					<ul>
 						@foreach ($item as $k => $subitem)
 							<li>
-								<a href="{{URL::to_route('admin_index', array($k))}}">{{$subitem}}</a>
+								@if (strpos($k, $settingsPrefix) === false)
+									<a href="{{URL::to_route('admin_index', array($k))}}">{{$subitem}}</a>
+								@else
+									<a href="{{URL::to_route('admin_settings', array(substr($k, strlen($settingsPrefix))))}}">{{$subitem}}</a>
+								@endif
 							</li>
 						@endforeach
 					</ul>
 				</li>
 			@else
 				<li class="item">
-					<a href="{{URL::to_route('admin_index', array($key))}}">{{$item}}</a>
+					@if (strpos($key, $settingsPrefix) === false)
+						<a href="{{URL::to_route('admin_index', array($key))}}">{{$item}}</a>
+					@else
+						<a href="{{URL::to_route('admin_settings', array(substr($key, strlen($settingsPrefix))))}}">{{$item}}</a>
+					@endif
 				</li>
 			@endif
 		@endforeach

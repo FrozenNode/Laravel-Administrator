@@ -55,22 +55,44 @@ class ModelHelper {
 		$editFields = Field::getEditFields($config);
 
 		//if the model exists, load up the existing related items
-		if ($model->exists)
+		if ($model->exists && !$saving)
 		{
 			//make sure the relationships are loaded
 			foreach ($editFields['objectFields'] as $field => $info)
 			{
 				if ($info->relationship)
 				{
-					//get all existing values for this relationship
-					if ($relatedItems = $model->{$field}()->get())
+					//if this is a hmabt, we want to sort our initial values
+					if ($info->multipleValues)
 					{
+						//if a sort_field is provided, use it, otherwise sort by the name field
+						if ($info->sortField)
+						{
+							$relatedItems = $model->{$field}()->order_by($info->sortField)->get();
+						}
+						else
+						{
+							$relatedItems = $model->{$field}()->order_by($info->nameField)->get();
+						}
+					}
+					else
+					{
+						$relatedItems = $model->{$field}()->get();
+					}
+
+					//get all existing values for this relationship
+					if ($relatedItems)
+					{
+						//the array that holds all the ids of the currently-related items
 						$relationsArray = array();
+
+						//the id-indexed array that holds all of the select option data for a relation.
+						//this holds the currently-related items and all of the available options
+						$autocompleteArray = array();
 
 						//iterate over the items
 						foreach ($relatedItems as $item)
 						{
-
 							//if this is a mutliple-value type (i.e. HasMany, HasManyAndBelongsTo), make sure this is an array
 							if ($info->multipleValues)
 							{
@@ -79,6 +101,12 @@ class ModelHelper {
 							else
 							{
 								$model->set_attribute($field, $item->{$item::$key});
+							}
+
+							//if this is an autocomplete field, we'll need to provide an array of arrays with 'id' and 'text' indexes
+							if ($info->autocomplete)
+							{
+								$autocompleteArray[$item->{$item::$key}] = array('id' => $item->{$item::$key}, 'text' => $item->{$info->nameField});
 							}
 						}
 
@@ -95,6 +123,12 @@ class ModelHelper {
 
 							//unset the relationships so we only get back what we need
 							$model->relationships = array();
+						}
+
+						//set the autocomplete array
+						if ($info->autocomplete)
+						{
+							$model->set_attribute($field.'_autocomplete', $autocompleteArray);
 						}
 					}
 					//if there are no values, then just set an empty array
@@ -359,7 +393,7 @@ class ModelHelper {
 		if ($selectedItems)
 		{
 			//if this isn't an array, set it up as one
-			$selectedItems = is_array($selectedItems) ? $selectedItems : array($selectedItems);
+			$selectedItems = is_array($selectedItems) ? $selectedItems : explode(',', $selectedItems);
 		}
 		else
 		{
@@ -372,6 +406,18 @@ class ModelHelper {
 			if (sizeof($selectedItems))
 			{
 				$query->where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
+
+				//if this is a hmabt and a sort field is set, order it by the sort field
+				if ($info->multipleValues && $info->sortField)
+				{
+					$query->order_by($info->sortField);
+				}
+				//otherwise order it by the name field
+				else
+				{
+					$query->order_by($info->nameField);
+				}
+
 				return static::formatOptions($relatedModel, $info, $query->get($selects));
 			}
 			else
@@ -390,7 +436,7 @@ class ModelHelper {
 				if (isset($constraints[$key]) && $constraints[$key] && sizeof($constraints[$key]))
 				{
 					//constrain the query
-					$info->applyConstraints($query, $model, $key, $relationshipName, $constraints);
+					$info->applyConstraints($query, $model, $key, $relationshipName, $constraints[$key]);
 				}
 			}
 		}
@@ -401,13 +447,13 @@ class ModelHelper {
 			//set up the wheres
 			foreach ($info->searchFields as $search)
 			{
-				$query->or_where(DB::raw($search), 'LIKE', '%'.$term.'%');
+				$query->where(DB::raw($search), 'LIKE', '%'.$term.'%');
 			}
 
-			//include the currently-selected items if there are any
+			//exclude the currently-selected items if there are any
 			if (count($selectedItems))
 			{
-				$query->or_where_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
+				$query->where_not_in($relatedModel->table().'.'.$relatedModel::$key, $selectedItems);
 			}
 
 			//set up the limits
@@ -432,8 +478,8 @@ class ModelHelper {
 		return array_map(function($m) use ($info, $model)
 		{
 			return array(
-				$model::$key => $m->{$model::$key},
-				$info->nameField => $m->{$info->nameField},
+				'id' => $m->{$model::$key},
+				'text' => $m->{$info->nameField},
 			);
 		}, $eloquentResults);
 	}

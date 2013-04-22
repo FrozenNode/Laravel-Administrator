@@ -55,16 +55,23 @@ class Column {
 	/**
 	 * Determines if this column is sortable
 	 *
-	 * @var string
+	 * @var bool
 	 */
 	public $sortable = true;
 
 	/**
 	 * Holds the Field object for the relationship
 	 *
-	 * @var bool
+	 * @var Field
 	 */
 	public $relationshipField = NULL;
+
+	/**
+	 * Holds the nested relationship string pieces and models
+	 *
+	 * @var array
+	 */
+	public $nested = array();
 
 	/**
 	 * Determines if this column is a related column
@@ -114,6 +121,7 @@ class Column {
 		$this->sortable = array_get($column, 'sortable', $this->sortable);
 		$this->relationship = array_get($column, 'relationship');
 		$this->select = array_get($column, 'select');
+		$this->nested = array_get($column, 'nested', $this->nested);
 		$this->isRelated = array_get($column, 'isRelated', $this->isRelated);
 		$this->isComputed = array_get($column, 'isComputed', $this->isComputed);
 		$this->isIncluded = array_get($column, 'isIncluded', $this->isIncluded);
@@ -153,13 +161,22 @@ class Column {
 		//if the relation option is set, we'll set up the column array using the select
 		if ($column['relationship'])
 		{
-			if (!method_exists($config->model, $column['relationship']) || !$column['select'])
+			//split the string up into an array on the . symbol
+			if (!$nested = static::getNestedRelationships($config->model, $column['relationship']))
+			{
+				return false;
+			}
+
+			if (!$column['select'])
 			{
 				return false;
 			}
 
 			//now we'll need to grab a relation field to see what its foreign table is
-			if (!$relationshipField = Field::get($column['relationship'], array('type' => 'relationship'), $config, false))
+			$relevant_name = $nested['pieces'][sizeof($nested['pieces'])-1];
+			$relevant_model = $nested['models'][sizeof($nested['models'])-2];
+
+			if (!$relationshipField = Field::get($relevant_name, array('type' => 'relationship'), $relevant_model, false))
 			{
 				return false;
 			}
@@ -175,6 +192,7 @@ class Column {
 				$selectTable = $relationshipField->table;
 			}
 
+			$column['nested'] = $nested;
 			$column['select'] = str_replace('(:table)', $selectTable, $column['select']);
 			$column['relationshipField'] = $relationshipField;
 		}
@@ -210,6 +228,42 @@ class Column {
 	}
 
 	/**
+	 * Converts the relationship key
+	 *
+	 * @param Eloquent		$top_model
+	 * @param string		$name 	//the relationship name
+	 *
+	 * @return false|array('models' => array(), 'relationships' => array(), 'pieces' => array())
+	 */
+	private static function getNestedRelationships($top_model, $name)
+	{
+		$pieces = explode('.', $name);
+		$models = array();
+		$num_pieces = sizeof($pieces);
+
+		//iterate over the relationships to see if they're all valid
+		foreach ($pieces as $i => $rel)
+		{
+			//if this is the first item, then the model is the config's model
+			if ($i === 0)
+			{
+				$models[] = $top_model;
+			}
+
+			//if the model method doesn't exist for any of the pieces along the way, exit out
+			if (!method_exists($models[$i], $rel) || !is_a($models[$i]->{$rel}(), 'Laravel\Database\Eloquent\Relationships\Belongs_To'))
+			{
+				return false;
+			}
+
+			//we don't need the model of the last item
+			$models[] = $models[$i]->{$rel}()->model;
+		}
+
+		return array('models' => $models, 'pieces' => $pieces);
+	}
+
+	/**
 	 * Adds selects to a query
 	 *
 	 * @param Query 	$query
@@ -227,22 +281,45 @@ class Column {
 			if ($this->isRelated)
 			{
 				$where = '';
-				$fieldTable = $this->relationshipField->table;
+				$from_table = $field_table = $this->relationshipField->table;
+
+				//now we must tediously build the joins if there are nested relationships (should only be for belongs_to fields)
+				$joins = '';
+				$num_pieces = sizeof($this->nested['pieces']);
+
+				if ($num_pieces > 1)
+				{
+					for ($i = 1; $i < $num_pieces; $i++)
+					{
+						$model = $this->nested['models'][$i];
+						$relationship = $model->{$this->nested['pieces'][$i]}();
+						$relationship_model = $relationship->model;
+						$table = $relationship_model->table();
+						$alias = $this->field.'_'.$table;
+						$last_alias = $this->field.'_'.$model->table();
+						$joins .= ' LEFT JOIN '.$table.' AS '.$alias.' ON '.$alias.'.'.$relationship->model->key().' = '.$last_alias.'.'.$relationship->foreign;
+					}
+				}
 
 				switch ($this->relationshipField->type)
 				{
 					case 'belongs_to':
-						$fieldTable = $this->field.'_'.$this->relationshipField->table;
+						$first_model = $this->nested['models'][0];
+						$first_piece = $this->nested['pieces'][0];
+						$first_relationship = $first_model->{$first_piece}();
+						$relationship_model = $first_relationship->model;
+						$from_table = $relationship_model->table();
+						$field_table = $this->field.'_'.$from_table;
 
-						$where = $model->table().'.'.$this->relationshipField->foreignKey.
+						$where = $first_model->table().'.'.$first_relationship->foreign.
 							' = '.
-						$fieldTable.'.'.$this->relationshipField->column;
+						$field_table.'.'.$relationship_model::$key;
 						break;
 					case 'has_one':
 					case 'has_many':
 						$where = $model->table().'.'.$model::$key.
 							' = '.
-						$fieldTable.'.'.$this->relationshipField->column;
+						$field_table.'.'.$this->relationshipField->column;
 						break;
 					case 'has_many_and_belongs_to':
 						$where = $model->table().'.'.$model::$key.
@@ -252,7 +329,7 @@ class Column {
 				}
 
 				$selects[] = DB::raw("(SELECT ".$this->select."
-										FROM ".$this->relationshipField->table." AS ".$fieldTable."
+										FROM ".$from_table." AS ".$field_table.' '.$joins."
 										WHERE ".$where.") AS ".$this->field);
 			}
 			else
@@ -308,7 +385,13 @@ class Column {
 				{
 					$return['relatedColumns'][$columnObject->field] = $columnObject->field;
 
-					if ($fk = $columnObject->relationshipField->foreignKey)
+					//if there are nested values, we'll want to grab the values slightly differently
+					if (sizeof($columnObject->nested))
+					{
+						$fk = $columnObject->nested['models'][0]->{$columnObject->nested['pieces'][0]}()->foreign;
+						$return['includedColumns'][$fk] = $model->table().'.'.$fk;
+					}
+					else if ($fk = $columnObject->relationshipField->foreignKey)
 					{
 						$return['includedColumns'][$fk] = $model->table().'.'.$fk;
 					}

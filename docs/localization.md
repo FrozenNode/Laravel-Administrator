@@ -38,7 +38,7 @@ Check the [available languages](#available-languages) to see if your language is
 
 If you provide more than one valid value in the application config's `languages` array, the admin user will be presented with a language selector at the top right of the admin interface:
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/3.1.0/examples/images/localization.png" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/localization.png" />
 
 You'll notice that Administrator uses Laravel's default language URI scheme. Since Administrator checks for the default language prior to building these items, this should flow smoothly with the rest of your site even if you don't use the default language URIs.
 
@@ -86,9 +86,7 @@ There are no special exceptions in the model config files...so you can localize 
 
 Administrator currently supports the following languages:
 
-	de
-	en
-	hu
+> de en es eu hu nl pl tr
 
 If you don't see the language you want, [contributing a new language is crazy easy](#contributing)!
 

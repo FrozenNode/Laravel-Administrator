@@ -37,7 +37,13 @@
 			/* The options lists for any fields
 			 * object
 			 */
-			listOptions: {}
+			listOptions: {},
+
+			/**
+			 * The options for booleans
+			 * array
+			 */
+			boolOptions: [{id: 'true', text: 'true'}, {id: 'false', text: 'false'}]
 		},
 
 		/*
@@ -171,6 +177,11 @@
 			 */
 			freezeActions: ko.observable(false),
 
+			/* If this is set to true, the relationship constraints won't update
+			 * bool
+			 */
+			freezeConstraints: false,
+
 			/* If custom actions are supplied, they are stored here
 			 * array
 			 */
@@ -300,7 +311,6 @@
 			{
 				var self = this;
 
-
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
@@ -313,6 +323,9 @@
 
 					return;
 				}
+
+				//freeze the relationship constraint updates
+				self.freezeConstraints = true;
 
 				self.loadingItem(true);
 				self.itemLoadingId(id);
@@ -338,14 +351,12 @@
 						self.activeItem(data[self.primaryKey]);
 						self.loadingItem(false);
 
-						ko.mapping.updateData(self, self.model, data);
-
 						//set the new options for relationships
 						$.each(adminData.edit_fields, function(ind, el)
 						{
 							if (el.relationship && el.autocomplete)
 							{
-								self.listOptions[el.field](data[el.field + '_options']);
+								self[el.field + '_autocomplete'] = data[el.field + '_autocomplete'];
 							}
 						});
 
@@ -361,7 +372,12 @@
 						//fixes an error where the relationships wouldn't load
 						setTimeout(function()
 						{
+							//update the data
 							ko.mapping.updateData(self, self.model, data);
+
+							//unfreeze the relationship constraint updates
+							self.freezeConstraints = false;
+
 							window.admin.resizePage();
 						}, 50);
 					}
@@ -607,11 +623,16 @@
 					};
 
 					//iterate over the observables to see if we should include them
-					$(observables).each(function()
+					$(observables).each(function(i, obs)
 					{
 						if (this in el)
 						{
 							filter[this] = el[this]() ? el[this]() : null;
+
+							if (obs === 'value' && filter[this] && el.type === 'has_many_and_belongs_to' && typeof filter[this] === 'string')
+							{
+								filter.value = filter.value.split(',');
+							}
 						}
 					});
 
@@ -735,7 +756,7 @@
 			//set up the rowsPerPageOptions
 			for (var i = 1; i <= 100; i++)
 			{
-				this.viewModel.rowsPerPageOptions.push(i);
+				this.viewModel.rowsPerPageOptions.push({id: i, text: i + ''});
 			}
 
 			//now that we have most of our data, we can set up the computed values
@@ -751,7 +772,7 @@
 			this.initRelationships();
 
 			//set up the KO bindings
-			ko.applyBindings(this.viewModel, $('#main_content')[0]);
+			ko.applyBindings(this.viewModel, $('#content')[0]);
 			ko.applyBindings(this.filtersViewModel, $('#filters_sidebar_section')[0]);
 
 			//set up pushstate history
@@ -824,7 +845,7 @@
 				}
 
 				//if this is an image field, set the upload params
-				if (field.type === 'image')
+				if (field.type === 'image' || field.type === 'file')
 				{
 					field.uploading = ko.observable(false);
 					field.upload_percentage = ko.observable(0);
@@ -857,7 +878,7 @@
 			$.each(adminData.edit_fields, function(ind, el)
 			{
 				if (el.relationship)
-					self.viewModel.listOptions[ind] = ko.observableArray(el.options);
+					self.viewModel.listOptions[ind] = el.options;
 			});
 		},
 
@@ -919,6 +940,9 @@
 
 						self.viewModel[key].subscribe(function(val)
 						{
+							if (self.viewModel.freezeConstraints)
+								return;
+
 							//when this value changes, we will want to update the listOptions for the other field
 							//this shouldn't affect the currently-selected item
 							var constraints = {};
@@ -950,6 +974,16 @@
 								},
 								success: function(response)
 								{
+									var data = {};
+
+									//iterate over the results and put them in the autocomplete array
+									$.each(response, function(ind, el)
+									{
+										data[el.id] = el;
+									});
+
+									self.viewModel[fieldName + '_autocomplete'] = data;
+
 									//update the options
 									self.viewModel.listOptions[fieldName](response);
 								}

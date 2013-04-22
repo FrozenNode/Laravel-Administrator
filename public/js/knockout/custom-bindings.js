@@ -42,7 +42,10 @@
 					$element.hide();
 				});
 
-				$tableContainer.stop().animate({marginRight: 290}, 150);
+				$tableContainer.stop().animate({marginRight: 290}, 150, function()
+				{
+					window.admin.resizePage();
+				});
 			}
 			else
 			{
@@ -59,104 +62,229 @@
 		}
 	};
 
-	//for chosen js
-	ko.bindingHandlers.chosen = {
+	var select2Defaults = {
+			placeholder: adminData.languages['select_options'],
+			formatNoMatches: function(term)
+			{
+				return adminData.languages['no_results'];
+			},
+			width: 'resolve',
+			allowClear: true
+		};
+
+	//for select2
+	ko.bindingHandlers.select2 = {
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
-			$(element).chosen();
+			var options = valueAccessor(),
+				defaults = $.extend({}, select2Defaults),
+				data;
 
-			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
+			if (options && typeof options === 'object')
+			{
+				$.extend(defaults, options);
+			}
+
+			//pull the latest from the list
+			if (defaults.data)
+			{
+				if ($.isFunction(defaults.data.results))
+				{
+					defaults.data.results = options.data.results();
+				}
+
+				$(element).data('list_data', defaults.data.results);
+
+				defaults.data = function()
+				{
+					return {results: $(element).data('list_data')};
+				}
+			}
+
+			//init select2 if it isn't already set up
+			if ($(element).data("select2") === undefined || $(element).data("select2") === null)
+			{
+				//set the original list data in case we need it for sorting
+				$(element).data('original_list_data', [].concat($(element).data('list_data')));
+
+				$(element).select2(defaults);
+
+				//if the sort option is set, set up jquery ui sortable
+				if (options.sort)
+				{
+					$(element).select2('container').find('ul.select2-choices').sortable({
+						containment: 'parent',
+						start: function() { $(element).select2("onSortStart") },
+						update: function() { $(element).select2("onSortEnd") }
+					});
+				}
+			}
+
+			//it's necessary to reorder the options array if the sort is set
+			if (options.sort)
+			{
+				var listData = $(element).data('list_data'),
+					val = $(element).val();
+
+				//initially we want to reset the list data so we can work with a fresh, alphabetized sort
+				$(element).data('list_data', [].concat($(element).data('original_list_data')));
+
+				//if there is a value for this field, split it and find the relevant items in the array
+				if (val)
+				{
+					var vals = val.split(','),
+						topItems = [],
+						allItems = $(element).data('list_data');
+
+					//iterate over the values
+					$.each(vals, function(ind, el)
+					{
+						//iterate over all the items to find our value
+						$.each(allItems, function(i, e)
+						{
+							if (e.id == el)
+							{
+								topItems.push(e);
+								allItems.splice(i, 1);
+								return false;
+							}
+						});
+					});
+
+					$(element).data('list_data', topItems.concat(allItems));
+				}
+			}
+
+			setTimeout(function()
+			{
+				$(element).trigger('change');
+			}, 50);
 		}
 	};
 
-	//for ajax chosen js
-	ko.bindingHandlers.ajaxChosen = {
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel, context)
-		{
-			var options = valueAccessor(),
-				viewModel = context.$root,
-				data = {
-					constraints: {},
-					field: options.field,
-					type: options.type
-				};
-
-			//figure out if there are any constraints that we need to send over
-			$(options.constraints).each(function(ind, el)
-			{
-				data.constraints[ind] = viewModel[ind]();
-			});
-
-			$(element).ajaxChosen({
-				minTermLength: 1,
-				afterTypeDelay: 50,
-				data: data,
-				type: 'POST',
-				url: base_url + adminData.model_name + '/update_options/',
-				dataType: 'json',
-				fillData: function()
-				{
-					var data = {};
-
-					//if this is a filter, go through the filters until this one is found and update the value
-					if (options.type === 'filter')
+	var select2RemoteHandler = function (element, valueAccessor, allBindingsAccessor, viewModel, context)
+	{
+		var options = valueAccessor(),
+			defaults = $.extend({
+				minimumInputLength: 1,
+				allowClear: true,
+				ajax: {
+					url: base_url + adminData.model_name + '/update_options/',
+					dataType: 'json',
+					quietMillis: 100,
+					type: 'POST',
+					data: function(term, page)
 					{
-						$.each(admin.filtersViewModel.filters, function(ind, el)
+						var data = {
+								term: term,
+								page: page,
+								field: options.field,
+								type: options.type,
+								constraints: {}
+							};
+
+						if (data.type === 'edit')
 						{
-							if (el.field === options.field && el.value())
+							data.selectedItems = admin.viewModel[data.field]();
+						}
+						else if (data.type === 'filter')
+						{
+							data.selectedItems = admin.filtersViewModel.filters[parseInt(options.filterIndex)].value();
+						}
+
+						//figure out if there are any constraints that we need to send over
+						if (options.constraints)
+						{
+							$.each(options.constraints, function(ind, el)
 							{
-								data.selectedItems = el.value();
-							}
-						});
-					}
-					else
+								data.constraints[ind] = admin.viewModel[ind]();
+							});
+						}
+
+						return data;
+					},
+					results: function(returndata, page)
 					{
-						if (admin.viewModel[options.field]())
+						var data = {},
+							val = $(element).val();
+
+						//we want to update the autocomplete index so we can show all possibly-selected items
+						if (val)
 						{
-							data.selectedItems = admin.viewModel[options.field]();
+							$(val.split(',')).each(function(ind, el)
+							{
+								data[this] = {id: this, text: admin.viewModel[options.field + '_autocomplete'][this].text};
+							});
+						}
+
+						//iterate over the results and put them in the autocomplete array
+						$.each(returndata, function(ind, el)
+						{
+							data[el.id] = el;
+						});
+
+						admin.viewModel[options.field + '_autocomplete'] = data;
+
+						return {
+							results: returndata
 						}
 					}
+				},
+				initSelection: function(element, callback) {
+					var data = [],
+						val = $(element).val();
 
-					return data;
-				}
-			}, function(data, term, select)
-			{
-				var $chosen = select.next(),
-					$single = $chosen.find('div.chzn-search input'),
-					$multi = $chosen.find('ul.chzn-choices'),
-					$multiInput = $multi.find('li.search-field input'),
-					singleVal = $single.val(),
-					multiVal = $multiInput.val();
+					if (!val)
+						return callback(null);
 
-				if (options.type === 'filter')
-				{
-					admin.filtersViewModel.listOptions[options.field](data);
-				}
-				else
-				{
-					admin.viewModel.listOptions[options.field](data);
-				}
-
-				setTimeout(function()
-				{
-					//reset the search and focus
-					if ($single.length)
+					//if this is a multi-select, set up the data as an array
+					if (options.multiple)
 					{
-						$single.val(singleVal);
-						$single.focus();
+						$(element.val().split(',')).each(function(ind, el)
+						{
+							data.push({id: this, text: admin.viewModel[options.field + '_autocomplete'][this].text});
+						});
 					}
+					//otherwise make the data a simple object
 					else
 					{
-						$multiInput.val(multiVal);
-						$multiInput.focus();
+						data = {id: val, text: admin.viewModel[options.field + '_autocomplete'][val].text};
 					}
-				}, 50);
 
-				return false;
-			});
+					callback(data);
+				}
+			}, select2Defaults);
 
-			setTimeout(function() {$(element).trigger("liszt:updated")}, 50);
+		if (options && typeof options === 'object')
+		{
+			$.extend(defaults, options);
 		}
+
+		//init select2 if it isn't already set up
+		if ($(element).data("select2") === undefined || $(element).data("select2") === null)
+		{
+			$(element).select2(defaults);
+
+			//if the sort option is set, set up jquery ui sortable
+			if (options.sort)
+			{
+				$(element).select2('container').find('ul.select2-choices').sortable({
+					containment: 'parent',
+					start: function() { $(element).select2("onSortStart") },
+					update: function() { $(element).select2("onSortEnd") }
+				});
+			}
+		}
+
+		setTimeout(function()
+		{
+			$(element).trigger('change');
+		}, 50);
+	}
+
+	//for ajax/remote select2
+	ko.bindingHandlers.select2Remote = {
+		update: select2RemoteHandler
 	};
 
 	/**
@@ -338,7 +466,7 @@
 
 			val = val === null ? '' : val + '';
 
-			if (!limit || val === null)
+			if (!limit || val === null || val.length < limit)
 				return;
 
 			val = val.substr(0, limit);
@@ -408,7 +536,7 @@
 			var editor = $element.ckeditorGet();
 
 			//destroy the existing editor if the DOM node is removed
-			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
 				var existingEditor = CKEDITOR.instances[element.name];
 
 				if (existingEditor)
@@ -423,6 +551,15 @@
 				observable($element.val());
 			}
 
+			//when the editor is loaded, we want to resize our page
+			editor.on('loaded', function()
+			{
+				setTimeout(function()
+				{
+					window.admin.resizePage();
+				}, 50)
+			})
+
 			editor.setData(value);
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
@@ -431,6 +568,8 @@
 			var value = ko.utils.unwrapObservable(valueAccessor()),
 				$element = $(element),
 				editor = $element.ckeditorGet();
+
+			value = value ? value : '';
 
 			$element.html(value);
 			editor.setData(value);
@@ -461,12 +600,13 @@
 	/**
 	 * File uploader using plupload
 	 */
-	ko.bindingHandlers.imageupload = {
+	ko.bindingHandlers.fileupload = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context)
 		{
 			var options = valueAccessor(),
 				cacheName = options.field + '_uploader',
-				viewModel = context.$root;
+				viewModel = context.$root,
+				filters = options.image ? [{title: 'Image files', extensions: 'jpg,jpeg,gif,png'}] : [];
 
 			viewModel[cacheName] = new plupload.Uploader({
 				runtimes: 'html5,flash,silverlight,gears,browserplus',
@@ -478,9 +618,7 @@
 				url: options.upload_url,
 				flash_swf_url: asset_url + 'js/plupload/js/plupload.flash.swf',
 				silverlight_xap_url: asset_url + 'js/plupload/js/plupload.silverlight.xap',
-				filters: [
-					{title: 'Image files', extensions: 'jpg,jpeg,gif,png'}
-				]
+				filters: filters
 			});
 
 			viewModel[cacheName].init();
@@ -511,21 +649,22 @@
 
 				options.uploading(false);
 
-				if (!data.errors.length) {
+				if (data.errors.length === 0) {
 					//success
-					//iterate over the images until we find it and then set the proper fields
+					//iterate over the files until we find it and then set the proper fields
 					viewModel[options.field](data.filename);
-
-					setTimeout(function()
-					{
-						viewModel[cacheName].splice();
-						viewModel[cacheName].refresh();
-						$('div.plupload').css('z-index', 71);
-					}, 200);
 				} else {
 					//error
-					alert('ERRRORRRRR');
+					alert(data.errors.messages.file[0]);
 				}
+
+				setTimeout(function()
+				{
+					viewModel[cacheName].splice();
+					viewModel[cacheName].refresh();
+					$('div.plupload').css('z-index', 71);
+					admin.resizePage();
+				}, 200);
 			});
 
 			$('#' + cacheName).bind('dragenter', function(e)
@@ -556,6 +695,6 @@
 				$('div.plupload').css('z-index', 71);
 			}, 200);
 		}
-	}
+	};
 
 })(jQuery);
