@@ -3,6 +3,7 @@
 - [Getting Administrator](#getting-administrator)
 - [Administrator Config](#administrator-config)
 - [Model Config](#model-config)
+- [Settings Config](#settings-config)
 
 <a name="getting-administrator"></a>
 ## Getting Administrator
@@ -31,8 +32,18 @@ There are several required fields that must be supplied. Among them are the `men
 <a name="model-config"></a>
 ## Model Config
 
-Any Eloquent model (or any object that ultimately extends from an Eloquent model) can be represented by a model configuration file. These files can be kept anywhere in your application directory structure and you provide the path to their location in the main `administrator.php` config. The names of these files correspond to the values supplied in the `menu` option in the `administrator.php` config.
+Any Eloquent model (or any object that ultimately extends from an Eloquent model) can be represented by a model configuration file. These files can be kept anywhere in your application directory structure and you provide the path to their location in the main `administrator.php` config (via the `model_config_path` option). The names of these files correspond to the values supplied in the `menu` option in the `administrator.php` config.
 
 There are several required fields that must be supplied in order for a model config file to work. Apart from that you can also define a number of optional fields that help you customize your admin interface on a per-model basis. For instance, if one of your models needs a WYSIWYG field, you'll probably want the edit form to be wider than the default width. All you would have to do is set the `form_width` option in that model's config.
 
 > For a detailed description of all the model configuration options, see the **[model configuration docs](/docs/model-configuration)**
+
+
+<a name="settings-config"></a>
+## Settings Config
+
+Settings configuration files help you manage administrative options that aren't necessarily best represented by an Eloquent model. These files can be kept anywhere in your application directory structure and you provide the path to their location in the main `administrator.php` config (via the `settings_config_path` option). The names of these files correspond to the values supplied in the `menu` option in the `administrator.php` config.
+
+There are several required fields that must be supplied in order for a settings config file to work. Apart from that you can also define a number of optional fields that help you customize your settings page.
+
+> For a detailed description of all the settings configuration options, see the **[settings configuration docs](/docs/settings-configuration)**
