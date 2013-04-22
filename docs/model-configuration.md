@@ -160,7 +160,7 @@ The `edit_fields` array lets you define the editable fields for a model. There a
 
 The `filters` array lets you define filters for a model. These work just like the `edit_field` items, except there are fewer filterable field types. For example, you can have an `image` field type in the `edit_fields` array, but you can't provide a `'type' => 'image'` in the `filters` array. You can, however, filter by an image's name by setting the field as a `text` field type.
 
-> For a detailed description of all the filter types and options, see the **[filters docs](/docs/filters)**
+> For a detailed description of all the filter types and options, see the **[filters docs](/docs/fields#filters)**
 
 <a name="permission"></a>
 ## Permission
