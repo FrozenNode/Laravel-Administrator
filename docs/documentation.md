@@ -29,5 +29,6 @@
     - [Date](/docs/field-type-date)
     - [Time](/docs/field-type-time)
     - [Datetime](/docs/field-type-datetime)
+    - [File](/docs/field-type-file)
     - [Image](/docs/field-type-image)
     - [Color](/docs/field-type-color)
