@@ -5,7 +5,7 @@
 <a name="usage"></a>
 ## Usage
 
-<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-file.jpg" />
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-file.png" />
 
 The `file` field type should be a text-like type in your database. The file's name is stored in this field, while the original will be saved in the `location` you specify, and any resized copies will be stored where you define in the `sizes` option.
 
