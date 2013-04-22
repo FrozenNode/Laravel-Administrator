@@ -7,6 +7,7 @@
     - [Installation](/docs/installation)
     - [Configuration](/docs/configuration)
     - [Model Configuration](/docs/model-configuration)
+    - [Settings Configuration](/docs/settings-configuration)
     - [Validation](/docs/validation)
     - [Localization](/docs/localization)
     - [Tutorials](/docs/tutorials)

@@ -121,3 +121,5 @@ Just as with all fields, if you provide a simple string instead of an array, the
 ## Settings Page
 
 If you're creating a settings page, you can use all of the field types except for [`key`](/docs/field-type-key) and [`relationship`](/docs/field-type-relationship).
+
+> For a detailed description of all the settings page options, see the **[settings configuration docs](/docs/settings-configuration)**
