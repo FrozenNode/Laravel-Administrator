@@ -69,10 +69,24 @@ class Time extends Field {
 	public function fillModel(&$model, $input)
 	{
 		$val = ( is_null($input) || !is_string($input) ) ? '' : $input;
+		$time = strtotime($val);
 
-		if (strtotime($val) !== false && strtotime($val))
+		//first we validate that it's a date/time
+		if ($time !== false)
 		{
-			$model->{$this->field} = $val;
+			//fill the model with the correct date/time format
+			if ($this->type === 'date')
+			{
+				$model->{$this->field} = date('Y-m-d', $time);
+			}
+			else if ($this->type === 'datetime')
+			{
+				$model->{$this->field} = date('Y-m-d H:i:s', $time);
+			}
+			else
+			{
+				$model->{$this->field} = date('H:i:s', $time);
+			}
 		}
 	}
 }
