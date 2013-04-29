@@ -116,6 +116,7 @@ abstract class Relationship extends Field {
 
 		//get the name field option
 		$this->nameField = array_get($info, 'name_field', $this->nameField);
+		$this->sortField = array_get($info, 'sort_field', $this->nameField);
 		$this->autocomplete = array_get($info, 'autocomplete', $this->autocomplete);
 		$this->numOptions = array_get($info, 'num_options', $this->numOptions);
 		$this->searchFields = array_get($info, 'search_fields', array($this->nameField));
