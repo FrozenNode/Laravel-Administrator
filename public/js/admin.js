@@ -985,7 +985,7 @@
 									self.viewModel[fieldName + '_autocomplete'] = data;
 
 									//update the options
-									self.viewModel.listOptions[fieldName](response);
+									self.viewModel.listOptions[fieldName] = response;
 								}
 							});
 						});
