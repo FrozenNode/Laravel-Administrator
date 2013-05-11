@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.3.0
+
+
 ### 3.2.0
 - Added support for a file field
 - You can now choose to provide a custom dashboard or a default home page from your menu
