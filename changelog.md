@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 3.3.0
+- You can now define your custom action's permissions in the model config's action_permissions option
 
 
 ### 3.2.0
