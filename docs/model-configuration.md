@@ -176,7 +176,7 @@ The `filters` array lets you define filters for a model. These work just like th
 		return Auth::user()->has_role('developer');
 	},
 
-The permission option lets you define a closure that determines whether or not the current user can access this model. If this field is provided (it isn't required), the user will only be given access if this resolves to a truthy value. If this fails, the user will be given a 404.
+The permission option lets you define a closure that determines whether or not the current user can access this model. If this field is provided (it isn't required), the user will only be given access if this resolves to a truthy value. If you return something falsey, it will redirect to your `login_path`. If you return a `Response` or `Redirect` object, it will respect those requests. Returned `Redirect` object will have the login redirect path added to the "with" data.
 
 <a name="action-permissions"></a>
 ## Action Permissions

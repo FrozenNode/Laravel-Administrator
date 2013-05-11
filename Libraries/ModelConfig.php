@@ -187,9 +187,15 @@ class ModelConfig {
 		//but first we have to check if the user has permission to access this model
 		$permission = array_get($config, 'permission');
 
-		if (is_callable($permission) && !$permission())
+		if (is_callable($permission))
 		{
-			return false;
+			$response = $permission();
+
+			//if it's falsey, or a response/redirect return the value
+			if (!$response || is_a($response, 'Laravel\\Response') || is_a($response, 'Laravel\\Redirect'))
+			{
+				return $response;
+			}
 		}
 
 		//if the title or single names are provided, throw an exception

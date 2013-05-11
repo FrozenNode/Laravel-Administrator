@@ -95,14 +95,26 @@ Route::filter('validate_admin', function ()
 
 	//get the admin check closure that should be supplied in the config
 	$permission = Config::get('administrator::administrator.permission');
+	$response = $permission();
 
-	if (!$permission())
+	//if this is a simple false value, send the user to the login redirect
+	if (!$response)
 	{
 		$loginUrl = URL::to(Config::get('administrator::administrator.login_path', 'user/login'));
 		$redirectKey = Config::get('administrator::administrator.login_redirect_key', 'redirect');
 		$redirectUri = URL::to_route('admin_dashboard');
 
 		return Redirect::to($loginUrl)->with($redirectKey, $redirectUri);
+	}
+	//otherwise if this is a response, return that
+	else if (is_a($response, 'Laravel\\Response'))
+	{
+		return $response;
+	}
+	//if it's a redirect, send it back with the redirect uri
+	else if (is_a($response, 'Laravel\\Redirect'))
+	{
+		return $response->with($redirectKey, $redirectUri);
 	}
 });
 
@@ -116,6 +128,16 @@ Route::filter('validate_model', function ()
 	if (!$config)
 	{
 		return Response::error('404');
+	}
+	//otherwise if this is a response, return that
+	else if (is_a($config, 'Laravel\\Response'))
+	{
+		return $config;
+	}
+	//if it's a redirect, send it back with the redirect uri
+	else if (is_a($config, 'Laravel\\Redirect'))
+	{
+		return $config->with($redirectKey, $redirectUri);
 	}
 
 	Request::route()->parameters[0] = $config;
