@@ -8,7 +8,7 @@
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-key.jpg" />
 
-The `key` field type shouldn't be used in the `edit_fields` array because managing an item's key should be handled internally by Eloquent. It will always display automatically for an existing item as an uneditable field, so you don't have to set it.
+The `key` field type can be used to show the primary key's value. You cannot make this field editable since primary key values are handled internally by your database.
 
 	'id' => array(
 		'type' => 'key', //optional...Administrator will know when a field is the model's key
