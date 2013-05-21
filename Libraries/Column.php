@@ -3,6 +3,7 @@ namespace Admin\Libraries;
 
 use Admin\Libraries\Fields\Field;
 use \DB;
+use \Exception;
 
 /**
  * The Column class helps us construct columns from models. It can be used to derive column information from a model, or it can be
@@ -94,6 +95,34 @@ class Column {
 	 */
 	public $isIncluded = false;
 
+	/**
+	 * The full class name of a belongsTo relationship
+	 *
+	 * @var string
+	 */
+	public static $belongsToClass = 'Laravel\Database\Eloquent\Relationships\Belongs_To';
+
+	/**
+	 * The full class name of a hasManyAndBelongsTo relationship
+	 *
+	 * @var string
+	 */
+	public static $hasManyAndBelongsToClass = 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To';
+
+	/**
+	 * The full class name of a hasManyAndBelongsTo relationship
+	 *
+	 * @var string
+	 */
+	public static $hasManyClass = 'Laravel\Database\Eloquent\Relationships\Has_Many';
+
+	/**
+	 * The full class name of a hasManyAndBelongsTo relationship
+	 *
+	 * @var string
+	 */
+	public static $hasOneClass = 'Laravel\Database\Eloquent\Relationships\Has_One';
+
 
 
 	/**
@@ -161,21 +190,44 @@ class Column {
 		//if the relation option is set, we'll set up the column array using the select
 		if ($column['relationship'])
 		{
+			$rel = $column['relationship'];
+
 			//split the string up into an array on the . symbol
-			if (!$nested = static::getNestedRelationships($config->model, $column['relationship']))
+			if ($nested = static::getNestedRelationships($config->model, $rel))
 			{
-				return false;
+				$relevant_name = $nested['pieces'][sizeof($nested['pieces'])-1];
+				$relevant_model = $nested['models'][sizeof($nested['models'])-2];
+				$column['nested'] = $nested;
+			}
+			//if we couldn't make a belongsTo nest out of it, check if it's a HMABT, HM, or HO
+			else if (method_exists($config->model, $rel))
+			{
+				$relationship = $config->model->{$rel}();
+
+				//HMABT, HM, HO
+				if (is_a($relationship, static::$hasManyAndBelongsToClass) || is_a($relationship, static::$hasManyClass)
+																						|| is_a($relationship, static::$hasOneClass))
+				{
+					$relevant_name = $rel;
+					$relevant_model = $config->model;
+				}
+				else
+				{
+					throw new Exception("Administrator: the relationship provided for the " . $field . " column is invalid");
+				}
+			}
+			else
+			{
+				throw new Exception("Administrator: the relationship provided for the " . $field . " column is invalid");
 			}
 
+			//check if a 'select' option was provided
 			if (!$column['select'])
 			{
-				return false;
+				throw new Exception("Administrator: you must provide a 'select' option for the " . $field . " relationship column");
 			}
 
 			//now we'll need to grab a relation field to see what its foreign table is
-			$relevant_name = $nested['pieces'][sizeof($nested['pieces'])-1];
-			$relevant_model = $nested['models'][sizeof($nested['models'])-2];
-
 			if (!$relationshipField = Field::get($relevant_name, array('type' => 'relationship'), $relevant_model, false))
 			{
 				return false;
@@ -189,10 +241,9 @@ class Column {
 			//else replace (:table) with the simple table name
 			else
 			{
-				$selectTable = $relationshipField->table;
+				$selectTable = $field.'_'.$config->model->{$rel}()->model->table();
 			}
 
-			$column['nested'] = $nested;
 			$column['select'] = str_replace('(:table)', $selectTable, $column['select']);
 			$column['relationshipField'] = $relationshipField;
 		}
@@ -251,7 +302,7 @@ class Column {
 			}
 
 			//if the model method doesn't exist for any of the pieces along the way, exit out
-			if (!method_exists($models[$i], $rel) || !is_a($models[$i]->{$rel}(), 'Laravel\Database\Eloquent\Relationships\Belongs_To'))
+			if (!method_exists($models[$i], $rel) || !is_a($models[$i]->{$rel}(), static::$belongsToClass))
 			{
 				return false;
 			}
@@ -285,25 +336,26 @@ class Column {
 
 				//now we must tediously build the joins if there are nested relationships (should only be for belongs_to fields)
 				$joins = '';
-				$num_pieces = sizeof($this->nested['pieces']);
-
-				if ($num_pieces > 1)
-				{
-					for ($i = 1; $i < $num_pieces; $i++)
-					{
-						$model = $this->nested['models'][$i];
-						$relationship = $model->{$this->nested['pieces'][$i]}();
-						$relationship_model = $relationship->model;
-						$table = $relationship_model->table();
-						$alias = $this->field.'_'.$table;
-						$last_alias = $this->field.'_'.$model->table();
-						$joins .= ' LEFT JOIN '.$table.' AS '.$alias.' ON '.$alias.'.'.$relationship->model->key().' = '.$last_alias.'.'.$relationship->foreign;
-					}
-				}
 
 				switch ($this->relationshipField->type)
 				{
 					case 'belongs_to':
+						$num_pieces = sizeof($this->nested['pieces']);
+
+						if ($num_pieces > 1)
+						{
+							for ($i = 1; $i < $num_pieces; $i++)
+							{
+								$model = $this->nested['models'][$i];
+								$relationship = $model->{$this->nested['pieces'][$i]}();
+								$relationship_model = $relationship->model;
+								$table = $relationship_model->table();
+								$alias = $this->field.'_'.$table;
+								$last_alias = $this->field.'_'.$model->table();
+								$joins .= ' LEFT JOIN '.$table.' AS '.$alias.' ON '.$alias.'.'.$relationship->model->key().' = '.$last_alias.'.'.$relationship->foreign;
+							}
+						}
+
 						$first_model = $this->nested['models'][0];
 						$first_piece = $this->nested['pieces'][0];
 						$first_relationship = $first_model->{$first_piece}();
@@ -317,14 +369,28 @@ class Column {
 						break;
 					case 'has_one':
 					case 'has_many':
+						$field_table = $this->field . '_' . $from_table;
+
 						$where = $model->table().'.'.$model::$key.
 							' = '.
 						$field_table.'.'.$this->relationshipField->column;
 						break;
 					case 'has_many_and_belongs_to':
-						$where = $model->table().'.'.$model::$key.
-							' = '.
-						$this->relationshipField->column;
+						$relationship = $model->{$this->relationship}();
+						$from_table = $model->table();
+						$field_table = $this->field.'_'.$from_table;
+						$other_table = $relationship->model->table();
+						$other_alias = $this->field.'_'.$other_table;
+						$other_model = $relationship->model;
+						$other_key = $other_model::$key;
+						$int_table = $this->relationshipField->table;
+						$int_alias = $this->field.'_'.$int_table;
+						$column1 = explode('.', $this->relationshipField->column)[1];
+						$column2 = explode('.', $this->relationshipField->column2)[1];
+						$joins .= ' LEFT JOIN '.$int_table.' AS '.$int_alias.' ON '.$int_alias.'.'.$column1.' = '.$field_table.'.'.$model::$key
+								.' LEFT JOIN '.$other_table.' AS '.$other_alias.' ON '.$other_alias.'.'.$other_key.' = '.$int_alias.'.'.$column2;
+
+						$where = $model->table().'.'.$model::$key.' = '.$int_alias.'.'.$column1;
 						break;
 				}
 
