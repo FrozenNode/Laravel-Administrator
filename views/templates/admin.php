@@ -40,11 +40,11 @@
 		</thead>
 		<tbody>
 			<!-- ko foreach: rows -->
-				<tr data-bind="click: function() {$root.clickItem($data[$root.primaryKey]); return true},
+				<tr data-bind="click: function() {$root.clickItem($data[$root.primaryKey].raw); return true},
 							css: {result: true, even: $index() % 2 == 1, odd: $index() % 2 != 1,
-									selected: $data[$root.primaryKey] == $root.itemLoadingId()}">
+									selected: $data[$root.primaryKey].raw == $root.itemLoadingId()}">
 					<!-- ko foreach: $root.columns -->
-						<td data-bind="html: $parentContext.$data[field]"></td>
+						<td data-bind="html: $parentContext.$data[field].rendered"></td>
 					<!-- /ko -->
 				</tr>
 			<!-- /ko -->

@@ -282,18 +282,27 @@ class ModelHelper {
 				//if this column is in our objects array, render the output with the given value
 				if (isset($config->columns['columnObjects'][$field]))
 				{
-					$arr[$field] = $config->columns['columnObjects'][$field]->renderOutput($item->get_attribute($field));
+					$arr[$field] = array(
+						'raw' => $item->get_attribute($field),
+						'rendered' => $config->columns['columnObjects'][$field]->renderOutput($item->get_attribute($field)),
+					);
 				}
 				//otherwise it's likely the primary key column which wasn't included (though it's needed for identification purposes)
 				else
 				{
-					$arr[$field] = $item->get_attribute($field);
+					$arr[$field] = array(
+						'raw' => $item->get_attribute($field),
+						'rendered' => $item->get_attribute($field),
+					);
 				}
 			}
 			//then grab the computed, unsortable columns
 			foreach ($config->columns['computedColumns'] as $col)
 			{
-				$arr[$col] = $config->columns['columnObjects'][$col]->renderOutput($item->{$col});
+				$arr[$col] = array(
+					'raw' => $item->{$col},
+					'rendered' => $config->columns['columnObjects'][$col]->renderOutput($item->{$col}),
+				);
 			}
 
 			$results[] = $arr;

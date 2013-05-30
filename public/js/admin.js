@@ -710,7 +710,7 @@
 							success: function(response)
 							{
 								//update the options
-								self.listOptions[fieldName](response);
+								self.listOptions[fieldName] = response;
 							}
 						});
 
