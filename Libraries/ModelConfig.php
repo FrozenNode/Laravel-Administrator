@@ -155,14 +155,16 @@ class ModelConfig {
 		$this->linkCallback = is_callable($linkCallback) ? $linkCallback : null;
 
 		//grab the action permissions, if supplied
-		$actionPermissions = array_get($config, 'action_permissions', array());
-		$create = array_get($actionPermissions, 'create');
-		$delete = array_get($actionPermissions, 'delete');
-		$update = array_get($actionPermissions, 'update');
+		$this->actionPermissions = array_merge($this->actionPermissions, array_get($config, 'action_permissions', array()));
 
-		$this->actionPermissions['create'] = is_callable($create) ? $create() : true;
-		$this->actionPermissions['delete'] = is_callable($delete) ? $delete() : true;
-		$this->actionPermissions['update'] = is_callable($update) ? $update() : true;
+		//iterate over the permissions to check if they're callable, run the function if they are
+		foreach ($this->actionPermissions as $i => $action)
+		{
+			if (is_callable($action))
+			{
+				$this->actionPermissions[$i] = $action();
+			}
+		}
 	}
 
 	/**
@@ -185,9 +187,15 @@ class ModelConfig {
 		//but first we have to check if the user has permission to access this model
 		$permission = array_get($config, 'permission');
 
-		if (is_callable($permission) && !$permission())
+		if (is_callable($permission))
 		{
-			return false;
+			$response = $permission();
+
+			//if it's falsey, or a response/redirect return the value
+			if (!$response || is_a($response, 'Laravel\\Response') || is_a($response, 'Laravel\\Redirect'))
+			{
+				return $response;
+			}
 		}
 
 		//if the title or single names are provided, throw an exception
