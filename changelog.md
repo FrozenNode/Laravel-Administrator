@@ -3,6 +3,7 @@
 ### 3.3.0
 - You can now define your custom action's permissions in the model config's action_permissions option
 - Returning Response or Redirect objects is now possible for admin and model configs
+- New language: Brazilian Portuguese (pt-BR)
 - Bugfix: Self-relationships weren't updating properly since the move to select2
 - Bugfix: Columns for HasMany, HasOne, and HMABT relationships now work
 
