@@ -385,8 +385,8 @@ class Column {
 						$other_key = $other_model::$key;
 						$int_table = $this->relationshipField->table;
 						$int_alias = $this->field.'_'.$int_table;
-						$column1 = explode('.', $this->relationshipField->column)[1];
-						$column2 = explode('.', $this->relationshipField->column2)[1];
+						$column1 = array_slice(explode('.', $this->relationshipField->column), 2, 1);
+						$column2 = array_slice(explode('.', $this->relationshipField->column2), 2, 1);
 						$joins .= ' LEFT JOIN '.$int_table.' AS '.$int_alias.' ON '.$int_alias.'.'.$column1.' = '.$field_table.'.'.$model::$key
 								.' LEFT JOIN '.$other_table.' AS '.$other_alias.' ON '.$other_alias.'.'.$other_key.' = '.$int_alias.'.'.$column2;
 
