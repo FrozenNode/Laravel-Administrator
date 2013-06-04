@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 3.3.0
+- **Version:** 3.3.1
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/overview.jpg" />
 
@@ -24,12 +24,8 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 3.3.0
-- You can now define your custom action's permissions in the model config's action_permissions option
-- Returning Response or Redirect objects is now possible for admin and model configs
-- New language: Brazilian Portuguese (pt-BR)
-- Bugfix: Self-relationships weren't updating properly since the move to select2
-- Bugfix: Columns for HasMany, HasOne, and HMABT relationships now work
+### 3.3.1
+- Bugfix: HMABT column had a php5.3 error
 
 
 See *changelog.md* for the changelog from previous versions
