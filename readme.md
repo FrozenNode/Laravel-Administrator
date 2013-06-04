@@ -4,7 +4,7 @@ Administrator is a database interface bundle for the Laravel PHP framework. Admi
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 3.3.1
+- **Version:** 3.3.2
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/overview.jpg" />
 
@@ -24,8 +24,8 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 3.3.1
-- Bugfix: HMABT column had a php5.3 error
+### 3.3.2
+- Bugfix: Error with 3.3.1 bugfix
 
 
 See *changelog.md* for the changelog from previous versions
