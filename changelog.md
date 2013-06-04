@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.3.2
+- Bugfix: Error with 3.3.1 bugfix
+
 ### 3.3.1
 - Bugfix: HMABT column had a php5.3 error
 
