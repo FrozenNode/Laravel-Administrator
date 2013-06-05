@@ -27,9 +27,13 @@ class Menu {
 			//if the item is a string, find its config
 			if (is_string($item))
 			{
+				//if the prefix is 'settings.', it's a settings config
 				$isSettings = strpos($item, 'settings.') !== false;
+
+				//fetch the appropriate config file
 				$config = $isSettings ? SettingsConfig::find($item) : ModelConfig::find($item);
 
+				//if a config object was returned and if the permission passes, add the item to the menu
 				if ($config)
 				{
 					$permission = array_get($config, 'permission');
