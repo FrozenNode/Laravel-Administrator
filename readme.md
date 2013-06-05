@@ -49,8 +49,8 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 3.3.2
-- Bugfix: Error with 3.3.1 bugfix
+### 4.0.0
+- Updated to Laravel 4 / Composer
 
 
 See *changelog.md* for the changelog from previous versions
