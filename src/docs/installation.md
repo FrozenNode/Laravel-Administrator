@@ -11,17 +11,14 @@
 
 To install Administrator as a Composer package to be used with Laravel 4, simply add this to your composer.json:
 
-```json
-"frozennode/administrator": "dev-master"
-```
+	"frozennode/administrator": "dev-master"
 
 ..and run `composer install`.  Once it is installed, you can register the service provider in `app/config/app.php` in the `providers` array:
 
-```php
-'providers' => array(
-    'Frozennode\Administrator\AdministratorServiceProvider',
-)
-```
+	'providers' => array(
+	    'Frozennode\Administrator\AdministratorServiceProvider',
+	)
+
 
 <a name="laravel-3"></a>
 ## Laravel 3
