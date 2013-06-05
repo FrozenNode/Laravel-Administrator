@@ -23,12 +23,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 	{
 		$this->package('frozennode/administrator');
 
-		//set the config items if a user has provided an application config
-		foreach (Config::get('administrator::administrator', array()) as $key => $option)
-		{
-			Config::set('administrator::administrator.'.$key, Config::get('administrator.'.$key, Config::get('administrator::administrator.'.$key)));
-		}
-
 		include __DIR__.'/../../filters.php';
 		include __DIR__.'/../../viewComposers.php';
 		include __DIR__.'/../../routes.php';
