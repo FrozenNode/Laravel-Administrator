@@ -169,7 +169,7 @@
 				minimumInputLength: 1,
 				allowClear: true,
 				ajax: {
-					url: base_url + adminData.model_name + '/update_options/',
+					url: base_url + adminData.model_name + '/update_options',
 					dataType: 'json',
 					quietMillis: 100,
 					type: 'POST',
