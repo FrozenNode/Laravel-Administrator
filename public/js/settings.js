@@ -72,7 +72,7 @@
 				var self = this,
 					saveData = ko.mapping.toJS(self);
 
-				saveData.csrf_token = csrf;
+				saveData._token = csrf;
 
 				self.statusMessage(self.languages['saving']).statusMessageType('');
 				self.freezeForm(true);
@@ -119,7 +119,7 @@
 
 				$.ajax({
 					url: custom_action_url,
-					data: {csrf_token: csrf, action_name: action},
+					data: {_token: csrf, action_name: action},
 					dataType: 'json',
 					type: 'POST',
 					complete: function()
@@ -248,8 +248,15 @@
 		initComputed: function()
 		{
 
-		}
+		},
 
+		/**
+		 * Handles a window resize
+		 */
+		resizePage: function()
+		{
+
+		}
 	};
 
 

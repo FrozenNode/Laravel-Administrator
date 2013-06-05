@@ -1,0 +1,25 @@
+{
+    "name": "frozennode/administrator",
+    "description": "A database interface package for Laravel",
+    "keywords": ["administrator", "laravel-administrator", "laravel"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jan Hartigan",
+            "email": "jan@frozennode.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "laravel/framework": ">=4.0.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/controllers"
+        ],
+        "psr-0": {
+            "Frozennode\\Administrator": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
