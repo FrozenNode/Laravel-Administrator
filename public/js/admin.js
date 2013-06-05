@@ -211,7 +211,7 @@
 				var self = this,
 					saveData = ko.mapping.toJS(self);
 
-				saveData.csrf_token = csrf;
+				saveData._token = csrf;
 
 				//if this is a new item, delete the primary key from the data array
 				if (!saveData[self.primaryKey])
@@ -269,7 +269,7 @@
 
 				$.ajax({
 					url: base_url + self.modelName() + '/' + self[self.primaryKey]() + '/delete',
-					data: {csrf_token: csrf},
+					data: {_token: csrf},
 					dataType: 'json',
 					type: 'POST',
 					success: function(response)
@@ -430,7 +430,7 @@
 
 				$.ajax({
 					url: base_url + self.modelName() + '/' + self[self.primaryKey]() + '/custom_action',
-					data: {csrf_token: csrf, action_name: action},
+					data: {_token: csrf, action_name: action},
 					dataType: 'json',
 					type: 'POST',
 					complete: function()
@@ -461,7 +461,7 @@
 				var self = this,
 					id = ++self.rowLoadingId,
 					data = {
-						csrf_token: csrf,
+						_token: csrf,
 						sortOptions: self.sortOptions,
 						filters: self.getFilters(),
 						page: self.pagination.page()
@@ -596,7 +596,7 @@
 
 				$.ajax({
 					url: rows_per_page_url,
-					data: {csrf_token: csrf, rows: rows},
+					data: {_token: csrf, rows: rows},
 					dataType: 'json',
 					type: 'POST',
 					complete: function()
@@ -661,7 +661,7 @@
 						window.admin.filtersViewModel.filters[fieldIndex].loadingOptions(true);
 
 						$.ajax({
-							url: base_url + self.modelName() + '/update_options/',
+							url: base_url + self.modelName() + '/update_options',
 							type: 'POST',
 							dataType: 'json',
 							data: {
@@ -695,7 +695,7 @@
 						self.editFields[fieldIndex].loadingOptions(true);
 
 						$.ajax({
-							url: base_url + self.modelName() + '/update_options/',
+							url: base_url + self.modelName() + '/update_options',
 							type: 'POST',
 							dataType: 'json',
 							data: {
@@ -958,7 +958,7 @@
 							self.viewModel.editFields[fieldIndex].loadingOptions(true);
 
 							$.ajax({
-								url: base_url + self.viewModel.modelName() + '/update_options/',
+								url: base_url + self.viewModel.modelName() + '/update_options',
 								type: 'POST',
 								dataType: 'json',
 								data: {
