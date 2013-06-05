@@ -8,9 +8,34 @@ Administrator is a database interface package for the Laravel PHP framework. Adm
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/overview.jpg" />
 
-## Laravel 4
+## Composer
 
-This package is for Laravel 4 and should be installed via your composer.json.
+To install Administrator as a Composer package to be used with Laravel 4, simply add this to your composer.json:
+
+```json
+"frozennode/administrator": "dev-master"
+```
+
+..and run `composer install`.  Once it is installed, you can register the service provider in `app/config/app.php` in the `providers` array:
+
+```php
+'providers' => array(
+    'Frozennode\Administrator\AdministratorServiceProvider',
+)
+```
+
+Then publish the config file with `php artisan config:publish frozennode/administrator`. This will add the file `app/config/packages/frozennode/administrator/administrator.php`. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
+
+### Laravel 3
+
+Since Administrator has switched over to Composer, you can no longer use `php artisan bundle:install administrator` or `php artisan bundle:upgrade administrator`. If you want to use Administrator with Laravel 3, you must switch to the [3.3.2 branch](https://github.com/FrozenNode/Laravel-Administrator/tree/3.3.2), download it, and add it in the `/bundles/administrator` directory and add this to your bundles.php file:
+
+```php
+'administrator' => array(
+    'handles' => 'admin', //this determines what URI this bundle will use
+    'auto' => true,
+),
+```
 
 ## Documentation
 

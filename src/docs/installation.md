@@ -1,18 +1,34 @@
 # Installation
 
-- [Getting Administrator](#getting-administrator)
+- [Composer](#composer)
+- [Laravel 3](#laravel-3)
 - [Administrator Config](#administrator-config)
 - [Model Config](#model-config)
 - [Settings Config](#settings-config)
 
-<a name="getting-administrator"></a>
-## Getting Administrator
+<a name="composer"></a>
+## Composer
 
-To get Administrator, you can either create a directory in your `/bundles` directory called `administrator` and manually copy the bundle contents into it, or you can run the artisan command:
+To install Administrator as a Composer package to be used with Laravel 4, simply add this to your composer.json:
 
-	php artisan bundle:install administrator
+```json
+"frozennode/administrator": "dev-master"
+```
 
-Then add this to your `bundles.php` array:
+..and run `composer install`.  Once it is installed, you can register the service provider in `app/config/app.php` in the `providers` array:
+
+```php
+'providers' => array(
+    'Frozennode\Administrator\AdministratorServiceProvider',
+)
+```
+
+<a name="laravel-3"></a>
+## Laravel 3
+
+Since Administrator has switched over to Composer, you can no longer use `php artisan bundle:install administrator` or `php artisan bundle:upgrade administrator`. If you want to use Administrator with Laravel 3, you must switch to the [3.3.2 branch](https://github.com/FrozenNode/Laravel-Administrator/tree/3.3.2), download it, and add it in the `/bundles/administrator` directory.
+
+After you've installed Administrator in the bundles directory, add this to your bundles.php file:
 
 	'administrator' => array(
 		'handles' => 'admin', //this determines what URI this bundle will use
@@ -22,7 +38,13 @@ Then add this to your `bundles.php` array:
 <a name="administrator-config"></a>
 ## Administrator Config
 
-Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`bundles/administrator/config/administrator.php`) and paste it into the application config file you just created. This will be where define the bundle-wide configuration options.
+Once the package is installed, you can publish the config file with:
+
+	php artisan config:publish frozennode/administrator`
+
+This will create the file `app/config/packages/frozennode/administrator/administrator.php` and seed it with some defaults. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
+
+If you've installed the Laravel 3 bundle, you can either edit the `bundles/administrator/config/administrator.php` file directly, or you can create an `administrator.php` at `application/config`.
 
 There are several required fields that must be supplied. Among them are the `menu` option where you define the menu structure of your site and point to your model configuration files.
 
