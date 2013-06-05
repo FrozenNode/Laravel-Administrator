@@ -1,4 +1,4 @@
-# Laravel Administrator Bundle
+# Laravel Administrator
 
 Administrator is a database interface package for the Laravel PHP framework. Administrator provides a visual interface to manage the data models on your site as you define them. In its most basic configuration, all you have to do is reference your application's Eloquent data models and provide a couple more configuration options.
 
