@@ -194,7 +194,7 @@ class Column {
 		if ($column['relationship'])
 		{
 			$rel = $column['relationship'];
-dd(method_exists($config->model, $rel));
+
 			//split the string up into an array on the . symbol
 			if ($nested = static::getNestedRelationships($config->model, $rel))
 			{
