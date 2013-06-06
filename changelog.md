@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.0.1
+- New language: Chinese (zh-CN)
+
 ### 4.0.0
 - Updated to Laravel 4 / Composer
 
