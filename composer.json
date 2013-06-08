@@ -10,7 +10,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
         "laravel/framework": ">=4.0.0"
     },
     "autoload": {
