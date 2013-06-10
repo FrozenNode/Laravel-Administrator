@@ -132,3 +132,9 @@ Route::get($uri . '/settings/{settings}/file', array(
 	'as' => 'admin_settings_display_file',
 	'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 ));
+
+//Switch locales
+Route::get($uri . '/switch_locale/{locale}', array(
+	'as' => 'admin_switch_locale',
+	'uses' => 'Frozennode\Administrator\AdminController@switchLocale'
+));

@@ -37,7 +37,7 @@ After you've installed Administrator in the bundles directory, add this to your 
 
 Once the package is installed, you can publish the config file with:
 
-	php artisan config:publish frozennode/administrator`
+	php artisan config:publish frozennode/administrator
 
 This will create the file `app/config/packages/frozennode/administrator/administrator.php` and seed it with some defaults. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
 

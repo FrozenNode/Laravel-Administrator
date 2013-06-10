@@ -6,15 +6,9 @@
 <a name="introduction"></a>
 ## Introduction
 
-Once the package is installed, you can publish the config file with:
+Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`bundles/administrator/config/administrator.php`) and paste it into the application config file you just created. This will be where you define the bundle-wide configuration options.
 
-	php artisan config:publish frozennode/administrator`
-
-This will create the file `app/config/packages/frozennode/administrator/administrator.php` and seed it with some defaults. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
-
-If you've installed the Laravel 3 bundle, you can either edit the `bundles/administrator/config/administrator.php` file directly, or you can create an `administrator.php` at `application/config`.
-
-All of the configuration options are used, but not all of them must be supplied.
+All of the configuration options are used, but not all of them must be supplied. When Administrator loads up, it overwrites the default options set in `bundles/administrator/config/administrator.php` with the options you set in `application/config/administrator.php`.
 
 <a name="options"></a>
 ## Options
@@ -32,6 +26,7 @@ Below is a list of all the available options:
 - [Login Path](#login-path)
 - [Redirect Key](#redirect-key)
 - [Global Rows Per Page](#global-rows-per-page)
+- [Locales](#locales)
 
 <a name="title"></a>
 ### Title
@@ -206,4 +201,21 @@ Your admin users have the ability to set the rows per page in each model with th
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/rows-per-page.png" />
 
-This is persistent across until the user's session expires. The `global_rows_per_page` option is the default value for when the user hasn't yet set the number they want for any particular model.
+This is persistent across page loads until the user's session expires. The `global_rows_per_page` option is the default value for when the user hasn't yet set the number they want for any particular model.
+
+<a name="locales"></a>
+### Locales
+
+	/**
+	 * An array of available locale strings. This determines which locales are available in the languages menu at the top right of the Administrator
+	 * interface.
+	 *
+	 * @type array
+	 */
+	'locales' => array('en', 'de', 'tr'),
+
+When provided, this array of locale strings gives the administrative user the choice of various locales in the locales menu at the top right of the Administrator interface:
+
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/localization.png" />
+
+The user's choice of locale will persist across page loads until a user's session expires.

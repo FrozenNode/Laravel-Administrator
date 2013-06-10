@@ -1,5 +1,17 @@
 ## Changelog
 
+### 4.0.1
+- New language: Chinese (zh-CN)
+
+### 4.0.0
+- Updated to Laravel 4 / Composer
+
+### 3.3.2
+- Bugfix: Error with 3.3.1 bugfix
+
+### 3.3.1
+- Bugfix: HMABT column had a php5.3 error
+
 ### 3.3.0
 - You can now define your custom action's permissions in the model config's action_permissions option
 - Returning Response or Redirect objects is now possible for admin and model configs

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\File\File as SFile;
 use Illuminate\Support\Facades\Validator;
 use Frozennode\Administrator\Fields\Field;
@@ -423,6 +424,23 @@ class AdminController extends Controller
 		{
 			return Response::json(array('success' => true));
 		}
+	}
+
+	/**
+	 * POST method for switching a user's locale
+	 *
+	 * @param string	$locale
+	 *
+	 * @return JSON
+	 */
+	public function switchLocale($locale)
+	{
+		if (in_array($locale, Config::get('administrator::administrator.locales')))
+		{
+			Session::put('administrator_locale', $locale);
+		}
+
+		return Redirect::back();
 	}
 
 }
