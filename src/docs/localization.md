@@ -27,7 +27,7 @@ By default, this value is `en`.
 
 **Adding more languages**
 
-In Laravel 3, it was possible to provide an array of accepted languages in your `application.php` config file. In L4 this feature was removed, so the `languages` array has been moved to Administrator's config file and is now called `locales`.
+In Laravel 3, it was possible to provide an array of accepted languages in your `application.php` config file. In L4 this feature was removed, so the `languages` array has been moved to Administrator's config file (`app/config/packages/frozennode/administrator/administrator.php`) and is now called `locales`.
 
 	'locales' => array('en', 'de', 'hu'),
 
