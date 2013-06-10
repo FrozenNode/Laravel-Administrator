@@ -21,14 +21,14 @@ return array(
 	 *
 	 * @type string
 	 */
-	'model_config_path' => app('path') . 'config/administrator',
+	'model_config_path' => app('path') . '/config/administrator',
 
 	/**
 	 * The path to your settings config directory
 	 *
 	 * @type string
 	 */
-	'settings_config_path' => app('path') . 'config/administrator/settings',
+	'settings_config_path' => app('path') . '/config/administrator/settings',
 
 	/**
 	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
@@ -103,5 +103,13 @@ return array(
 	 * @type NULL|int
 	 */
 	'global_rows_per_page' => 20,
+
+	/**
+	 * An array of available locale strings. This determines which locales are available in the languages menu at the top right of the Administrator
+	 * interface.
+	 *
+	 * @type array
+	 */
+	'locales' => array(),
 
 );

@@ -2,7 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 
 class AdministratorServiceProvider extends ServiceProvider {
@@ -27,7 +26,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		include __DIR__.'/../../viewComposers.php';
 		include __DIR__.'/../../routes.php';
 
-		Event::fire('administrator.ready');
+		$this->app['events']->fire('administrator.ready');
 	}
 
 	/**
