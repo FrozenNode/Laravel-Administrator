@@ -4,8 +4,8 @@ Administrator is a database interface package for the Laravel PHP framework. Adm
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.0.0
-- **Development Version:** 4.0.1 (please submit pull requests to this branch)
+- **Version:** 4.0.1
+- **Development Version:** 4.1.0 (please submit pull requests to this branch)
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/overview.jpg" />
 
@@ -50,8 +50,9 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.0.0
-- Updated to Laravel 4 / Composer
+### 4.0.1
+- Bugfix: "languages" array from L3 replaced by administrator config's "locales"
+- New language: Chinese (zh-CN)
 
 
 See *changelog.md* for the changelog from previous versions
