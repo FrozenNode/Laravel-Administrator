@@ -5,10 +5,17 @@ use Frozennode\Administrator\SettingsConfig;
 
 //Filters
 
-
 //validate_admin filter
 Route::filter('validate_admin', function ()
 {
+	//set the locale
+	$locale = Session::get('administrator_locale');
+
+	if ($locale && in_array($locale, Config::get('administrator::administrator.locales')))
+	{
+		App::setLocale($locale);
+	}
+
 	//get the admin check closure that should be supplied in the config
 	$permission = Config::get('administrator::administrator.permission');
 	$response = $permission();
