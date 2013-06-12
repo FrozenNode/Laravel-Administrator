@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.1.0
+- Bugfix: Column objects weren't indexing properly when a column was simply a string value
 - Bugfix: BelongsTo edit fields weren't setting due to overwriting with an empty array
 - Bugfix: Custom actions in settings weren't working properly
 - Bugfix: relationship saving was causing overload issue in php 5.4

@@ -447,6 +447,11 @@ class Column {
 
 			foreach ($config->columns as $field => $column)
 			{
+				$noInfo = is_numeric($field);
+
+				$field = $noInfo ? $column : $field;
+				$column = $noInfo ? array() : $column;
+
 				//get the column object
 				if (!$columnObject = Column::get($field, $column, $config))
 				{
