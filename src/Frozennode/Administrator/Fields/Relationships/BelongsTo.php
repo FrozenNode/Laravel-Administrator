@@ -50,7 +50,11 @@ class BelongsTo extends Relationship {
 	public function fillModel(&$model, $input)
 	{
 		$model->{$this->foreignKey} = $input;
-		unset($model->attributes[$this->field]);
+
+		if(!empty($model->attributes[$this->field]))
+		{
+			unset($model->attributes[$this->field]);
+		}
 	}
 
 	/**

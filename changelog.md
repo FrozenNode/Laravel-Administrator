@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.1.0
+- Bugfix: relationship saving was causing overload issue in php 5.4
+
 ### 4.0.1
 - Bugfix: "languages" array from L3 replaced by administrator config's "locales"
 - New language: Chinese (zh-CN)

@@ -96,7 +96,10 @@ class HasManyAndBelongsTo extends Relationship {
 		}
 
 		//then attach all of the new records
-		unset($model->attributes[$this->field]);
+		if(!empty($model->attributes[$this->field]))
+		{
+			unset($model->attributes[$this->field]);
+		}
 	}
 
 
