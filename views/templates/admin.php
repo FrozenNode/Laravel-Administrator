@@ -14,6 +14,12 @@
 											allowClear: false}" />
 			<span> <?php echo __('administrator::administrator.itemsperpage') ?></span>
 		</div>
+
+		<a href="#" class="ui-button ui-buttonfix ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary"
+			data-bind="attr: {href: base_url + modelName() + '/csv'}">
+			<span class="ui-button-icon-primary ui-icon ui-icon-document"></span>
+			<span class="ui-button-text">csv</span>
+		</a>
 		<!-- ko if: actionPermissions.create -->
 			<a class="new_item"
 				data-bind="attr: {href: base_url + modelName() + '/new'},

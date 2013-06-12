@@ -700,3 +700,23 @@ body label {
   left:100px;
   font-size:20px;
 }
+
+
+/* 
+TODO
+No idea which way to go styling a button, so I used jquery ui, but that looked awfull.
+This is a fix that worked for me, but this is not really the way to go
+*/
+.ui-buttonfix {
+  display: inline-block;
+  margin-right: .1em;
+  vertical-align: middle;
+  text-align: center;
+  width: 60px;
+  color: #333;
+  background: transparent;
+  border: 0;
+}
+.ui-buttonfix span.ui-button-icon-primary{
+  position: absolute;
+}
