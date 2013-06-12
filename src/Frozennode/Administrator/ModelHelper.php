@@ -111,8 +111,11 @@ class ModelHelper {
 							}
 						}
 
-						//set the relations array to the property that matches the relationship name
-						$model->{$field} = $relationsArray;
+						//if this is a BTM, set the relations array to the property that matches the relationship name
+						if ($info->multipleValues)
+						{
+							$model->{$field} = $relationsArray;
+						}
 
 						//set the options attribute if $updateRelationships is true
 						if ($updateRelationships)
