@@ -115,7 +115,7 @@ Route::group(array('before' => 'validate_settings|csrf'), function() use ($uri)
 	//Custom Action
 	Route::post($uri . '/settings/{settings}/custom_action', array(
 		'as' => 'admin_settings_custom_action',
-		'uses' => 'Frozennode\Administrator\AdminController@customAction'
+		'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
 	));
 });
 

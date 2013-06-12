@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.1.0
+- Bugfix: Custom actions in settings weren't working properly
 - Bugfix: relationship saving was causing overload issue in php 5.4
 
 ### 4.0.1
