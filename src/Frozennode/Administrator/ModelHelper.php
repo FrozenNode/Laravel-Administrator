@@ -336,10 +336,7 @@ class ModelHelper {
 			//if this is an "external" field (i.e. it's not a column on this model's table), unset it
 			else
 			{
-				if(!empty($model->attributes[$field]))
-				{
-					unset($model->attributes[$field]);
-				}
+				$model->__unset($field);
 			}
 		}
 	}

@@ -95,11 +95,7 @@ class HasManyAndBelongsTo extends Relationship {
 			$model->{$this->field}()->sync($input);
 		}
 
-		//then attach all of the new records
-		if(!empty($model->attributes[$this->field]))
-		{
-			unset($model->attributes[$this->field]);
-		}
+		$model->__unset($this->field);
 	}
 
 

@@ -51,10 +51,7 @@ class BelongsTo extends Relationship {
 	{
 		$model->{$this->foreignKey} = $input;
 
-		if(!empty($model->attributes[$this->field]))
-		{
-			unset($model->attributes[$this->field]);
-		}
+		$model->__unset($this->field);
 	}
 
 	/**
