@@ -6,9 +6,15 @@
 <a name="introduction"></a>
 ## Introduction
 
-Once the bundle is installed, create a new file in your application config called administrator.php (`application/config/administrator.php`). Then copy the contents of the bundle's config file (`bundles/administrator/config/administrator.php`) and paste it into the application config file you just created. This will be where you define the bundle-wide configuration options.
+Once the package is installed, you can publish the config file with:
 
-All of the configuration options are used, but not all of them must be supplied. When Administrator loads up, it overwrites the default options set in `bundles/administrator/config/administrator.php` with the options you set in `application/config/administrator.php`.
+	php artisan config:publish frozennode/administrator
+
+This will create the file `app/config/packages/frozennode/administrator/administrator.php` and seed it with some defaults. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
+
+If you've installed the Laravel 3 bundle, you can either edit the `bundles/administrator/config/administrator.php` file directly, or you can create an `administrator.php` at `application/config`.
+
+All of the configuration options are used, but not all of them must be supplied.
 
 <a name="options"></a>
 ## Options
