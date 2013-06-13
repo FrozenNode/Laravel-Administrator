@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.1.0
+- Bugfix: Null values for unrequired relationships weren't resetting field
 - Bugfix: Stray old "Admin\\Libraries" sitting in the Column model was causing issues with relationship fields
 - Bugfix: Column objects weren't indexing properly when a column was simply a string value
 - Bugfix: BelongsTo edit fields weren't setting due to overwriting with an empty array

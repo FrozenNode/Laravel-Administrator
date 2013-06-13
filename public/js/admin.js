@@ -372,7 +372,10 @@
 						//fixes an error where the relationships wouldn't load
 						setTimeout(function()
 						{
-							//update the data
+							//first clear the data
+							ko.mapping.updateData(self, self.model, self.model);
+
+							//then update the data
 							ko.mapping.updateData(self, self.model, data);
 
 							//unfreeze the relationship constraint updates
