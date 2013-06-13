@@ -505,7 +505,7 @@ class Column {
 
 		foreach ($editFields['objectFields'] as $field => $info)
 		{
-			if (is_a($info, 'Admin\\Libraries\\Fields\\Relationships\\BelongsTo'))
+			if (is_a($info, 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo'))
 			{
 				$return['includedColumns'][$info->foreignKey] = $model->getTable().'.'.$info->foreignKey;
 			}
