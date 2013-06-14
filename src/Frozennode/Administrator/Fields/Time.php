@@ -60,6 +60,39 @@ class Time extends Field {
 	}
 
 	/**
+	 * Filters a query object given
+	 *
+	 * @param Query		$query
+	 * @param Eloquent	$model
+	 * @param array		$selects
+	 *
+	 * @return void
+	 */
+	public function filterQuery(&$query, $model, &$selects)
+	{
+		//try to read the time for the min and max values, and if they check out, set the where
+		if ($this->minValue)
+		{
+			$time = strtotime($this->minValue);
+
+			if ($time !== false)
+			{
+				$query->where($model->getTable().'.'.$this->field, '>=', $this->getDateString($time));
+			}
+		}
+
+		if ($this->maxValue)
+		{
+			$time = strtotime($this->maxValue);
+
+			if ($time !== false)
+			{
+				$query->where($model->getTable().'.'.$this->field, '<=', $this->getDateString($time));
+			}
+		}
+	}
+
+	/**
 	 * Fill a model with input data
 	 *
 	 * @param Eloquent	$model
@@ -75,18 +108,30 @@ class Time extends Field {
 		if ($time !== false)
 		{
 			//fill the model with the correct date/time format
-			if ($this->type === 'date')
-			{
-				$model->{$this->field} = date('Y-m-d', $time);
-			}
-			else if ($this->type === 'datetime')
-			{
-				$model->{$this->field} = date('Y-m-d H:i:s', $time);
-			}
-			else
-			{
-				$model->{$this->field} = date('H:i:s', $time);
-			}
+			$model->{$this->field} = $this->getDateString($time);
+		}
+	}
+
+	/**
+	 * Get a date format from a time depending on the type of time field this is
+	 *
+	 * @param int		$time
+	 *
+	 * @return string
+	 */
+	protected function getDateString($time)
+	{
+		if ($this->type === 'date')
+		{
+			return date('Y-m-d', $time);
+		}
+		else if ($this->type === 'datetime')
+		{
+			return date('Y-m-d H:i:s', $time);
+		}
+		else
+		{
+			date('H:i:s', $time);
 		}
 	}
 }
