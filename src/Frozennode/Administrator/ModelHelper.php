@@ -202,7 +202,6 @@ class ModelHelper {
 
 		//set up initial array states for the selects
 		$selects = array($model->getTable().'.*');
-		$db_query->select($selects);
 
 		//then we set the filters
 		if ($filters && is_array($filters))
@@ -214,10 +213,12 @@ class ModelHelper {
 					continue;
 				}
 
-				$fieldObject->filterQuery($db_query, $model);
-				$fieldObject->filterQuery($count_query, $model);
+				$fieldObject->filterQuery($db_query, $model, $selects);
+				$fieldObject->filterQuery($count_query, $model, $selects);
 			}
 		}
+
+		$db_query->select($selects);
 
 		//determines if the sort should have the table prefixed to it
 		$sortOnTable = true;

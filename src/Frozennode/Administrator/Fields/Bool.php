@@ -45,10 +45,11 @@ class Bool extends Field {
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
+	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model)
+	public function filterQuery(&$query, $model, &$selects)
 	{
 		//if the field isn't empty
 		if ($this->value !== '')
