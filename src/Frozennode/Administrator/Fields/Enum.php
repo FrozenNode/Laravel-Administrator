@@ -49,13 +49,14 @@ class Enum extends Field {
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
+	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model)
+	public function filterQuery(&$query, $model, &$selects)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model);
+		parent::filterQuery($query, $model, $selects);
 
 		//if there is no value, return
 		if (!$this->value)

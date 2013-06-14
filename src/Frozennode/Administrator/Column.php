@@ -447,6 +447,11 @@ class Column {
 
 			foreach ($config->columns as $field => $column)
 			{
+				$noInfo = is_numeric($field);
+
+				$field = $noInfo ? $column : $field;
+				$column = $noInfo ? array() : $column;
+
 				//get the column object
 				if (!$columnObject = Column::get($field, $column, $config))
 				{
@@ -500,7 +505,7 @@ class Column {
 
 		foreach ($editFields['objectFields'] as $field => $info)
 		{
-			if (is_a($info, 'Admin\\Libraries\\Fields\\Relationships\\BelongsTo'))
+			if (is_a($info, 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo'))
 			{
 				$return['includedColumns'][$info->foreignKey] = $model->getTable().'.'.$info->foreignKey;
 			}

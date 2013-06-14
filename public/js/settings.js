@@ -129,10 +129,7 @@
 					success: function(response)
 					{
 						if (response.success)
-						{
 							self.statusMessage(messages.success).statusMessageType('success');
-							self.updateData(response.data);
-						}
 						else
 							self.statusMessage(response.error).statusMessageType('error');
 					}

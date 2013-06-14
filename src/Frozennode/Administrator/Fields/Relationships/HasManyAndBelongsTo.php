@@ -95,8 +95,7 @@ class HasManyAndBelongsTo extends Relationship {
 			$model->{$this->field}()->sync($input);
 		}
 
-		//then attach all of the new records
-		unset($model->attributes[$this->field]);
+		$model->__unset($this->field);
 	}
 
 
@@ -105,13 +104,14 @@ class HasManyAndBelongsTo extends Relationship {
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
+	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model)
+	public function filterQuery(&$query, $model, &$selects)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model);
+		parent::filterQuery($query, $model, $selects);
 
 		//if there is no value, return
 		if (!$this->value)
@@ -125,7 +125,17 @@ class HasManyAndBelongsTo extends Relationship {
 			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column);
 		}
 
+		//add where clause
 		$query->whereIn($this->column2, $this->value);
+
+		//add having clauses
+		$query->havingRaw('COUNT(DISTINCT '.$this->column2.') = '. count($this->value));
+
+		//add select field
+		if (!in_array($this->column2, $selects))
+		{
+			$selects[] = $this->column2;
+		}
 	}
 
 	/**
