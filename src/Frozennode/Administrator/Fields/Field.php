@@ -307,10 +307,11 @@ abstract class Field {
 	 *
 	 * @param Query		$query
 	 * @param Eloquent	$model
+	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model)
+	public function filterQuery(&$query, $model, &$selects)
 	{
 		//if this field has a min/max range, set it
 		if ($this->minMax)

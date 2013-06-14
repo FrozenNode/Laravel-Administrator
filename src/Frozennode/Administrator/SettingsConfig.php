@@ -226,7 +226,7 @@ class SettingsConfig {
 	}
 
 	/**
-	 * Fetches the data for this settings config
+	 * Fetches the data for this settings config and stores it in the data property
 	 */
 	public function fetchData()
 	{

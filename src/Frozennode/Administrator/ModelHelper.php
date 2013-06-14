@@ -111,8 +111,11 @@ class ModelHelper {
 							}
 						}
 
-						//set the relations array to the property that matches the relationship name
-						$model->{$field} = $relationsArray;
+						//if this is a BTM, set the relations array to the property that matches the relationship name
+						if ($info->multipleValues)
+						{
+							$model->{$field} = $relationsArray;
+						}
 
 						//set the options attribute if $updateRelationships is true
 						if ($updateRelationships)
@@ -199,7 +202,6 @@ class ModelHelper {
 
 		//set up initial array states for the selects
 		$selects = array($model->getTable().'.*');
-		$db_query->select($selects);
 
 		//then we set the filters
 		if ($filters && is_array($filters))
@@ -211,10 +213,12 @@ class ModelHelper {
 					continue;
 				}
 
-				$fieldObject->filterQuery($db_query, $model);
-				$fieldObject->filterQuery($count_query, $model);
+				$fieldObject->filterQuery($db_query, $model, $selects);
+				$fieldObject->filterQuery($count_query, $model, $selects);
 			}
 		}
+
+		$db_query->select($selects);
 
 		//determines if the sort should have the table prefixed to it
 		$sortOnTable = true;
@@ -330,9 +334,10 @@ class ModelHelper {
 			{
 				$info->fillModel($model, \Input::get($field, NULL));
 			}
+			//if this is an "external" field (i.e. it's not a column on this model's table), unset it
 			else
 			{
-				unset($model->attributes[$field]);
+				$model->__unset($field);
 			}
 		}
 	}

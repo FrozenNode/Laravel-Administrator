@@ -403,12 +403,11 @@ class AdminController extends Controller
 	public function settingsCustomAction($settingsName)
 	{
 		$config = App::make('itemconfig');
-		$model = ModelHelper::getModel($id, false, true);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
 		$action = Action::getByName($actionName);
-		$result = $action->perform($model);
+		$result = $action->perform($config->data);
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))

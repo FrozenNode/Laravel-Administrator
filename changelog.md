@@ -1,5 +1,15 @@
 ## Changelog
 
+### 4.1.0
+- If you select multiple BelongsToMany relationship filter options, the list will search for items that has all the selected relationships. Previously this was an OR
+- Bugfix: Formatted date filters were not being properly sent to SQL
+- Bugfix: Null values for unrequired relationships weren't resetting field
+- Bugfix: Stray old "Admin\\Libraries" sitting in the Column model was causing issues with relationship fields
+- Bugfix: Column objects weren't indexing properly when a column was simply a string value
+- Bugfix: BelongsTo edit fields weren't setting due to overwriting with an empty array
+- Bugfix: Custom actions in settings weren't working properly
+- Bugfix: relationship saving was causing overload issue in php 5.4
+
 ### 4.0.1
 - Bugfix: "languages" array from L3 replaced by administrator config's "locales"
 - New language: Chinese (zh-CN)
