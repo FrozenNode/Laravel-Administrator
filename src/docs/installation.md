@@ -2,6 +2,7 @@
 
 - [Composer](#composer)
 - [Laravel 3](#laravel-3)
+- [Assets](#assets)
 - [Administrator Config](#administrator-config)
 - [Model Config](#model-config)
 - [Settings Config](#settings-config)
@@ -32,10 +33,17 @@ After you've installed Administrator in the bundles directory, add this to your 
 		'auto' => true,
 	),
 
+<a name="assets"></a>
+## Assets
+
+After the package is installed, you need to publish the package's assets like this:
+
+	php artisan asset:publish frozennode/administrator
+
 <a name="administrator-config"></a>
 ## Administrator Config
 
-Once the package is installed, you can publish the config file with:
+You can publish the config file with:
 
 	php artisan config:publish frozennode/administrator
 
