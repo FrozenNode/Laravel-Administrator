@@ -1,7 +1,7 @@
 {
     "name": "frozennode/administrator",
     "description": "A database interface package for Laravel",
-    "keywords": ["administrator", "laravel-administrator", "laravel"],
+    "keywords": ["administrator", "admin", "database", "laravel-administrator", "laravel", "cms"],
     "license": "MIT",
     "authors": [
         {
