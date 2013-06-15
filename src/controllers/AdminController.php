@@ -265,7 +265,7 @@ class AdminController extends Controller
 			}
 			else
 			{
-				throw new Exception("Administrator: " .  __('administrator::administrator.valid_home_page'));
+				throw new \Exception("Administrator: " .  trans('administrator::administrator.valid_home_page'));
 			}
 		}
 	}
