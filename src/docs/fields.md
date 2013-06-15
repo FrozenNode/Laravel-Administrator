@@ -10,7 +10,7 @@
 <a name="introduction"></a>
 ## Introduction
 
-As you're [setting up your model config](/docs/model-configuration) or your [settings config](/docs/settings-configuration), you'll have to supply an `edit_fields` option. This is an array of fields that represents what will be shown to the admin user in your model or settings edit form. For model's, each field should be one of your model's SQL columns or one of its [Eloquent relationships](/docs/field-type-relationship). The order in which they are given is the order in which the admin user will see them.
+As you're [setting up your model config](/docs/model-configuration) or your [settings config](/docs/settings-configuration), you'll have to supply an `edit_fields` option. This is an array of fields that represents what will be shown to the admin user in your model or settings edit form. For models, each field should be one of your model's SQL columns or one of its [Eloquent relationships](/docs/field-type-relationship). The order in which they are given is the order in which the admin user will see them.
 
 	/**
 	 * The editable fields

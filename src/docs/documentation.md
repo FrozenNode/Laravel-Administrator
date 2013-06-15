@@ -11,6 +11,8 @@
     - [Validation](/docs/validation)
     - [Localization](/docs/localization)
     - [Tutorials](/docs/tutorials)
+- Custom Actions
+    - [Overview](/docs/actions)
 - Columns
     - [Overview](/docs/columns)
     - [Relationships](/docs/relationship-columns)

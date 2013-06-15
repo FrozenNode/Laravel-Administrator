@@ -214,31 +214,7 @@ Action permissions can be supplied to give you access control over the three pri
 			'action' => function($model)
 			{
 				//get all the items of this model and reorder them
-				$query = $model::order_by('ordering', 'ASC');
-
-				$old = $query->get();
-				$new = array();
-
-				foreach ($old as $i => $item)
-				{
-					if ($item->id === $model->id && $i !== 0)
-					{
-						array_splice($new, $i - 1, 0, array($item));
-					}
-					else
-					{
-						$new[] = $item;
-					}
-				}
-
-				//run back through and assign the order values
-				foreach ($new as $i => $item)
-				{
-					$item->ordering = $i + 1;
-					$item->save();
-				}
-
-				return true;
+				$model->orderUp();
 			}
 		),
 
