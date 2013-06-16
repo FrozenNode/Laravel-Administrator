@@ -9,7 +9,7 @@ class Theater extends Model {
 
 	public function films()
 	{
-		return $this->hasManyAndBelongsTo('Film', 'films_theaters');
+		return $this->belongsToMany('Film', 'films_theaters');
 	}
 
 	public function box_office()
