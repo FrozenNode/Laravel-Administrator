@@ -6,11 +6,11 @@
 
 return array(
 
-	'title' => 'Directors',
+	'title' => 'Theaters',
 
-	'single' => 'director',
+	'single' => 'Theater',
 
-	'model' => 'Director',
+	'model' => 'Theater',
 
 	/**
 	 * The display columns
