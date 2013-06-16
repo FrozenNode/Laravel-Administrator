@@ -3,7 +3,7 @@
 - [Introduction](#introduction)
 - [Simple Columns](#simple-columns)
 - [Column Headers](#column-headers)
-- [Using Getters](#using-getters)
+- [Using Accessors](#using-accessors)
 - [Setting the Sort Field](#setting-the-sort-field)
 - [Custom Selects](#custom-selects)
 - [Relationship Columns](#relationship-columns)
@@ -12,7 +12,7 @@
 <a name="introduction"></a>
 ## Introduction
 
-In each model's config file, you must specify a `columns` option. This should be an array of the columns that you wish to display in a model's result set. At its very simplest, this could just be a simple array of attribute names (including [getters](http://laravel.com/docs/database/eloquent#getter-and-setter-methods)). However, you also have the ability to control the column's header through the `title` option, the column's `sort_field` (if you're using a getter), a custom SQL select statement, whether or not to use a column on another table (through an Eloquent relationship), and what the output of the column should be.
+In each model's config file, you must specify a `columns` option. This should be an array of the columns that you wish to display in a model's result set. At its very simplest, this could just be a simple array of attribute names (including [accessors](http://laravel.com/docs/eloquent#accessors-and-mutators)). However, you also have the ability to control the column's header through the `title` option, the column's `sort_field` (if you're using an accessor), a custom SQL select statement, whether or not to use a column on another table (through an Eloquent relationship), and what the output of the column should be.
 
 <a name="simple-columns"></a>
 ## Simple Columns
@@ -46,14 +46,14 @@ If you want to control the output of a column's header, set the `title` option:
 		'title' => 'ID'
 	)
 
-<a name="using-getters"></a>
-## Using Getters
+<a name="using-accessors"></a>
+## Using Accessors
 
-[Eloquent Getters](http://laravel.com/docs/database/eloquent#getter-and-setter-methods) can also be used as column values. For instance, if you have a column called `salary` and a getter in your Eloquent model that looks like this:
+[Eloquent Accessors](http://laravel.com/docs/eloquent#accessors-and-mutators) can also be used as column values. For instance, if you have a column called `salary` and an accessor in your Eloquent model that looks like this:
 
-	public function get_formatted_salary()
+	public function getFormattedSalaryAttribute()
 	{
-		return '$'.number_format($this->get_attribute('salary'), 2);
+		return '$'.number_format($this->getAttribute('salary'), 2);
 	}
 
 You would be able to reference `formattted_salary` as the column's key like this:
@@ -62,12 +62,12 @@ You would be able to reference `formattted_salary` as the column's key like this
 		'title' => 'Formatted Salary'
 	)
 
-> **Note**: You won't be able to sort getter columns until you define a sort_field!
+> **Note**: You won't be able to sort accessor columns until you define a sort_field!
 
 <a name="setting-the-sort-field"></a>
 ## Setting the Sort Field
 
-If you're using a getter, you may also want to define a `sort_field` that Administrator can use to sort it. This is required because a getter doesn't exist on the model's database table. All you'd need to do is reference an item on that table like this:
+If you're using an accessor, you may also want to define a `sort_field` that Administrator can use to sort it. This is required because an accessor doesn't exist on the model's database table. All you'd need to do is reference an item on that table like this:
 
 	'formatted_salary' => array(
 		'title' => 'Formatted Salary',
@@ -77,7 +77,7 @@ If you're using a getter, you may also want to define a `sort_field` that Admini
 <a name="custom-selects"></a>
 ## Custom Selects
 
-If you're dissatisfied with using your model's standard columns and getters, you also have the ability to create a column as a custom `select` statement. Any valid SQL SELECT statement works here. This is useful if you want to use things like SELECT functions. This also comes with a (very) slight performance boost over using getters since all the work is happening in the SQL.
+If you're dissatisfied with using your model's standard columns and accessors, you also have the ability to create a column as a custom `select` statement. Any valid SQL SELECT statement works here. This is useful if you want to use things like SELECT functions. This also comes with a (very) slight performance boost over using accessors since all the work is happening in the SQL.
 
 When you define a custom `select`, you need to prefix any column in the table with `(:table).`. This is necessary because the query that is performed to get your model's result set often joins together a number of different tables. This is what a custom `select` option might look like:
 

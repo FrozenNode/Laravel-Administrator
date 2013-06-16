@@ -24,7 +24,7 @@ class Film extends Model {
 		return $this->belongsToMany('Theater', 'films_theaters');
 	}
 
-	public function box_office()
+	public function boxOffice()
 	{
 		return $this->hasMany('BoxOffice');
 	}

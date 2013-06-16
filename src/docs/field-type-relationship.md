@@ -3,15 +3,15 @@
 - [Overview](#overview)
 - [Belongs To](#belongs-to)
 - [Belongs To Filter](#belongs-to-filter)
-- [Has Many And Belongs To](#has-many-and-belongs-to)
-- [Has Many And Belongs To Filter](#has-many-and-belongs-to-filter)
+- [Belongs To Many](#belongs-to-many)
+- [Belongs To Many Filter](#belongs-to-many-filter)
 - [Large Datasets and Autocomplete](#large-datasets-and-autocomplete)
 - [Constraining Relationships](#constraining-relationships)
 
 <a name="overview"></a>
 ## Overview
 
-Relationship field types allow you to manage the `belongs_to` and `has_many_and_belongs_to` relationships on your model. Unlike regular field types, the *key* of the relationship field type should be the *name of the relationship method*.
+Relationship field types allow you to manage the `belongsTo` and `belongsToMany` relationships on your model. Unlike regular field types, the *key* of the relationship field type should be the *name of the relationship method*.
 
 <a name="belongs-to"></a>
 ## Belongs To
@@ -21,16 +21,16 @@ Relationship field types allow you to manage the `belongs_to` and `has_many_and_
 	'user' => array(
 		'type' => 'relationship',
 		'title' => 'User',
-		'name_field' => 'name', //what column or getter on the other table you want to use to represent this object
+		'name_field' => 'name', //what column or accessor on the other table you want to use to represent this object
 	)
 
-The `name_field` option lets you define which column on the other table will be used to represent the relationship. This field might be used in this model:
+The `name_field` option lets you define which column or accessor on the other table will be used to represent the relationship. This field might be used in this model:
 
 	class Hat extends Eloquent {
 
 		public function user()
 		{
-			return $this->belongs_to('User');
+			return $this->belongsTo('User');
 		}
 	}
 
@@ -39,7 +39,7 @@ The `name_field` option lets you define which column on the other table will be 
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single-filter.png" />
 
-The `belongs_to` filter lets you filter a result set for items that are related to the selection you make.
+The `belongsTo` filter lets you filter a result set for items that are related to the selection you make.
 
 <a name="has-many-and-belongs-to"></a>
 ## Has Many And Belongs To
@@ -49,16 +49,16 @@ The `belongs_to` filter lets you filter a result set for items that are related 
 	'actors' => array(
 		'type' => 'relationship',
 		'title' => 'Actors',
-		'name_field' => 'full_name', //using the get_full_name getter
+		'name_field' => 'full_name', //using the getFullNameAttribute accessor
 	)
 
-In this case, the `name_field` supplied is a getter on the `User` model that combines the `first_name` field and the `last_name` field. This field might be used in this model
+In this case, the `name_field` supplied is an accessor on the `User` model that combines the `first_name` field and the `last_name` field. This field might be used in this model
 
 	class Film extends Eloquent {
 
 		public function actors()
 		{
-			return $this->has_many_and_belongs_to('Actor', 'films_actors');
+			return $this->belongsToMany('Actor', 'films_actors');
 		}
 	}
 
@@ -69,18 +69,18 @@ If you want to let your admin users reorder the selected values, you can create 
 	'actors' => array(
 		'type' => 'relationship',
 		'title' => 'Actors',
-		'name_field' => 'full_name', 	//using the get_full_name getter
+		'name_field' => 'full_name', 	//using the getFullNameAttribute accessor
 		'sort_field' => 'ordering', 	//this will look for a numerical column at films_actors.ordering
 	)
 
 Now the individual items in the multi-select box will be sortable via drag and drop.
 
-<a name="has-many-and-belongs-to-filter"></a>
-## Has Many And Belongs To Filter
+<a name="belongs-to-many-filter"></a>
+## Belongs To Many Filter
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi-filter.png" />
 
-The `has_many_and_belongs_to` filter lets you filter a result set for items that are related to the selection you make. This is an inclusive filter, not a progressively exclusive filter.
+The `belongsToMany` filter lets you filter a result set for items that are related to the selection you make. This is an inclusive filter, not a progressively exclusive filter.
 
 <a name="large-datasets-and-autocomplete"></a>
 ## Large Datasets and Autocomplete
@@ -107,13 +107,13 @@ The `search_fields` option should be an array of valid SQL select fields that ca
 
 Occasionally you might be in a situation where you have two or more relationship fields in a model. These two fields might themselves be related on a pivot table. In this case, it's sometimes useful to be able to constrain the options of one of these fields based on the selected option of the other. An example might help clear things up...
 
-Let's pretend that we have two models: a `Film` model and a `Theater` model. There can be many films in a theater and each film can be in many theaters. This is a standard `has_many_and_belongs_to` relationship. The `Film` model would look like this:
+Let's pretend that we have two models: a `Film` model and a `Theater` model. There can be many films in a theater and each film can be in many theaters. This is a standard `belongsToMany` relationship. The `Film` model would look like this:
 
 	class Film extends Eloquent {
 
 		public function theaters()
 		{
-			return $this->has_many_and_belongs_to('Theater', 'films_theaters');
+			return $this->belongsToMany('Theater', 'films_theaters');
 		}
 	}
 
@@ -123,7 +123,7 @@ And the `Theater` model would look like this:
 
 		public function films()
 		{
-			return $this->has_many_and_belongs_to('Film', 'films_theaters');
+			return $this->belongsToMany('Film', 'films_theaters');
 		}
 	}
 
@@ -133,12 +133,12 @@ Let's also imagine that we have another model that counts the box office takes f
 
 		public function theater()
 		{
-			return $this->belongs_to('Theater');
+			return $this->belongsTo('Theater');
 		}
 
 		public function film()
 		{
-			return $this->belongs_to('Film');
+			return $this->belongsTo('Film');
 		}
 	}
 

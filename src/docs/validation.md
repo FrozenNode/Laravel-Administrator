@@ -24,4 +24,4 @@ Now if an admin user tries to save a Movie without an age or an age below 18, Ad
 <a name="using-aware"></a>
 ## Using Aware
 
-If you're already using [Aware](http://bundles.laravel.com/bundle/aware), then you don't really have to do anything! Aware allows you to define a static `$rules` property on your Eloquent models, which works exactly like it does in Administrator.
+If you're already using [Aware](https://github.com/awareness/aware), then you don't really have to do anything! Aware allows you to define a static `$rules` property on your Eloquent models, which works exactly like it does in Administrator.

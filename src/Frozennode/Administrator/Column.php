@@ -83,7 +83,7 @@ class Column {
 	public $isRelated = false;
 
 	/**
-	 * Determines if this column is a computed column (either a getter or a select was supplied)
+	 * Determines if this column is a computed column (either an accessor or a select was supplied)
 	 *
 	 * @var bool
 	 */
@@ -250,7 +250,7 @@ class Column {
 			$column['select'] = str_replace('(:table)', $selectTable, $column['select']);
 			$column['relationshipField'] = $relationshipField;
 		}
-		//if the supplied item is a getter, make this unsortable for the moment
+		//if the supplied item is an accessor, make this unsortable for the moment
 		else if (method_exists($config->model, camel_case('get_'.$field.'_attribute')) && $field === $column['sort_field'])
 		{
 			$column['sortable'] = false;
@@ -434,7 +434,7 @@ class Column {
 	 		'columnObjects' => array(),
 	 		//columns that are on the model's table (i.e. not related or computed)
 	 		'includedColumns' => array(),
-	 		//columns that are 'computed' (either a getter or a select was supplied)
+	 		//columns that are 'computed' (either an accessor or a select was supplied)
 	 		'computedColumns' => array(),
 	 		//relationship columns
 	 		'relatedColumns' => array(),

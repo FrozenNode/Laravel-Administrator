@@ -27,7 +27,7 @@ return array(
 		),
 		'box_office' => array(
 			'title' => 'Box Office',
-			'relationship' => 'box_office',
+			'relationship' => 'boxOffice',
 			'select' => "CONCAT('$', FORMAT(SUM((:table).revenue), 2))"
 		),
 	),

@@ -18,13 +18,13 @@ If you want to display related columns, you can provide a `relationship` option.
 <a name="setting-up-the-eloquent-relationship"></a>
 ## Setting Up the Eloquent Relationship
 
-The [Eloquent relationship](http://laravel.com/docs/database/eloquent#relationships) should be set up normally using the relationship method. This would look something like this:
+The [Eloquent relationship](http://laravel.com/docs/eloquent#relationships) should be set up normally using the relationship method. This would look something like this:
 
 	class User extends Eloquent {
 
 		public function phone()
 		{
-			return $this->has_one('Phone');
+			return $this->hasOne('Phone');
 		}
 	}
 
@@ -34,7 +34,7 @@ In this case, the relationship "name" that we will want to reference is `phone` 
 
 		public function films()
 		{
-			return $this->has_many_and_belongs_to('Film');
+			return $this->belongsToMany('Film');
 		}
 	}
 
@@ -43,7 +43,7 @@ In this case, the relationship "name" that we will want to reference is `films`.
 <a name="simple-select"></a>
 ## Simple Select
 
-A simple `select` statement would be used when the data that you're joining is necessarily just one row long. This happens when the relationship is defined as a `belongs_to` or `has_one` relationship. So let's pretend that you have a `hats` table represented by the `Hat` model. Each hat is owned by a single `User`, so there is a `user_id` column on the `hats` table. If you are displaying the `Hat` model in Administrator, you could display the hat's owner's email address in a column by doing this:
+A simple `select` statement would be used when the data that you're joining is necessarily just one row long. This happens when the relationship is defined as a `belongsTo` or `hasOne` relationship. So let's pretend that you have a `hats` table represented by the `Hat` model. Each hat is owned by a single `User`, so there is a `user_id` column on the `hats` table. If you are displaying the `Hat` model in Administrator, you could display the hat's owner's email address in a column by doing this:
 
 	'user_email' => array(
 		'title' => "Owner's Email",
@@ -62,7 +62,7 @@ If you want to display the user's first and last name, you could do this:
 <a name="more-complex-selects"></a>
 ## More Complex Selects
 
-If want to show data from a `has_many` or `has_many_and_belongs_to` relationship, you may want to provide a grouping function in your `select` statement. If you have a `Director` model and you want to count the number of films he's been involved in, you could do something like this:
+If want to show data from a `hasMany` or `belongsToMany` relationship, you may want to provide a grouping function in your `select` statement. If you have a `Director` model and you want to count the number of films he's been involved in, you could do something like this:
 
 	'num_films' => array(
 		'title' => '# Films',
@@ -74,7 +74,7 @@ If you are in your `Film` model and you want to show a formatted total of all th
 
 	'box_office' => array(
 		'title' => 'Box Office',
-		'relationship' => 'box_office', //this is the name of the Eloquent relationship method!
+		'relationship' => 'boxOffice', //this is the name of the Eloquent relationship method!
 		'select' => "CONCAT('$', FORMAT(SUM((:table).revenue), 2))",
 	)
 
@@ -83,21 +83,21 @@ As long as you provide a valid SQL SELECT statement into the `select` option, yo
 <a name="nested-relationships"></a>
 ## Nested Relationships
 
-Sometimes you might want to display a column value of a distantly-related model. In particular, when you have a series of `belongs_to` relationships. Imagine, for example, that you have a `cart` table. On it you have `inventory_id`, which points to the `inventory` table. The `inventory` table has `product_id`, which points to the `products` table. Your models migth look like:
+Sometimes you might want to display a column value of a distantly-related model. In particular, when you have a series of `belongsTo` relationships. Imagine, for example, that you have a `cart` table. On it you have `inventory_id`, which points to the `inventory` table. The `inventory` table has `product_id`, which points to the `products` table. Your models migth look like:
 
 ### Cart Model
 	public function inventory()
 	{
-		return $this->belongs_to('Inventory');
+		return $this->belongsTo('Inventory');
 	}
 
 ### Inventory Model
 	public function product()
 	{
-		return $this->belongs_to('Product');
+		return $this->belongsTo('Product');
 	}
 
-Each product has a name and we want to select it for rows in our `cart` admin. In order to do this, you can use the dot syntax that [Eloquent uses when eager loading nested relationships](http://laravel.com/docs/database/eloquent#eager).
+Each product has a name and we want to select it for rows in our `cart` admin. In order to do this, you can use the dot syntax that [Eloquent uses when eager loading nested relationships](http://laravel.com/docs/eloquent#eager-loading).
 
 	'product_name' => array(
 		'title' => 'Product Name',

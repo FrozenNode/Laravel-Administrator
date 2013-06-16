@@ -139,7 +139,7 @@ In either case, if the value (either the view or the menu item) can't be found, 
 	 */
 	'dashboard_view' => 'administrator.dashboard',
 
-If the `use_dashboard` option is set to true, Administrator will attempt to load up this view into the Administrator content area. You can set this up however you like, and by using [View Composers](http://laravel.com/docs/views#view-composers), you can insert any data into this view that you need.
+If the `use_dashboard` option is set to true, Administrator will attempt to load up this view into the Administrator content area. You can set this up however you like, and by using [View Composers](http://laravel.com/docs/responses#view-composers), you can insert any data into this view that you need.
 
 <a name="home-page"></a>
 ### Home Page

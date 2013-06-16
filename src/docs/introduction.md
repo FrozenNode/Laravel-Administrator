@@ -31,7 +31,7 @@ Unlike many other admin interface systems, Administrator doesn't come with authe
 <a name="eloquent"></a>
 ##Eloquent
 
-Most importantly, Administrator is built with [the Eloquent ORM](http://laravel.com/docs/database/eloquent) in mind, so it won't get in the way of you using normal Eloquent features like accessors, mutators, and events.
+Most importantly, Administrator is built with [the Eloquent ORM](http://laravel.com/docs/eloquent) in mind, so it won't get in the way of you using normal Eloquent features like accessors, mutators, and events.
 
 
 <a name="installation-guidance"></a>
