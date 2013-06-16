@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 4.1.0
-- If you select multiple BelongsToMany relationship filter options, the list will search for items that has all the selected relationships. Previously this was an OR
+- If you select multiple BelongsToMany relationship filter options, the list will search for items that have all the selected relationships. Previously this was an OR
 - Bugfix: Formatted date filters were not being properly sent to SQL
 - Bugfix: Null values for unrequired relationships weren't resetting field
 - Bugfix: Stray old "Admin\\Libraries" sitting in the Column model was causing issues with relationship fields
