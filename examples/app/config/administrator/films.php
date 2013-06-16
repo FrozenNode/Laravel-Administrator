@@ -52,12 +52,12 @@ return array(
 		'director' => array(
 			'title' => 'Director',
 			'type' => 'relationship',
-			'name_field' => 'name',
+			'name_field' => 'first_name',
 		),
 		'actors' => array(
 			'title' => 'Actors',
 			'type' => 'relationship',
-			'name_field' => 'name',
+			'name_field' => 'first_name',
 		),
 	),
 
@@ -74,12 +74,12 @@ return array(
 		'director' => array(
 			'title' => 'Director',
 			'type' => 'relationship',
-			'name_field' => 'name',
+			'name_field' => 'first_name',
 		),
 		'actors' => array(
 			'title' => 'Actors',
 			'type' => 'relationship',
-			'name_field' => 'name',
+			'name_field' => 'first_name',
 		),
 		'theaters' => array(
 			'title' => 'Theater',
