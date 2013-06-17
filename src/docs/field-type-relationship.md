@@ -41,8 +41,8 @@ The `name_field` option lets you define which column or accessor on the other ta
 
 The `belongsTo` filter lets you filter a result set for items that are related to the selection you make.
 
-<a name="has-many-and-belongs-to"></a>
-## Has Many And Belongs To
+<a name="belongs-to-many"></a>
+## Belongs To Many
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi.png" />
 
