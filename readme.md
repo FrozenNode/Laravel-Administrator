@@ -4,7 +4,7 @@ Administrator is a database interface package for the Laravel PHP framework. Adm
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.1.0
+- **Version:** 4.2.0
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/overview.jpg" />
 
