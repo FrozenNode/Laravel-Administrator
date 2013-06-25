@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.2.0
+- Bugfix: CKEditor wasn't properly loading up data after it had been cleared
+
 ### 4.1.0
 - If you select multiple BelongsToMany relationship filter options, the list will search for items that have all the selected relationships. Previously this was an OR
 - Bugfix: Formatted date filters were not being properly sent to SQL
