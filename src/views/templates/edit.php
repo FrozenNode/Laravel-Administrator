@@ -80,7 +80,7 @@
 				<!-- /ko -->
 			<!-- /ko -->
 
-			<!-- ko if: type === 'has_many_and_belongs_to' -->
+			<!-- ko if: type === 'belongs_to_many' -->
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->

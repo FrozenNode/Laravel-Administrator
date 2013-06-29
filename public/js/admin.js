@@ -632,7 +632,7 @@
 						{
 							filter[this] = el[this]() ? el[this]() : null;
 
-							if (obs === 'value' && filter[this] && el.type === 'has_many_and_belongs_to' && typeof filter[this] === 'string')
+							if (obs === 'value' && filter[this] && el.type === 'belongs_to_many' && typeof filter[this] === 'string')
 							{
 								filter.value = filter.value.split(',');
 							}

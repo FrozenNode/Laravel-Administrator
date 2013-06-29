@@ -29,9 +29,9 @@ abstract class Field {
 
 		//relationships
 		'belongs_to' => 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo',
+		'belongs_to_many' => 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsToMany',
 		'has_one' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasOne',
 		'has_many' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasMany',
-		'has_many_and_belongs_to' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasManyAndBelongsTo',
 
 	);
 
@@ -250,6 +250,10 @@ abstract class Field {
 		{
 			return 'belongs_to';
 		}
+		else if (is_a($related_model, static::$relationshipBase.'BelongsToMany'))
+		{
+			return 'belongs_to_many';
+		}
 		else if (is_a($related_model, static::$relationshipBase.'HasOne'))
 		{
 			return 'has_one';
@@ -257,10 +261,6 @@ abstract class Field {
 		else if (is_a($related_model, static::$relationshipBase.'HasMany'))
 		{
 			return 'has_many';
-		}
-		else if (is_a($related_model, static::$relationshipBase.'BelongsToMany'))
-		{
-			return 'has_many_and_belongs_to';
 		}
 		else
 		{

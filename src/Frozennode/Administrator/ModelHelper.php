@@ -94,7 +94,7 @@ class ModelHelper {
 						//iterate over the items
 						foreach ($relatedItems as $item)
 						{
-							//if this is a mutliple-value type (i.e. HasMany, HasManyAndBelongsTo), make sure this is an array
+							//if this is a mutliple-value type (i.e. HasMany, BelongsToMany), make sure this is an array
 							if ($info->multipleValues)
 							{
 								$relationsArray[] = $item->{$item->getKeyName()};

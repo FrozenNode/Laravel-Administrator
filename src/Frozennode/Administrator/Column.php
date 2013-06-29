@@ -104,21 +104,21 @@ class Column {
 	public static $belongsToClass = 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo';
 
 	/**
-	 * The full class name of a hasManyAndBelongsTo relationship
+	 * The full class name of a BelongsToMany relationship
 	 *
 	 * @var string
 	 */
-	public static $hasManyAndBelongsToClass = 'Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany';
+	public static $BelongsToManyClass = 'Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany';
 
 	/**
-	 * The full class name of a hasManyAndBelongsTo relationship
+	 * The full class name of a hasMany relationship
 	 *
 	 * @var string
 	 */
 	public static $hasManyClass = 'Illuminate\\Database\\Eloquent\\Relations\\HasMany';
 
 	/**
-	 * The full class name of a hasManyAndBelongsTo relationship
+	 * The full class name of a hasOne relationship
 	 *
 	 * @var string
 	 */
@@ -202,13 +202,13 @@ class Column {
 				$relevant_model = $nested['models'][sizeof($nested['models'])-2];
 				$column['nested'] = $nested;
 			}
-			//if we couldn't make a belongsTo nest out of it, check if it's a HMABT, HM, or HO
+			//if we couldn't make a belongsTo nest out of it, check if it's a BTM, HM, or HO
 			else if (method_exists($config->model, $rel))
 			{
 				$relationship = $config->model->{$rel}();
 
-				//HMABT, HM, HO
-				if (is_a($relationship, static::$hasManyAndBelongsToClass) || is_a($relationship, static::$hasManyClass)
+				//BTM, HM, HO
+				if (is_a($relationship, static::$BelongsToManyClass) || is_a($relationship, static::$hasManyClass)
 																						|| is_a($relationship, static::$hasOneClass))
 				{
 					$relevant_name = $rel;
@@ -236,7 +236,7 @@ class Column {
 				return false;
 			}
 
-			//if this is a belongs_to, we need to set up the proper aliased select replacement
+			//if this is a BelongsTo, we need to set up the proper aliased select replacement
 			if (!$relationshipField->external)
 			{
 				$selectTable = $field.'_'.$relationshipField->table;
@@ -370,15 +370,7 @@ class Column {
 							' = '.
 						$field_table.'.'.$relationship_model->getKeyName();
 						break;
-					case 'has_one':
-					case 'has_many':
-						$field_table = $this->field . '_' . $from_table;
-
-						$where = $model->getTable().'.'.$model->getKeyName().
-							' = '.
-						$field_table.'.'.$this->relationshipField->column;
-						break;
-					case 'has_many_and_belongs_to':
+					case 'belongs_to_many':
 						$relationship = $model->{$this->relationship}();
 						$from_table = $model->getTable();
 						$field_table = $this->field.'_'.$from_table;
@@ -396,6 +388,14 @@ class Column {
 								.' LEFT JOIN '.$other_table.' AS '.$other_alias.' ON '.$other_alias.'.'.$other_key.' = '.$int_alias.'.'.$column2;
 
 						$where = $model->getTable().'.'.$model->getKeyName().' = '.$int_alias.'.'.$column1;
+						break;
+					case 'has_one':
+					case 'has_many':
+						$field_table = $this->field . '_' . $from_table;
+
+						$where = $model->getTable().'.'.$model->getKeyName().
+							' = '.
+						$field_table.'.'.$this->relationshipField->column;
 						break;
 				}
 
