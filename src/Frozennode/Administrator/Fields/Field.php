@@ -16,6 +16,7 @@ abstract class Field {
 		'textarea' => 'Frozennode\\Administrator\\Fields\\Text',
 		'wysiwyg' => 'Frozennode\\Administrator\\Fields\\Text',
 		'markdown' => 'Frozennode\\Administrator\\Fields\\Text',
+		'password' => 'Frozennode\\Administrator\\Fields\\Password',
 		'date' => 'Frozennode\\Administrator\\Fields\\Time',
 		'time' => 'Frozennode\\Administrator\\Fields\\Time',
 		'datetime' => 'Frozennode\\Administrator\\Fields\\Time',

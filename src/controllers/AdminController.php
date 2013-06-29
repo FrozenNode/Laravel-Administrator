@@ -106,7 +106,7 @@ class AdminController extends Controller
 		//iterate over the edit fields to see if any are setters (and therefore need their values unset)
 		foreach ($editFields['objectFields'] as $field => $info)
 		{
-			if ($info->setter)
+			if (($info->setter && $info->type !== 'password') || ($info->type === 'password' && empty($model->{$field})))
 			{
 				$model->__unset($field);
 			}

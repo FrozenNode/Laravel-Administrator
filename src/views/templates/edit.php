@@ -66,6 +66,12 @@
 				<!-- /ko -->
 			<!-- /ko -->
 
+			<!-- ko if: type === 'password' -->
+				<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
+				<input type="password" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+																		valueUpdate: 'afterkeydown', characterLimit: limit" />
+			<!-- /ko -->
+
 			<!-- ko if: type === 'belongs_to' -->
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 

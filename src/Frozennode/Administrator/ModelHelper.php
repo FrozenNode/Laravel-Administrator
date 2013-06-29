@@ -138,6 +138,12 @@ class ModelHelper {
 						$model->{$field} = array();
 					}
 				}
+
+				//if this is a setter field, unset it
+				if ($info->setter)
+				{
+					$model->__unset($field);
+				}
 			}
 
 			//include the item link if one was supplied

@@ -55,7 +55,7 @@
 		width: <?php echo intval(($config->formWidth - 75) / 2) ?>px;
 	}
 
-	div.item_edit form.edit_form input[type="text"], div.item_edit form.edit_form textarea {
+	div.item_edit form.edit_form input[type="text"], div.item_edit form.edit_form input[type="password"], div.item_edit form.edit_form textarea {
 		max-width: <?php echo $config->formWidth - 75 ?>px;
 		width: <?php echo $config->formWidth - 75 ?>px;
 	}
