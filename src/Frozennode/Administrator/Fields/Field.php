@@ -90,6 +90,13 @@ abstract class Field {
 	public $title = '';
 
 	/**
+	 * When a field is a setter, no value will be returned from the database and the value will be unset before saving
+	 *
+	 * @var bool
+	 */
+	public $setter = false;
+
+	/**
 	 * The value (used in filter)
 	 *
 	 * @var string
@@ -130,6 +137,7 @@ abstract class Field {
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
 		$this->editable = array_get($info, 'editable', $this->editable);
+		$this->setter = array_get($info, 'setter', $this->setter);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));

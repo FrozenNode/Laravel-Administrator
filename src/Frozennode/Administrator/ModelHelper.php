@@ -34,7 +34,7 @@ class ModelHelper {
 		//make sure the edit fields are included
 		foreach ($editFields['objectFields'] as $field => $obj)
 		{
-			if (!$obj->relationship && !array_key_exists($field, $config->columns['includedColumns']))
+			if (!$obj->relationship && !$obj->setter && !array_key_exists($field, $config->columns['includedColumns']))
 			{
 				$config->columns['includedColumns'][$field] = $model->getTable().'.'.$field;
 			}

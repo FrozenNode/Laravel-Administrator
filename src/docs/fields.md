@@ -4,6 +4,7 @@
 - [Title Option](#title-option)
 - [Type Option](#type-option)
 - [Editable Option](#editable-option)
+- [Setter Option](#setter-option)
 - [Filters](#filters)
 - [Settings Page](#settings-page)
 
@@ -82,6 +83,16 @@ The `editable` option determines whether or not a field can be edited. By defaul
 	),
 
 > **Tip**: You may want to use the `editable` option together with Eloquent setters.
+
+<a name="setter-option"></a>
+## Setter Option
+
+The `setter` option lets you define a field as an attribute that is set on the Eloquent model, but is unset before the model is saved. This gives you access to use it as a [mutator](http://laravel.com/docs/eloquent#accessors-and-mutators) without having to worry about that value getting stored in the database. By default, this is set to `false` for all fields except for the [`password`](/docs/field-type-password) field.
+
+	'name' => array(
+		'title' => 'Name',
+		'setter' => true,
+	),
 
 <a name="filters"></a>
 ## Filters

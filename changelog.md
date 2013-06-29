@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.2.0
+- Setter fields are now available in the edit fields array
 - Bugfix: CKEditor wasn't properly loading up data after it had been cleared
 
 ### 4.1.0
