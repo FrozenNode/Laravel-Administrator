@@ -28,13 +28,13 @@ class ModelHelper {
 	{
 		//if we're getting an existing model, we'll want to first get the edit fields without the relationships loaded
 		$config = App::make('itemconfig');
-		$model = $config->model;
+		$originalModel = $model = $config->model;
 		$editFields = Field::getEditFields($config, ($id ? false : true));
 
 		//make sure the edit fields are included
 		foreach ($editFields['objectFields'] as $field => $obj)
 		{
-			if (!$obj->relationship && !array_key_exists($field, $config->columns['includedColumns']))
+			if (!$obj->relationship && !$obj->setter && !array_key_exists($field, $config->columns['includedColumns']))
 			{
 				$config->columns['includedColumns'][$field] = $model->getTable().'.'.$field;
 			}
@@ -94,7 +94,7 @@ class ModelHelper {
 						//iterate over the items
 						foreach ($relatedItems as $item)
 						{
-							//if this is a mutliple-value type (i.e. HasMany, HasManyAndBelongsTo), make sure this is an array
+							//if this is a mutliple-value type (i.e. HasMany, BelongsToMany), make sure this is an array
 							if ($info->multipleValues)
 							{
 								$relationsArray[] = $item->{$item->getKeyName()};
@@ -138,6 +138,12 @@ class ModelHelper {
 						$model->{$field} = array();
 					}
 				}
+
+				//if this is a setter field, unset it
+				if ($info->setter)
+				{
+					$model->__unset($field);
+				}
 			}
 
 			//include the item link if one was supplied
@@ -147,6 +153,22 @@ class ModelHelper {
 			{
 				$model->setAttribute('admin_item_link', $link);
 			}
+
+			//temporarily update the model on the config object
+			$config->model = $model;
+
+			//set up the model with the edit fields new data
+			$editFields = Field::getEditFields($config);
+			$model->setAttribute('administrator_edit_fields', $editFields['arrayFields']);
+
+			//set up the config with the new actions data
+			$config->updateActions();
+			$model->setAttribute('administrator_actions', $config->actions);
+			$model->setAttribute('administrator_action_permissions', $config->actionPermissions);
+
+			//reset to the old model on the config so we can accurately pull our data model
+			$config->model = $originalModel;
+			$config->updateActions();
 		}
 
 		return $model;

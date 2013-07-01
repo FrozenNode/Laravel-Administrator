@@ -187,13 +187,13 @@ The permission option lets you define a closure that determines whether or not t
 	 * @type array
 	 */
 	'action_permissions'=> array(
-		'delete' => function()
+		'delete' => function($model)
 		{
 			return Auth::user()->has_role('developer');
 		}
 	),
 
-Action permissions can be supplied to give you access control over the three primary actions: `create`, `update`, and `delete`. `read` access is assumed if the user passes the [`permission`](#permission) check. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should be an anonymous function that returns either true or false.
+Action permissions can be supplied to give you access control over the three primary actions (`create`, `update`, and `delete`) and any custom actions that you define. `read` access is assumed if the user passes the [`permission`](#permission) check. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should be an anonymous function that returns either true or false.
 
 <a name="custom-actions"></a>
 ## Custom Actions
@@ -210,6 +210,10 @@ Action permissions can be supplied to give you access control over the three pri
 				'success' => 'Reordered',
 				'error' => 'There was an error while reordering',
 			),
+			'permission' => function($model)
+			{
+				return $model->category_id !== 2;
+			},
 			//the model is passed to the closure
 			'action' => function($model)
 			{

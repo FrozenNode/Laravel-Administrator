@@ -16,6 +16,7 @@ abstract class Field {
 		'textarea' => 'Frozennode\\Administrator\\Fields\\Text',
 		'wysiwyg' => 'Frozennode\\Administrator\\Fields\\Text',
 		'markdown' => 'Frozennode\\Administrator\\Fields\\Text',
+		'password' => 'Frozennode\\Administrator\\Fields\\Password',
 		'date' => 'Frozennode\\Administrator\\Fields\\Time',
 		'time' => 'Frozennode\\Administrator\\Fields\\Time',
 		'datetime' => 'Frozennode\\Administrator\\Fields\\Time',
@@ -29,9 +30,9 @@ abstract class Field {
 
 		//relationships
 		'belongs_to' => 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo',
+		'belongs_to_many' => 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsToMany',
 		'has_one' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasOne',
 		'has_many' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasMany',
-		'has_many_and_belongs_to' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasManyAndBelongsTo',
 
 	);
 
@@ -90,6 +91,13 @@ abstract class Field {
 	public $title = '';
 
 	/**
+	 * When a field is a setter, no value will be returned from the database and the value will be unset before saving
+	 *
+	 * @var bool
+	 */
+	public $setter = false;
+
+	/**
 	 * The value (used in filter)
 	 *
 	 * @var string
@@ -130,10 +138,19 @@ abstract class Field {
 		$this->type = $info['type'];
 		$this->title = array_get($info, 'title', $field);
 		$this->editable = array_get($info, 'editable', $this->editable);
+		$this->setter = array_get($info, 'setter', $this->setter);
+		$this->visible = array_get($info, 'visible', $this->visible);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));
 		$this->field = $field;
+
+		//make sure the hide callback is run if it's supplied
+		if (is_callable($this->visible))
+		{
+			$visible = $this->visible;
+			$this->visible = $visible($config->model) ? true : false;
+		}
 	}
 
 
@@ -250,6 +267,10 @@ abstract class Field {
 		{
 			return 'belongs_to';
 		}
+		else if (is_a($related_model, static::$relationshipBase.'BelongsToMany'))
+		{
+			return 'belongs_to_many';
+		}
 		else if (is_a($related_model, static::$relationshipBase.'HasOne'))
 		{
 			return 'has_one';
@@ -257,10 +278,6 @@ abstract class Field {
 		else if (is_a($related_model, static::$relationshipBase.'HasMany'))
 		{
 			return 'has_many';
-		}
-		else if (is_a($related_model, static::$relationshipBase.'BelongsToMany'))
-		{
-			return 'has_many_and_belongs_to';
 		}
 		else
 		{
@@ -280,6 +297,7 @@ abstract class Field {
 			'field' => $this->field,
 			'title' => $this->title,
 			'editable' => $this->editable,
+			'setter' => $this->setter,
 			'visible' => $this->visible,
 			'value' => $this->value,
 			'minMax' => $this->minMax,

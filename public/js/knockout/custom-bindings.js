@@ -530,18 +530,12 @@
 			var value = ko.utils.unwrapObservable(valueAccessor()),
 				$element = $(element);
 
+			value = value ? value : '';
+
 			$element.html(value);
 			$element.ckeditor({ language : language });
 
 			var editor = $element.ckeditorGet();
-
-			//destroy the existing editor if the DOM node is removed
-			ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-				var existingEditor = CKEDITOR.instances[element.name];
-
-				if (existingEditor)
-					existingEditor.destroy(true);
-			});
 
 			//wire up the blur event to ensure our observable is properly updated
 			editor.focusManager.blur = function()
@@ -571,8 +565,22 @@
 
 			value = value ? value : '';
 
-			$element.html(value);
-			editor.setData(value);
+			//if there isn't a value, set the value immediately
+			if (!value)
+			{
+				$element.html(value);
+				editor.setData(value);
+			}
+			//otherwise pause for a moment and then set it
+			else
+			{
+				setTimeout(function()
+				{
+					$element.html(value);
+					editor.setData(value);
+				}, 50);
+			}
+
 		}
 	};
 

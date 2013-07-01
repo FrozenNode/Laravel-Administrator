@@ -3,7 +3,7 @@ namespace Frozennode\Administrator\Fields\Relationships;
 
 use Frozennode\Administrator\Column;
 
-class HasManyAndBelongsTo extends Relationship {
+class BelongsToMany extends Relationship {
 
 
 	/**
