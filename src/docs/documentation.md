@@ -21,6 +21,7 @@
 - Field Types
     - [Key](/docs/field-type-key)
     - [Text](/docs/field-type-text)
+    - [Password](/docs/field-type-password)
     - [TextArea](/docs/field-type-textarea)
     - [WYSIWYG](/docs/field-type-wysiwyg)
     - [Markdown](/docs/field-type-markdown)
