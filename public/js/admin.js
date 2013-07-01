@@ -132,6 +132,11 @@
 				isLast: false,
 			},
 
+			/* The original edit fields array
+			 * array
+			 */
+			originalEditFields: [],
+
 			/* The model edit fields
 			 * array
 			 */
@@ -216,6 +221,15 @@
 				//if this is a new item, delete the primary key from the data array
 				if (!saveData[self.primaryKey])
 					delete saveData[self.primaryKey];
+
+				//iterate over the edit fields and ensure that the belongs_to relationships are false if they are an empty string
+				$.each(self.editFields(), function(ind, field)
+				{
+					if (field.relationship && !field.external && saveData[field.field] === '')
+					{
+						saveData[field.field] = false;
+					}
+				});
 
 				self.statusMessage(self.languages['saving']).statusMessageType('');
 				self.freezeForm(true);
@@ -314,6 +328,14 @@
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
+					if (window.admin)
+					{
+						//override the edit fields to the original non-existent model
+						adminData.edit_fields = self.originalEditFields;
+						self.editFields(window.admin.prepareEditFields());
+					}
+
+					//update all the info to the new item state
 					ko.mapping.updateData(self, self.model, self.model);
 					self.itemLoadingId(null);
 					self.activeItem(0);
@@ -350,6 +372,10 @@
 						//set the active item and update the model data
 						self.activeItem(data[self.primaryKey]);
 						self.loadingItem(false);
+
+						//update the edit fields
+						adminData.edit_fields = data.administrator_edit_fields;
+						self.editFields(window.admin.prepareEditFields());
 
 						//set the new options for relationships
 						$.each(adminData.edit_fields, function(ind, el)
@@ -632,7 +658,7 @@
 						{
 							filter[this] = el[this]() ? el[this]() : null;
 
-							if (obs === 'value' && filter[this] && el.type === 'has_many_and_belongs_to' && typeof filter[this] === 'string')
+							if (obs === 'value' && filter[this] && el.type === 'belongs_to_many' && typeof filter[this] === 'string')
 							{
 								filter.value = filter.value.split(',');
 							}
@@ -687,7 +713,7 @@
 				});
 
 				//then we'll update the edit fields
-				$.each(self.editFields, function(ind, field)
+				$.each(self.editFields(), function(ind, field)
 				{
 					var fieldIndex = ind,
 						fieldName = field.field;
@@ -695,7 +721,7 @@
 					//if there are constraints to maintain, set up the subscriptions
 					if ((!field.constraints || !field.constraints.length) && field.selfRelationship)
 					{
-						self.editFields[fieldIndex].loadingOptions(true);
+						field.loadingOptions(true);
 
 						$.ajax({
 							url: base_url + self.modelName() + '/update_options',
@@ -708,7 +734,7 @@
 							},
 							complete: function()
 							{
-								self.editFields[fieldIndex].loadingOptions(false);
+								field.loadingOptions(false);
 							},
 							success: function(response)
 							{
@@ -769,7 +795,8 @@
 			this.filtersViewModel.filters = this.prepareFilters();
 
 			//prepare the edit fields
-			this.viewModel.editFields = this.prepareEditFields();
+			this.viewModel.originalEditFields = adminData.edit_fields;
+			this.viewModel.editFields(this.prepareEditFields());
 
 			//set up the relationships
 			this.initRelationships();
@@ -930,7 +957,7 @@
 			});
 
 			//iterate over the edit fields
-			$.each(self.viewModel.editFields, function(ind, field)
+			$.each(self.viewModel.editFields(), function(ind, field)
 			{
 				//if there are constraints to maintain, set up the subscriptions
 				if (field.constraints && self.getObjectSize(field.constraints))
@@ -958,7 +985,7 @@
 
 							//freeze the actions
 							self.viewModel.freezeActions(true);
-							self.viewModel.editFields[fieldIndex].loadingOptions(true);
+							field.loadingOptions(true);
 
 							$.ajax({
 								url: base_url + self.viewModel.modelName() + '/update_options',
@@ -973,7 +1000,7 @@
 								complete: function()
 								{
 									self.viewModel.freezeActions(false);
-									self.viewModel.editFields[fieldIndex].loadingOptions(false);
+									field.loadingOptions(false);
 								},
 								success: function(response)
 								{

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -18,5 +18,7 @@ return array(
 	'deleted' => 'Item verwijderd.',
 	'character_left' => ' letter over',
 	'characters_left' => ' letters over',
+	'no_results' => 'No results matched',
+	'select_options' => 'Select Some Options',
 
 );

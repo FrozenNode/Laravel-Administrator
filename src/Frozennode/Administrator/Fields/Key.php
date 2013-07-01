@@ -4,19 +4,11 @@ namespace Frozennode\Administrator\Fields;
 class Key extends Field {
 
 	/**
-	 * Constructor function
+	 * If this is true, the field is editable
 	 *
-	 * @param string|int	$field
-	 * @param array			$info
-	 * @param ModelConfig 	$config
+	 * @var bool
 	 */
-	public function __construct($field, $info, $config)
-	{
-		parent::__construct($field, $info, $config);
-
-		$this->visible = array_get($info, 'visible', $this->visible);
-		$this->editable = false;
-	}
+	public $editable = false;
 
 	/**
 	 * Filters a query object given
