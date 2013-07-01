@@ -1,7 +1,6 @@
 # Field Type - Password
 
 - [Usage](#usage)
-- [Filter](#filter)
 
 <a name="usage"></a>
 ## Usage
