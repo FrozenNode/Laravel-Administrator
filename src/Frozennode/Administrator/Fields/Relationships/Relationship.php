@@ -215,6 +215,7 @@ abstract class Relationship extends Field {
 		$arr['column'] = $this->column;
 		$arr['foreignKey'] = $this->foreignKey;
 		$arr['name_field'] = $this->nameField;
+		$arr['external'] = $this->external;
 		$arr['options'] = $this->options;
 		$arr['selfRelationship'] = $this->selfRelationship;
 		$arr['autocomplete'] = $this->autocomplete;

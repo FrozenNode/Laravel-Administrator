@@ -222,6 +222,15 @@
 				if (!saveData[self.primaryKey])
 					delete saveData[self.primaryKey];
 
+				//iterate over the edit fields and ensure that the belongs_to relationships are false if they are an empty string
+				$.each(self.editFields(), function(ind, field)
+				{
+					if (field.relationship && !field.external && saveData[field.field] === '')
+					{
+						saveData[field.field] = false;
+					}
+				});
+
 				self.statusMessage(self.languages['saving']).statusMessageType('');
 				self.freezeForm(true);
 

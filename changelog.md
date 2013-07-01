@@ -4,6 +4,7 @@
 - The 'visible' option for edit fields can now be passed a boolean or a callback that returns a boolean depending on the specific model being viewed
 - Password fields are now available in the edit fields array
 - Setter fields are now available in the edit fields array
+- Bugfix: Unsetting belongsTo relationships weren't nullifying the value in the database
 - Bugfix: Some missing language keys were causing translation bugs in some languages
 - Bugfix: CKEditor wasn't properly loading up data after it had been cleared
 
