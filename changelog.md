@@ -3,6 +3,7 @@
 ### 4.2.0
 - Password fields are now available in the edit fields array
 - Setter fields are now available in the edit fields array
+- Bugfix: Some missing language keys were causing translation bugs in some languages
 - Bugfix: CKEditor wasn't properly loading up data after it had been cleared
 
 ### 4.1.0

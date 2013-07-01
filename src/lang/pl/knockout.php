@@ -18,4 +18,7 @@ return array(
 	'deleted'            => 'Obiekt usunięty.',
 	'character_left'     => ' znak pozostał',
 	'characters_left'    => ' znaki pozostały',
+	'no_results' => 'No results matched',
+	'select_options' => 'Select Some Options',
+
 );

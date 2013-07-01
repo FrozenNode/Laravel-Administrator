@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -21,6 +21,8 @@ return array(
 	'id' => 'ID',
 	'uploadimage' => 'Učitaj sliku',
 	'imageuploading' => 'Učitavanje slike',
+	'imageuploading' => 'Image Uploading',
+	'uploadfile' => 'Upload File',
 	'none' => 'Nijedno',
 	'all' => 'Sve',
 	'itemsperpage' => 'stavki po strani',
