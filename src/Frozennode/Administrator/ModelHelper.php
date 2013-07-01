@@ -154,13 +154,21 @@ class ModelHelper {
 				$model->setAttribute('admin_item_link', $link);
 			}
 
-			//update the model on the config object and set up the model with the edit fields new data
+			//temporarily update the model on the config object
 			$config->model = $model;
+
+			//set up the model with the edit fields new data
 			$editFields = Field::getEditFields($config);
 			$model->setAttribute('administrator_edit_fields', $editFields['arrayFields']);
 
+			//set up the config with the new actions data
+			$config->updateActions();
+			$model->setAttribute('administrator_actions', $config->actions);
+			$model->setAttribute('administrator_action_permissions', $config->actionPermissions);
+
 			//reset to the old model on the config so we can accurately pull our data model
 			$config->model = $originalModel;
+			$config->updateActions();
 		}
 
 		return $model;

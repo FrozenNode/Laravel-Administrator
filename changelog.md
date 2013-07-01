@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.2.0
+- The action permissions are now passed the relevant model so you can determine which actions are available for certain items in your database
 - The 'visible' option for edit fields can now be passed a boolean or a callback that returns a boolean depending on the specific model being viewed
 - Password fields are now available in the edit fields array
 - Setter fields are now available in the edit fields array

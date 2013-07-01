@@ -211,7 +211,7 @@
 		<!-- /ko -->
 	<!-- /ko -->
 
-	<!-- ko if: $root[$root.primaryKey]() && actions.length -->
+	<!-- ko if: $root[$root.primaryKey]() && actions().length -->
 		<div class="custom_buttons">
 			<!-- ko foreach: actions -->
 				<!-- ko if: hasPermission && $root.actionPermissions[name] !== false -->

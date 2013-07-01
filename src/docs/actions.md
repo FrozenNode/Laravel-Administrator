@@ -34,6 +34,8 @@ The `title` option lets you define the button's label value.
 
 The `messages` option is an array with three keys: `active`, `success`, and `error`. The `active` key is what is shown to the user as the action is being performed. The `success` key is the success message. The `error` key is the default error message.
 
+The `permission` option is an anonymous function that gets the relevant `$model` passed to it as its only parameter. This is exactly the same as if you were to put this action in your [`action_permissions`](/docs/model-configuration#action-permissions) array. Where you choose to put the permission callback is entirely up to you.
+
 > **Note**: If you want to show a custom error message, return an error string back from the `action` function
 
 <a name="model-config"></a>

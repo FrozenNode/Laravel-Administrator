@@ -27,6 +27,13 @@ class SettingsConfig {
 	public $storagePath;
 
 	/**
+	 * The original configuration options that were supplied
+	 *
+	 * @var array
+	 */
+	public $originalConfig;
+
+	/**
 	 * The settings page's title
 	 *
 	 * @var string
@@ -85,6 +92,7 @@ class SettingsConfig {
 	{
 		//set the class properties for the items which we know to exist
 		$this->storagePath = storage_path() . '/administrator_settings/';
+		$this->originalConfig = $config;
 		$this->title = array_get($config, 'title');
 		$this->name = array_get($config, 'name');
 		$this->edit = array_get($config, 'edit_fields');
