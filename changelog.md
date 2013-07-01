@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.2.0
+- The 'visible' option for edit fields can now be passed a boolean or a callback that returns a boolean depending on the specific model being viewed
 - Password fields are now available in the edit fields array
 - Setter fields are now available in the edit fields array
 - Bugfix: Some missing language keys were causing translation bugs in some languages

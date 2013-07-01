@@ -28,7 +28,7 @@ class ModelHelper {
 	{
 		//if we're getting an existing model, we'll want to first get the edit fields without the relationships loaded
 		$config = App::make('itemconfig');
-		$model = $config->model;
+		$originalModel = $model = $config->model;
 		$editFields = Field::getEditFields($config, ($id ? false : true));
 
 		//make sure the edit fields are included
@@ -153,6 +153,14 @@ class ModelHelper {
 			{
 				$model->setAttribute('admin_item_link', $link);
 			}
+
+			//update the model on the config object and set up the model with the edit fields new data
+			$config->model = $model;
+			$editFields = Field::getEditFields($config);
+			$model->setAttribute('administrator_edit_fields', $editFields['arrayFields']);
+
+			//reset to the old model on the config so we can accurately pull our data model
+			$config->model = $originalModel;
 		}
 
 		return $model;

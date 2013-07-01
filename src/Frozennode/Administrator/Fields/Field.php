@@ -139,10 +139,18 @@ abstract class Field {
 		$this->title = array_get($info, 'title', $field);
 		$this->editable = array_get($info, 'editable', $this->editable);
 		$this->setter = array_get($info, 'setter', $this->setter);
+		$this->visible = array_get($info, 'visible', $this->visible);
 		$this->value = static::getFilterValue(array_get($info, 'value', $this->value));
 		$this->minValue = static::getFilterValue(array_get($info, 'minValue', $this->minValue));
 		$this->maxValue = static::getFilterValue(array_get($info, 'maxValue', $this->maxValue));
 		$this->field = $field;
+
+		//make sure the hide callback is run if it's supplied
+		if (is_callable($this->visible))
+		{
+			$visible = $this->visible;
+			$this->visible = $visible($config->model) ? true : false;
+		}
 	}
 
 
@@ -289,6 +297,8 @@ abstract class Field {
 			'field' => $this->field,
 			'title' => $this->title,
 			'editable' => $this->editable,
+			'setter' => $this->setter,
+			//'hide' => $this->setter,
 			'visible' => $this->visible,
 			'value' => $this->value,
 			'minMax' => $this->minMax,

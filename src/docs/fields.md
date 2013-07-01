@@ -5,6 +5,7 @@
 - [Type Option](#type-option)
 - [Editable Option](#editable-option)
 - [Setter Option](#setter-option)
+- [Visible Option](#visible-option)
 - [Filters](#filters)
 - [Settings Page](#settings-page)
 
@@ -26,6 +27,14 @@ As you're [setting up your model config](/docs/model-configuration) or your [set
 		'published' => array(
 			'title' => 'Published',
 			'type' => 'bool',
+		),
+		'expired' => array(
+			'title' => 'Expired',
+			'type' => 'bool',
+			'visible' => function($model)
+			{
+				return $model->exists;
+			}
 		),
 		'collection' => array(
 			'type' => 'relationship',
@@ -92,6 +101,20 @@ The `setter` option lets you define a field as an attribute that is set on the E
 	'name' => array(
 		'title' => 'Name',
 		'setter' => true,
+	),
+
+<a name="visible-option"></a>
+## Visible Option
+
+The `visible` option lets you determine if a field should be present for a particular model state. The default value of this field is boolean true. Passing in boolean false will hide the field. You can also pass in an anonymous function that accepts the relevant `$model` as the single parameter. You can return a truthy value if you want to show the field for that item, or you can return a falsey value if you hide it. This is particularly useful for hiding a field when you're creating an item or when you're editing one.
+
+	'initial_thoughts' => array(
+		'title' => 'Initial Thoughts',
+		'type' => 'textarea',
+		'visible' => function($model)
+		{
+			return !$model->exists; //will only show up before an item is saved for the first time
+		},
 	),
 
 <a name="filters"></a>
