@@ -298,7 +298,6 @@ abstract class Field {
 			'title' => $this->title,
 			'editable' => $this->editable,
 			'setter' => $this->setter,
-			//'hide' => $this->setter,
 			'visible' => $this->visible,
 			'value' => $this->value,
 			'minMax' => $this->minMax,
