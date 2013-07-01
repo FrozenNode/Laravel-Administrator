@@ -66,6 +66,12 @@
 				<!-- /ko -->
 			<!-- /ko -->
 
+			<!-- ko if: type === 'password' -->
+				<div class="characters_left" data-bind="charactersLeft: {value: $root[field], limit: limit}"></div>
+				<input type="password" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field],
+																		valueUpdate: 'afterkeydown', characterLimit: limit" />
+			<!-- /ko -->
+
 			<!-- ko if: type === 'belongs_to' -->
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
@@ -80,7 +86,7 @@
 				<!-- /ko -->
 			<!-- /ko -->
 
-			<!-- ko if: type === 'has_many_and_belongs_to' -->
+			<!-- ko if: type === 'belongs_to_many' -->
 				<div class="loader" data-bind="visible: loadingOptions"></div>
 
 				<!-- ko if: autocomplete -->
@@ -205,7 +211,7 @@
 		<!-- /ko -->
 	<!-- /ko -->
 
-	<!-- ko if: $root[$root.primaryKey]() && actions.length -->
+	<!-- ko if: $root[$root.primaryKey]() && actions().length -->
 		<div class="custom_buttons">
 			<!-- ko foreach: actions -->
 				<!-- ko if: hasPermission && $root.actionPermissions[name] !== false -->

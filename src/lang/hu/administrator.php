@@ -21,6 +21,8 @@ return array(
 	'id' => 'Azonosító',
 	'uploadimage' => 'Kép feltöltése',
 	'imageuploading' => 'Képfeltöltés',
+	'uploadfile' => 'Upload File',
+	'fileuploading' => 'File Uploading',
 	'none' => 'Nincs',
 	'all' => 'Mind',
 	'itemsperpage' => 'sor oldalanként',
@@ -47,4 +49,6 @@ return array(
 	'valid_menu' => "Az administrator.php konfigurációjában biztosítania kell érvényes 'menu' opciót",
 	'valid_config_path' => "Az administrator.php konfigurációjában biztosítania kell érvényes 'model_config_path' értéket. Léteznie kell ennek a könyvtárnak, és írhatónak kell lennie.",
 	'not_eloquent' => " nem egy Eloquent model",
+	'storage_path_permissions' => "You must make your storage path writable in order to make a settings page",
+	'valid_home_page' => "You must provide a valid menu item in the home_page option of your config",
 );

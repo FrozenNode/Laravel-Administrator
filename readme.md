@@ -4,7 +4,7 @@ Administrator is a database interface package for the Laravel PHP framework. Adm
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.1.0
+- **Version:** 4.2.0
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/overview.jpg" />
 
@@ -51,15 +51,14 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.1.0
-- If you select multiple BelongsToMany relationship filter options, the list will search for items that have all the selected relationships. Previously this was an OR
-- Bugfix: Formatted date filters were not being properly sent to SQL
-- Bugfix: Null values for unrequired relationships weren't resetting field
-- Bugfix: Stray old "Admin\\Libraries" sitting in the Column model was causing issues with relationship fields
-- Bugfix: Column objects weren't indexing properly when a column was simply a string value
-- Bugfix: BelongsTo edit fields weren't setting due to overwriting with an empty array
-- Bugfix: Custom actions in settings weren't working properly
-- Bugfix: relationship saving was causing overload issue in php 5.4
+### 4.2.0
+- The action permissions are now passed the relevant model so you can determine which actions are available for certain items in your database
+- The 'visible' option for edit fields can now be passed a boolean or a callback that returns a boolean depending on the specific model being viewed
+- Password fields are now available in the edit fields array
+- Setter fields are now available in the edit fields array
+- Bugfix: Unsetting belongsTo relationships weren't nullifying the value in the database
+- Bugfix: Some missing language keys were causing translation bugs in some languages
+- Bugfix: CKEditor wasn't properly loading up data after it had been cleared
 
 
 See *changelog.md* for the changelog from previous versions

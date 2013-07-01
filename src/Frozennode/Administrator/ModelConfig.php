@@ -10,6 +10,13 @@ use \Exception;
 class ModelConfig {
 
 	/**
+	 * The original configuration options that were supplied
+	 *
+	 * @var array
+	 */
+	public $originalConfig;
+
+	/**
 	 * The model's title
 	 *
 	 * @var string
@@ -114,19 +121,17 @@ class ModelConfig {
 	public function __construct($config)
 	{
 		//set the class properties for the items which we know to exist
+		$this->originalConfig = $config;
 		$this->title = array_get($config, 'title');
 		$this->single = array_get($config, 'single');
 		$this->model = array_get($config, 'model');
 		$this->columns = array_get($config, 'columns');
-		$this->actions = array_get($config, 'actions');
 		$this->edit = array_get($config, 'edit_fields');
 		$this->filters = array_get($config, 'filters', array());
 		$this->name = array_get($config, 'model_name');
 
-		//fetch the meaningful information for columns and actions
-		//we won't do the same for edit fields and filters because that information is not always persistent across a request
+		//fetch the meaningful information for columns
 		$this->columns = Column::getColumns($this);
-		$this->actions = Action::getActions($this);
 
 		//copy $this->model because of php syntax issues
 		$model = $this->model;
@@ -154,17 +159,8 @@ class ModelConfig {
 		$linkCallback = array_get($config, 'link');
 		$this->linkCallback = is_callable($linkCallback) ? $linkCallback : null;
 
-		//grab the action permissions, if supplied
-		$this->actionPermissions = array_merge($this->actionPermissions, array_get($config, 'action_permissions', array()));
-
-		//iterate over the permissions to check if they're callable, run the function if they are
-		foreach ($this->actionPermissions as $i => $action)
-		{
-			if (is_callable($action))
-			{
-				$this->actionPermissions[$i] = $action();
-			}
-		}
+		//get the action permissions
+		$this->updateActions();
 	}
 
 	/**
@@ -385,6 +381,37 @@ class ModelConfig {
 		else
 		{
 			return false;
+		}
+	}
+
+	/**
+	 * Updates the actions with the permissions for the current model
+	 *
+	 * @return void
+	 */
+	public function updateActions()
+	{
+		$this->actions = Action::getActions($this);
+		$this->updateActionPermissions();
+	}
+
+	/**
+	 * Updates the action permissions array with the current model
+	 *
+	 * @return void
+	 */
+	public function updateActionPermissions()
+	{
+		//grab the action permissions, if supplied
+		$this->actionPermissions = array_merge($this->actionPermissions, array_get($this->originalConfig, 'action_permissions', array()));
+
+		//iterate over the permissions to check if they're callable, run the function if they are
+		foreach ($this->actionPermissions as $i => $action)
+		{
+			if (is_callable($action))
+			{
+				$this->actionPermissions[$i] = $action($this->model);
+			}
 		}
 	}
 }

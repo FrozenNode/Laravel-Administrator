@@ -1,5 +1,14 @@
 ## Changelog
 
+### 4.2.0
+- The action permissions are now passed the relevant model so you can determine which actions are available for certain items in your database
+- The 'visible' option for edit fields can now be passed a boolean or a callback that returns a boolean depending on the specific model being viewed
+- Password fields are now available in the edit fields array
+- Setter fields are now available in the edit fields array
+- Bugfix: Unsetting belongsTo relationships weren't nullifying the value in the database
+- Bugfix: Some missing language keys were causing translation bugs in some languages
+- Bugfix: CKEditor wasn't properly loading up data after it had been cleared
+
 ### 4.1.0
 - If you select multiple BelongsToMany relationship filter options, the list will search for items that have all the selected relationships. Previously this was an OR
 - Bugfix: Formatted date filters were not being properly sent to SQL

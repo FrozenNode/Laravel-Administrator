@@ -96,11 +96,21 @@ class AdminController extends Controller
 	{
 		$config = App::make('itemconfig');
 		$model = ModelHelper::getModel($id, false, false, true);
+		$editFields = Field::getEditFields($config, false);
 
 		//fill the model with our input
 		ModelHelper::fillModel($model);
 
 		$rules = isset($model::$rules) ? $model::$rules : array();
+
+		//iterate over the edit fields to see if any are setters (and therefore need their values unset)
+		foreach ($editFields['objectFields'] as $field => $info)
+		{
+			if (($info->setter && $info->type !== 'password') || ($info->type === 'password' && empty($model->{$field})))
+			{
+				$model->__unset($field);
+			}
+		}
 
 		//if the model exists, this is an update
 		if ($model->exists)

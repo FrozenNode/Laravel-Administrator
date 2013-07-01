@@ -21,6 +21,8 @@ return array(
 	'id' => 'ID',
 	'uploadimage' => 'Upload Afbeelding',
 	'imageuploading' => 'Afbeelding Uploading',
+	'uploadfile' => 'Upload File',
+	'fileuploading' => 'File Uploading',
 	'none' => 'Geen',
 	'all' => 'Alle',
 	'itemsperpage' => 'items per pagina',
@@ -47,4 +49,6 @@ return array(
 	'valid_menu' => "Je moet een geldige 'menu' optie aangeven in de administrator.php config",
 	'valid_config_path' => "Je moet een geldig 'model_config_path' aangeven in de administrator.php config. De directory moet ook bestaan en leesbaar zijn.",
 	'not_eloquent' => " is geen Eloquent model",
+	'storage_path_permissions' => "You must make your storage path writable in order to make a settings page",
+	'valid_home_page' => "You must provide a valid menu item in the home_page option of your config",
 );
