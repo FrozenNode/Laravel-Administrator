@@ -190,12 +190,12 @@
 			/* If custom actions are supplied, they are stored here
 			 * array
 			 */
-			actions: [],
+			actions: ko.observableArray(),
 
 			/* Holds the per-action permissions
 			 * object
 			 */
-			actionsPermissions: {},
+			actionPermissions: {},
 
 			/* The languages array holds text for the current language
 			 * object
@@ -246,7 +246,6 @@
 					success: function(response)
 					{
 						if (response.success) {
-							//$('#users_list').trigger('reloadGrid');
 							self.statusMessage(self.languages['saved']).statusMessageType('success');
 							self[self.primaryKey](response.data[self.primaryKey]);
 							self.activeItem(response.data[self.primaryKey]);
@@ -376,6 +375,10 @@
 						//update the edit fields
 						adminData.edit_fields = data.administrator_edit_fields;
 						self.editFields(window.admin.prepareEditFields());
+
+						//update the action permissions
+						self.actions(data.administrator_actions);
+						self.actionPermissions = data.administrator_action_permissions;
 
 						//set the new options for relationships
 						$.each(adminData.edit_fields, function(ind, el)
@@ -778,7 +781,7 @@
 			this.viewModel.expandWidth(adminData.expand_width);
 			this.viewModel.rowsPerPage(adminData.rows_per_page);
 			this.viewModel.primaryKey = adminData.primary_key;
-			this.viewModel.actions = adminData.actions;
+			this.viewModel.actions(adminData.actions);
 			this.viewModel.actionPermissions = adminData.action_permissions;
 			this.viewModel.languages = adminData.languages;
 
