@@ -106,7 +106,7 @@
 }
 #settings_page form.settings_form div.control_buttons span.message {
   display:block;
-  margin:10px 0 0 3px;
+  margin:10px 30px 0 3px;
 }
 #settings_page form.settings_form > div {
   display:inline-block;
@@ -692,7 +692,7 @@ body label {
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form div.control_buttons span.message {
   display:block;
-  margin:10px 0 0 3px;
+  margin:10px 30px 0 3px;
 }
 #admin_page #content div.item_edit_container div.item_edit div.loading {
   position:absolute;
