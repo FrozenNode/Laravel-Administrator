@@ -96,8 +96,13 @@ class AdminController extends Controller
 	{
 		$config = App::make('itemconfig');
 		$model = ModelHelper::getModel($id, false, false, true);
-		$model = $model::find($id);
 		$editFields = Field::getEditFields($config, false);
+
+		//fetch the proper model so we don't have to deal with any extra attributes
+		if ($model->exists)
+		{
+			$model = $model::find($id);
+		}
 
 		//fill the model with our input
 		ModelHelper::fillModel($model);
@@ -217,8 +222,9 @@ class AdminController extends Controller
 	public function customAction($modelName, $id = null)
 	{
 		$config = App::make('itemconfig');
+		$model = $config->model;
 		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
-		$data = $isSettings ? $config->data : ModelHelper::getModel($id, false, true);
+		$data = $isSettings ? $config->data : $model::find($id);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
