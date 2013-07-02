@@ -77,7 +77,7 @@ class Action {
 	 */
 	public static function create($name, $info, $config)
 	{
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig');
+		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config->data;
 
 		//check the permission on this item
 		$info['hasPermission'] = is_callable(array_get($info, 'permission', false)) ? $info['permission']($model) : true;
@@ -96,7 +96,7 @@ class Action {
 	/**
 	 * Gets an action by name
 	 *
-	 * @param string						$name
+	 * @param string	$name
 	 *
 	 * @return false|Action object
 	 */

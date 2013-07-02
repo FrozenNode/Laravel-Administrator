@@ -96,6 +96,7 @@ class AdminController extends Controller
 	{
 		$config = App::make('itemconfig');
 		$model = ModelHelper::getModel($id, false, false, true);
+		$model = $model::find($id);
 		$editFields = Field::getEditFields($config, false);
 
 		//fill the model with our input
