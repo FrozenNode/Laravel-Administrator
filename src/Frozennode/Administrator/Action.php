@@ -127,7 +127,7 @@ class Action {
 	 *
 	 * @param ModelConfig		$config
 	 *
-	 * @return false|array of Action objects and arrays
+	 * @return array of Action objects and arrays
 	 */
 	public static function getActions($config)
 	{
@@ -137,7 +137,7 @@ class Action {
 		//check if the model has actions
 		if (!$actions || !is_array($actions))
 		{
-			return false;
+			return array();
 		}
 
 		//we'll be returning both the objects and the arrays
@@ -152,7 +152,7 @@ class Action {
 			}
 		}
 
-		return sizeof($validActions) ? $validActions : false;
+		return sizeof($validActions) ? $validActions : array();
 	}
 
 	/**
