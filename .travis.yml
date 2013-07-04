@@ -1,8 +1,12 @@
 language: php
 
-php: 
+php:
   - 5.3
   - 5.4
+
+branches:
+  except:
+    - 3.2.0
 
 before_script:
   - curl -s http://getcomposer.org/installer | php
