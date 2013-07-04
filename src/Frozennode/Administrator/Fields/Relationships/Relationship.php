@@ -28,6 +28,20 @@ abstract class Relationship extends Field {
 	public $nameField = 'name';
 
 	/**
+	 * The column to use to sort the options from the other table
+	 *
+	 * @var string
+	 */
+	public $optionsSortField = false;
+
+	/**
+	 * The SQL sort direction to use for the options sort field
+	 *
+	 * @var string
+	 */
+	public $optionsSortDirection = 'ASC';
+
+	/**
 	 * The symbol to use in front of the number
 	 *
 	 * @var string
@@ -114,8 +128,10 @@ abstract class Relationship extends Field {
 		//get an instance of the relationship object
 		$relationship = $model->{$field}();
 
-		//get the name field option
+		//get the various options
 		$this->nameField = array_get($info, 'name_field', $this->nameField);
+		$this->optionsSortField = array_get($info, 'options_sort_field', $this->nameField);
+		$this->optionsSortDirection = array_get($info, 'options_sort_direction', $this->optionsSortDirection);
 		$this->autocomplete = array_get($info, 'autocomplete', $this->autocomplete);
 		$this->numOptions = array_get($info, 'num_options', $this->numOptions);
 		$this->searchFields = array_get($info, 'search_fields', array($this->nameField));
@@ -129,7 +145,16 @@ abstract class Relationship extends Field {
 
 		if (array_get($info, 'load_relationships', false))
 		{
-			$options = $relationship->getRelated()->orderBy($this->nameField)->get();
+			//if a sort field was supplied, order the results by it
+			if ($this->optionsSortField)
+			{
+				$options = $relationship->getRelated()->orderBy(\DB::raw($this->optionsSortField), $this->optionsSortDirection)->get();
+			}
+			//otherwise just pull back an unsorted list
+			else
+			{
+				$options = $relationship->getRelated()->get();
+			}
 		}
 		//otherwise if there are relationship items, we need them in the initial options list
 		else if ($relationshipItems = $relationship->get())

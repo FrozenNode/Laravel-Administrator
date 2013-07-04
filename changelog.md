@@ -1,5 +1,8 @@
 ## Changelog
 
+- You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields are require ordering on something other than the name_field
+- Bugfix: Using an accessor for a name_field in a relationship field would previously cause SQL errors
+
 ### 4.2.0
 - The action permissions are now passed the relevant model so you can determine which actions are available for certain items in your database
 - The 'visible' option for edit fields can now be passed a boolean or a callback that returns a boolean depending on the specific model being viewed
