@@ -21,7 +21,8 @@ Relationship field types allow you to manage the `belongs_to` and `has_many_and_
 	'user' => array(
 		'type' => 'relationship',
 		'title' => 'User',
-		'name_field' => 'name', //what column or getter on the other table you want to use to represent this object
+		'name_field' => 'fullname', //what column or getter on the other table you want to use to represent this object
+		'sort_field' => 'username', //if this is not specified, name_field will be used for sorting
 	)
 
 The `name_field` option lets you define which column on the other table will be used to represent the relationship. This field might be used in this model:
