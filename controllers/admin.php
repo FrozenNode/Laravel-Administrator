@@ -181,10 +181,11 @@ class Administrator_Admin_Controller extends Controller
 	 *
 	 * @return JSON
 	 */
-	public function action_custom_action($config, $id = null)
+	public function action_custom_action($config, $id)
 	{
 		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
-		$data = $isSettings ? $config->data : ModelHelper::getModel($config, $id, false, true);
+		$model = $config->model;
+		$data = $isSettings ? $config->data : $model::find($id);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
