@@ -67,7 +67,7 @@ class Number extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = is_null($input) ? '' : $this->parseNumber($input);
+		$model->{$this->field} = is_null($input) || $input === '' ? null : $this->parseNumber($input);
 	}
 
 	/**
