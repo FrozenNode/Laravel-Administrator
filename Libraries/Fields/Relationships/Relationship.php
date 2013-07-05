@@ -145,7 +145,12 @@ abstract class Relationship extends Field {
 
 		if (array_get($info, 'load_relationships', false))
 		{
-			$options = $relationship->model->order_by($this->optionsSortField, $this->optionsSortDirection)->get();
+			$optionsQuery = $relationship->model;
+			if ($this->optionsSortField)
+			{
+				$optionsQuery->order_by(\DB::raw($this->optionsSortField), $this->optionsSortDirection)
+			}
+			$options = $optionsQuery->get();
 		}
 		//otherwise if there are relationship items, we need them in the initial options list
 		else if ($relationshipItems = $relationship->get())
