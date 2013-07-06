@@ -1,6 +1,7 @@
 ## Changelog
 
 - You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields are require ordering on something other than the name_field
+- Bugfix: Table prefixes are now taken into consideration
 - Bugfix: Number fields would take two tries to clear
 - Bugfix: Saving empty number field would result in 0
 - Bugfix: Using an accessor for a name_field in a relationship field would previously cause SQL errors

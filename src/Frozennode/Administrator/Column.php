@@ -97,6 +97,13 @@ class Column {
 	public $isIncluded = false;
 
 	/**
+	 * The table prefix
+	 *
+	 * @var string
+	 */
+	public $tablePrefix = '';
+
+	/**
 	 * The full class name of a belongsTo relationship
 	 *
 	 * @var string
@@ -155,6 +162,7 @@ class Column {
 		$this->isRelated = array_get($column, 'isRelated', $this->isRelated);
 		$this->isComputed = array_get($column, 'isComputed', $this->isComputed);
 		$this->isIncluded = array_get($column, 'isIncluded', $this->isIncluded);
+		$this->tablePrefix = DB::getTablePrefix();
 		$this->output = is_string($output) ? $output : $this->output;
 		$this->relationshipField = array_get($column, 'relationshipField', $this->relationshipField);
 	}
@@ -239,12 +247,12 @@ class Column {
 			//if this is a BelongsTo, we need to set up the proper aliased select replacement
 			if (!$relationshipField->external)
 			{
-				$selectTable = $field.'_'.$relationshipField->table;
+				$selectTable = $field.'_'.DB::getTablePrefix().$relationshipField->table;
 			}
 			//else replace (:table) with the simple table name
 			else
 			{
-				$selectTable = $field.'_'.$config->model->{$rel}()->getRelated()->getTable();
+				$selectTable = $field.'_'.DB::getTablePrefix().$config->model->{$rel}()->getRelated()->getTable();
 			}
 
 			$column['select'] = str_replace('(:table)', $selectTable, $column['select']);
@@ -259,7 +267,7 @@ class Column {
 		//however, if this is not a relation and the select option was supplied, str_replace the select option and make it sortable again
 		if (!$column['relationship'] && $column['select'])
 		{
-			$column['select'] = str_replace('(:table)', $config->model->getTable(), $column['select']);
+			$column['select'] = str_replace('(:table)', DB::getTablePrefix().$config->model->getTable(), $column['select']);
 			$column['sortable'] = true;
 		}
 
@@ -335,7 +343,7 @@ class Column {
 			if ($this->isRelated)
 			{
 				$where = '';
-				$from_table = $field_table = $this->relationshipField->table;
+				$from_table = $field_table = $this->tablePrefix . $this->relationshipField->table;
 
 				//now we must tediously build the joins if there are nested relationships (should only be for belongs_to fields)
 				$joins = '';
@@ -352,9 +360,9 @@ class Column {
 								$model = $this->nested['models'][$i];
 								$relationship = $model->{$this->nested['pieces'][$i]}();
 								$relationship_model = $relationship->getRelated();
-								$table = $relationship_model->getTable();
+								$table = $this->tablePrefix.$relationship_model->getTable();
 								$alias = $this->field.'_'.$table;
-								$last_alias = $this->field.'_'.$model->getTable();
+								$last_alias = $this->field.'_'.$this->tablePrefix.$model->getTable();
 								$joins .= ' LEFT JOIN '.$table.' AS '.$alias.' ON '.$alias.'.'.$relationship->getRelated()->getKeyName().' = '.$last_alias.'.'.$relationship->getForeignKey();
 							}
 						}
@@ -363,22 +371,22 @@ class Column {
 						$first_piece = $this->nested['pieces'][0];
 						$first_relationship = $first_model->{$first_piece}();
 						$relationship_model = $first_relationship->getRelated();
-						$from_table = $relationship_model->getTable();
+						$from_table = $this->tablePrefix.$relationship_model->getTable();
 						$field_table = $this->field.'_'.$from_table;
 
-						$where = $first_model->getTable().'.'.$first_relationship->getForeignKey().
+						$where = $this->tablePrefix.$first_model->getTable().'.'.$first_relationship->getForeignKey().
 							' = '.
 						$field_table.'.'.$relationship_model->getKeyName();
 						break;
 					case 'belongs_to_many':
 						$relationship = $model->{$this->relationship}();
-						$from_table = $model->getTable();
+						$from_table = $this->tablePrefix.$model->getTable();
 						$field_table = $this->field.'_'.$from_table;
-						$other_table = $relationship->getRelated()->getTable();
+						$other_table = $this->tablePrefix.$relationship->getRelated()->getTable();
 						$other_alias = $this->field.'_'.$other_table;
 						$other_model = $relationship->getRelated();
 						$other_key = $other_model->getKeyName();
-						$int_table = $this->relationshipField->table;
+						$int_table = $this->tablePrefix.$this->relationshipField->table;
 						$int_alias = $this->field.'_'.$int_table;
 						$column1 = explode('.', $this->relationshipField->column);
 						$column1 = $column1[1];
@@ -387,13 +395,13 @@ class Column {
 						$joins .= ' LEFT JOIN '.$int_table.' AS '.$int_alias.' ON '.$int_alias.'.'.$column1.' = '.$field_table.'.'.$model->getKeyName()
 								.' LEFT JOIN '.$other_table.' AS '.$other_alias.' ON '.$other_alias.'.'.$other_key.' = '.$int_alias.'.'.$column2;
 
-						$where = $model->getTable().'.'.$model->getKeyName().' = '.$int_alias.'.'.$column1;
+						$where = $this->tablePrefix.$model->getTable().'.'.$model->getKeyName().' = '.$int_alias.'.'.$column1;
 						break;
 					case 'has_one':
 					case 'has_many':
 						$field_table = $this->field . '_' . $from_table;
 
-						$where = $model->getTable().'.'.$model->getKeyName().
+						$where = $this->tablePrefix.$model->getTable().'.'.$model->getKeyName().
 							' = '.
 						$field_table.'.'.$this->relationshipField->column;
 						break;
