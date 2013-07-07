@@ -401,11 +401,11 @@ class Column {
 
 				$selects[] = DB::raw("(SELECT ".$this->select."
 										FROM ".$from_table." AS ".$field_table.' '.$joins."
-										WHERE ".$where.") AS ".$this->field);
+										WHERE ".$where.") AS `".$this->field."`");
 			}
 			else
 			{
-				$selects[] = DB::raw($this->select.' AS '.$this->field);
+				$selects[] = DB::raw($this->select.' AS `'.$this->field."`");
 			}
 		}
 
