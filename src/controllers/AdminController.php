@@ -151,8 +151,9 @@ class AdminController extends Controller
 			$data = $model->getAttributes();
 		}
 
+		$validationMessages = isset($model::$messages) ? $model::$messages : array();
 		//validate the model
-		$validator = Validator::make($data, $rules);
+		$validator = Validator::make($data, $rules, $validationMessages);
 
 		if ($validator->fails())
 		{
