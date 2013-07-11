@@ -458,10 +458,18 @@
 			 *
 			 * @param string	action
 			 * @param object	messages
+			 * @param string	confirmation
 			 */
-			customAction: function(action, messages)
+			customAction: function(action, messages, confirmation)
 			{
 				var self = this;
+
+				//if a confirmation string was supplied, flash it in a confirm()
+				if (confirmation)
+				{
+					if (!confirm(confirmation))
+						return false;
+				}
 
 				self.statusMessage(messages.active).statusMessageType('');
 				self.freezeForm(true);

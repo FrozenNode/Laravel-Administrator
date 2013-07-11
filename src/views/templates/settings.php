@@ -170,7 +170,7 @@
 		<!-- ko if: actions.length -->
 			<!-- ko foreach: actions -->
 				<!-- ko if: hasPermission -->
-					<input type="button" data-bind="click: function(){$root.customAction(name, messages)}, value: title,
+					<input type="button" data-bind="click: function(){$root.customAction(name, messages, confirmation)}, value: title,
 																	attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 				<!-- /ko -->
 			<!-- /ko -->
