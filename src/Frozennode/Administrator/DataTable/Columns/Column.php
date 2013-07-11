@@ -352,12 +352,11 @@ class Column {
 	/**
 	 * Adds selects to a query
 	 *
-	 * @param Query 	$query
 	 * @param array 	$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects)
+	public function filterQuery(&$selects)
 	{
 		$model = $this->config->getDataModel();
 
