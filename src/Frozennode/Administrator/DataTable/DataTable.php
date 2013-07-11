@@ -104,9 +104,8 @@ class DataTable {
 		//iterate over the columns to check if we need to join any values or add any extra columns
 		foreach ($columns as $column)
 		{
-			//if this is a related column, we'll need to add some joins
+			//if this is a related column, we'll need to add some selects
 			$column->filterQuery($db_query, $selects);
-			$column->filterQuery($count_query, $selects);
 
 			//if this is a related field or
 			if ( ($column->isRelated || $column->select) && $column->field === $sort['field'])
