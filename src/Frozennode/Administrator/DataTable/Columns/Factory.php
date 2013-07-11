@@ -147,7 +147,7 @@ class Factory {
 			{
 				//if only a string value was supplied, may sure to turn it into an array
 				$object = $this->make($this->parseOptions($name, $options));
-				$this->columns[$name] = $object;
+				$this->columns[$object->field] = $object;
 			}
 		}
 
