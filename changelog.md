@@ -1,6 +1,7 @@
 ## Changelog
 
 - You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields are require ordering on something other than the name_field
+- Bugfix: The model results no longer require an ajax load on pageload
 - Bugfix: Table prefixes are now taken into consideration
 - Bugfix: Number fields would take two tries to clear
 - Bugfix: Saving empty number field would result in 0

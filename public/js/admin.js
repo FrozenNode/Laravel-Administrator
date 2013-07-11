@@ -23,6 +23,12 @@
 		 */
 		historyStarted: false,
 
+		/*
+		 * If this is true, all the values have been initialized and we can
+		 *
+		 * @type bool
+		 */
+		initialized: false,
 
 		/*
 		 * Filters view model
@@ -499,6 +505,10 @@
 						page: self.pagination.page()
 					};
 
+				//if the page hasn't been initialized yet, don't update the rows
+				if (!window.admin.initialized)
+					return;
+
 				//if we're on page 0 (i.e. there is currently no result set, set the page to 1)
 				if (!data.page)
 					data.page = 1;
@@ -525,7 +535,6 @@
 						self.pagination.total(response.total);
 						self.rows(response.results);
 						self.loadingRows(false);
-
 					}
 				});
 			},
@@ -819,6 +828,12 @@
 
 			//run an initial page resize
 			this.resizePage();
+
+			//finally run a timer to overcome bugs with select2
+			setTimeout(function()
+			{
+				self.initialized = true;
+			}, 100);
 
 			return this;
 		},
