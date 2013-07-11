@@ -105,7 +105,7 @@ class DataTable {
 		foreach ($columns as $column)
 		{
 			//if this is a related column, we'll need to add some selects
-			$column->filterQuery($db_query, $selects);
+			$column->filterQuery($selects);
 
 			//if this is a related field or
 			if ( ($column->isRelated || $column->select) && $column->field === $sort['field'])
@@ -143,53 +143,12 @@ class DataTable {
 
 		//then retrieve the rows
 		$query->getQuery()->select($selects);
-		$rows = $query->distinct()->get();
-		$results = array();
-
-		//convert the resulting set into arrays
-		foreach ($rows as $item)
-		{
-			//iterate over the included and related columns
-			$onTableColumns = array_merge($this->columnFactory->getIncludedColumns($this->fieldFactory->getEditFields()), $this->columnFactory->getRelatedColumns());
-			$arr = array();
-
-			foreach ($onTableColumns as $field => $col)
-			{
-				//if this column is in our objects array, render the output with the given value
-				if (isset($columns[$field]))
-				{
-					$arr[$field] = array(
-						'raw' => $item->getAttribute($field),
-						'rendered' => $columns[$field]->renderOutput($item->getAttribute($field)),
-					);
-				}
-				//otherwise it's likely the primary key column which wasn't included (though it's needed for identification purposes)
-				else
-				{
-					$arr[$field] = array(
-						'raw' => $item->getAttribute($field),
-						'rendered' => $item->getAttribute($field),
-					);
-				}
-			}
-
-			//then grab the computed, unsortable columns
-			foreach ($this->columnFactory->getComputedColumns() as $col)
-			{
-				$arr[$col] = array(
-					'raw' => $item->{$col},
-					'rendered' => $columns[$col]->renderOutput($item->{$col}),
-				);
-			}
-
-			$results[] = $arr;
-		}
 
 		return array(
 			'page' => $page,
 			'last' => $last,
 			'total' => $num_rows,
-			'results' => $results,
+			'results' => $this->parseResults($query->distinct()->get()),
 		);
 	}
 
@@ -216,6 +175,63 @@ class DataTable {
 				$fieldObject->filterQuery($count_query);
 			}
 		}
+	}
+
+	/**
+	 * Parses the results of a getRows query and converts it into a manageable array with the proper rendering
+	 *
+	 * @param 	Collection	$rows
+	 *
+	 * @return	array
+	 */
+	public function parseResults($rows)
+	{
+		$results = array();
+		$columns = $this->columnFactory->getColumns();
+		$includedColumns = $this->columnFactory->getIncludedColumns($this->fieldFactory->getEditFields());
+		$relatedColumns = $this->columnFactory->getRelatedColumns();
+		$onTableColumns = array_merge($includedColumns, $relatedColumns);
+		$computedColumns = $this->columnFactory->getComputedColumns();
+
+		//convert the resulting set into arrays
+		foreach ($rows as $item)
+		{
+			//iterate over the included and related columns
+			$arr = array();
+
+			foreach ($onTableColumns as $field => $col)
+			{
+				//if this column is in our objects array, render the output with the given value
+				if (isset($columns[$field]))
+				{
+					$arr[$field] = array(
+						'raw' => $item->getAttribute($field),
+						'rendered' => $columns[$field]->renderOutput($item->getAttribute($field)),
+					);
+				}
+				//otherwise it's likely the primary key column which wasn't included (though it's needed for identification purposes)
+				else
+				{
+					$arr[$field] = array(
+						'raw' => $item->getAttribute($field),
+						'rendered' => $item->getAttribute($field),
+					);
+				}
+			}
+
+			//then grab the computed, unsortable columns
+			foreach ($computedColumns as $col)
+			{
+				$arr[$col] = array(
+					'raw' => $item->{$col},
+					'rendered' => $columns[$col]->renderOutput($item->{$col}),
+				);
+			}
+
+			$results[] = $arr;
+		}
+
+		return $results;
 	}
 
 	/**
