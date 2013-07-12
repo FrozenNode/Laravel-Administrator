@@ -311,7 +311,7 @@
 			 */
 			clickItem: function(id)
 			{
-				if (!this.loadingItem() && this.activeItem() !== id)
+				if (!this.loadingItem() && this.activeItem() !== id && this.actionPermissions.view)
 				{
 					History.pushState({modelName: this.modelName(), id: id}, null, route + this.modelName() + '/' + id);
 				}
@@ -358,6 +358,13 @@
 					dataType: 'json',
 					success: function(data)
 					{
+						//if there was an error, kick out
+						if (data.success === false && data.errors)
+						{
+							alert(data.errors);
+							return;
+						}
+
 						if (self.itemLoadingId() !== id)
 						{
 							//if there are no currently-loading items, clear the form

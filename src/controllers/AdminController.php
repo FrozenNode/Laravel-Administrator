@@ -59,6 +59,7 @@ class AdminController extends Controller
 		$fieldFactory = App::make('admin_field_factory');
 		$actionFactory = App::make('admin_action_factory');
 		$columnFactory = App::make('admin_column_factory');
+		$actionPermissions = $actionFactory->getActionPermissions();
 		$fields = $fieldFactory->getEditFields();
 
 		//if it's ajax, we just return the item information as json
@@ -72,7 +73,10 @@ class AdminController extends Controller
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
 
-			return $model->toJson();
+			return $actionPermissions['view'] ? $model->toJson() : Response::json(array(
+				'success' => false,
+				'errors' => "You do not have permission to view this item",
+			));
 		}
 		else
 		{

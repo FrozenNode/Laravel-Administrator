@@ -182,7 +182,8 @@ The permission option lets you define a closure that determines whether or not t
 ## Action Permissions
 
 	/**
-	 * The action_permissions option lets you define permissions on the three primary actions: 'create', 'update', and 'delete'.
+	 * The action_permissions option lets you define permissions on the four primary actions: 'create', 'update', 'delete', and 'view'.
+	 * It also provides a secondary place to define permissions for your custom actions.
 	 *
 	 * @type array
 	 */
@@ -193,7 +194,7 @@ The permission option lets you define a closure that determines whether or not t
 		}
 	),
 
-Action permissions can be supplied to give you access control over the three primary actions (`create`, `update`, and `delete`) and any custom actions that you define. `read` access is assumed if the user passes the [`permission`](#permission) check. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should be an anonymous function that returns either true or false.
+Action permissions can be supplied to give you access control over the four primary actions (`create`, `update`, `delete`, and `view`) and any custom actions that you define. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should either be an anonymous function that returns either true or false, or simply a boolean value.
 
 <a name="custom-actions"></a>
 ## Custom Actions

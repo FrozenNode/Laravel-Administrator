@@ -1,5 +1,6 @@
 ## Changelog
 
+- A fourth basic action permission is now available: 'view'. This dictates whether or not the admin user can click an item to open it
 - You can now supply a 'confirmation' string option to your custom actions which will require a confirmation from the admin user before the action can go through.
 - You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields are require ordering on something other than the name_field
 - Bugfix: The model results no longer require an ajax load on pageload
