@@ -241,7 +241,7 @@ class DataTable {
 	 */
 	public function setSort($sort = null)
 	{
-		$sort = $sort && is_array($sort) ? $sort : array();
+		$sort = $sort && is_array($sort) ? $sort : $this->config->getOption('sort');
 
 		//set the sort values
 		$this->sort = array(
