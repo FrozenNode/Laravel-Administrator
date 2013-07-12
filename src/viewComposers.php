@@ -2,9 +2,6 @@
 
 use Frozennode\Administrator\ModelHelper;
 use Frozennode\Administrator\Fields\Field;
-use Frozennode\Administrator\ModelConfig;
-use Frozennode\Administrator\SettingsConfig;
-use Frozennode\Administrator\Menu;
 
 //View Composers
 
@@ -13,40 +10,48 @@ View::composer('administrator::index', function($view)
 {
 	//get a model instance that we'll use for constructing stuff
 	$config = App::make('itemconfig');
-	$model = $config->model;
+	$fieldFactory = App::make('admin_field_factory');
+	$columnFactory = App::make('admin_column_factory');
+	$actionFactory = App::make('admin_action_factory');
+	$dataTable = App::make('admin_datatable');
+	$model = $config->getDataModel();
 	$baseUrl = URL::route('admin_dashboard');
 	$route = parse_url($baseUrl);
 
-	//get the edit fields
-	$editFields = Field::getEditFields($config);
-
 	//add the view fields
 	$view->config = $config;
+	$view->dataTable = $dataTable;
 	$view->primaryKey = $model->getKeyName();
-	$view->rows = ModelHelper::getRows($config->sort);
-	$view->editFields = $editFields;
-	$view->actions = $config->actions;
-	$view->filters = Field::getFilters($config);
+	//$view->rows = ModelHelper::getRows($config->sort);
+	$view->rows = $dataTable->getRows(App::make('db'));
+	$view->editFields = $fieldFactory->getEditFields();
+	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
+	$view->dataModel = $fieldFactory->getDataModel();
+	$view->columnModel = $columnFactory->getColumnValues();
+	$view->actions = $actionFactory->getActions();
+	$view->actionPermissions = $actionFactory->getActionPermissions();
+	$view->filters = $fieldFactory->getFiltersArrays();
+	$view->formWidth = $config->getOption('form_width');
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = URL::to('packages/frozennode/administrator/');
 	$view->route = $route['path'].'/';
-	$view->model = isset($view->model) ? $view->model : false;
+	$view->itemId = isset($view->itemId) ? $view->itemId : false;
 });
 
 //admin settings view
 View::composer('administrator::settings', function($view)
 {
 	$config = App::make('itemconfig');
+	$fieldFactory = App::make('admin_field_factory');
+	$actionFactory = App::make('admin_action_factory');
 	$baseUrl = URL::route('admin_dashboard');
 	$route = parse_url($baseUrl);
 
-	//get the edit fields
-	$editFields = Field::getEditFields($config);
-
 	//add the view fields
 	$view->config = $config;
-	$view->editFields = $editFields;
-	$view->actions = $config->actions;
+	$view->editFields = $fieldFactory->getEditFields();
+	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
+	$view->actions = $actionFactory->getActions();
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = URL::to('packages/frozennode/administrator/');
 	$view->route = $route['path'].'/';
@@ -55,6 +60,6 @@ View::composer('administrator::settings', function($view)
 //header view
 View::composer(array('administrator::partials.header', 'administrator::dashboard'), function($view)
 {
-	$view->menu = Menu::getMenu();
-	$view->settingsPrefix = SettingsConfig::$prefix;
+	$view->menu = App::make('admin_menu')->getMenu();
+	$view->settingsPrefix = App::make('admin_config_factory')->getSettingsPrefix();
 });

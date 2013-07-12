@@ -3,10 +3,10 @@
 		<h2 data-bind="text: modelTitle"></h2>
 		<div class="paginator">
 			<input type="button" value="<?php echo trans('administrator::administrator.previous') ?>"
-					data-bind="attr: {disabled: pagination.isFirst() || !pagination.last() }, click: function() {page('prev')}" />
+					data-bind="attr: {disabled: pagination.isFirst() || !pagination.last() || !initialized() }, click: function() {page('prev')}" />
 			<input type="button" value="<?php echo trans('administrator::administrator.next') ?>"
-					data-bind="attr: {disabled: pagination.isLast() || !pagination.last() }, click: function() {page('next')}" />
-			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 }, value: pagination.page" />
+					data-bind="attr: {disabled: pagination.isLast() || !pagination.last() || !initialized() }, click: function() {page('next')}" />
+			<input type="text" data-bind="attr: {disabled: pagination.last() === 0 || !initialized() }, value: pagination.page" />
 			<span data-bind="text: ' / ' + pagination.last()"></span>
 		</div>
 		<div class="per_page">

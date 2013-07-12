@@ -6,18 +6,18 @@
 	var site_url = "<?php echo URL::to('/') ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
-		save_url = "<?php echo URL::route('admin_settings_save', array($config->name)) ?>",
-		custom_action_url = "<?php echo URL::route('admin_settings_custom_action', array($config->name)) ?>",
-		file_url = "<?php echo URL::route('admin_settings_display_file', array($config->name)) ?>",
+		save_url = "<?php echo URL::route('admin_settings_save', array($config->getOption('name'))) ?>",
+		custom_action_url = "<?php echo URL::route('admin_settings_custom_action', array($config->getOption('name'))) ?>",
+		file_url = "<?php echo URL::route('admin_settings_display_file', array($config->getOption('name'))) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		language = "<?php echo Config::get('app.locale') ?>",
 		adminData = {
-			name: "<?php echo $config->name ?>",
-			title: "<?php echo $config->title ?>",
-			data: <?php echo json_encode($config->data) ?>,
-			actions: <?php echo json_encode($config->actions) ?>,
-			edit_fields: <?php echo json_encode($editFields['arrayFields']) ?>,
+			name: "<?php echo $config->getOption('name') ?>",
+			title: "<?php echo $config->getOption('title') ?>",
+			data: <?php echo json_encode($config->getDataModel()) ?>,
+			actions: <?php echo json_encode($actions) ?>,
+			edit_fields: <?php echo json_encode($arrayFields) ?>,
 			languages: <?php echo json_encode(trans('administrator::knockout')) ?>
 		};
 </script>
