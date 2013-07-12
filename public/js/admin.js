@@ -24,13 +24,6 @@
 		historyStarted: false,
 
 		/*
-		 * If this is true, all the values have been initialized and we can
-		 *
-		 * @type bool
-		 */
-		initialized: false,
-
-		/*
 		 * Filters view model
 		 */
 		filtersViewModel: {
@@ -62,6 +55,12 @@
 			 */
 			model: {},
 
+			/*
+			 * If this is true, all the values have been initialized and we can
+			 *
+			 * bool
+			 */
+			initialized: ko.observable(false),
 
 			/* The model name for this data model
 			 * string
@@ -511,7 +510,7 @@
 					};
 
 				//if the page hasn't been initialized yet, don't update the rows
-				if (!window.admin.initialized)
+				if (!this.initialized())
 					return;
 
 				//if we're on page 0 (i.e. there is currently no result set, set the page to 1)
@@ -774,6 +773,8 @@
 		 */
 		init: function()
 		{
+			var self = this;
+
 			//set up the basic pieces of data
 			this.viewModel.model = adminData.data_model;
 			this.$container = $('#admin_content');
@@ -837,8 +838,8 @@
 			//finally run a timer to overcome bugs with select2
 			setTimeout(function()
 			{
-				self.initialized = true;
-			}, 100);
+				self.viewModel.initialized(true);
+			}, 1000);
 
 			return this;
 		},
