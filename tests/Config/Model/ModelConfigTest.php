@@ -44,7 +44,7 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testValidationRun()
 	{
-		$config = new ModelConfig($this->validator, []);
+		$config = new ModelConfig($this->validator, array());
 	}
 /*
 	public function testMakeReturnsModel()
