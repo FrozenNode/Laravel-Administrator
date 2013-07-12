@@ -60,7 +60,7 @@ abstract class Config {
 		//if the validator failed, throw an exception
 		if ($validator->fails())
 		{
-			throw new \InvalidArgumentException('There are problems with your ' . $config['name'] . ' config: ' . implode('. ', $validator->messages()->all()) . '.');
+			throw new \InvalidArgumentException('There are problems with your ' . $config['name'] . ' config: ' . implode('. ', $validator->messages()->all()));
 		}
 
 		//check the permission

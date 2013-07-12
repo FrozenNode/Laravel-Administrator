@@ -70,7 +70,7 @@ class Factory {
 		//if the validator failed, throw an exception
 		if ($validator->fails())
 		{
-			throw new \InvalidArgumentException('There are problems with your administrator.php config: ' . implode('. ', $validator->messages()->all()) . '.');
+			throw new \InvalidArgumentException('There are problems with your administrator.php config: ' . implode('. ', $validator->messages()->all()));
 		}
 	}
 
