@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\File\File as SFile;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator as LValidator;
 use Frozennode\Administrator\Fields\Field;
 
 /**
@@ -56,27 +56,28 @@ class AdminController extends Controller
 	public function item($modelName, $itemId = false)
 	{
 		$config = App::make('itemconfig');
-
-		//try to get the object
-		$model = ModelHelper::getModel($itemId, true);
+		$fieldFactory = App::make('admin_field_factory');
+		$actionFactory = App::make('admin_action_factory');
+		$columnFactory = App::make('admin_column_factory');
+		$fields = $fieldFactory->getEditFields();
 
 		//if it's ajax, we just return the item information as json
-		//otherwise we load up the index page and dump values into
 		if (Request::ajax())
 		{
+			//try to get the object
+			$model = $config->getModel($itemId, $fields, $columnFactory->getIncludedColumns($fields));
+
+			if ($model->exists)
+			{
+				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
+			}
+
 			return $model->toJson();
 		}
 		else
 		{
-			//if the $itemId is false, we can assume this is a request for /new
-			//if the user doesn't have the proper permissions to create, redirect them back to the model page
-			if (!$itemId && !$config->actionPermissions['create'])
-			{
-				return Redirect::route('admin_index', array($config->name));
-			}
-
 			$view = View::make("administrator::index", array(
-				'model' => $model,
+				'itemId' => $itemId,
 			));
 
 			//set the layout content and title
@@ -95,82 +96,22 @@ class AdminController extends Controller
 	public function save($modelName, $id = false)
 	{
 		$config = App::make('itemconfig');
-		$model = ModelHelper::getModel($id, false, false, true);
-		$editFields = Field::getEditFields($config, false);
+		$fieldFactory = App::make('admin_field_factory');
+		$actionFactory = App::make('admin_action_factory');
+		$save = $config->save(App::make('request'), $fieldFactory->getEditFields(), $actionFactory->getActionPermissions(), $id);
 
-		//fetch the proper model so we don't have to deal with any extra attributes
-		if ($model->exists)
-		{
-			$model = $model::find($id);
-		}
-
-		//fill the model with our input
-		ModelHelper::fillModel($model);
-
-		$rules = isset($model::$rules) ? $model::$rules : array();
-
-		//iterate over the edit fields to see if any are setters (and therefore need their values unset)
-		foreach ($editFields['objectFields'] as $field => $info)
-		{
-			if (($info->setter && $info->type !== 'password') || ($info->type === 'password' && empty($model->{$field})))
-			{
-				$model->__unset($field);
-			}
-		}
-
-		//if the model exists, this is an update
-		if ($model->exists)
-		{
-			//check if the user has permission to update
-			if (!$config->actionPermissions['update'])
-			{
-				return Response::json(array(
-					'success' => false,
-					'errors' => 'There was an error updating this item. Please reload the page and try again.',
-				));
-			}
-
-			//so only include dirty fields
-			$data = $model->getDirty();
-
-			//and validate the fields that are being updated
-			$rules = array_intersect_key($rules, $data);
-		}
-		else
-		{
-			//check if the user has permission to create
-			if (!$config->actionPermissions['create'])
-			{
-				return Response::json(array(
-					'success' => false,
-					'errors' => 'There was an error creating this item. Please reload the page and try again.',
-				));
-			}
-
-			//otherwise validate everything
-			$data = $model->getAttributes();
-		}
-
-		//validate the model
-		$validator = Validator::make($data, $rules);
-
-		if ($validator->fails())
+		if (is_string($save))
 		{
 			return Response::json(array(
 				'success' => false,
-				'errors' => $validator->errors()->all(),
+				'errors' => $save,
 			));
 		}
 		else
 		{
-			$model->save();
-
-			//Save the relationships
-			ModelHelper::saveRelationships($model);
-
 			return Response::json(array(
 				'success' => true,
-				'data' => $model->toArray(),
+				'data' => $config->getDataModel()->toArray(),
 			));
 		}
 	}
@@ -186,14 +127,16 @@ class AdminController extends Controller
 	public function delete($modelName, $id)
 	{
 		$config = App::make('itemconfig');
-		$model = ModelHelper::getModel($id);
+		$actionFactory = App::make('admin_action_factory');
+		$baseModel = $config->getDataModel();
+		$model = $baseModel::find($id);
 		$errorResponse = array(
 			'success' => false,
 			'error' => "There was an error deleting this item. Please reload the page and try again.",
 		);
 
 		//if the model or the id don't exist, send back 404
-		if (!$model->exists || !$config->actionPermissions['delete'])
+		if (!$model->exists || !$actionFactory->getActionPermissions()['delete'])
 		{
 			return Response::json($errorResponse);
 		}
@@ -222,14 +165,14 @@ class AdminController extends Controller
 	public function customAction($modelName, $id = null)
 	{
 		$config = App::make('itemconfig');
-		$model = $config->model;
-		$isSettings = is_a($config, 'Admin\\Libraries\\SettingsConfig');
-		$data = $isSettings ? $config->data : $model::find($id);
+		$actionFactory = App::make('admin_action_factory');
+		$model = $config->getDataModel();
+		$model = $model::find($id);
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
-		$action = Action::getByName($actionName);
-		$result = $action->perform($data);
+		$action = $actionFactory->getByName($actionName);
+		$result = $action->perform($model);
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
@@ -243,13 +186,7 @@ class AdminController extends Controller
 		}
 		else
 		{
-			//if this is a settings config, we want to save the data before returning
-			if ($isSettings)
-			{
-				$config->putToJSON($data);
-			}
-
-			return Response::json(array('success' => true, 'data' => $isSettings ? $data : null));
+			return Response::json(array('success' => true, 'data' => null));
 		}
 	}
 
@@ -269,26 +206,29 @@ class AdminController extends Controller
 		//else we should redirect to the menu item
 		else
 		{
+			$configFactory = App::make('admin_config_factory');
 			$home = Config::get('administrator::administrator.home_page');
 
 			//first try to find it if it's a model config item
-			if ($config = ModelConfig::get($home))
+			$config = $configFactory->make($home);
+
+			if ($config->getType() === 'model')
 			{
-				return Redirect::route('admin_index', array($config->name));
+				return Redirect::route('admin_index', array($config->getOption('name')));
 			}
-			else if ($config = SettingsConfig::get($home))
+			else if ($config->getType() === 'settings')
 			{
-				return Redirect::route('admin_settings', array($config->name));
+				return Redirect::route('admin_settings', array($config->getOption('name')));
 			}
 			else
 			{
-				throw new \Exception("Administrator: " .  trans('administrator::administrator.valid_home_page'));
+				throw new \InvalidArgumentException("Administrator: " .  trans('administrator::administrator.valid_home_page'));
 			}
 		}
 	}
 
 	/**
-	 * Gets the item edit page / information
+	 * Gets the database results for the current model
 	 *
 	 * @param string		$modelName
 	 *
@@ -296,14 +236,15 @@ class AdminController extends Controller
 	 */
 	public function results($modelName)
 	{
-		$config = App::make('itemconfig');
+		$dataTable = App::make('admin_datatable');
 
 		//get the sort options and filters
+		$page = Input::get('page', 1);
 		$sortOptions = Input::get('sortOptions', array());
 		$filters = Input::get('filters', array());
 
 		//return the rows
-		return Response::json(ModelHelper::getRows($sortOptions, $filters));
+		return Response::json($dataTable->getRows(App::make('db'), $page, $sortOptions, $filters));
 	}
 
 	/**
@@ -315,7 +256,7 @@ class AdminController extends Controller
 	 */
 	public function updateOptions($modelName)
 	{
-		$config = App::make('itemconfig');
+		$fieldFactory = App::make('admin_field_factory');
 
 		//get the constraints, the search term, and the currently-selected items
 		$constraints = Input::get('constraints', array());
@@ -325,11 +266,11 @@ class AdminController extends Controller
 		$selectedItems = Input::get('selectedItems', false);
 
 		//return the rows
-		return Response::json(ModelHelper::updateRelationshipOptions($field, $type, $constraints, $selectedItems, $term));
+		return Response::json($fieldFactory->updateRelationshipOptions($field, $type, $constraints, $selectedItems, $term));
 	}
 
 	/**
-	 * The GET method that displays an file field's file
+	 * The GET method that displays a file field's file
 	 *
 	 * @return Image / File
 	 */
@@ -359,10 +300,10 @@ class AdminController extends Controller
 	 */
 	public function fileUpload($modelName, $fieldName)
 	{
-		$config = App::make('itemconfig');
+		$fieldFactory = App::make('admin_field_factory');
 
 		//get the model and the field object
-		$field = Field::findField($config, $fieldName);
+		$field = $fieldFactory->findField($fieldName);
 
 		return Response::JSON($field->doUpload());
 	}
@@ -376,11 +317,11 @@ class AdminController extends Controller
 	 */
 	public function rowsPerPage($modelName)
 	{
-		$config = App::make('itemconfig');
+		$dataTable = App::make('admin_datatable');
 
 		//get the inputted rows and the model rows
 		$rows = (int) Input::get('rows', 20);
-		$config->setRowsPerPage($rows);
+		$dataTable->setRowsPerPage(App::make('session'), 0, $rows);
 
 		return Response::JSON(array('success' => true));
 	}
@@ -394,8 +335,6 @@ class AdminController extends Controller
 	 */
 	public function settings($settingsName)
 	{
-		$config = App::make('itemconfig');
-
 		//set the layout content and title
 		$this->layout->content = View::make("administrator::settings");
 	}
@@ -407,7 +346,23 @@ class AdminController extends Controller
 	 */
 	public function settingsSave()
 	{
-		return App::make('itemconfig')->save();
+		$config = App::make('itemconfig');
+		$save = $config->save(App::make('request'), App::make('admin_field_factory')->getEditFields());
+
+		if (is_string($save))
+		{
+			return Response::json(array(
+				'success' => false,
+				'errors' => $save,
+			));
+		}
+		else
+		{
+			return Response::json(array(
+				'success' => true,
+				'data' => $config->getDataModel(),
+			));
+		}
 	}
 
 	/**
@@ -420,11 +375,12 @@ class AdminController extends Controller
 	public function settingsCustomAction($settingsName)
 	{
 		$config = App::make('itemconfig');
+		$actionFactory = App::make('admin_action_factory');
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
-		$action = Action::getByName($actionName);
-		$result = $action->perform($config->data);
+		$action = $actionFactory->getByName($actionName);
+		$result = $action->perform($config->getDataModel());
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
