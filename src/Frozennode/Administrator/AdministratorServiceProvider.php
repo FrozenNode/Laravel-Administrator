@@ -1,8 +1,13 @@
 <?php namespace Frozennode\Administrator;
 
+use Frozennode\Administrator\Config\Factory as ConfigFactory;
+use Frozennode\Administrator\Fields\Factory as FieldFactory;
+use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
+use Frozennode\Administrator\Actions\Factory as ActionFactory;
+use Frozennode\Administrator\DataTable\DataTable;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator as LValidator;
 
 class AdministratorServiceProvider extends ServiceProvider {
 
@@ -22,6 +27,51 @@ class AdministratorServiceProvider extends ServiceProvider {
 	{
 		$this->package('frozennode/administrator');
 
+		//make sure the Laravel Validator is using our custom Validator that we can pass to various constructors
+		LValidator::resolver(function($translator, $data, $rules, $messages)
+		{
+			return new \Frozennode\Administrator\Validator($translator, $data, $rules, $messages);
+		});
+
+		//set up the shared instances
+		$this->app['admin_config_factory'] = $this->app->share(function($app)
+		{
+			$validator = LValidator::make(array(), array());
+			return new ConfigFactory($validator, Config::get('administrator::administrator'));
+		});
+
+		$this->app['admin_field_factory'] = $this->app->share(function($app)
+		{
+			$validator = LValidator::make(array(), array());
+			return new FieldFactory($validator, $app->make('itemconfig'), $app->make('db'));
+		});
+
+		$this->app['admin_datatable'] = $this->app->share(function($app)
+		{
+			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin_column_factory'), $app->make('admin_field_factory'));
+			$dataTable->setRowsPerPage($app->make('session'), Config::get('administrator::administrator.global_rows_per_page'));
+
+			return $dataTable;
+		});
+
+		$this->app['admin_column_factory'] = $this->app->share(function($app)
+		{
+			$validator = LValidator::make(array(), array());
+			return new ColumnFactory($validator, $app->make('itemconfig'), $app->make('db'));
+		});
+
+		$this->app['admin_action_factory'] = $this->app->share(function($app)
+		{
+			$validator = LValidator::make(array(), array());
+			return new ActionFactory($validator, $app->make('itemconfig'), $app->make('db'));
+		});
+
+		$this->app['admin_menu'] = $this->app->share(function($app)
+		{
+			return new Menu($app->make('config'), $app->make('admin_config_factory'));
+		});
+
+		//include our filters, view composers, and routes
 		include __DIR__.'/../../filters.php';
 		include __DIR__.'/../../viewComposers.php';
 		include __DIR__.'/../../routes.php';
@@ -36,7 +86,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+
 	}
 
 	/**
