@@ -96,10 +96,7 @@
 							self.updateData(response.data);
 						}
 						else
-						{
-							var error = typeof response.errors == 'string' ? response.errors : response.errors.join(' ');
-							self.statusMessage(error).statusMessageType('error');
-						}
+							self.statusMessage(response.errors).statusMessageType('error');
 					}
 				});
 			},
