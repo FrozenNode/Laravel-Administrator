@@ -1,6 +1,10 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class Enum extends Field {
 
 	/**
@@ -11,17 +15,18 @@ class Enum extends Field {
 	public $options = array();
 
 	/**
-	 * Constructor function
+	 * Create a new Enum instance
 	 *
-	 * @param string|int	$field
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
-		$this->value = $this->value === '' ? null : $this->value;
-		$options = array_get($info, 'options', $this->options);
+		$options = $this->validator->arrayGet($options, 'options', $this->options);
 
 		//iterate over the options to create the options assoc array
 		foreach ($options as $val => $text)
@@ -45,18 +50,31 @@ class Enum extends Field {
 	}
 
 	/**
+	 * Sets the filter options for this item
+	 *
+	 * @param array		$filter
+	 *
+	 * @return void
+	 */
+	public function setFilter($filter)
+	{
+		parent::setFilter($filter);
+
+		$this->value = $this->value === '' ? null : $this->value;
+	}
+
+	/**
 	 * Filters a query object
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
 		if (!$this->value)
@@ -64,7 +82,7 @@ class Enum extends Field {
 			return;
 		}
 
-		$query->where($model->getTable().'.'.$this->field, '=', $this->value);
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->field, '=', $this->value);
 	}
 
 	/**

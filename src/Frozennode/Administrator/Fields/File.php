@@ -1,8 +1,10 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
 use Frozennode\Administrator\Includes\Multup;
 
 class File extends Field {
@@ -50,37 +52,31 @@ class File extends Field {
 	public $mimes = false;
 
 	/**
-	 * Constructor function
+	 * Create a new File instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
-		$isSettings = is_a($config, 'Frozennode\\Administrator\\SettingsConfig');
+		parent::__construct($validator, $config, $db, $options);
 
-		$this->mimes = array_get($info, 'mimes', $this->mimes);
-		$this->naming = array_get($info, 'naming', $this->naming);
-		$this->length = array_get($info, 'length', $this->length);
-		$this->location = array_get($info, 'location');
-		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
-
-		if ($isSettings)
-		{
-			$this->uploadUrl = URL::route('admin_settings_file_upload', array($config->name, $this->field));
-		}
-		else
-		{
-			$this->uploadUrl = URL::route('admin_file_upload', array($config->name, $this->field));
-		}
+		$this->mimes = $this->validator->arrayGet($options, 'mimes', $this->mimes);
+		$this->naming = $this->validator->arrayGet($options, 'naming', $this->naming);
+		$this->length = $this->validator->arrayGet($options, 'length', $this->length);
+		$this->location = $this->validator->arrayGet($options, 'location');
+		$this->sizeLimit = (int) $this->validator->arrayGet($options, 'size_limit', $this->sizeLimit);
 
 		//make sure the naming is one of the two accepted values
 		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
 
 		// Satisfy params for Multup, for keep we return false so we don't random filename
 		$this->naming = ($this->naming == 'keep') ? false : true;
+
+		//set the upload url depending on the type of config this is
+		$this->setUploadUrl();
 	}
 
 	/**
@@ -114,5 +110,20 @@ class File extends Field {
 		$arr['upload_url'] = $this->uploadUrl;
 
 		return $arr;
+	}
+
+	/**
+	 * Gets the upload URL depending on the type of page this is
+	 */
+	public function setUploadUrl()
+	{
+		if ($this->config->getType() === 'settings')
+		{
+			$this->uploadUrl = URL::route('admin_settings_file_upload', array($this->config->getOption('name'), $this->field));
+		}
+		else
+		{
+			$this->uploadUrl = URL::route('admin_file_upload', array($this->config->getOption('name'), $this->field));
+		}
 	}
 }

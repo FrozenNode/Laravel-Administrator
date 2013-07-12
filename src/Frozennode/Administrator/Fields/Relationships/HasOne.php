@@ -1,7 +1,9 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
-use Frozennode\Administrator\Column;
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 
 class HasOne extends Relationship {
 
@@ -13,18 +15,19 @@ class HasOne extends Relationship {
 	public $editable = false;
 
 	/**
-	 * Constructor function
+	 * Create a new BelongsToMany instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
 		//set up the model depending on what's passed in
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config;
+		$model = $this->config->getDataModel();
 
 		$relationship = $model->{$field}();
 		$related_model = $relationship->getRelated();
@@ -34,33 +37,14 @@ class HasOne extends Relationship {
 	}
 
 	/**
-	 * Filters a query object with this item's data given a model
+	 * Filters a query object with this item's data (currently empty because there's no easy way to represent this)
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
-	{
-		//run the parent method
-		parent::filterQuery($query, $model, $selects);
-
-		//if there is no value, return
-		if (!$this->value)
-		{
-			return;
-		}
-
-		//if the table hasn't been joined yet, join it
-		if (!Column::isJoined($query, $this->table))
-		{
-			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->table.'.'.$this->column);
-		}
-
-		$query->where_in($this->table.'.id', (is_array($this->value) ? $this->value : array($this->value)));
-	}
+	public function filterQuery(&$query, &$selects = null) {}
 
 	/**
 	 * For the moment this is an empty function until I can figure out a way to display HasOne and HasMany relationships on this model

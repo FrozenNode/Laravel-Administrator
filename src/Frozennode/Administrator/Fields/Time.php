@@ -1,7 +1,9 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use \DateTime;
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 
 class Time extends Field {
 
@@ -30,18 +32,19 @@ class Time extends Field {
 
 
 	/**
-	 * Constructor function
+	 * Create a new Time instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
-		$this->date_format = array_get($info, 'date_format', $this->date_format);
-		$this->time_format = array_get($info, 'time_format', $this->time_format);
+		$this->date_format = $this->validator->arrayGet($options, 'date_format', $this->date_format);
+		$this->time_format = $this->validator->arrayGet($options, 'time_format', $this->time_format);
 	}
 
 	/**
@@ -60,15 +63,14 @@ class Time extends Field {
 	}
 
 	/**
-	 * Filters a query object given
+	 * Filters a query object
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//try to read the time for the min and max values, and if they check out, set the where
 		if ($this->minValue)

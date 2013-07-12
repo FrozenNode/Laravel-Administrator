@@ -1,6 +1,10 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class Number extends Field {
 
 	/**
@@ -40,20 +44,34 @@ class Number extends Field {
 
 
 	/**
-	 * Constructor function
+	 * Create a new Number instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
-		$this->symbol = array_get($info, 'symbol', $this->symbol);
-		$this->decimals = array_get($info, 'decimals', $this->decimals);
-		$this->decimalSeparator = array_get($info, 'decimal_separator', $this->decimalSeparator);
-		$this->thousandsSeparator = array_get($info, 'thousands_separator', $this->thousandsSeparator);
+		$this->symbol = $this->validator->arrayGet($options, 'symbol', $this->symbol);
+		$this->decimals = $this->validator->arrayGet($options, 'decimals', $this->decimals);
+		$this->decimalSeparator = $this->validator->arrayGet($options, 'decimal_separator', $this->decimalSeparator);
+		$this->thousandsSeparator = $this->validator->arrayGet($options, 'thousands_separator', $this->thousandsSeparator);
+	}
+
+	/**
+	 * Sets the filter options for this item
+	 *
+	 * @param array		$filter
+	 *
+	 * @return void
+	 */
+	public function setFilter($filter)
+	{
+		parent::setFilter($filter);
+
 		$this->minValue = $this->minValue ? str_replace(',', '', $this->minValue) : $this->minValue;
 		$this->maxValue = $this->maxValue ? str_replace(',', '', $this->maxValue) : $this->maxValue;
 	}

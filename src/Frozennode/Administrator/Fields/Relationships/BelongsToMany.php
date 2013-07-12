@@ -1,7 +1,9 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
-use Frozennode\Administrator\Column;
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 
 class BelongsToMany extends Relationship {
 
@@ -29,27 +31,28 @@ class BelongsToMany extends Relationship {
 
 
 	/**
-	 * Constructor function
+	 * Create a new BelongsToMany instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
 		//set up the model depending on what's passed in
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config;
+		$model = $this->config->getDataModel();
 
-		$relationship = $model->{$field}();
+		$relationship = $model->{$this->field}();
 		$related_model = $relationship->getRelated();
 
 		$this->table = $relationship->getTable();
 		$this->column = $relationship->getForeignKey();
 		$this->column2 = $relationship->getOtherKey();
 		$this->foreignKey = $related_model->getKeyName();
-		$this->sortField = array_get($info, 'sort_field', $this->sortField);
+		$this->sortField = $this->validator->arrayGet($options, 'sort_field', $this->sortField);
 	}
 
 
@@ -71,7 +74,8 @@ class BelongsToMany extends Relationship {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
+	 * @param Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 *
 	 * @return array
 	 */
@@ -100,18 +104,17 @@ class BelongsToMany extends Relationship {
 
 
 	/**
-	 * Filters a query object with this item's data given a model
+	 * Filters a query object with this item's data
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
 		if (!$this->value)
@@ -119,8 +122,10 @@ class BelongsToMany extends Relationship {
 			return;
 		}
 
+		$model = $this->config->getDataModel();
+
 		//if the table hasn't been joined yet, join it
-		if (!Column::isJoined($query, $this->table))
+		if (!$this->validator->isJoined($query, $this->table))
 		{
 			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column);
 		}
@@ -132,7 +137,7 @@ class BelongsToMany extends Relationship {
 		$query->havingRaw('COUNT(DISTINCT '.$this->column2.') = '. count($this->value));
 
 		//add select field
-		if (!in_array($this->column2, $selects))
+		if ($selects && !in_array($this->column2, $selects))
 		{
 			$selects[] = $this->column2;
 		}
@@ -141,20 +146,20 @@ class BelongsToMany extends Relationship {
 	/**
 	 * Constrains a query by a given set of constraints
 	 *
-	 * @param  Query 		$query
-	 * @param  Eloquent 	$model
-	 * @param  array 		$constraints
+	 * @param  Query 								$query
+	 * @param  Illuminate\Database\Eloquent\Model 	$model
+	 * @param  string 								$constraint
 	 *
 	 * @return void
 	 */
-	public function constrainQuery(&$query, $model, $constraints)
+	public function constrainQuery(&$query, $model, $constraint)
 	{
 		//if the column hasn't been joined yet, join it
-		if (!Column::isJoined($query, $this->table))
+		if (!$this->validator->isJoined($query, $this->table))
 		{
 			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column2);
 		}
 
-		$query->where($this->column, '=', $constraints);
+		$query->where($this->column, '=', $constraint);
 	}
 }

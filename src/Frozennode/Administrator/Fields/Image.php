@@ -1,6 +1,9 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 use Frozennode\Administrator\Includes\Multup;
 use Illuminate\Support\Facades\URL;
 
@@ -19,17 +22,18 @@ class Image extends File {
 	public $sizes = array();
 
 	/**
-	 * Constructor function
+	 * Create a new Image instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
-		$this->sizes = array_get($info, 'sizes', $this->sizes);
+		$this->sizes = $this->validator->arrayGet($options, 'sizes', $this->sizes);
 	}
 
 	/**

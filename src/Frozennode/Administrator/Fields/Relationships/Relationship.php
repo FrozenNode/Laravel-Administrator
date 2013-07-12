@@ -2,6 +2,9 @@
 namespace Frozennode\Administrator\Fields\Relationships;
 
 use Frozennode\Administrator\Fields\Field;
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 
 abstract class Relationship extends Field {
 
@@ -42,14 +45,14 @@ abstract class Relationship extends Field {
 	public $optionsSortDirection = 'ASC';
 
 	/**
-	 * The symbol to use in front of the number
+	 * The relationship table name
 	 *
 	 * @var string
 	 */
 	public $table = '';
 
 	/**
-	 * The number of decimal places after the number
+	 * The relationship column
 	 *
 	 * @var string
 	 */
@@ -112,61 +115,61 @@ abstract class Relationship extends Field {
 	public $constraints = array();
 
 	/**
-	 * Constructor function
+	 * Create a new Relationship instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
 		//put the model into a variable so we can call it statically
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config;
+		$model = $this->config->getDataModel();
 
 		//get an instance of the relationship object
-		$relationship = $model->{$field}();
+		$relationship = $model->{$this->field}();
 
 		//get the various options
-		$this->nameField = array_get($info, 'name_field', $this->nameField);
-		$this->optionsSortField = array_get($info, 'options_sort_field', $this->nameField);
-		$this->optionsSortDirection = array_get($info, 'options_sort_direction', $this->optionsSortDirection);
-		$this->autocomplete = array_get($info, 'autocomplete', $this->autocomplete);
-		$this->numOptions = array_get($info, 'num_options', $this->numOptions);
-		$this->searchFields = array_get($info, 'search_fields', array($this->nameField));
+		$this->nameField = $this->validator->arrayGet($options, 'name_field', $this->nameField);
+		$this->optionsSortField = $this->validator->arrayGet($options, 'options_sort_field', $this->nameField);
+		$this->optionsSortDirection = $this->validator->arrayGet($options, 'options_sort_direction', $this->optionsSortDirection);
+		$this->autocomplete = $this->validator->arrayGet($options, 'autocomplete', $this->autocomplete);
+		$this->numOptions = $this->validator->arrayGet($options, 'num_options', $this->numOptions);
+		$this->searchFields = $this->validator->arrayGet($options, 'search_fields', array($this->nameField));
 		$this->selfRelationship = $relationship->getRelated()->getTable() === $model->getTable();
 
 		//set up and check the constraints
-		$this->setUpConstraints($info, $model);
+		$this->setUpConstraints($options);
 
 		//if we want all of the possible items on the other model, load them up, otherwise leave the options empty
-		$options = array();
+		$items = array();
 
-		if (array_get($info, 'load_relationships', false))
+		if ($this->validator->arrayGet($options, 'load_relationships', false))
 		{
 			//if a sort field was supplied, order the results by it
 			if ($this->optionsSortField)
 			{
-				$options = $relationship->getRelated()->orderBy(\DB::raw($this->optionsSortField), $this->optionsSortDirection)->get();
+				$items = $relationship->getRelated()->orderBy($this->db->raw($this->optionsSortField), $this->optionsSortDirection)->get();
 			}
 			//otherwise just pull back an unsorted list
 			else
 			{
-				$options = $relationship->getRelated()->get();
+				$items = $relationship->getRelated()->get();
 			}
 		}
 		//otherwise if there are relationship items, we need them in the initial options list
 		else if ($relationshipItems = $relationship->get())
 		{
-			$options = $relationshipItems;
+			$items = $relationshipItems;
 		}
 
 		$nameField = $this->nameField;
 
 		//map the options to the options property where array('id': [key], 'text': [nameField])
-
-		foreach ($options as $option)
+		foreach ($items as $option)
 		{
 			$this->options[] = array(
 				'id' => $option->id,
@@ -179,15 +182,13 @@ abstract class Relationship extends Field {
 	/**
 	 * Sets up the constraints for a relationship field if provided. We do this so we can assume later that it will just work
 	 *
-	 * @param  array 		$info
-	 * @param  Eloquent		$model
-	 * @param  Relationship	$relationship
+	 * @param  array 		$options
 	 *
 	 * @return  void
 	 */
-	private function setupConstraints($info, $model)
+	public function setupConstraints($options)
 	{
-		$constraints = array_get($info, 'constraints', $this->constraints);
+		$constraints = $this->validator->arrayGet($options, 'constraints', $this->constraints);
 
 		//set up and check the constraints
 		if (is_array($constraints) && sizeof($constraints))
@@ -198,33 +199,12 @@ abstract class Relationship extends Field {
 			foreach ($constraints as $field => $rel)
 			{
 				//check if the supplied values are strings and that their methods exist on their respective models
-				if (is_string($field) && is_string($rel) && method_exists($model, $field))
+				if (is_string($field) && is_string($rel) && method_exists($this->config->getDataModel(), $field))
 				{
 					$this->constraints[$field] = $rel;
 				}
 			}
 		}
-	}
-
-	/**
-	 * Constrains a query object with this item's relation to a third model
-	 *
-	 * @param Query		$query
-	 * @param Eloquent	$model
-	 * @param string	$key //the relationship name on this model
-	 * @param string	$relationshipName //the relationship name on the constraint model
-	 * @param array		$constraints
-	 *
-	 * @return void
-	 */
-	public function applyConstraints(&$query, $model, $key, $relationshipName, $constraints)
-	{
-		//first we get the other model and the relationship field on it
-		$relatedModel = $model->{$this->field}()->getRelated();
-		$otherModel = $model->{$key}()->getRelated();
-		$otherField = Field::get($relationshipName, array('type' => 'relationship'), $otherModel, false);
-
-		$otherField->constrainQuery($query, $relatedModel, $constraints);
 	}
 
 	/**

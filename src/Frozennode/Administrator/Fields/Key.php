@@ -11,18 +11,17 @@ class Key extends Field {
 	public $editable = false;
 
 	/**
-	 * Filters a query object given
+	 * Filters a query object
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
 		if (!$this->value)
@@ -30,6 +29,6 @@ class Key extends Field {
 			return;
 		}
 
-		$query->where($model->getTable().'.'.$this->field, '=', $this->value);
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->field, '=', $this->value);
 	}
 }

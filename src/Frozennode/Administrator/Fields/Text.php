@@ -1,6 +1,10 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class Text extends Field {
 
 	/**
@@ -18,33 +22,33 @@ class Text extends Field {
 	public $height = 100;
 
 	/**
-	 * Constructor function
+	 * Create a new Text instance
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @param Frozennode\Administrator\Validator 				$validator
+	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param array												$options
 	 */
-	public function __construct($field, $info, $config)
+	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
 	{
-		parent::__construct($field, $info, $config);
+		parent::__construct($validator, $config, $db, $options);
 
-		$this->limit = array_get($info, 'limit', $this->limit);
-		$this->height = array_get($info, 'height', $this->height);
+		$this->limit = $this->validator->arrayGet($options, 'limit', $this->limit);
+		$this->height = $this->validator->arrayGet($options, 'height', $this->height);
 	}
 
 	/**
 	 * Filters a query object given
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
 		if (!$this->value)
@@ -52,7 +56,7 @@ class Text extends Field {
 			return;
 		}
 
-		$query->where($model->getTable().'.'.$this->field, 'LIKE', '%' . $this->value . '%');
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->field, 'LIKE', '%' . $this->value . '%');
 	}
 
 	/**
