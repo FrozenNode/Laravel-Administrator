@@ -32,6 +32,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Permission](#permission)
 - [Action Permissions](#action-permissions)
 - [Custom Actions](#custom-actions)
+- [Validation Rules](#validation-rules)
 - [Sort](#sort)
 - [Form Width](#form-width)
 - [Link](#link)
@@ -234,6 +235,21 @@ You can define custom actions for your model if you want to provide the administ
 When the user clicks on either button, the `action` property above is called and passed the relevant Eloquent model.
 
 > For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
+
+<a name="validation-rules"></a>
+### Validation Rules
+
+	/**
+	 * The validation rules for the form, based on the Laravel validation class
+	 *
+	 * @type array
+	 */
+	'rules' => array(
+		'name' => 'required',
+		'age' => 'required|integer|min:18',
+	),
+
+The validation rules for your models can be set using the `rules` option. Administrator uses [Laravel's validation](http://laravel.com/docs/validation) to validate your models. If the form is invalid, it will notify the admin user without saving the form.
 
 <a name="sort"></a>
 ## Sort

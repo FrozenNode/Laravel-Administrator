@@ -1,6 +1,7 @@
 ## Changelog
 
 - A fourth basic action permission is now available: 'view'. This dictates whether or not the admin user can click an item to open it
+- There is now an optional 'rules' property in model configuration files which works just like the $rules static property in Eloquent models
 - You can now define where the raw settings data is stored by providing a 'storage_path' option to settings configs
 - You can now supply a 'confirmation' string option to your custom actions which will require a confirmation from the admin user before the action can go through.
 - You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields are require ordering on something other than the name_field
