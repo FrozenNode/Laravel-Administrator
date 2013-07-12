@@ -15,7 +15,7 @@ Route::get($uri, array(
 ));
 
 //The route group for all other requests needs to validate admin, model, and add assets
-Route::group(array('before' => 'validate_model'), function() use ($uri)
+Route::group(array('before' => 'validate_model|post_validate'), function() use ($uri)
 {
 	//Model Index
 	Route::get($uri . '/{model}', array(
@@ -50,7 +50,7 @@ Route::group(array('before' => 'validate_model'), function() use ($uri)
 });
 
 //CSRF protection in forms
-Route::group(array('before' => 'validate_model|csrf'), function() use ($uri)
+Route::group(array('before' => 'validate_model|post_validate|csrf'), function() use ($uri)
 {
 	//Save Item
 	Route::post($uri . '/{model}/{id?}/save', array(
@@ -81,7 +81,7 @@ Route::group(array('before' => 'validate_model|csrf'), function() use ($uri)
 });
 
 //Standard validation without csrf
-Route::group(array('before' => 'validate_model'), function() use ($uri)
+Route::group(array('before' => 'validate_model|post_validate'), function() use ($uri)
 {
 	//File Uploads
 	Route::post($uri . '/{model}/{field}/file_upload', array(
@@ -99,12 +99,12 @@ Route::group(array('before' => 'validate_model'), function() use ($uri)
 //Settings Pages
 Route::get($uri . '/settings/{settings}', array(
 	'as' => 'admin_settings',
-	'before' => 'validate_settings',
+	'before' => 'validate_settings|post_validate',
 	'uses' => 'Frozennode\Administrator\AdminController@settings'
 ));
 
 //Settings POSTs
-Route::group(array('before' => 'validate_settings|csrf'), function() use ($uri)
+Route::group(array('before' => 'validate_settings|post_validate|csrf'), function() use ($uri)
 {
 	//Save Item
 	Route::post($uri . '/settings/{settings}/save', array(
@@ -121,14 +121,14 @@ Route::group(array('before' => 'validate_settings|csrf'), function() use ($uri)
 
 //Settings file upload
 Route::post($uri . '/settings/{settings}/{field}/file_upload', array(
-	'before' => 'validate_settings',
+	'before' => 'validate_settings|post_validate',
 	'as' => 'admin_settings_file_upload',
 	'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
 ));
 
 //Display a settings file
 Route::get($uri . '/settings/{settings}/file', array(
-	'before' => 'validate_settings',
+	'before' => 'validate_settings|post_validate',
 	'as' => 'admin_settings_display_file',
 	'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 ));

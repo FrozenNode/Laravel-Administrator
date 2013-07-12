@@ -1,13 +1,12 @@
 <?php
 
-use Frozennode\Administrator\ModelConfig;
-use Frozennode\Administrator\SettingsConfig;
-
 //Filters
 
 //validate_admin filter
 Route::filter('validate_admin', function ()
 {
+	$configFactory = $this->app->make('admin_config_factory');
+
 	//set the locale
 	$locale = Session::get('administrator_locale');
 
@@ -45,44 +44,54 @@ Route::filter('validate_admin', function ()
 Route::filter('validate_model', function($route, $request)
 {
 	$modelName = $route->getParameter('model');
-	$config = ModelConfig::get($modelName);
 
-	App::singleton('itemconfig', function($app) use ($config)
+	App::singleton('itemconfig', function($app) use ($modelName)
 	{
-		return $config;
+		$configFactory = App::make('admin_config_factory');
+		return $configFactory->make($modelName);
 	});
-
-	//if the model doesn't exist at all, redirect to 404
-	if (!$config)
-	{
-		App::abort(404, 'Page not found');
-	}
-	//otherwise if this is a response, return that
-	else if (is_a($config, 'Illuminate\Http\JsonResponse') || is_a($config, 'Illuminate\Http\Response'))
-	{
-		return $config;
-	}
-	//if it's a redirect, send it back with the redirect uri
-	else if (is_a($config, 'Illuminate\\Http\\RedirectResponse'))
-	{
-		return $config->with($redirectKey, $redirectUri);
-	}
 });
 
 //validate_settings filter
 Route::filter('validate_settings', function($route, $request)
 {
 	$settingsName = $route->getParameter('settings');
-	$config = SettingsConfig::get(SettingsConfig::$prefix . $settingsName);
 
-	App::singleton('itemconfig', function($app) use ($config)
+	App::singleton('itemconfig', function($app) use ($settingsName)
 	{
-		return $config;
+		$configFactory = App::make('admin_config_factory');
+		return $configFactory->make($configFactory->getSettingsPrefix() . $settingsName);
 	});
+});
+
+Route::filter('post_validate', function($route, $request)
+{
+	$config = App::make('itemconfig');
 
 	//if the model doesn't exist at all, redirect to 404
 	if (!$config)
 	{
 		App::abort(404, 'Page not found');
+	}
+
+	//check the permission
+	$p = $config->getPermission();
+
+	//if the user is simply not allowed permission to this model, redirect them to the dashboard
+	if (!$p)
+	{
+		return Redirect::to(URL::route('admin_dashboard'));
+	}
+
+	//get the settings data if it's a settings page
+	if ($config->getType() === 'settings')
+	{
+		$config->fetchData(App::make('admin_field_factory')->getEditFields());
+	}
+
+	//otherwise if this is a response, return that
+	if (is_a($p, 'Illuminate\Http\JsonResponse') || is_a($p, 'Illuminate\Http\Response') || is_a($p, 'Illuminate\\Http\\RedirectResponse'))
+	{
+		return $p;
 	}
 });
