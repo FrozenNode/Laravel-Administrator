@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'stavki po strani',
 	'noresults' => 'Nema rezultata',
 	'backtosite' => 'Nazad na sajt',
+	'logout' => 'Одјава',
 
 	'previous' => 'pred',
 	'next' => 'sled',

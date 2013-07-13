@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'sor oldalanként',
 	'noresults' => 'Nincs eredmény',
 	'backtosite' => 'Vissza az oldalra',
+	'logout' => 'Logout',
 
 	'previous' => 'előző',
 	'next' => 'következő',
