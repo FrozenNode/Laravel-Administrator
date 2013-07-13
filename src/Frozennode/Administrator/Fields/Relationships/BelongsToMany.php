@@ -7,28 +7,16 @@ use Illuminate\Database\DatabaseManager as DB;
 
 class BelongsToMany extends Relationship {
 
-
 	/**
-	 * The field type which matches a $fieldTypes key
+	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $column2 = '';
-
-	/**
-	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
-	 *
-	 * @var bool
-	 */
-	public $multipleValues = true;
-
-	/**
-	 * If provided, the sort field is used to reorder values in the UI and then saved to the intermediate relationship table
-	 *
-	 * @var bool
-	 */
-	public $sortField = false;
-
+	protected $relationshipDefaults = array(
+		'column2' => '',
+		'multiple_values' => true,
+		'sort_field' => false,
+	);
 
 	/**
 	 * Create a new BelongsToMany instance
@@ -44,31 +32,13 @@ class BelongsToMany extends Relationship {
 
 		//set up the model depending on what's passed in
 		$model = $this->config->getDataModel();
-
-		$relationship = $model->{$this->field}();
+		$relationship = $model->{$this->getOption('field_name')}();
 		$related_model = $relationship->getRelated();
 
-		$this->table = $relationship->getTable();
-		$this->column = $relationship->getForeignKey();
-		$this->column2 = $relationship->getOtherKey();
-		$this->foreignKey = $related_model->getKeyName();
-		$this->sortField = $this->validator->arrayGet($options, 'sort_field', $this->sortField);
-	}
-
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['column2'] = $this->column2;
-		$arr['sort_field'] = $this->sortField;
-
-		return $arr;
+		$this->userOptions['table'] = $relationship->getTable();
+		$this->userOptions['column'] = $relationship->getForeignKey();
+		$this->userOptions['column2'] = $relationship->getOtherKey();
+		$this->userOptions['foreign_key'] = $related_model->getKeyName();
 	}
 
 	/**
@@ -82,24 +52,25 @@ class BelongsToMany extends Relationship {
 	public function fillModel(&$model, $input)
 	{
 		$input = $input ? explode(',', $input) : array();
+		$fieldName = $this->getOption('field_name');
 
 		//if this field is sortable, delete all the old records and insert the new ones one at a time
-		if ($this->sortField)
+		if ($sortField = $this->getOption('sort_field'))
 		{
 			//first delete all the old records
-			$model->{$this->field}()->delete();
+			$model->{$fieldName}()->delete();
 
 			foreach ($input as $i => $item)
 			{
-				$model->{$this->field}()->attach($item, array($this->sortField => $i));
+				$model->{$fieldName}()->attach($item, array($sortField => $i));
 			}
 		}
 		else
 		{
-			$model->{$this->field}()->sync($input);
+			$model->{$fieldName}()->sync($input);
 		}
 
-		$model->__unset($this->field);
+		$model->__unset($fieldName);
 	}
 
 
@@ -116,8 +87,14 @@ class BelongsToMany extends Relationship {
 		//run the parent method
 		parent::filterQuery($query, $selects);
 
+		//get the values
+		$value = $this->getOption('value');
+		$table = $this->getOption('table');
+		$column = $this->getOption('column');
+		$column2 = $this->getOption('column2');
+
 		//if there is no value, return
-		if (!$this->value)
+		if (!$value)
 		{
 			return;
 		}
@@ -125,21 +102,21 @@ class BelongsToMany extends Relationship {
 		$model = $this->config->getDataModel();
 
 		//if the table hasn't been joined yet, join it
-		if (!$this->validator->isJoined($query, $this->table))
+		if (!$this->validator->isJoined($query, $table))
 		{
-			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column);
+			$query->join($table, $model->getTable().'.'.$model->getKeyName(), '=', $column);
 		}
 
 		//add where clause
-		$query->whereIn($this->column2, $this->value);
+		$query->whereIn($column2, $value);
 
 		//add having clauses
-		$query->havingRaw('COUNT(DISTINCT '.$this->column2.') = '. count($this->value));
+		$query->havingRaw('COUNT(DISTINCT '.$column2.') = '. count($value));
 
 		//add select field
-		if ($selects && !in_array($this->column2, $selects))
+		if ($selects && !in_array($column2, $selects))
 		{
-			$selects[] = $this->column2;
+			$selects[] = $column2;
 		}
 	}
 
@@ -155,11 +132,11 @@ class BelongsToMany extends Relationship {
 	public function constrainQuery(&$query, $model, $constraint)
 	{
 		//if the column hasn't been joined yet, join it
-		if (!$this->validator->isJoined($query, $this->table))
+		if (!$this->validator->isJoined($query, $this->getOption('table')))
 		{
-			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column2);
+			$query->join($this->getOption('table'), $model->getTable().'.'.$model->getKeyName(), '=', $this->getOption('column2'));
 		}
 
-		$query->where($this->column, '=', $constraint);
+		$query->where($this->getOption('column'), '=', $constraint);
 	}
 }

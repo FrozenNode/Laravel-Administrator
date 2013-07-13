@@ -8,59 +8,25 @@ use Illuminate\Database\DatabaseManager as DB;
 class Time extends Field {
 
 	/**
-	 * Determines whether this field's filter uses a min/max range
+	 * The specific defaults for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $minMax = true;
+	protected $defaults = array(
+		'min_max' => true,
+		'date_format' => 'yy-mm-dd',
+		'time_format' => 'HH:mm',
+	);
 
 	/**
-	 * Format string for the jQuery UI Datepicker
-	 * http://docs.jquery.com/UI/Datepicker/formatDate
+	 * The specific rules for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $date_format = 'yy-mm-dd';
-
-	/**
-	 * Format string for the jQUery timepicker plugin
-	 * http://trentrichardson.com/examples/timepicker/#tp-formatting
-	 *
-	 * @var string
-	 */
-	public $time_format = 'HH:mm';
-
-
-	/**
-	 * Create a new Time instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
-	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
-	{
-		parent::__construct($validator, $config, $db, $options);
-
-		$this->date_format = $this->validator->arrayGet($options, 'date_format', $this->date_format);
-		$this->time_format = $this->validator->arrayGet($options, 'time_format', $this->time_format);
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['date_format'] = $this->date_format;
-		$arr['time_format'] = $this->time_format;
-
-		return $arr;
-	}
+	protected $rules = array(
+		'date_format' => 'string',
+		'time_format' => 'string',
+	);
 
 	/**
 	 * Filters a query object
@@ -73,23 +39,23 @@ class Time extends Field {
 	public function filterQuery(&$query, &$selects = null)
 	{
 		//try to read the time for the min and max values, and if they check out, set the where
-		if ($this->minValue)
+		if ($minValue = $this->getOption('min_value'))
 		{
-			$time = strtotime($this->minValue);
+			$time = strtotime($minValue);
 
 			if ($time !== false)
 			{
-				$query->where($model->getTable().'.'.$this->field, '>=', $this->getDateString($time));
+				$query->where($model->getTable().'.'.$this->getOption('field_name'), '>=', $this->getDateString($time));
 			}
 		}
 
-		if ($this->maxValue)
+		if ($maxValue = $this->getOption('max_value'))
 		{
-			$time = strtotime($this->maxValue);
+			$time = strtotime($maxValue);
 
 			if ($time !== false)
 			{
-				$query->where($model->getTable().'.'.$this->field, '<=', $this->getDateString($time));
+				$query->where($model->getTable().'.'.$this->getOption('field_name'), '<=', $this->getDateString($time));
 			}
 		}
 	}
@@ -98,6 +64,7 @@ class Time extends Field {
 	 * Fill a model with input data
 	 *
 	 * @param Eloquent	$model
+	 * @param mixed		$input
 	 *
 	 * @return array
 	 */
@@ -110,7 +77,7 @@ class Time extends Field {
 		if ($time !== false)
 		{
 			//fill the model with the correct date/time format
-			$model->{$this->field} = $this->getDateString($time);
+			$model->{$this->getOption('field_name')} = $this->getDateString($time);
 		}
 	}
 
@@ -123,11 +90,11 @@ class Time extends Field {
 	 */
 	protected function getDateString($time)
 	{
-		if ($this->type === 'date')
+		if ($this->getOption('type') === 'date')
 		{
 			return date('Y-m-d', $time);
 		}
-		else if ($this->type === 'datetime')
+		else if ($this->getOption('type') === 'datetime')
 		{
 			return date('Y-m-d H:i:s', $time);
 		}

@@ -12,7 +12,9 @@ class Enum extends Field {
 	 *
 	 * @var array
 	 */
-	public $options = array();
+	protected $rules = array(
+		'options' => 'array|not_empty',
+	);
 
 	/**
 	 * Create a new Enum instance
@@ -26,16 +28,19 @@ class Enum extends Field {
 	{
 		parent::__construct($validator, $config, $db, $options);
 
-		$options = $this->validator->arrayGet($options, 'options', $this->options);
+		$options = $this->getOption('options');
+		$formattedOptions = array();
 
 		//iterate over the options to create the options assoc array
 		foreach ($options as $val => $text)
 		{
-			$this->options[] = array(
+			$formattedOptions[] = array(
 				'id' => is_numeric($val) ? $text : $val,
 				'text' => $text,
 			);
 		}
+
+		$this->userOptions['options'] = $formattedOptions;
 	}
 
 	/**
@@ -46,7 +51,7 @@ class Enum extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = $input;
+		$model->{$this->getOption('field_name')} = $input;
 	}
 
 	/**
@@ -60,7 +65,7 @@ class Enum extends Field {
 	{
 		parent::setFilter($filter);
 
-		$this->value = $this->value === '' ? null : $this->value;
+		$this->userOptions['value'] = $this->getOption('value') === '' ? null : $this->getOption('value');
 	}
 
 	/**
@@ -77,25 +82,11 @@ class Enum extends Field {
 		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$this->getOption('value'))
 		{
 			return;
 		}
 
-		$query->where($this->config->getDataModel()->getTable().'.'.$this->field, '=', $this->value);
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['options'] = $this->options;
-
-		return $arr;
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), '=', $this->getOption('value'));
 	}
 }

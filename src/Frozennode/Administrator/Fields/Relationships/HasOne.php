@@ -8,11 +8,13 @@ use Illuminate\Database\DatabaseManager as DB;
 class HasOne extends Relationship {
 
 	/**
-	 * If this is true, the field is editable
+	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
-	 * @var bool
+	 * @var array
 	 */
-	public $editable = false;
+	protected $relationshipDefaults = array(
+		'editable' => false,
+	);
 
 	/**
 	 * Create a new BelongsToMany instance
@@ -28,12 +30,11 @@ class HasOne extends Relationship {
 
 		//set up the model depending on what's passed in
 		$model = $this->config->getDataModel();
-
-		$relationship = $model->{$field}();
+		$relationship = $model->{$this->getOption('field_name')}();
 		$related_model = $relationship->getRelated();
 
-		$this->table = $related_model->getTable();
-		$this->column = $relationship->getPlainForeignKey();
+		$this->userOptions['table'] = $related_model->getTable();
+		$this->userOptions['column'] = $relationship->getPlainForeignKey();
 	}
 
 	/**

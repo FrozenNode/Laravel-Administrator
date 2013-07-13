@@ -22,7 +22,7 @@ class Bool extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = $input === 'true' || $input === '1' ? 1 : 0;
+		$model->{$this->getOption('field_name')} = $input === 'true' || $input === '1' ? 1 : 0;
 	}
 
 	/**
@@ -36,12 +36,12 @@ class Bool extends Field {
 	{
 		parent::setFilter($filter);
 
-		$this->value = $this->validator->arrayGet($filter, 'value', '');
+		$this->userOptions['value'] = $this->validator->arrayGet($filter, 'value', '');
 
 		//if it isn't null, we have to check the 'true'/'false' string
-		if ($this->value !== '')
+		if ($this->userOptions['value'] !== '')
 		{
-			$this->value = $this->value === 'true' ? 1 : 0;
+			$this->userOptions['value'] = $this->userOptions['value'] === 'true' ? 1 : 0;
 		}
 	}
 
@@ -56,9 +56,9 @@ class Bool extends Field {
 	public function filterQuery(&$query, &$selects = null)
 	{
 		//if the field isn't empty
-		if ($this->value !== '')
+		if ($this->getOption('value') !== '')
 		{
-			$query->where($this->config->getDataModel()->getTable().'.'.$this->field, '=', $this->value);
+			$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), '=', $this->getOption('value'));
 		}
 	}
 }

@@ -8,18 +8,14 @@ use Illuminate\Database\DatabaseManager as DB;
 class HasMany extends Relationship {
 
 	/**
-	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
+	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
-	 * @var bool
+	 * @var array
 	 */
-	public $multipleValues = true;
-
-	/**
-	 * If this is true, the field is editable
-	 *
-	 * @var bool
-	 */
-	public $editable = false;
+	protected $relationshipDefaults = array(
+		'multiple_values' => true,
+		'editable' => false,
+	);
 
 	/**
 	 * Create a new BelongsToMany instance
@@ -35,12 +31,11 @@ class HasMany extends Relationship {
 
 		//set up the model depending on what's passed in
 		$model = $this->config->getDataModel();
-
-		$relationship = $model->{$field}();
+		$relationship = $model->{$this->getOption('field_name')}();
 		$related_model = $relationship->getRelated();
 
-		$this->table = $related_model->getTable();
-		$this->column = $relationship->getPlainForeignKey();
+		$this->userOptions['table'] = $related_model->getTable();
+		$this->userOptions['column'] = $relationship->getPlainForeignKey();
 	}
 
 	/**

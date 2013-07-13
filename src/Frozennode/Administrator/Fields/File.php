@@ -10,46 +10,28 @@ use Frozennode\Administrator\Includes\Multup;
 class File extends Field {
 
 	/**
-	 * The naming mechanism for the file (can be either 'keep' or 'random').
+	 * The specific defaults for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $naming = 'random';
+	protected $defaults = array(
+		'naming' => 'random',
+		'length' => 32,
+		'mimes' => false,
+		'size_limit' => 2,
+	);
 
 	/**
-	 * Length of file name if naming is set to random
+	 * The specific rules for subclasses to override
 	 *
-	 * @var int
+	 * @var array
 	 */
-	public $length = 32;
-
-	/**
-	 * The directory location used to store the file
-	 *
-	 * @var string
-	 */
-	public $location;
-
-	/**
-	 * The upload url for this field
-	 *
-	 * @var string
-	 */
-	public $uploadUrl;
-
-	/**
-	 * The file size limit in MB
-	 *
-	 * @var int
-	 */
-	public $sizeLimit = 2;
-
-	/**
-	 * The mime types that this field should be limited to separated by commas
-	 *
-	 * @var false | string
-	 */
-	public $mimes = false;
+	protected $rules = array(
+		'location' => 'required|string|directory',
+		'naming' => 'in:keep,random',
+		'length' => 'integer|min:0',
+		'mimes' => 'string',
+	);
 
 	/**
 	 * Create a new File instance
@@ -63,20 +45,12 @@ class File extends Field {
 	{
 		parent::__construct($validator, $config, $db, $options);
 
-		$this->mimes = $this->validator->arrayGet($options, 'mimes', $this->mimes);
-		$this->naming = $this->validator->arrayGet($options, 'naming', $this->naming);
-		$this->length = $this->validator->arrayGet($options, 'length', $this->length);
-		$this->location = $this->validator->arrayGet($options, 'location');
-		$this->sizeLimit = (int) $this->validator->arrayGet($options, 'size_limit', $this->sizeLimit);
-
-		//make sure the naming is one of the two accepted values
-		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
-
-		// Satisfy params for Multup, for keep we return false so we don't random filename
-		$this->naming = ($this->naming == 'keep') ? false : true;
-
 		//set the upload url depending on the type of config this is
-		$this->setUploadUrl();
+		$url = $this->validator->getUrlInstance();
+		$route = $this->config->getType() === 'settings' ? 'admin_settings_file_upload' : 'admin_file_upload';
+
+		//set the upload url to the proper route
+		$this->userOptions['upload_url'] = $url->route($route, array($this->config->getOption('name'), $this->getOption('field_name')));
 	}
 
 	/**
@@ -86,44 +60,14 @@ class File extends Field {
 	 */
 	public function doUpload()
 	{
-		$mimes = $this->mimes ? '|mimes:' . $this->mimes : '';
+		$mimes = $this->getOption('mimes') ? '|mimes:' . $this->getOption('mimes') : '';
 
 		//use the multup library to perform the upload
-		$result = Multup::open('file', 'max:' . $this->sizeLimit * 1000 . $mimes, $this->location, $this->naming)
-			->set_length($this->length)
+		$result = Multup::open('file', 'max:' . $this->getOption('size_limit') * 1000 . $mimes, $this->getOption('location'),
+									$this->getOption('naming') === 'random')
+			->set_length($this->getOption('length'))
 			->upload();
 
 		return $result[0];
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['location'] = $this->location;
-		$arr['size_limit'] = $this->sizeLimit;
-		$arr['upload_url'] = $this->uploadUrl;
-
-		return $arr;
-	}
-
-	/**
-	 * Gets the upload URL depending on the type of page this is
-	 */
-	public function setUploadUrl()
-	{
-		if ($this->config->getType() === 'settings')
-		{
-			$this->uploadUrl = URL::route('admin_settings_file_upload', array($this->config->getOption('name'), $this->field));
-		}
-		else
-		{
-			$this->uploadUrl = URL::route('admin_file_upload', array($this->config->getOption('name'), $this->field));
-		}
 	}
 }

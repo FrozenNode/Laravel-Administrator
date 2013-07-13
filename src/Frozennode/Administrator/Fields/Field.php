@@ -29,6 +29,13 @@ abstract class Field {
 	protected $db;
 
 	/**
+	 * The options supplied merged into the defaults
+	 *
+	 * @var bool
+	 */
+	public $userOptions;
+
+	/**
 	 * This is used in setting up filters
 	 *
 	 * @var bool
@@ -112,6 +119,46 @@ abstract class Field {
 	 */
 	public $minMax = false;
 
+	/**
+	 * The default configuration options
+	 *
+	 * @var array
+	 */
+	protected $baseDefaults = array(
+		'relationship' => false,
+		'external' => false,
+		'editable' => true,
+		'visible' => true,
+		'setter' => false,
+		'value' => '',
+		'min_value' => '',
+		'max_value' => '',
+		'min_max' => false,
+	);
+
+	/**
+	 * The specific defaults for subclasses to override
+	 *
+	 * @var array
+	 */
+	protected $defaults = array();
+
+	/**
+	 * The base rules that all fields need to pass
+	 *
+	 * @var array
+	 */
+	protected $baseRules = array(
+		'type' => 'required|string',
+		'field_name' => 'required|string',
+	);
+
+	/**
+	 * The specific rules for subclasses to override
+	 *
+	 * @var array
+	 */
+	protected $rules = array();
 
 	/**
 	 * Create a new Field instance
@@ -127,20 +174,27 @@ abstract class Field {
 		$this->config = $config;
 		$this->db = $db;
 
-		//fill the basic fields
-		$this->field = $options['field_name'];
-		$this->type = $options['type'];
-		$this->title = $validator->arrayGet($options, 'title', $this->field);
-		$this->editable = $validator->arrayGet($options, 'editable', $this->editable);
-		$this->setter = $validator->arrayGet($options, 'setter', $this->setter);
-		$this->visible = $validator->arrayGet($options, 'visible', $this->visible);
+		//set the title if it doesn't exist
+		$options['title'] = $validator->arrayGet($options, 'title', $options['field_name']);
 
-		//make sure the hide callback is run if it's supplied
-		if (is_callable($this->visible))
+		//make sure the visible callback is run if it's supplied
+		if (is_callable($validator->arrayGet($options, 'visible')))
 		{
-			$visible = $this->visible;
-			$this->visible = $visible($this->config->getDataModel()) ? true : false;
+			$options['visible'] = $options['visible']($this->config->getDataModel()) ? true : false;
 		}
+
+		//override the config
+		$validator->override($config, $this->getRules());
+
+		//if the validator failed, throw an exception
+		if ($validator->fails())
+		{
+			throw new \InvalidArgumentException("There are problems with your '" . $options['field_name'] . "' field: " .
+												implode('. ', $validator->messages()->all()));
+		}
+
+		//fill up the instance with the user-supplied options
+		$this->userOptions = array_merge($this->getDefaults(), $config);
 	}
 
 	/**
@@ -150,20 +204,7 @@ abstract class Field {
 	 */
 	public function toArray()
 	{
-		return array(
-			'type' => $this->type,
-			'field' => $this->field,
-			'title' => $this->title,
-			'editable' => $this->editable,
-			'setter' => $this->setter,
-			'visible' => $this->visible,
-			'value' => $this->value,
-			'minMax' => $this->minMax,
-			'minValue' => $this->minValue,
-			'maxValue' => $this->maxValue,
-			'editable' => $this->editable,
-			'relationship' => $this->relationship,
-		);
+		return $this->getOptions();
 	}
 
 	/**
@@ -175,7 +216,7 @@ abstract class Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = is_null($input) ? '' : $input;
+		$model->{$this->getOption('field_name')} = is_null($input) ? '' : $input;
 	}
 
 	/**
@@ -187,9 +228,9 @@ abstract class Field {
 	 */
 	public function setFilter($filter)
 	{
-		$this->value = $this->getFilterValue($this->validator->arrayGet($filter, 'value', $this->value));
-		$this->minValue = $this->getFilterValue($this->validator->arrayGet($filter, 'minValue', $this->minValue));
-		$this->maxValue = $this->getFilterValue($this->validator->arrayGet($filter, 'maxValue', $this->maxValue));
+		$this->userOptions['value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'value', $this->getOption('value')));
+		$this->userOptions['min_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'minValue', $this->getOption('min_value')));
+		$this->userOptions['max_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'maxValue', $this->getOption('max_value')));
 	}
 
 	/**
@@ -205,16 +246,16 @@ abstract class Field {
 		$model = $this->config->getDataModel();
 
 		//if this field has a min/max range, set it
-		if ($this->minMax)
+		if ($this->getOption('min_max'))
 		{
-			if ($this->minValue)
+			if ($minValue = $this->getOption('min_value'))
 			{
-				$query->where($model->getTable().'.'.$this->field, '>=', $this->minValue);
+				$query->where($model->getTable().'.'.$this->getOption('field_name'), '>=', $minValue);
 			}
 
-			if ($this->maxValue)
+			if ($maxValue = $this->getOption('max_value'))
 			{
-				$query->where($model->getTable().'.'.$this->field, '<=', $this->maxValue);
+				$query->where($model->getTable().'.'.$this->getOption('field_name'), '<=', $maxValue);
 			}
 		}
 	}
@@ -226,7 +267,7 @@ abstract class Field {
 	 *
 	 * @return false|string
 	 */
-	private static function getFilterValue($value)
+	protected function getFilterValue($value)
 	{
 		if (empty($value) || (is_string($value) && trim($value) === ''))
 		{
@@ -236,6 +277,55 @@ abstract class Field {
 		{
 			return $value;
 		}
+	}
+
+	/**
+	 * Gets all user options
+	 *
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		return $this->userOptions;
+	}
+
+	/**
+	 * Gets a field's option
+	 *
+	 * @param string 	$key
+	 *
+	 * @return mixed
+	 */
+	public function getOption($key)
+	{
+		$options = $this->getOptions();
+
+		if (!array_key_exists($key, $options))
+		{
+			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $this->getOption('field_name') . "' field");
+		}
+
+		return $options[$key];
+	}
+
+	/**
+	 * Gets all rules
+	 *
+	 * @return array
+	 */
+	public function getRules()
+	{
+		return array_merge($this->baseRules, $this->rules);
+	}
+
+	/**
+	 * Gets all default values
+	 *
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		return array_merge($this->baseDefaults, $this->defaults);
 	}
 
 }

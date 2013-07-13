@@ -8,34 +8,24 @@ use Illuminate\Database\DatabaseManager as DB;
 class Text extends Field {
 
 	/**
-	 * The character limit
+	 * The specific defaults for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $limit = 0;
+	protected $defaults = array(
+		'limit' => 0,
+		'height' => 100,
+	);
 
 	/**
-	 * The starting height of the textarea (if applicable)
+	 * The specific rules for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $height = 100;
-
-	/**
-	 * Create a new Text instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
-	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
-	{
-		parent::__construct($validator, $config, $db, $options);
-
-		$this->limit = $this->validator->arrayGet($options, 'limit', $this->limit);
-		$this->height = $this->validator->arrayGet($options, 'height', $this->height);
-	}
+	protected $rules = array(
+		'limit' => 'integer|min:0',
+		'height' => 'integer|min:0',
+	);
 
 	/**
 	 * Filters a query object given
@@ -51,26 +41,11 @@ class Text extends Field {
 		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$this->getOption('value'))
 		{
 			return;
 		}
 
-		$query->where($this->config->getDataModel()->getTable().'.'.$this->field, 'LIKE', '%' . $this->value . '%');
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['limit'] = $this->limit;
-		$arr['height'] = $this->height;
-
-		return $arr;
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), 'LIKE', '%' . $this->getOption('value') . '%');
 	}
 }

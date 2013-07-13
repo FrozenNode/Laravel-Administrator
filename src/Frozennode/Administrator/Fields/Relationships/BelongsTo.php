@@ -8,18 +8,13 @@ use Illuminate\Database\DatabaseManager as DB;
 class BelongsTo extends Relationship {
 
 	/**
-	 * Determines if this column is a normal field on this table
+	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $foreignKey;
-
-	/**
-	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
-	 *
-	 * @var bool
-	 */
-	public $external = false;
+	protected $relationshipDefaults = array(
+		'external' => false
+	);
 
 	/**
 	 * Create a new BelongsTo instance
@@ -35,13 +30,12 @@ class BelongsTo extends Relationship {
 
 		//set up the model depending on what's passed in
 		$model = $this->config->getDataModel();
-
-		$relationship = $model->{$this->field}();
+		$relationship = $model->{$this->getOption('field_name')}();
 		$otherModel = $relationship->getRelated();
 
-		$this->table = $otherModel->getTable();
-		$this->column = $otherModel->getKeyName();
-		$this->foreignKey = $relationship->getForeignKey();
+		$this->userOptions['table'] = $otherModel->getTable();
+		$this->userOptions['column'] = $otherModel->getKeyName();
+		$this->userOptions['foreign_key'] = $relationship->getForeignKey();
 	}
 
 
@@ -54,9 +48,9 @@ class BelongsTo extends Relationship {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->foreignKey} = $input !== 'false' ? $input : null;
+		$model->{$this->getOption('foreign_key')} = $input !== 'false' ? $input : null;
 
-		$model->__unset($this->field);
+		$model->__unset($this->getOption('field_name'));
 	}
 
 	/**
@@ -73,12 +67,12 @@ class BelongsTo extends Relationship {
 		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$this->getOption('value'))
 		{
 			return;
 		}
 
-		$query->where($this->foreignKey, '=', $this->value);
+		$query->where($this->getOption('foreign_key'), '=', $this->getOption('value'));
 	}
 
 }

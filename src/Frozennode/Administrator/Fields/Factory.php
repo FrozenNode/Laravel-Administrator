@@ -4,6 +4,7 @@ namespace Frozennode\Administrator\Fields;
 use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Factory {
 
@@ -191,7 +192,8 @@ class Factory {
 			}
 			else
 			{
-				throw new \InvalidArgumentException("The '" . $options['field_name'] . "' relationship field you supplied for " . $this->config->getOption('name') . " is not a valid relationship method name on the supplied Eloquent model");
+				throw new \InvalidArgumentException("The '" . $options['field_name'] . "' relationship field you supplied for " .
+								$this->config->getOption('name') . " is not a valid relationship method name on the supplied Eloquent model");
 			}
 
 			//if we should load the relationships, set the option
@@ -378,7 +380,7 @@ class Factory {
 
 		foreach ($this->getEditFields(true, $override) as $fieldObject)
 		{
-			$return[$fieldObject->field] = $fieldObject->toArray();
+			$return[$fieldObject->getOption('field_name')] = $fieldObject->toArray();
 		}
 
 		//add the primary key field, which will be uneditable, but part of the data model
@@ -440,12 +442,12 @@ class Factory {
 		if (!sizeof($this->filters) && $configFilters)
 		{
 			//iterate over the filters and create field objects for them
-			foreach ($configFilters as $field => $options)
+			foreach ($configFilters as $name => $filter)
 			{
-				if ($fieldObject = $this->make($field, $options))
+				if ($fieldObject = $this->make($name, $filter))
 				{
 					//the filters array is indexed on the field name and holds the arrayed values for the filters
-					$this->filters[$fieldObject->field] = $fieldObject;
+					$this->filters[$fieldObject->getOption('field_name')] = $fieldObject;
 				}
 			}
 		}
@@ -462,9 +464,9 @@ class Factory {
 	{
 		if (!sizeof($this->filtersArrays))
 		{
-			foreach ($this->getFilters() as $name => $options)
+			foreach ($this->getFilters() as $name => $filter)
 			{
-				$this->filtersArrays[$name] = $options->toArray();
+				$this->filtersArrays[$name] = $filter->toArray();
 			}
 		}
 
@@ -472,14 +474,14 @@ class Factory {
 	}
 
 	/**
-	 * Finds a field's options given a field name, a model, and a type (filter/edit)
+	 * Finds a field's options given a field name and a type (filter/edit)
 	 *
 	 * @param  string 		$field
 	 * @param  string 		$type
 	 *
-	 * @return array|false
+	 * @return mixed
 	 */
-	public function getOptions($field, $type)
+	public function getFieldObjectByName($field, $type)
 	{
 		$info = false;
 
@@ -521,7 +523,7 @@ class Factory {
 		//first get the related model and fetch the field's options
 		$model = $this->config->getDataModel();
 		$relatedModel = $model->{$field}()->getRelated();
-		$fieldObject = $this->getOptions($field, $type);
+		$fieldObject = $this->getFieldObjectByName($field, $type);
 
 		//if we can't find the field, return an empty array
 		if (!$fieldObject)
@@ -535,34 +537,15 @@ class Factory {
 		//set up the selects
 		$query->select(array($this->db->raw($relatedModel->getTable().'.*')));
 
-		//if selectedItems are provided, set them up as a proper array
-		if ($selectedItems)
-		{
-			//if this isn't an array, set it up as one
-			$selectedItems = is_array($selectedItems) ? $selectedItems : explode(',', $selectedItems);
-		}
-		else
-		{
-			$selectedItems = array();
-		}
+		//format the selected items into an array
+		$selectedItems = $this->formatSelectedItems($selectedItems);
 
 		//if this is an autocomplete field, check if there is a search term. If not, just return the selected items
-		if ($fieldObject->autocomplete && !$term)
+		if ($fieldObject->getOption('autocomplete') && !$term)
 		{
 			if (sizeof($selectedItems))
 			{
-				$query->whereIn($relatedModel->getTable().'.'.$relatedModel->getKeyName(), $selectedItems);
-
-				//if this is a hmabt and a sort field is set, order it by the sort field
-				if ($fieldObject->multipleValues && $fieldObject->sortField)
-				{
-					$query->orderBy($fieldObject->sortField);
-				}
-				//otherwise order it by the name field
-				else
-				{
-					$query->orderBy($fieldObject->nameField);
-				}
+				$this->filterQueryBySelectedItems($query, $selectedItems, $fieldObject, $relatedModel);
 
 				return $this->formatOptions($relatedModel, $fieldObject, $query->get());
 			}
@@ -572,39 +555,14 @@ class Factory {
 			}
 		}
 
-		//if there are constraints
-		if (sizeof($fieldObject->constraints))
-		{
-			//iterate over the constraints
-			foreach ($fieldObject->constraints as $key => $relationshipName)
-			{
-				//now that we're looping through the constraints, check to see if this one was supplied
-				if (isset($constraints[$key]) && $constraints[$key] && sizeof($constraints[$key]))
-				{
-					//constrain the query
-					//first we get the other model and the relationship field on it
-					$model = $this->config->getDataModel();
-					$relatedModel = $model->{$fieldObject->field}()->getRelated();
-					$otherModel = $model->{$key}()->getRelated();
-
-					//set the data model for the config
-					$this->config->setDataModel($otherModel);
-					$otherField = $this->make($relationshipName, array('type' => 'relationship'), false);
-
-					//constrain the query
-					$otherField->constrainQuery($query, $relatedModel, $constraints[$key]);
-
-					//set the data model back and apply the constraints
-					$this->config->setDataModel($model);
-				}
-			}
-		}
+		//applies constraints if there are any
+		$this->applyConstraints($constraints, $query, $fieldObject);
 
 		//if there is a search term, limit the result set by that term
 		if ($term)
 		{
 			//set up the wheres
-			foreach ($fieldObject->searchFields as $search)
+			foreach ($fieldObject->getOption('search_fields') as $search)
 			{
 				$query->where($this->db->raw($search), 'LIKE', '%'.$term.'%');
 			}
@@ -616,11 +574,97 @@ class Factory {
 			}
 
 			//set up the limits
-			$query->take($fieldObject->numOptions + count($selectedItems));
+			$query->take($fieldObject->getOption('num_options') + count($selectedItems));
 		}
 
 		//finally we can return the options
 		return $this->formatOptions($relatedModel, $fieldObject, $query->get());
+	}
+
+	/**
+	 * Takes the supplied $selectedItems mixed value and formats it to a usable array
+	 *
+	 * @param mixed		$selectedItems
+	 *
+	 * @return array
+	 */
+	public function formatSelectedItems($selectedItems)
+	{
+		if ($selectedItems)
+		{
+			//if this isn't an array, set it up as one
+			return is_array($selectedItems) ? $selectedItems : explode(',', $selectedItems);
+		}
+		else
+		{
+			return array();
+		}
+	}
+
+	/**
+	 * Takes the supplied $selectedItems mixed value and formats it to a usable array
+	 *
+	 * @param Illuminate\Database\Query\Builder			$query
+	 * @param array										$selectedItems
+	 * @param Frozennode\Administrator\Fields\Field		$fieldObject
+	 * @param Eloquent									$relatedModel
+	 *
+	 * @return array
+	 */
+	public function filterQueryBySelectedItems(QueryBuilder &$query, array $selectedItems, Field $fieldObject, $relatedModel)
+	{
+		$query->whereIn($relatedModel->getTable().'.'.$relatedModel->getKeyName(), $selectedItems);
+
+		//if this is a BelongsToMany and a sort field is set, order it by the sort field
+		if ($fieldObject->getOption('multiple_values') && $fieldObject->getOption('sort_field'))
+		{
+			$query->orderBy($fieldObject->getOption('sort_field'));
+		}
+		//otherwise order it by the name field
+		else
+		{
+			$query->orderBy($fieldObject->getOption('name_field'));
+		}
+	}
+
+	/**
+	 * Takes the supplied $selectedItems mixed value and formats it to a usable array
+	 *
+	 * @param mixed										$constraints
+	 * @param Illuminate\Database\Query\Builder			$query
+	 * @param Frozennode\Administrator\Fields\Field		$fieldObject
+	 *
+	 * @return array
+	 */
+	public function applyConstraints($constraints, QueryBuilder &$query, Field $fieldObject)
+	{
+		$configConstraints = $fieldObject->getOption('constraints');
+
+		if (sizeof($configConstraints))
+		{
+			//iterate over the config constraints
+			foreach ($configConstraints as $key => $relationshipName)
+			{
+				//now that we're looping through the constraints, check to see if this one was supplied
+				if (isset($constraints[$key]) && $constraints[$key] && sizeof($constraints[$key]))
+				{
+					//first we get the other model and the relationship field on it
+					$model = $this->config->getDataModel();
+					$relatedModel = $model->{$fieldObject->getOption('field_name')}()->getRelated();
+					$otherModel = $model->{$key}()->getRelated();
+
+					//set the data model for the config
+					$this->config->setDataModel($otherModel);
+					$otherField = $this->make($relationshipName, array('type' => 'relationship'), false);
+
+					//constrain the query
+					$otherField->constrainQuery($query, $relatedModel, $constraints[$key]);
+
+					//set the data model back to the original
+					$this->config->setDataModel($model);
+				}
+			}
+		}
 	}
 
 	/**
@@ -640,7 +684,7 @@ class Factory {
 		{
 			return array(
 				'id' => $m->{$model->getKeyName()},
-				'text' => $m->{$field->nameField},
+				'text' => $m->{$field->getOption('name_field')},
 			);
 		}, $results);
 	}
