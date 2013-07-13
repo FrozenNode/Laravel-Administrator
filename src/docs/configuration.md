@@ -192,7 +192,7 @@ Provide any value that would work with Laravel's `URL::to()` method.
 	 */
 	'logout_path' => 'user/logout',
 
-Provide any value that would work with Laravel's `URL::to()` method.
+Provide any value that would work with Laravel's `URL::to()` method. If you don't want the logout link just set it to null, 'logout_path' => null, instead of a link.
 
 <a name="redirect-key"></a>
 ### Redirect Key
