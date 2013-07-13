@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'éléments par page',
 	'noresults' => 'Aucun résultat',
 	'backtosite' => 'Retour au site',
+	'logout' => 'Déconnexion',
 
 	'previous' => 'préc',
 	'next' => 'suiv',

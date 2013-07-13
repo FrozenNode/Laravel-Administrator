@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'items per page',
 	'noresults' => 'No Results',
 	'backtosite' => 'Back to Site',
+	'logout' => 'Logout',
 
 	'previous' => 'prev',
 	'next' => 'next',

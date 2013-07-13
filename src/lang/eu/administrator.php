@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'item orrialdeko',
 	'noresults' => 'Emaitzik Ez',
 	'backtosite' => 'Tokira Itzuli',
+	'logout' => 'Logout',
 
 	'previous' => 'aurrekoa',
 	'next' => 'hurrengoa',
