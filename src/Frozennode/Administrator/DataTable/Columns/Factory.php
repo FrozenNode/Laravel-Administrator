@@ -5,6 +5,10 @@ use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
 
+use Frozennode\Administrator\DataTable\Columns\Relationships\BelongsTo;
+use Frozennode\Administrator\DataTable\Columns\Relationships\BelongsToMany;
+use Frozennode\Administrator\DataTable\Columns\Relationships\HasOneOrMany;
+
 class Factory {
 
 	/**
@@ -64,6 +68,34 @@ class Factory {
 	protected $computedColumns = array();
 
 	/**
+	 * The class name of a BelongsTo relationship
+	 *
+	 * @var string
+	 */
+	const BELONGS_TO = 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo';
+
+	/**
+	 * The class name of a BelongsToMany relationship
+	 *
+	 * @var string
+	 */
+	const BELONGS_TO_MANY = 'Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany';
+
+	/**
+	 * The class name of a HasMany relationship
+	 *
+	 * @var string
+	 */
+	const HAS_MANY = 'Illuminate\\Database\\Eloquent\\Relations\\HasMany';
+
+	/**
+	 * The class name of a HasOne relationship
+	 *
+	 * @var string
+	 */
+	const HAS_ONE = 'Illuminate\\Database\\Eloquent\\Relations\\HasOne';
+
+	/**
 	 * Create a new action Factory instance
 	 *
 	 * @param Frozennode\Administrator\Validator 				$validator
@@ -83,7 +115,7 @@ class Factory {
 	 *
 	 * @param array		$options
 	 *
-	 * @return Administrator\Frozennode\DataTable\Columns\Column
+	 * @return Frozennode\Administrator\DataTable\Columns\Column
 	 */
 	public function make($options)
 	{
@@ -95,14 +127,48 @@ class Factory {
 	 *
 	 * @param array		$options
 	 *
-	 * @return Administrator\Frozennode\DataTable\Columns\Column
+	 * @return Frozennode\Administrator\DataTable\Columns\Column
 	 */
 	public function getColumnObject($options)
 	{
-		$column = new Column($this->validator, $this->config, $this->db, $options);
-		$column->build();
+		$class = $this->getColumnClassName($options);
+		return new $class($this->validator, $this->config, $this->db, $options);
+	}
 
-		return $column;
+	/**
+	 * Gets the column class name depending on whether or not it's a relationship and what type of relationship it is
+	 *
+	 * @param array		$options
+	 *
+	 * @return string
+	 */
+	public function getColumnClassName($options)
+	{
+		$model = $this->config->getDataModel();
+		$namespace = __NAMESPACE__ . '\\';
+
+		//if the relationship is set
+		if ($method = $this->validator->arrayGet($options, 'relationship'))
+		{
+			if (method_exists($model, $method))
+			{
+				$relationship = $model->{$method}();
+
+				if (is_a($relationship, self::BELONGS_TO_MANY))
+				{
+					return $namespace . 'Relationships\BelongsToMany';
+				}
+				else if (is_a($relationship, self::HAS_ONE) || is_a($relationship, self::HAS_MANY))
+				{
+					return $namespace . 'Relationships\HasOneOrMany';
+				}
+			}
+
+			//assume it's a nested relationship
+			return $namespace . 'Relationships\BelongsTo';
+		}
+
+		return $namespace . 'Column';
 	}
 
 	/**
@@ -147,7 +213,7 @@ class Factory {
 			{
 				//if only a string value was supplied, may sure to turn it into an array
 				$object = $this->make($this->parseOptions($name, $options));
-				$this->columns[$object->field] = $object;
+				$this->columns[$object->getOption('column_name')] = $object;
 			}
 		}
 
@@ -176,7 +242,7 @@ class Factory {
 		{
 			foreach ($this->getColumns() as $column)
 			{
-				$this->columnArrays[] = $columnObject->toArray();
+				$this->columnArrays[] = $column->getOptions();
 			}
 		}
 
@@ -199,28 +265,18 @@ class Factory {
 
 			foreach ($this->getColumns() as $column)
 			{
-				if ($column->isRelated)
+				if ($column->getOption('is_related'))
 				{
-					//if there are nested values, we'll want to grab the values slightly differently
-					if (sizeof($column->nested))
-					{
-						$fk = $column->nested['models'][0]->{$column->nested['pieces'][0]}()->getForeignKey();
-						$this->includedColumns[$fk] = $model->getTable().'.'.$fk;
-					}
-					else if ($column->belongsToMany)
-					{
-						$fk = $model->{$column->relationship}()->getRelated()->getKeyName();
-						$this->includedColumns[$fk] = $model->getTable().'.'.$fk;
-					}
+					$this->includedColumns = array_merge($this->includedColumns, $column->getIncludedColumn());
 				}
-				else if (!$column->isComputed)
+				else if (!$column->getOption('is_computed'))
 				{
-					$this->includedColumns[$column->field] = $model->getTable().'.'.$column->field;
+					$this->includedColumns[$column->getOption('column_name')] = $model->getTable().'.'.$column->getOption('column_name');
 				}
 			}
 
 			//make sure the table key is included
-			if (!array_get($this->includedColumns, $model->getKeyName()))
+			if (!$this->validator->arrayGet($this->includedColumns, $model->getKeyName()))
 			{
 				$this->includedColumns[$model->getKeyName()] = $model->getTable().'.'.$model->getKeyName();
 			}
@@ -230,7 +286,7 @@ class Factory {
 			{
 				if (is_a($field, 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo'))
 				{
-					$this->includedColumns[$field->foreignKey] = $model->getTable().'.'.$field->foreignKey;
+					$this->includedColumns[$field->getOption('foreign_key')] = $model->getTable().'.'.$field->getOption('foreign_key');
 				}
 			}
 		}
@@ -250,9 +306,9 @@ class Factory {
 		{
 			foreach ($this->getColumns() as $column)
 			{
-				if ($column->isRelated)
+				if ($column->getOption('is_related'))
 				{
-					$this->relatedColumns[$column->field] = $column->field;
+					$this->relatedColumns[$column->getOption('column_name')] = $column->getOption('column_name');
 				}
 			}
 		}
@@ -272,9 +328,9 @@ class Factory {
 		{
 			foreach ($this->getColumns() as $column)
 			{
-				if (!$column->isRelated && $column->isComputed)
+				if (!$column->getOption('is_related') && $column->getOption('is_computed'))
 				{
-					$this->computedColumns[$column->field] = $column->field;
+					$this->computedColumns[$column->getOption('column_name')] = $column->getOption('column_name');
 				}
 			}
 		}
