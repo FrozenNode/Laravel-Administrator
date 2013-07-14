@@ -191,7 +191,7 @@ Provide any value that would work with Laravel's `URL::to()` method.
 	 */
 	'login_redirect_key' => 'redirect',
 
-When a user is redirected to the `login_path`, the redirect path is sent with them. This option lets you define the key. Using the above as an example, you would retrieve the redirect url by doing `Input::get('redirect')`.
+When a user is redirected to the `login_path`, the redirect path is sent with them. This option lets you define the key. Using the above as an example, you would retrieve the redirect url by doing `Session::get('redirect')`.
 
 <a name="global-rows-per-page"></a>
 ### Global Rows Per Page
