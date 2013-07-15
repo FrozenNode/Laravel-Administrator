@@ -111,5 +111,12 @@ return array(
 	 * @type array
 	 */
 	'locales' => array(),
+	
+	/**
+	 * Additional CSS file for overriding the Administrator CSS styles relative to /public/ url
+	 *
+	 * @type NULL|string
+	 */
+	 'additional_css' => null,
 
 );

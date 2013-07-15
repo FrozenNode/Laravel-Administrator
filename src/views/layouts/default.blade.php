@@ -10,6 +10,10 @@
 	<link href="{{asset('packages/frozennode/administrator/css/jquery.lw-colorpicker.css')}}" media="all" type="text/css" rel="stylesheet">
 	<link href="{{asset('packages/frozennode/administrator/css/main.css')}}" media="all" type="text/css" rel="stylesheet">
 
+	@if (Config::get('administrator::administrator.additional_css'))
+	<link href="{{ Config::get('administrator::administrator.additional_css') }}" media="all" type="text/css" rel="stylesheet">
+	@endif
+	
 </head>
 <body>
 	<div class="row-fluid">
