@@ -278,6 +278,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 	public function testGetEditFieldsArraysReturnsIndexedArrayOfOptions()
 	{
 		$field = m::mock(array('getOption' => 'field', 'getOptions' => 'field_object'));
+		$this->config->shouldReceive('getType')->once()->andReturn('model');
 		$this->factory->shouldReceive('getEditFields')->once()->andReturn(array($field))
 						->shouldReceive('fillKeyField')->once();
 		$this->assertEquals($this->factory->getEditFieldsArrays(), array('field' => 'field_object'));

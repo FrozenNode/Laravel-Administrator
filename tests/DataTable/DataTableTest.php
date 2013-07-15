@@ -105,7 +105,7 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 	{
 		$query = m::mock('Illuminate\Database\Query\Builder');
 		$countQuery = m::mock('Illuminate\Database\Query\Builder');
-		$filters = array(array('field' => 1), array('field' => 2), array('field' => 3));
+		$filters = array(array('field_name' => 1), array('field_name' => 2), array('field_name' => 3));
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
 		$field->shouldReceive('setFilter')->times(3)
 				->shouldReceive('filterQuery')->times(6);
