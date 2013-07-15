@@ -159,16 +159,10 @@ class ColumnFactoryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->factory->getColumns(), array('foo' => $columnObject));
 	}
 
-	public function testGetColumnValuesReturnsUnIndexedArray()
-	{
-		$this->factory->shouldReceive('getColumns')->once()->andReturn(array('foo' => 'bar'));
-		$this->assertEquals($this->factory->getColumnValues(), array('bar'));
-	}
-
-	public function testGetColumnArraysReturnsUnIndexedArray()
+	public function testGetColumnOptionsReturnsUnIndexedArray()
 	{
 		$this->factory->shouldReceive('getColumns')->once()->andReturn(array('foo' => m::mock(array('getOptions' => 'bar'))));
-		$this->assertEquals($this->factory->getColumnArrays(), array('bar'));
+		$this->assertEquals($this->factory->getColumnOptions(), array('bar'));
 	}
 
 	public function testGetIncludedColumnsReturnsColumns()

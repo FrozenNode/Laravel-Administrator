@@ -188,7 +188,7 @@ class DataTable {
 			foreach ($filters as $filter)
 			{
 				//get the field object
-				$fieldObject = $this->fieldFactory->findFilter($filter['field']);
+				$fieldObject = $this->fieldFactory->findFilter($filter['field_name']);
 
 				//set the filter on the object
 				$fieldObject->setFilter($filter);

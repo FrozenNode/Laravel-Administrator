@@ -40,11 +40,11 @@ class Factory {
 	protected $columns = array();
 
 	/**
-	 * The column arrays
+	 * The column options arrays
 	 *
 	 * @var array
 	 */
-	protected $columnArrays = array();
+	protected $columnOptions = array();
 
 	/**
 	 * The included column (used for pulling a certain range of selects from the DB)
@@ -225,28 +225,18 @@ class Factory {
 	 *
 	 * @return array
 	 */
-	public function getColumnValues()
-	{
-		return array_values($this->getColumns());
-	}
-
-	/**
-	 * Gets the column objects as an integer-indexed array
-	 *
-	 * @return array
-	 */
-	public function getColumnArrays()
+	public function getColumnOptions()
 	{
 		//make sure we only run this once and then return the cached version
-		if (!sizeof($this->columnArrays))
+		if (!sizeof($this->columnOptions))
 		{
 			foreach ($this->getColumns() as $column)
 			{
-				$this->columnArrays[] = $column->getOptions();
+				$this->columnOptions[] = $column->getOptions();
 			}
 		}
 
-		return $this->columnArrays;
+		return $this->columnOptions;
 	}
 
 	/**

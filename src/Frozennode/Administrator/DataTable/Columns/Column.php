@@ -224,7 +224,7 @@ class Column {
 
 		if (!array_key_exists($key, $options))
 		{
-			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $options['column_name'] . "' field");
+			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $options['column_name'] . "' column");
 		}
 
 		return $options[$key];
