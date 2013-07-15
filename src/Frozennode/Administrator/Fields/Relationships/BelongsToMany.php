@@ -19,26 +19,24 @@ class BelongsToMany extends Relationship {
 	);
 
 	/**
-	 * Create a new BelongsToMany instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
+	 * Builds a few basic options
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
+	public function build()
 	{
-		parent::__construct($validator, $config, $db, $options);
+		parent::build();
 
-		//set up the model depending on what's passed in
+		$options = $this->suppliedOptions;
+
 		$model = $this->config->getDataModel();
-		$relationship = $model->{$this->getOption('field_name')}();
-		$related_model = $relationship->getRelated();
+		$relationship = $model->{$options['field_name']}();
+		$relatedModel = $relationship->getRelated();
 
-		$this->userOptions['table'] = $relationship->getTable();
-		$this->userOptions['column'] = $relationship->getForeignKey();
-		$this->userOptions['column2'] = $relationship->getOtherKey();
-		$this->userOptions['foreign_key'] = $related_model->getKeyName();
+		$options['table'] = $relationship->getTable();
+		$options['column'] = $relationship->getForeignKey();
+		$options['column2'] = $relationship->getOtherKey();
+		$options['foreign_key'] = $relatedModel->getKeyName();
+
+		$this->suppliedOptions = $options;
 	}
 
 	/**
@@ -53,23 +51,27 @@ class BelongsToMany extends Relationship {
 	{
 		$input = $input ? explode(',', $input) : array();
 		$fieldName = $this->getOption('field_name');
+		$relationship = $model->{$fieldName}();
 
 		//if this field is sortable, delete all the old records and insert the new ones one at a time
 		if ($sortField = $this->getOption('sort_field'))
 		{
 			//first delete all the old records
-			$model->{$fieldName}()->delete();
+			$relationship->delete();
 
+			//then re-attach them in the correct order
 			foreach ($input as $i => $item)
 			{
-				$model->{$fieldName}()->attach($item, array($sortField => $i));
+				$relationship->attach($item, array($sortField => $i));
 			}
 		}
 		else
 		{
-			$model->{$fieldName}()->sync($input);
+			//elsewise the order doesn't matter, so use sync
+			$relationship->sync($input);
 		}
 
+		//unset the attribute on the model
 		$model->__unset($fieldName);
 	}
 
@@ -124,17 +126,17 @@ class BelongsToMany extends Relationship {
 	 * Constrains a query by a given set of constraints
 	 *
 	 * @param  Query 								$query
-	 * @param  Illuminate\Database\Eloquent\Model 	$model
+	 * @param  Illuminate\Database\Eloquent\Model 	$relatedModel
 	 * @param  string 								$constraint
 	 *
 	 * @return void
 	 */
-	public function constrainQuery(&$query, $model, $constraint)
+	public function constrainQuery(&$query, $relatedModel, $constraint)
 	{
 		//if the column hasn't been joined yet, join it
 		if (!$this->validator->isJoined($query, $this->getOption('table')))
 		{
-			$query->join($this->getOption('table'), $model->getTable().'.'.$model->getKeyName(), '=', $this->getOption('column2'));
+			$query->join($this->getOption('table'), $relatedModel->getTable().'.'.$relatedModel->getKeyName(), '=', $this->getOption('column2'));
 		}
 
 		$query->where($this->getOption('column'), '=', $constraint);

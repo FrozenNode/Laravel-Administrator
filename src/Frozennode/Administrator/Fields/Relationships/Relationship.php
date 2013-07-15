@@ -55,35 +55,31 @@ abstract class Relationship extends Field {
 	);
 
 	/**
-	 * Create a new Relationship instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
+	 * Builds a few basic options
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
+	public function build()
 	{
-		parent::__construct($validator, $config, $db, $options);
+		parent::build();
 
-		//put the model into a variable so we can call it statically
+		$options = $this->suppliedOptions;
 		$model = $this->config->getDataModel();
-
-		//get an instance of the relationship object
-		$relationship = $model->{$this->getOption('field_name')}();
+		$relationship = $model->{$options['field_name']}();
 
 		//set the search fields to the name field if none exist
-		$searchFields = $this->getOption('search_fields');
-		$this->userOptions['search_fields'] = empty($searchFields) ? array($this->getOption('name_field')) : $searchFields;
+		$searchFields = $this->validator->arrayGet($options, 'search_fields');
+		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
+		$options['search_fields'] = empty($searchFields) ? array($nameField) : $searchFields;
 
 		//determine if this is a self-relationship
-		$this->userOptions['self_relationship'] = $relationship->getRelated()->getTable() === $model->getTable();
+		$options['self_relationship'] = $relationship->getRelated()->getTable() === $model->getTable();
 
 		//set up and check the constraints
 		$this->setUpConstraints($options);
 
 		//load up the relationship options
 		$this->loadRelationshipOptions($options);
+
+		$this->suppliedOptions = $options;
 	}
 
 	/**
@@ -93,9 +89,10 @@ abstract class Relationship extends Field {
 	 *
 	 * @return  void
 	 */
-	public function setupConstraints($options)
+	public function setUpConstraints(&$options)
 	{
-		$constraints = $this->getOption('constraints');
+		$constraints = $this->validator->arrayGet($options, 'constraints');
+		$model = $this->config->getDataModel();
 
 		//set up and check the constraints
 		if (sizeof($constraints))
@@ -106,13 +103,13 @@ abstract class Relationship extends Field {
 			foreach ($constraints as $field => $rel)
 			{
 				//check if the supplied values are strings and that their methods exist on their respective models
-				if (is_string($field) && is_string($rel) && method_exists($this->config->getDataModel(), $field))
+				if (is_string($field) && is_string($rel) && method_exists($model, $field))
 				{
 					$validConstraints[$field] = $rel;
 				}
 			}
 
-			$this->userOptions['constraints'] = $validConstraints;
+			$options['constraints'] = $validConstraints;
 		}
 	}
 
@@ -123,24 +120,27 @@ abstract class Relationship extends Field {
 	 *
 	 * @return  void
 	 */
-	public function loadRelationshipOptions($options)
+	public function loadRelationshipOptions(&$options)
 	{
 		//if we want all of the possible items on the other model, load them up, otherwise leave the options empty
 		$items = array();
+		$model = $this->config->getDataModel();
+		$relationship = $model->{$options['field_name']}();
+		$relatedModel = $relationship->getRelated();
 
-		if ($this->getOption('load_relationships'))
+		if ($this->validator->arrayGet($options, 'load_relationships'))
 		{
 			//if a sort field was supplied, order the results by it
-			if ($optionsSortField = $this->getOption('options_sort_field'))
+			if ($optionsSortField = $this->validator->arrayGet($options, 'options_sort_field'))
 			{
-				$optionsSortDirection = $this->getOption('options_sort_direction');
+				$optionsSortDirection = $this->validator->arrayGet($options, 'options_sort_direction', $this->defaults['options_sort_direction']);
 
-				$items = $relationship->getRelated()->orderBy($this->db->raw($optionsSortField), $optionsSortDirection)->get();
+				$items = $relatedModel->orderBy($this->db->raw($optionsSortField), $optionsSortDirection)->get();
 			}
 			//otherwise just pull back an unsorted list
 			else
 			{
-				$items = $relationship->getRelated()->get();
+				$items = $relatedModel->get();
 			}
 		}
 		//otherwise if there are relationship items, we need them in the initial options list
@@ -150,18 +150,29 @@ abstract class Relationship extends Field {
 		}
 
 		//map the options to the options property where array('id': [key], 'text': [nameField])
-		$dataOptions = array();
-		$nameField = $this->getOption('name_field');
+		$nameField = $this->validator->arrayGet($options, 'name_field');
+		$keyField = $relatedModel->getKeyName();
+		$options['options'] = $this->mapRelationshipOptions($items, $nameField, $keyField);
+	}
 
-		foreach ($items as $option)
+	/**
+	 * Maps the relationship options to an array with 'id' and 'text' keys
+	 *
+	 * @param array		$items
+	 * @param string	$nameField
+	 * @param string	$keyField
+	 *
+	 * @return array
+	 */
+	public function mapRelationshipOptions(array $items, $nameField, $keyField)
+	{
+		return array_map(function($option) use ($nameField, $keyField)
 		{
-			$dataOptions[] = array(
-				'id' => $option->id,
+			return array(
+				'id' => $option->{$keyField},
 				'text' => $option->{$nameField}
 			);
-		}
-
-		$this->userOptions['options'] = $dataOptions;
+		}, $items);
 	}
 
 	/**

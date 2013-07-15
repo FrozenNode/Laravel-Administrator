@@ -70,7 +70,7 @@ class Number extends Field {
 	 *
 	 * @return string
 	 */
-	private function parseNumber($number)
+	public function parseNumber($number)
 	{
 		return str_replace($this->getOption('decimal_separator'), '.', str_replace($this->getOption('thousands_separator'), '', $number));
 	}

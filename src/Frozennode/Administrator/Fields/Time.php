@@ -38,6 +38,8 @@ class Time extends Field {
 	 */
 	public function filterQuery(&$query, &$selects = null)
 	{
+		$model = $this->config->getDataModel();
+
 		//try to read the time for the min and max values, and if they check out, set the where
 		if ($minValue = $this->getOption('min_value'))
 		{
@@ -88,7 +90,7 @@ class Time extends Field {
 	 *
 	 * @return string
 	 */
-	protected function getDateString($time)
+	public function getDateString($time)
 	{
 		if ($this->getOption('type') === 'date')
 		{

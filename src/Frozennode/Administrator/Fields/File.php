@@ -34,23 +34,18 @@ class File extends Field {
 	);
 
 	/**
-	 * Create a new File instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
+	 * Builds a few basic options
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
+	public function build()
 	{
-		parent::__construct($validator, $config, $db, $options);
+		parent::build();
 
 		//set the upload url depending on the type of config this is
 		$url = $this->validator->getUrlInstance();
 		$route = $this->config->getType() === 'settings' ? 'admin_settings_file_upload' : 'admin_file_upload';
 
 		//set the upload url to the proper route
-		$this->userOptions['upload_url'] = $url->route($route, array($this->config->getOption('name'), $this->getOption('field_name')));
+		$this->suppliedOptions['upload_url'] = $url->route($route, array($this->config->getOption('name'), $this->suppliedOptions['field_name']));
 	}
 
 	/**

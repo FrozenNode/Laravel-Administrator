@@ -29,95 +29,18 @@ abstract class Field {
 	protected $db;
 
 	/**
+	 * The originally supplied options
+	 *
+	 * @var array
+	 */
+	protected $suppliedOptions;
+
+	/**
 	 * The options supplied merged into the defaults
 	 *
-	 * @var bool
+	 * @var array
 	 */
-	public $userOptions;
-
-	/**
-	 * This is used in setting up filters
-	 *
-	 * @var bool
-	 */
-	public $relationship = false;
-
-	/**
-	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
-	 *
-	 * @var bool
-	 */
-	public $external = false;
-
-	/**
-	 * If this is true, the field is editable
-	 *
-	 * @var bool
-	 */
-	public $editable = true;
-
-	/**
-	 * Determines if the field is visible
-	 *
-	 * @var bool
-	 */
-	public $visible = true;
-
-	/**
-	 * The name of the field
-	 *
-	 * @var string
-	 */
-	public $field = '';
-
-	/**
-	 * The field type which matches a $fieldTypes key
-	 *
-	 * @var string
-	 */
-	public $type = false;
-
-	/**
-	 * When a field is instantiated, it is give its field type which matches a $fieldTypes key
-	 *
-	 * @var string
-	 */
-	public $title = '';
-
-	/**
-	 * When a field is a setter, no value will be returned from the database and the value will be unset before saving
-	 *
-	 * @var bool
-	 */
-	public $setter = false;
-
-	/**
-	 * The value (used in filter)
-	 *
-	 * @var string
-	 */
-	public $value = '';
-
-	/**
-	 * The minimum value (used in range filter)
-	 *
-	 * @var string
-	 */
-	public $minValue = '';
-
-	/**
-	 * The maximum value (used in range filter)
-	 *
-	 * @var string
-	 */
-	public $maxValue = '';
-
-	/**
-	 * Determines if a type has a min/max range
-	 *
-	 * @var string
-	 */
-	public $minMax = false;
+	protected $userOptions;
 
 	/**
 	 * The default configuration options
@@ -173,28 +96,46 @@ abstract class Field {
 		$this->validator = $validator;
 		$this->config = $config;
 		$this->db = $db;
+		$this->suppliedOptions = $options;
+	}
+
+	/**
+	 * Builds a few basic options
+	 */
+	public function build()
+	{
+		$options = $this->suppliedOptions;
 
 		//set the title if it doesn't exist
-		$options['title'] = $validator->arrayGet($options, 'title', $options['field_name']);
+		$options['title'] = $this->validator->arrayGet($options, 'title', $options['field_name']);
 
 		//make sure the visible callback is run if it's supplied
-		if (is_callable($validator->arrayGet($options, 'visible')))
+		$visible = $this->validator->arrayGet($options, 'visible');
+
+		if (is_callable($visible))
 		{
-			$options['visible'] = $options['visible']($this->config->getDataModel()) ? true : false;
+			$options['visible'] = $visible($this->config->getDataModel()) ? true : false;
 		}
 
+		$this->suppliedOptions = $options;
+	}
+
+	/**
+	 * Validates the supplied options
+	 *
+	 * @return void
+	 */
+	public function validateOptions()
+	{
 		//override the config
-		$validator->override($config, $this->getRules());
+		$this->validator->override($this->suppliedOptions, $this->getRules());
 
 		//if the validator failed, throw an exception
-		if ($validator->fails())
+		if ($this->validator->fails())
 		{
-			throw new \InvalidArgumentException("There are problems with your '" . $options['field_name'] . "' field: " .
-												implode('. ', $validator->messages()->all()));
+			throw new \InvalidArgumentException("There are problems with your '" . $this->suppliedOptions['field_name'] . "' field in the " .
+									$this->config->getOption('name') . " config: " .	implode('. ', $this->validator->messages()->all()));
 		}
-
-		//fill up the instance with the user-supplied options
-		$this->userOptions = array_merge($this->getDefaults(), $config);
 	}
 
 	/**
@@ -267,7 +208,7 @@ abstract class Field {
 	 *
 	 * @return false|string
 	 */
-	protected function getFilterValue($value)
+	public function getFilterValue($value)
 	{
 		if (empty($value) || (is_string($value) && trim($value) === ''))
 		{
@@ -286,6 +227,14 @@ abstract class Field {
 	 */
 	public function getOptions()
 	{
+		if (empty($this->userOptions))
+		{
+			//validate the options and then merge them into the defaults
+			$this->build();
+			$this->validateOptions();
+			$this->userOptions = array_merge($this->getDefaults(), $this->suppliedOptions);
+		}
+
 		return $this->userOptions;
 	}
 
@@ -302,7 +251,7 @@ abstract class Field {
 
 		if (!array_key_exists($key, $options))
 		{
-			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $this->getOption('field_name') . "' field");
+			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $this->userOptions['field_name'] . "' field");
 		}
 
 		return $options[$key];

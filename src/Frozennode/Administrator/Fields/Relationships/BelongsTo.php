@@ -17,27 +17,24 @@ class BelongsTo extends Relationship {
 	);
 
 	/**
-	 * Create a new BelongsTo instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
+	 * Builds a few basic options
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
+	public function build()
 	{
-		parent::__construct($validator, $config, $db, $options);
+		parent::build();
 
-		//set up the model depending on what's passed in
+		$options = $this->suppliedOptions;
+
 		$model = $this->config->getDataModel();
-		$relationship = $model->{$this->getOption('field_name')}();
-		$otherModel = $relationship->getRelated();
+		$relationship = $model->{$options['field_name']}();
+		$relatedModel = $relationship->getRelated();
 
-		$this->userOptions['table'] = $otherModel->getTable();
-		$this->userOptions['column'] = $otherModel->getKeyName();
-		$this->userOptions['foreign_key'] = $relationship->getForeignKey();
+		$options['table'] = $relatedModel->getTable();
+		$options['column'] = $relatedModel->getKeyName();
+		$options['foreign_key'] = $relationship->getForeignKey();
+
+		$this->suppliedOptions = $options;
 	}
-
 
 	/**
 	 * Fill a model with input data

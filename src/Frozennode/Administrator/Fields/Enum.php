@@ -17,30 +17,27 @@ class Enum extends Field {
 	);
 
 	/**
-	 * Create a new Enum instance
-	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
-	 * @param array												$options
+	 * Builds a few basic options
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
+	public function build()
 	{
-		parent::__construct($validator, $config, $db, $options);
+		parent::build();
 
-		$options = $this->getOption('options');
-		$formattedOptions = array();
+		$options = $this->suppliedOptions;
+
+		$dataOptions = $this->getOption('options');
+		$options['options'] = array();
 
 		//iterate over the options to create the options assoc array
-		foreach ($options as $val => $text)
+		foreach ($dataOptions as $val => $text)
 		{
-			$formattedOptions[] = array(
+			$options['options'][] = array(
 				'id' => is_numeric($val) ? $text : $val,
 				'text' => $text,
 			);
 		}
 
-		$this->userOptions['options'] = $formattedOptions;
+		$this->suppliedOptions = $options;
 	}
 
 	/**
