@@ -6,7 +6,7 @@
 - There is now an optional 'rules' property in model configuration files which works just like the $rules static property in Eloquent models
 - You can now define where the raw settings data is stored by providing a 'storage_path' option to settings configs
 - You can now supply a 'confirmation' string option to your custom actions which will require a confirmation from the admin user before the action can go through.
-- You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields are require ordering on something other than the name_field
+- You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields, and as such require ordering on something other than the name_field
 - Bugfix: The model results no longer require an ajax load on pageload
 - Bugfix: Table prefixes are now taken into consideration
 - Bugfix: Number fields would take two tries to clear

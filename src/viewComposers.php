@@ -22,12 +22,11 @@ View::composer('administrator::index', function($view)
 	$view->config = $config;
 	$view->dataTable = $dataTable;
 	$view->primaryKey = $model->getKeyName();
-	//$view->rows = ModelHelper::getRows($config->sort);
 	$view->rows = $dataTable->getRows(App::make('db'));
 	$view->editFields = $fieldFactory->getEditFields();
 	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
 	$view->dataModel = $fieldFactory->getDataModel();
-	$view->columnModel = $columnFactory->getColumnValues();
+	$view->columnModel = $columnFactory->getColumnOptions();
 	$view->actions = $actionFactory->getActionsOptions();
 	$view->actionPermissions = $actionFactory->getActionPermissions();
 	$view->filters = $fieldFactory->getFiltersArrays();
