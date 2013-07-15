@@ -30,7 +30,9 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//make sure the Laravel Validator is using our custom Validator that we can pass to various constructors
 		LValidator::resolver(function($translator, $data, $rules, $messages)
 		{
-			return new \Frozennode\Administrator\Validator($translator, $data, $rules, $messages);
+			$validator = new \Frozennode\Administrator\Validator($translator, $data, $rules, $messages);
+			$validator->setUrlInstance(\App::make('url'));
+			return $validator;
 		});
 
 		//set up the shared instances
