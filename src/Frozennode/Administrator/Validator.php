@@ -7,6 +7,7 @@ class Validator extends \Illuminate\Validation\Validator {
 		'string' => "The :attribute option must be a string",
 		'directory' => "The :attribute option must be a valid directory",
 		'array' => "The :attribute option must be an array",
+		'array_with' => "The :attribute array is missing some required values",
 		'not_empty' => "The :attribute option must not be empty",
 		'callable' => "The :attribute option must be a function",
 		'eloquent' => "The :attribute option must be the string name of a valid Eloquent model",
@@ -143,6 +144,22 @@ class Validator extends \Illuminate\Validation\Validator {
 	public function validateArray($attribute, $value, $parameters)
 	{
 		return is_array($value);
+	}
+
+	/**
+	 * Validates that an item is an array
+	 */
+	public function validateArrayWith($attribute, $value, $parameters)
+	{
+		foreach ($parameters as $key)
+		{
+			if (!isset($value[$key]))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
