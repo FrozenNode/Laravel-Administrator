@@ -28,6 +28,13 @@ class Factory {
 	protected $actions = array();
 
 	/**
+	 * The array of actions options
+	 *
+	 * @var array
+	 */
+	protected $actionsOptions = array();
+
+	/**
 	 * The action permissions array
 	 *
 	 * @var array
@@ -162,6 +169,30 @@ class Factory {
 		}
 
 		return $this->actions;
+	}
+
+	/**
+	 * Gets all actions as arrays of options
+	 *
+	 * @param bool	$override
+	 *
+	 * @return array of Action options
+	 */
+	public function getActionsOptions($override = false)
+	{
+		//make sure we only run this once and then return the cached version
+		if (!sizeof($this->actionsOptions) || $override)
+		{
+			$this->actionsOptions = array();
+
+			//loop over the actions to build the list
+			foreach ($this->getActions($override) as $name => $action)
+			{
+				$this->actionsOptions[] = $action->getOptions();
+			}
+		}
+
+		return $this->actionsOptions;
 	}
 
 	/**

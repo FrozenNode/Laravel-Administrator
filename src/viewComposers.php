@@ -28,7 +28,7 @@ View::composer('administrator::index', function($view)
 	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
 	$view->dataModel = $fieldFactory->getDataModel();
 	$view->columnModel = $columnFactory->getColumnValues();
-	$view->actions = $actionFactory->getActions();
+	$view->actions = $actionFactory->getActionsOptions();
 	$view->actionPermissions = $actionFactory->getActionPermissions();
 	$view->filters = $fieldFactory->getFiltersArrays();
 	$view->formWidth = $config->getOption('form_width');
@@ -51,7 +51,7 @@ View::composer('administrator::settings', function($view)
 	$view->config = $config;
 	$view->editFields = $fieldFactory->getEditFields();
 	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
-	$view->actions = $actionFactory->getActions();
+	$view->actions = $actionFactory->getActionsOptions();
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = URL::to('packages/frozennode/administrator/');
 	$view->route = $route['path'].'/';

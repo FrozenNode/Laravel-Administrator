@@ -110,6 +110,14 @@ class ActionFactoryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->factory->getActions(), array(1, 1, 1));
 	}
 
+	public function testGetActionsOptions()
+	{
+		$action = m::mock('Frozennode\Administrator\Actions\Action');
+		$action->shouldReceive('getOptions')->times(3)->andReturn(1);
+		$this->factory->shouldReceive('getActions')->andReturn(array($action, $action, $action));
+		$this->assertEquals($this->factory->getActionsOptions(), array(1, 1, 1));
+	}
+
 	public function testGetActionPermissionsCallback()
 	{
 		$this->config->shouldReceive('getDataModel')->once()
