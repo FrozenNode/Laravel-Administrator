@@ -230,9 +230,9 @@
 				//iterate over the edit fields and ensure that the belongs_to relationships are false if they are an empty string
 				$.each(self.editFields(), function(ind, field)
 				{
-					if (field.relationship && !field.external && saveData[field.field] === '')
+					if (field.relationship && !field.external && saveData[field.field_name] === '')
 					{
-						saveData[field.field] = false;
+						saveData[field.field_name] = false;
 					}
 				});
 
@@ -394,7 +394,7 @@
 						{
 							if (el.relationship && el.autocomplete)
 							{
-								self[el.field + '_autocomplete'] = data[el.field + '_autocomplete'];
+								self[el.field_name + '_autocomplete'] = data[el.field_name + '_autocomplete'];
 							}
 						});
 
@@ -563,7 +563,7 @@
 				//iterate over the columns to check if it's a valid sort_field or field
 				$.each(this.columns, function(i, col)
 				{
-					if (field === col.sort_field || field === col.field)
+					if (field === col.sort_field || field === col.column_name)
 					{
 						found = true;
 						return false;
@@ -664,12 +664,12 @@
 			getFilters: function()
 			{
 				var filters = [],
-					observables = ['value', 'minValue', 'maxValue'];
+					observables = ['value', 'min_value', 'max_value'];
 
 				$.each(window.admin.filtersViewModel.filters, function(ind, el)
 				{
 					var filter = {
-						field: el.field,
+						field_name: el.field_name,
 						type: el.type,
 						value: el.value() ? el.value() : null,
 					};
@@ -706,9 +706,9 @@
 				$.each(window.admin.filtersViewModel.filters, function(ind, filter)
 				{
 					var fieldIndex = ind,
-						fieldName = filter.field;
+						fieldName = filter.field_name;
 
-					if ((!filter.constraints || !filter.constraints.length) && filter.selfRelationship)
+					if ((!filter.constraints || !filter.constraints.length) && filter.self_relationship)
 					{
 						window.admin.filtersViewModel.filters[fieldIndex].loadingOptions(true);
 
@@ -739,10 +739,10 @@
 				$.each(self.editFields(), function(ind, field)
 				{
 					var fieldIndex = ind,
-						fieldName = field.field;
+						fieldName = field.field_name;
 
 					//if there are constraints to maintain, set up the subscriptions
-					if ((!field.constraints || !field.constraints.length) && field.selfRelationship)
+					if ((!field.constraints || !field.constraints.length) && field.self_relationship)
 					{
 						field.loadingOptions(true);
 
@@ -862,7 +862,7 @@
 
 			$.each(adminData.filters, function(ind, filter)
 			{
-				var observables = ['value', 'minValue', 'maxValue'];
+				var observables = ['value', 'min_value', 'max_value'];
 
 				//iterate over the desired observables and check if they're there. if so, assign them an observable slot
 				$.each(observables, function(i, obs)
@@ -879,7 +879,7 @@
 					filter.loadingOptions = ko.observable(false);
 				}
 
-				filter.field_id = 'filter_field_' + filter.field;
+				filter.field_id = 'filter_field_' + filter.field_name;
 
 				filters.push(filter);
 			});
@@ -975,13 +975,13 @@
 
 
 				//check if there's a min and max value. if so, subscribe to those as well
-				if ('minValue' in filter)
+				if ('min_value' in filter)
 				{
-					self.filtersViewModel.filters[ind].minValue.subscribe(runFilter);
+					self.filtersViewModel.filters[ind].min_value.subscribe(runFilter);
 				}
-				if ('maxValue' in filter)
+				if ('max_value' in filter)
 				{
-					self.filtersViewModel.filters[ind].maxValue.subscribe(runFilter);
+					self.filtersViewModel.filters[ind].max_value.subscribe(runFilter);
 				}
 
 
@@ -997,7 +997,7 @@
 					$.each(field.constraints, function(key, relationshipName)
 					{
 						var fieldIndex = ind,
-							fieldName = field.field;
+							fieldName = field.field_name;
 
 						self.viewModel[key].subscribe(function(val)
 						{
