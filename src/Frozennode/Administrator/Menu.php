@@ -54,9 +54,6 @@ class Menu {
 			//if the item is a string, find its config
 			if (is_string($item))
 			{
-				//if the prefix is 'settings.', it's a settings config
-				$isSettings = strpos($item, 'settings.') !== false;
-
 				//fetch the appropriate config file
 				$config = $this->configFactory->make($item);
 
@@ -70,6 +67,12 @@ class Menu {
 			else if (is_array($item))
 			{
 				$menu[$key] = $this->getMenu($item);
+
+				//if the submenu is empty, unset it
+				if (empty($menu[$key]))
+				{
+					unset($menu[$key]);
+				}
 			}
 		}
 
