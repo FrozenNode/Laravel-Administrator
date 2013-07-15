@@ -66,7 +66,7 @@ class Factory {
 	 *
 	 * @return Frozennode\Administrator\Actions\Action
 	 */
-	public function make($name, $options)
+	public function make($name, array $options)
 	{
 		//check the permission on this item
 		$options = $this->parseDefaults($name, $options);
@@ -97,7 +97,8 @@ class Factory {
 		$options['action_name'] = $name;
 
 		//set the permission
-		$options['has_permission'] = is_callable($this->validator->arrayGet($options, 'permission', false)) ? $options['permission']($model) : true;
+		$permission = $this->validator->arrayGet($options, 'permission', false);
+		$options['has_permission'] = is_callable($permission) ? $permission($model) : true;
 
 		//check if the messages array exists
 		$options['messages'] = $this->validator->arrayGet($options, 'messages', array());
@@ -130,7 +131,7 @@ class Factory {
 		//loop over the actions to find our culprit
 		foreach ($this->getActions() as $action)
 		{
-			if ($action->name === $name)
+			if ($action->getOption('name') === $name)
 			{
 				return $action;
 			}
@@ -188,7 +189,7 @@ class Factory {
 			{
 				if (is_callable($callback))
 				{
-					$this->actionPermissions[$action] = (bool) $callback();
+					$this->actionPermissions[$action] = (bool) $callback($model);
 				}
 				else
 				{

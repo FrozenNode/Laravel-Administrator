@@ -21,50 +21,45 @@ class Action {
 	protected $config;
 
 	/**
-	 * The name of the action
-	 *
-	 * @var string
-	 */
-	public $name;
-
-	/**
-	 * The title of the action button
-	 *
-	 * @var string
-	 */
-	public $title = 'Custom Action';
-
-	/**
-	 * If this is true, this user has permission to access this action
-	 *
-	 * @var bool
-	 */
-	public $hasPermission;
-
-	/**
-	 * If this is a string, flash a confirmation message
-	 *
-	 * @var string
-	 */
-	public $confirmation = false;
-
-	/**
-	 * The action messages for this button
+	 * The user supplied options array
 	 *
 	 * @var array
 	 */
-	public $messages = array(
-		'active' => 'Just a moment...',
-		'success' => 'Success!',
-		'error' => 'There was an error performing this action',
+	protected $suppliedOptions = array();
+
+	/**
+	 * The options array
+	 *
+	 * @var array
+	 */
+	protected $options = array();
+
+	/**
+	 * The default configuration options
+	 *
+	 * @var array
+	 */
+	protected $defaults = array(
+		'title' => 'Custom Action',
+		'has_permission' => true,
+		'confirmation' => false,
+		'messages' => array(
+			'active' => 'Just a moment...',
+			'success' => 'Success!',
+			'error' => 'There was an error performing this action',
+		),
 	);
 
 	/**
-	 * The function to run for this action
+	 * The base rules that all fields need to pass
 	 *
-	 * @var closure
+	 * @var array
 	 */
-	public $action;
+	protected $rules = array(
+		'title' => 'string',
+		'messages' => 'array|array_with:active,success,error',
+		'action' => 'required|callable',
+	);
 
 	/**
 	 * Create a new action Factory instance
@@ -77,29 +72,52 @@ class Action {
 	{
 		$this->config = $config;
 		$this->validator = $validator;
-		$this->name = $options['action_name'];
-		$this->title = $this->validator->arrayGet($options, 'title', $this->title);
-		$this->hasPermission = $options['has_permission'];
+		$this->suppliedOptions = $options;
+	}
+
+	/**
+	 * Validates the supplied options
+	 *
+	 * @return void
+	 */
+	public function validateOptions()
+	{
+		//override the config
+		$this->validator->override($this->suppliedOptions, $this->rules);
+
+		//if the validator failed, throw an exception
+		if ($this->validator->fails())
+		{
+			throw new \InvalidArgumentException("There are problems with your '" . $this->suppliedOptions['action_name'] . "' action in the " .
+									$this->config->getOption('name') . " model: " .	implode('. ', $this->validator->messages()->all()));
+		}
+	}
+
+	/**
+	 * Builds the necessary fields on the object
+	 *
+	 * @return void
+	 */
+	public function build()
+	{
+		$model = $this->config->getDataModel();
+		$options = $this->suppliedOptions;
 
 		//check if a confirmation was supplied
 		$confirmation = $this->validator->arrayGet($options, 'confirmation');
 
+		//if it's a string, simply set it
 		if (is_string($confirmation))
 		{
-			$this->confirmation = $confirmation;
+			$options['confirmation'] = $confirmation;
 		}
+		//if it's callable pass it the current model and run it
 		else if (is_callable($confirmation))
 		{
-			$this->confirmation = $confirmation($model);
+			$options['confirmation'] = $confirmation($model);
 		}
 
-		//run through the messages
-		$this->messages['active'] = $this->validator->arrayGet($options['messages'], 'active', trans('administrator::administrator.active'));
-		$this->messages['success'] = $this->validator->arrayGet($options['messages'], 'success', trans('administrator::administrator.success'));
-		$this->messages['error'] = $this->validator->arrayGet($options['messages'], 'error', trans('administrator::administrator.error'));
-
-		//set up the action
-		$this->action = $this->validator->arrayGet($options, 'action', function() {});
+		$this->suppliedOptions = $options;
 	}
 
 	/**
@@ -111,23 +129,45 @@ class Action {
 	 */
 	public function perform(&$data)
 	{
-		$action = $this->action;
+		$action = $this->getOption('action');
 		return $action($data);
 	}
 
 	/**
-	 * Turn sort options into an array
+	 * Gets all user options
 	 *
 	 * @return array
 	 */
-	public function toArray()
+	public function getOptions()
 	{
-		return array(
-			'name' => $this->name,
-			'title' => $this->title,
-			'hasPermission' => $this->hasPermission,
-			'messages' => $this->messages,
-			'confirmation' => $this->confirmation,
-		);
+		//make sure the supplied options have been merged with the defaults
+		if (empty($this->options))
+		{
+			//validate the options and build them
+			$this->validateOptions();
+			$this->build();
+			$this->options = array_merge($this->defaults, $this->suppliedOptions);
+		}
+
+		return $this->options;
+	}
+
+	/**
+	 * Gets a field's option
+	 *
+	 * @param string 	$key
+	 *
+	 * @return mixed
+	 */
+	public function getOption($key)
+	{
+		$options = $this->getOptions();
+
+		if (!array_key_exists($key, $options))
+		{
+			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $options['action_name'] . "' action");
+		}
+
+		return $options[$key];
 	}
 }
