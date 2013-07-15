@@ -150,7 +150,7 @@ abstract class Relationship extends Field {
 		}
 
 		//map the options to the options property where array('id': [key], 'text': [nameField])
-		$nameField = $this->validator->arrayGet($options, 'name_field');
+		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
 		$keyField = $relatedModel->getKeyName();
 		$options['options'] = $this->mapRelationshipOptions($items, $nameField, $keyField);
 	}
@@ -164,15 +164,19 @@ abstract class Relationship extends Field {
 	 *
 	 * @return array
 	 */
-	public function mapRelationshipOptions(array $items, $nameField, $keyField)
+	public function mapRelationshipOptions($items, $nameField, $keyField)
 	{
-		return array_map(function($option) use ($nameField, $keyField)
+		$result = array();
+
+		foreach ($items as $option)
 		{
-			return array(
+			$result[] = array(
 				'id' => $option->{$keyField},
 				'text' => $option->{$nameField}
 			);
-		}, $items);
+		}
+
+		return $result;
 	}
 
 	/**

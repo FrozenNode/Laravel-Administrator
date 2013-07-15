@@ -170,8 +170,8 @@ abstract class Field {
 	public function setFilter($filter)
 	{
 		$this->userOptions['value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'value', $this->getOption('value')));
-		$this->userOptions['min_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'minValue', $this->getOption('min_value')));
-		$this->userOptions['max_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'maxValue', $this->getOption('max_value')));
+		$this->userOptions['min_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'min_value', $this->getOption('min_value')));
+		$this->userOptions['max_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'max_value', $this->getOption('max_value')));
 	}
 
 	/**

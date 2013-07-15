@@ -413,8 +413,11 @@ class Factory {
 			$return[$fieldObject->getOption('field_name')] = $fieldObject->getOptions();
 		}
 
-		//get the key field
-		$this->fillKeyField($return);
+		//get the key field if this is a model page
+		if ($this->config->getType() === 'model')
+		{
+			$this->fillKeyField($return);
+		}
 
 		return $return;
 	}
