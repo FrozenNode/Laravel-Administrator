@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'Sayfa Başına Kalem',
 	'noresults' => 'Bulunamadı',
 	'backtosite' => 'Siteye Dön',
+	'logout' => 'Çıkış',
 
 	'previous' => 'önceki',
 	'next' => 'sonraki',

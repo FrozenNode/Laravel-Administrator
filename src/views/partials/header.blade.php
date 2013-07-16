@@ -50,6 +50,9 @@
 				</li>
 			</ul>
 		@endif
+		@if(Config::get('administrator::administrator.logout_path'))
+			<a href="{{URL::to(Config::get('administrator::administrator.logout_path'))}}" id="logout">{{trans('administrator::administrator.logout')}}</a>
+		@endif
 		<a href="{{URL::to('/')}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
 	</div>
 </header>

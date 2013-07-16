@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'itens por página',
 	'noresults' => 'Sem Resultados',
 	'backtosite' => 'Voltar para o Site',
+	'logout' => 'Logout',
 
 	'previous' => 'anterior',
 	'next' => 'próximo',
