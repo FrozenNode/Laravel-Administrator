@@ -45,9 +45,10 @@ class ColumnFactoryTest extends \PHPUnit_Framework_TestCase {
 	protected $factory;
 
 	/**
-	 * The ColumnFactory mock
+	 * The namespace prefix that we have to use in order to get around the weird php quirk that requires you to specify the
+	 * fully qualified class name if you do "new $class".
 	 *
-	 * @var Mockery
+	 * @var string
 	 */
 	protected $namespace = 'Frozennode\\Administrator\\DataTable\\Columns\\';
 
