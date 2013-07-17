@@ -196,8 +196,8 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	public function testUpdateModelWithLink()
 	{
 		$model = m::mock('stdClass')->makePartial();
-		$model->id = 1;
 		$model->shouldReceive('find')->once()
+				->shouldReceive('getKey')->once()
 				->shouldReceive('setAttribute')->times(4);
 		$fieldFactory = m::mock('Frozennode\Administrator\Fields\Factory');
 		$fieldFactory->shouldReceive('getEditFieldsArrays')->once();
@@ -212,8 +212,8 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	public function testUpdateModelWithoutLink()
 	{
 		$model = m::mock('stdClass')->makePartial();
-		$model->id = 1;
 		$model->shouldReceive('find')->once()
+				->shouldReceive('getKey')->once()
 				->shouldReceive('setAttribute')->times(3);
 		$fieldFactory = m::mock('Frozennode\Administrator\Fields\Factory');
 		$fieldFactory->shouldReceive('getEditFieldsArrays')->once();

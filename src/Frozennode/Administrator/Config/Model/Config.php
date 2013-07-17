@@ -275,7 +275,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	public function updateModel($model, FieldFactory $fieldFactory, ActionFactory $actionFactory)
 	{
 		//set the data model to the active model
-		$this->setDataModel($model->find($model->id));
+		$this->setDataModel($model->find($model->getKey()));
 
 		//include the item link if one was supplied
 		if ($link = $this->getModelLink())
