@@ -97,7 +97,7 @@ class Factory {
 		//if the name is not a string or the options is not an array at this point, throw an error because we can't do anything with it
 		if (!is_string($name) || !is_array($options))
 		{
-			throw new \InvalidArgumentException("A custom action in your  " . $this->config->getOption('name') . " configuration file is invalid");
+			throw new \InvalidArgumentException("A custom action in your  " . $this->config->getOption('action_name') . " configuration file is invalid");
 		}
 
 		//set the action name
@@ -138,7 +138,7 @@ class Factory {
 		//loop over the actions to find our culprit
 		foreach ($this->getActions() as $action)
 		{
-			if ($action->getOption('name') === $name)
+			if ($action->getOption('action_name') === $name)
 			{
 				return $action;
 			}
