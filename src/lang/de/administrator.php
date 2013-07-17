@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'Artikel pro Seite',
 	'noresults' => 'Keine Resultate',
 	'backtosite' => 'Zurück zur Website',
+	'logout' => 'Abmeldung',
 
 	'previous' => 'Zurück',
 	'next' => 'Weiter',
