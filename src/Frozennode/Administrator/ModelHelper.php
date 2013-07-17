@@ -155,7 +155,7 @@ class ModelHelper {
 			}
 
 			//temporarily update the model on the config object
-			$config->model = $model::find($model->id);
+			$config->model = $model::find($model->getKey());
 
 			//set up the model with the edit fields new data
 			$editFields = Field::getEditFields($config);
