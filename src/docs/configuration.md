@@ -190,9 +190,11 @@ Provide any value that would work with Laravel's `URL::to()` method.
 	 *
 	 * @type string
 	 */
-	'logout_path' => 'user/logout',
+	'logout_path' => URL::route('logout'),
 
-Provide any value that would work with Laravel's `URL::to()` method. If you don't want the logout link just set it to null, 'logout_path' => null, instead of a link.
+If you would like to give your administrative users the option to log out from the admin interface, you can specify a string `logout_path`. When provided, an anchor will show up at the top right of the screen that will send the user to your specified path. By default, the `logout_path` option is set to `false`.
+
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/logout-button.png" />
 
 <a name="redirect-key"></a>
 ### Redirect Key

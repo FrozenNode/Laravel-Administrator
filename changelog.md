@@ -7,6 +7,7 @@
 - You can now define where the raw settings data is stored by providing a 'storage_path' option to settings configs
 - You can now supply a 'confirmation' string option to your custom actions which will require a confirmation from the admin user before the action can go through.
 - You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields, and as such require ordering on something other than the name_field
+- 'logout_path' option is now available in the main config. By default this is false, but if you provide a string value it will show a logout button and link the user to that path if clicked
 - Bugfix: Tons of other bugs that I caught while creating the unit tests :D
 - Bugfix: The model results no longer require an ajax load on pageload
 - Bugfix: Table prefixes are now taken into consideration
