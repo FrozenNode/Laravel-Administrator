@@ -30,6 +30,7 @@ Below is a list of all the available options:
 - [Dashboard View](#dashboard-view)
 - [Home Page](#home-page)
 - [Login Path](#login-path)
+- [Logout Path](#logout-path)
 - [Redirect Key](#redirect-key)
 - [Global Rows Per Page](#global-rows-per-page)
 - [Locales](#locales)
@@ -180,6 +181,18 @@ The permission option lets you define a closure that determines whether or not t
 	'login_path' => 'user/login',
 
 Provide any value that would work with Laravel's `URL::to()` method.
+
+<a name="logout-path"></a>
+### Logout Path
+
+	/**
+	 * The logout path is the path where Administrator will send the user when they click the logout link
+	 *
+	 * @type string
+	 */
+	'logout_path' => 'user/logout',
+
+Provide any value that would work with Laravel's `URL::to()` method. If you don't want the logout link just set it to null, 'logout_path' => null, instead of a link.
 
 <a name="redirect-key"></a>
 ### Redirect Key

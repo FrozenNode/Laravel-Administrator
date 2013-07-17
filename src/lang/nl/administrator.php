@@ -28,6 +28,7 @@ return array(
 	'itemsperpage' => 'items per pagina',
 	'noresults' => 'Geen Resultaten',
 	'backtosite' => 'Terug naar de Site',
+	'logout' => 'Afmelden',
 
 	'previous' => 'vorige',
 	'next' => 'volgende',
