@@ -113,9 +113,18 @@ class AdminController extends Controller
 		}
 		else
 		{
+			$columnFactory = App::make('admin_column_factory');
+			$fields = $fieldFactory->getEditFields();
+			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
+
+			if ($model->exists)
+			{
+				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
+			}
+
 			return Response::json(array(
 				'success' => true,
-				'data' => $config->getDataModel()->toArray(),
+				'data' => $model->toArray(),
 			));
 		}
 	}
@@ -190,7 +199,17 @@ class AdminController extends Controller
 		}
 		else
 		{
-			return Response::json(array('success' => true, 'data' => null));
+			$fieldFactory = App::make('admin_field_factory');
+			$columnFactory = App::make('admin_column_factory');
+			$fields = $fieldFactory->getEditFields();
+			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
+
+			if ($model->exists)
+			{
+				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
+			}
+
+			return Response::json(array('success' => true, 'data' => $model->toArray()));
 		}
 	}
 

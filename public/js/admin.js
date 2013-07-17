@@ -252,10 +252,9 @@
 					{
 						if (response.success) {
 							self.statusMessage(self.languages['saved']).statusMessageType('success');
-							self[self.primaryKey](response.data[self.primaryKey]);
-							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
 							self.updateSelfRelationships();
+							self.setData(response.data);
 
 							setTimeout(function()
 							{
@@ -377,52 +376,65 @@
 							return;
 						}
 
-						//set the active item and update the model data
-						self.activeItem(data[self.primaryKey]);
-						self.loadingItem(false);
-
-						//update the edit fields
-						adminData.edit_fields = data.administrator_edit_fields;
-						self.editFields(window.admin.prepareEditFields());
-
-						//update the action permissions
-						self.actions(data.administrator_actions);
-						self.actionPermissions = data.administrator_action_permissions;
-
-						//set the new options for relationships
-						$.each(adminData.edit_fields, function(ind, el)
-						{
-							if (el.relationship && el.autocomplete)
-							{
-								self[el.field_name + '_autocomplete'] = data[el.field_name + '_autocomplete'];
-							}
-						});
-
-						//set the item link if it exists
-						if (data.admin_item_link)
-						{
-							self.itemLink(data.admin_item_link);
-						}
-
-						//set the last item property which helps manage the animation states
-						self.lastItem = id;
-
-						//fixes an error where the relationships wouldn't load
-						setTimeout(function()
-						{
-							//first clear the data
-							ko.mapping.updateData(self, self.model, self.model);
-
-							//then update the data
-							ko.mapping.updateData(self, self.model, data);
-
-							//unfreeze the relationship constraint updates
-							self.freezeConstraints = false;
-
-							window.admin.resizePage();
-						}, 50);
+						self.setData(data);
 					}
 				});
+			},
+
+			/**
+			 * Overrides the data in the view model
+			 *
+			 * @param object	data
+			 * @param
+			 */
+			setData: function(data)
+			{
+				var self = this;
+
+				//set the active item and update the model data
+				self.activeItem(data[self.primaryKey]);
+				self.loadingItem(false);
+
+				//update the edit fields
+				adminData.edit_fields = data.administrator_edit_fields;
+				self.editFields(window.admin.prepareEditFields());
+
+				//update the action permissions
+				self.actions(data.administrator_actions);
+				self.actionPermissions = data.administrator_action_permissions;
+
+				//set the new options for relationships
+				$.each(adminData.edit_fields, function(ind, el)
+				{
+					if (el.relationship && el.autocomplete)
+					{
+						self[el.field_name + '_autocomplete'] = data[el.field_name + '_autocomplete'];
+					}
+				});
+
+				//set the item link if it exists
+				if (data.admin_item_link)
+				{
+					self.itemLink(data.admin_item_link);
+				}
+
+				//set the last item property which helps manage the animation states
+				self.lastItem = data[self.primaryKey];
+
+				//fixes an error where the relationships wouldn't load
+				setTimeout(function()
+				{
+					//first clear the data
+					ko.mapping.updateData(self, self.model, self.model);
+
+					//then update the data
+					ko.mapping.updateData(self, self.model, data);
+
+					//unfreeze the relationship constraint updates
+					self.freezeConstraints = false;
+
+					window.admin.resizePage();
+				}, 50);
 			},
 
 			/**
@@ -492,6 +504,7 @@
 						{
 							self.statusMessage(messages.success).statusMessageType('success');
 							self.updateRows();
+							self.setData(response.data);
 						}
 						else
 							self.statusMessage(response.error).statusMessageType('error');
