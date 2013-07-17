@@ -155,7 +155,7 @@ class ModelHelper {
 			}
 
 			//temporarily update the model on the config object
-			$config->model = $model::find($model->id);
+			$config->model = $model::find($model->getKey());
 
 			//set up the model with the edit fields new data
 			$editFields = Field::getEditFields($config);
@@ -220,7 +220,7 @@ class ModelHelper {
 		//get things going by grouping the set
 		$query = $model::groupBy($model->getTable().'.'.$model->getKeyName());
 		$db_query = $query->getQuery();
-		$count_query = DB::table($model->getTable())->groupBy($model->getTable().'.'.$model->getKeyName());
+		$count_query = $db_query->getConnection()->table($model->getTable())->groupBy($model->getTable().'.'.$model->getKeyName());
 
 		//set up initial array states for the selects
 		$selects = array($model->getTable().'.*');
