@@ -384,7 +384,8 @@ class AdminController extends Controller
 
 		//get the action and perform the custom action
 		$action = $actionFactory->getByName($actionName);
-		$result = $action->perform($config->getDataModel());
+		$data = $config->getDataModel();
+		$result = $action->perform($data);
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
