@@ -551,9 +551,15 @@
 				{
 					window.admin.resizePage();
 				}, 50)
-			})
+			});
 
-			editor.setData(value);
+			//handle destroying an editor (based on what jQuery plugin does)
+	        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+	            var existingEditor = CKEDITOR.instances[element.name];
+
+	            if (existingEditor)
+		            existingEditor.destroy(true);
+	        });
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
