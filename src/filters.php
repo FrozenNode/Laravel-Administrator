@@ -75,7 +75,7 @@ Route::filter('post_validate', function($route, $request)
 	}
 
 	//check the permission
-	$p = $config->getPermission();
+	$p = $config->getOption('permission');
 
 	//if the user is simply not allowed permission to this model, redirect them to the dashboard
 	if (!$p)

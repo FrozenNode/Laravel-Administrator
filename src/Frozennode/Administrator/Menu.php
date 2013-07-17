@@ -58,7 +58,7 @@ class Menu {
 				$config = $this->configFactory->make($item);
 
 				//if a config object was returned and if the permission passes, add the item to the menu
-				if ($config && $config->getPermission())
+				if ($config && $config->getOption('permission'))
 				{
 					$menu[$item] = $config->getOption('title');
 				}
