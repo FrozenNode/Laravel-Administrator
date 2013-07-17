@@ -149,17 +149,19 @@ class Validator extends \Illuminate\Validation\Validator {
 	/**
 	 * Validates that an item is an array
 	 */
-	public function validateArrayWith($attribute, $value, $parameters)
+	public function validateArrayWithAllOrNone($attribute, $value, $parameters)
 	{
+		$missing = 0;
+
 		foreach ($parameters as $key)
 		{
 			if (!isset($value[$key]))
 			{
-				return false;
+				$missing++;
 			}
 		}
 
-		return true;
+		return $missing === count($parameters) || $missing === 0;
 	}
 
 	/**

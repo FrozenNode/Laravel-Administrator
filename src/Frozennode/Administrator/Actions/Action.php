@@ -57,7 +57,7 @@ class Action {
 	 */
 	protected $rules = array(
 		'title' => 'string',
-		'messages' => 'array|array_with:active,success,error',
+		'messages' => 'array|array_with_all_or_none:active,success,error',
 		'action' => 'required|callable',
 	);
 
