@@ -314,9 +314,12 @@ class Config extends ConfigBase implements ConfigInterface {
 		}
 
 		//make sure the user has the proper permissions
-		if ($model->exists && !$actionPermissions['update'])
+		if ($model->exists)
 		{
-			return "You do not have permission to save this item";
+			if (!$actionPermissions['update'])
+			{
+				return "You do not have permission to save this item";
+			}
 		}
 		else if (!$actionPermissions['update'] || !$actionPermissions['create'])
 		{
