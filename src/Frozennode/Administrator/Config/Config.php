@@ -14,6 +14,13 @@ abstract class Config {
 	protected $validator;
 
 	/**
+	 * The user supplied options array
+	 *
+	 * @var array
+	 */
+	protected $suppliedOptions = array();
+
+	/**
 	 * The original configuration options that were supplied
 	 *
 	 * @var array
@@ -21,63 +28,62 @@ abstract class Config {
 	protected $options;
 
 	/**
-	 * Determines whether or not a user can access this model
-	 *
-	 * @var bool
-	 */
-	protected $permission = true;
-
-	/**
-	 * The rules array
+	 * The defaults property
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
-		'title' => 'required|string',
-		'edit_fields' => 'required|array|not_empty',
-		'permission' => 'callable',
-		'action_permissions' => 'array',
-		'actions' => 'array',
-		'sort' => 'array',
-		'form_width' => 'integer',
-		'link' => 'callable',
-		'rules' => 'array',
-	);
+	protected $defaults = array();
 
+	/**
+	 * The rules property
+	 *
+	 * @var array
+	 */
+	protected $rules = array();
 
 	/**
 	 * Create a new model Config instance
 	 *
 	 * @param Frozennode\Administrator\Validator 	$validator
-	 * @param array 								$config
+	 * @param array 								$options
 	 */
-	public function __construct(Validator $validator, array $config)
+	public function __construct(Validator $validator, array $options)
 	{
-		//set the config, and then validate it
 		$this->validator = $validator;
-		$validator->override($config, $this->rules);
-
-		//if the validator failed, throw an exception
-		if ($validator->fails())
-		{
-			throw new \InvalidArgumentException('There are problems with your ' . $config['name'] . ' config: ' . implode('. ', $validator->messages()->all()));
-		}
-
-		//check the permission
-		$this->permission = isset($config['permission']) ? $config['permission']() : $this->permission;
-
-		//fill up the instance with the user-supplied options
-		$this->options = array_merge($this->defaults, $config);
+		$this->suppliedOptions = $options;
 	}
 
 	/**
-	 * Permission getter
+	 * Validates the supplied options
 	 *
-	 * @return  bool
+	 * @return void
 	 */
-	public function getPermission()
+	public function validateOptions()
 	{
-		return $this->permission;
+		//override the config
+		$this->validator->override($this->suppliedOptions, $this->rules);
+
+		//if the validator failed, throw an exception
+		if ($this->validator->fails())
+		{
+			throw new \InvalidArgumentException('There are problems with your ' . $this->suppliedOptions['name'] . ' config: ' .
+						implode('. ', $this->validator->messages()->all()));
+		}
+	}
+
+	/**
+	 * Builds the necessary fields on the object
+	 *
+	 * @return void
+	 */
+	public function build()
+	{
+		$options = $this->suppliedOptions;
+
+		//check the permission
+		$options['permission'] = isset($options['permission']) ? $options['permission']() : true;
+
+		$this->suppliedOptions = $options;
 	}
 
 	/**
@@ -91,6 +97,25 @@ abstract class Config {
 	}
 
 	/**
+	 * Gets all user options
+	 *
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		//make sure the supplied options have been merged with the defaults
+		if (empty($this->options))
+		{
+			//validate the options and build them
+			$this->validateOptions();
+			$this->build();
+			$this->options = array_merge($this->defaults, $this->suppliedOptions);
+		}
+
+		return $this->options;
+	}
+
+	/**
 	 * Gets a config option
 	 *
 	 * @param string 	$key
@@ -99,24 +124,27 @@ abstract class Config {
 	 */
 	public function getOption($key)
 	{
-		if (!array_key_exists($key, $this->options))
+		$options = $this->getOptions();
+
+		if (!array_key_exists($key, $options))
 		{
-			throw new \InvalidArgumentException("An invalid option was searched for in '" . $this->getOption('name') . "'");
+			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $options['name'] . "' config");
 		}
 
-		return $this->options[$key];
+		return $options[$key];
 	}
 
 	/**
 	 * Validates the supplied data against the options rules
 	 *
 	 * @param array		$data
+	 * @param array		$rules
 	 *
 	 * @param mixed
 	 */
-	public function validateData(array $data)
+	public function validateData(array $data, array $rules)
 	{
-		if ($rules = $this->getOption('rules'))
+		if ($rules)
 		{
 			$this->validator->override($data, $rules);
 

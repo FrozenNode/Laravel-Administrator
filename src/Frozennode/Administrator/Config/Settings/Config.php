@@ -157,14 +157,14 @@ class Config extends ConfigBase implements ConfigInterface {
 			$data[$name] = $input->get($name);
 
 			//make sure the bool field is set correctly
-			if ($field->type === 'bool')
+			if ($field->getOption('type') === 'bool')
 			{
 				$data[$name] = $data[$name] === 'true' || $data[$name] === '1' ? 1 : 0;
 			}
 		}
 
 		//validate the model
-		$validation = $this->validateData($data);
+		$validation = $this->validateData($data, $this->getOption('rules'));
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;
@@ -219,7 +219,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		//check if the storage path is writable
 		if (!is_writable($path))
 		{
-			throw new Exception("Administrator: " .  trans('administrator::administrator.storage_path_permissions'));
+			throw new \InvalidArgumentException("The storage_path option in your " . $this->getOption('name') . " settings config is not writable");
 		}
 
 		file_put_contents($path . $this->getOption('name') . '.json', json_encode($data));

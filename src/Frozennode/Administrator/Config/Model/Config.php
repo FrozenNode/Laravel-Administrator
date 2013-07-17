@@ -4,6 +4,7 @@ namespace Frozennode\Administrator\Config\Model;
 use Frozennode\Administrator\Config\Config as ConfigBase;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\Fields\Factory as FieldFactory;
+use Frozennode\Administrator\Fields\Field as Field;
 use Frozennode\Administrator\Actions\Factory as ActionFactory;
 
 /**
@@ -110,11 +111,11 @@ class Config extends ConfigBase implements ConfigInterface {
 		$originalModel = $model = $this->getDataModel();
 
 		//make sure the edit fields are included
-		foreach ($fields as $field => $obj)
+		foreach ($fields as $name => $field)
 		{
-			if (!$obj->relationship && !$obj->setter && !array_key_exists($field, $columns))
+			if (!$field->getOption('relationship') && !$field->getOption('setter') && !array_key_exists($name, $columns))
 			{
-				$columns[$field] = $model->getTable().'.'.$field;
+				$columns[$name] = $model->getTable().'.'.$name;
 			}
 		}
 
@@ -125,93 +126,141 @@ class Config extends ConfigBase implements ConfigInterface {
 		//if the model exists, load up the existing related items
 		if ($model->exists)
 		{
-			//make sure the relationships are loaded
-			foreach ($fields as $field => $info)
-			{
-				if ($info->relationship)
-				{
-					//if this is a belongsToMany, we want to sort our initial values
-					if ($info->multipleValues)
-					{
-						//if a sort_field is provided, use it, otherwise sort by the name field
-						if ($info->sortField)
-						{
-							$relatedItems = $model->{$field}()->orderBy($info->sortField)->get();
-						}
-						else
-						{
-							$relatedItems = $model->{$field}()->orderBy($info->nameField)->get();
-						}
-					}
-					else
-					{
-						$relatedItems = $model->{$field}()->get();
-					}
-
-					//get all existing values for this relationship
-					if ($relatedItems)
-					{
-						//the array that holds all the ids of the currently-related items
-						$relationsArray = array();
-
-						//the id-indexed array that holds all of the select option data for a relation.
-						//this holds the currently-related items and all of the available options
-						$autocompleteArray = array();
-
-						//iterate over the items
-						foreach ($relatedItems as $item)
-						{
-							//if this is a mutliple-value type (i.e. HasMany, BelongsToMany), make sure this is an array
-							if ($info->multipleValues)
-							{
-								$relationsArray[] = $item->{$item->getKeyName()};
-							}
-							else
-							{
-								$model->setAttribute($field, $item->{$item->getKeyName()});
-							}
-
-							//if this is an autocomplete field, we'll need to provide an array of arrays with 'id' and 'text' indexes
-							if ($info->autocomplete)
-							{
-								$autocompleteArray[$item->{$item->getKeyName()}] = array('id' => $item->{$item->getKeyName()}, 'text' => $item->{$info->nameField});
-							}
-						}
-
-						//if this is a BTM, set the relations array to the property that matches the relationship name
-						if ($info->multipleValues)
-						{
-							$model->{$field} = $relationsArray;
-						}
-
-						//set the options attribute
-						$model->setAttribute($field.'_options', $info->options);
-
-						//unset the relationships so we only get back what we need
-						$model->relationships = array();
-
-						//set the autocomplete array
-						if ($info->autocomplete)
-						{
-							$model->setAttribute($field.'_autocomplete', $autocompleteArray);
-						}
-					}
-					//if there are no values, then just set an empty array
-					else
-					{
-						$model->{$field} = array();
-					}
-				}
-
-				//if this is a setter field, unset it
-				if ($info->setter)
-				{
-					$model->__unset($field);
-				}
-			}
+			$this->setExtraModelValues($fields, $model);
 		}
 
 		return $model;
+	}
+
+	/**
+	 * Fills a model with the data it needs before being sent back to the user
+	 *
+	 * @param array		$fields
+	 * @param Eloquent	$model
+	 *
+	 * @return void
+	 */
+	public function setExtraModelValues(array $fields, &$model)
+	{
+		//make sure the relationships are loaded
+		foreach ($fields as $name => $field)
+		{
+			if ($field->getOption('relationship'))
+			{
+				$this->setModelRelationship($model, $field);
+			}
+
+			//if this is a setter field, unset it
+			if ($field->getOption('setter'))
+			{
+				$model->__unset($name);
+			}
+		}
+	}
+
+	/**
+	 * Fills a model with the necessary relationship values for a field
+	 *
+	 * @param Illuminate\Database\Eloquent\Model		$model
+	 * @param Frozennode\Administrator\Fields\Field		$field
+	 *
+	 * @return void
+	 */
+	public function setModelRelationship(&$model, Field $field)
+	{
+		//if this is a belongsToMany, we want to sort our initial values
+		$relatedItems = $this->getModelRelatedItems($model, $field);
+		$name = $field->getOption('field_name');
+		$multipleValues = $field->getOption('multiple_values');
+		$nameField = $field->getOption('name_field');
+		$autocomplete = $field->getOption('autocomplete');
+		$options = $field->getOption('options');
+
+		//get all existing values for this relationship
+		if ($relatedItems)
+		{
+			//the array that holds all the ids of the currently-related items
+			$relationsArray = array();
+
+			//the id-indexed array that holds all of the select option data for a relation.
+			//this holds the currently-related items and all of the available options
+			$autocompleteArray = array();
+
+			//iterate over the items
+			foreach ($relatedItems as $item)
+			{
+				$keyName = $item->getKeyName();
+
+				//if this is a mutliple-value type (i.e. HasMany, BelongsToMany), make sure this is an array
+				if ($multipleValues)
+				{
+					$relationsArray[] = $item->{$keyName};
+				}
+				else
+				{
+					$model->setAttribute($name, $item->{$keyName});
+				}
+
+				//if this is an autocomplete field, we'll need to provide an array of arrays with 'id' and 'text' indexes
+				if ($autocomplete)
+				{
+					$autocompleteArray[$item->{$keyName}] = array('id' => $item->{$keyName}, 'text' => $item->{$nameField});
+				}
+			}
+
+			//if this is a BTM, set the relations array to the property that matches the relationship name
+			if ($multipleValues)
+			{
+				$model->{$name} = $relationsArray;
+			}
+
+			//set the options attribute
+			$model->setAttribute($name.'_options', $options);
+
+			//unset the relationships so we only get back what we need
+			$model->relationships = array();
+
+			//set the autocomplete array
+			if ($autocomplete)
+			{
+				$model->setAttribute($name.'_autocomplete', $autocompleteArray);
+			}
+		}
+		//if there are no values, then just set an empty array
+		else
+		{
+			$model->{$name} = array();
+		}
+	}
+
+	/**
+	 * Fills a model with the necessary relationship values
+	 *
+	 * @param Illuminate\Database\Eloquent\Model		$model
+	 * @param Frozennode\Administrator\Fields\Field		$field
+	 *
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function getModelRelatedItems($model, Field $field)
+	{
+		$name = $field->getOption('field_name');
+
+		if ($field->getOption('multiple_values'))
+		{
+			//if a sort_field is provided, use it, otherwise sort by the name field
+			if ($sortField = $field->getOption('sort_field'))
+			{
+				return $model->{$name}()->orderBy($sortField)->get();
+			}
+			else
+			{
+				return $model->{$name}()->orderBy($field->getOption('name_field'))->get();
+			}
+		}
+		else
+		{
+			return $model->{$name}()->get();
+		}
 	}
 
 	/**
@@ -225,10 +274,8 @@ class Config extends ConfigBase implements ConfigInterface {
 	 */
 	public function updateModel($model, FieldFactory $fieldFactory, ActionFactory $actionFactory)
 	{
-		$originalModel = $this->getDataModel();
-
 		//set the data model to the active model
-		$this->setDataModel($model::find($model->id));
+		$this->setDataModel($model->find($model->id));
 
 		//include the item link if one was supplied
 		if ($link = $this->getModelLink())
@@ -240,7 +287,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		$model->setAttribute('administrator_edit_fields', $fieldFactory->getEditFieldsArrays(true));
 
 		//set up the new actions data
-		$model->setAttribute('administrator_actions', $actionFactory->getActions(true));
+		$model->setAttribute('administrator_actions', $actionFactory->getActionsOptions(true));
 		$model->setAttribute('administrator_action_permissions', $actionFactory->getActionPermissions(true));
 
 		return $model;
@@ -283,7 +330,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		extract($this->prepareDataAndRules($model));
 
 		//validate the model
-		$validation = $this->validateData($data);
+		$validation = $this->validateData($data, $rules);
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;
@@ -292,7 +339,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		$model->save();
 
 		//save the relationships
-		$this->saveRelationships($model, $fields);
+		$this->saveRelationships($input, $model, $fields);
 
 		//set/update the data model
 		$this->setDataModel($model);
@@ -342,50 +389,29 @@ class Config extends ConfigBase implements ConfigInterface {
 	public function fillModel(&$model, \Illuminate\Http\Request $input, array $fields)
 	{
 		//run through the edit fields to see if we need to unset relationships
-		foreach ($fields as $field => $object)
+		foreach ($fields as $name => $field)
 		{
-			if (!$object->external)
+			if (!$field->getOption('external'))
 			{
-				$object->fillModel($model, $input->get($field, NULL));
+				$field->fillModel($model, $input->get($name, NULL));
 			}
 			//if this is an "external" field (i.e. it's not a column on this model's table), unset it
 			else
 			{
-				$model->__unset($field);
+				$model->__unset($name);
 			}
 		}
 
 		//loop through the fields again to unset any setter fields
-		foreach ($fields as $field => $object)
+		foreach ($fields as $name => $field)
 		{
-			if (($object->setter && $object->type !== 'password') || ($object->type === 'password' && empty($model->{$field})))
+			$type = $field->getOption('type');
+
+			if (($field->getOption('setter') && $type !== 'password') || ($type === 'password' && empty($model->{$name})))
 			{
-				$model->__unset($field);
+				$model->__unset($name);
 			}
 		}
-	}
-
-	/**
-	 * Validates the supplied data against the options rules
-	 *
-	 * @param array		$data
-	 *
-	 * @param mixed
-	 */
-	public function validateData(array $data)
-	{
-		if ($rules = $this->getOption('rules'))
-		{
-			$this->validator->override($data, $rules);
-
-			//if the validator fails, kick back the errors
-			if ($this->validator->fails())
-			{
-				return implode('. ', $this->validator->messages()->all());
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -395,7 +421,6 @@ class Config extends ConfigBase implements ConfigInterface {
 	 */
 	public function getModelValidationRules()
 	{
-		$model = $this->getDataModel();
 		$optionsRules = $this->getOption('rules');
 
 		//if the 'rules' option was provided for this model, it takes precedent
@@ -429,19 +454,20 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * After a model has been saved, this is called to save the relationships
 	 *
-	 * @param Eloquent		$model
-	 * @param array			$fields
+	 * @param Illuminate\Http\Request				$model
+	 * @param Illuminate\Database\Eloquent\Model	$model
+	 * @param array									$fields
 	 *
 	 * @return void
 	 */
-	public function saveRelationships(&$model, array $fields)
+	public function saveRelationships(\Illuminate\Http\Request $input, &$model, array $fields)
 	{
 		//run through the edit fields to see if we need to set relationships
 		foreach ($fields as $name => $field)
 		{
-			if ($field->external)
+			if ($field->getOption('external'))
 			{
-				$field->fillModel($model, \Input::get($field, NULL));
+				$field->fillModel($model, $input->get($name, NULL));
 			}
 		}
 	}
