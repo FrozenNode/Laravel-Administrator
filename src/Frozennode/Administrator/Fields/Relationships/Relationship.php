@@ -2,172 +2,102 @@
 namespace Frozennode\Administrator\Fields\Relationships;
 
 use Frozennode\Administrator\Fields\Field;
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 
 abstract class Relationship extends Field {
 
-
 	/**
-	 * This is used in setting up filters
-	 *
-	 * @var bool
-	 */
-	public $relationship = true;
-
-	/**
-	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
-	 *
-	 * @var bool
-	 */
-	public $external = true;
-
-	/**
-	 * The string to use to name the items on the other table
-	 *
-	 * @var string
-	 */
-	public $nameField = 'name';
-
-	/**
-	 * The symbol to use in front of the number
-	 *
-	 * @var string
-	 */
-	public $table = '';
-
-	/**
-	 * The number of decimal places after the number
-	 *
-	 * @var string
-	 */
-	public $column = '';
-
-	/**
-	 * Foreign key value that is used on the local table
-	 *
-	 * @var bool|string
-	 */
-	public $foreignKey = false;
-
-	/**
-	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
-	 *
-	 * @var bool
-	 */
-	public $multipleValues = false;
-
-	/**
-	 * The array of items from which the user will be able to choose
+	 * The specific defaults for subclasses to override
 	 *
 	 * @var array
 	 */
-	public $options = array();
+	protected $defaults = array(
+		'relationship' => true,
+		'external' => true,
+		'name_field' => 'name',
+		'options_sort_field' => false,
+		'options_sort_direction' => 'ASC',
+		'table' => '',
+		'column' => '',
+		'foreign_key' => false,
+		'multiple_values' => false,
+		'options' => array(),
+		'self_relationship' => false,
+		'autocomplete' => false,
+		'num_options' => 10,
+		'search_fields' => array(),
+		'constraints' => array(),
+		'load_relationships' => false,
+	);
 
 	/**
-	 * If this is true, the field will start with no options and be an autocomplete
-	 *
-	 * @var bool
-	 */
-	public $selfRelationship = false;
-
-	/**
-	 * If this is true, the field will start with no options and be an autocomplete
-	 *
-	 * @var bool
-	 */
-	public $autocomplete = false;
-
-	/**
-	 * The number of options to display to a user when the autocomplete is turned on
-	 *
-	 * @var int
-	 */
-	public $numOptions = 10;
-
-	/**
-	 * The search fields on the other table to look for when autocomplete is on. If left empty, default is the name_field
+	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
 	 * @var array
 	 */
-	public $searchFields = array();
+	protected $relationshipDefaults = array();
 
 	/**
-	 * The constraining relationships. If this has a value
+	 * The specific rules for subclasses to override
 	 *
 	 * @var array
 	 */
-	public $constraints = array();
+	protected $rules = array(
+		'name_field' => 'string',
+		'sort_field' => 'string',
+		'options_sort_field' => 'string',
+		'options_sort_direction' => 'string',
+		'num_options' => 'integer|min:0',
+		'search_fields' => 'array',
+		'constraints' => 'array',
+	);
 
 	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * Builds a few basic options
 	 */
-	public function __construct($field, $info, $config)
+	public function build()
 	{
-		parent::__construct($field, $info, $config);
+		parent::build();
 
-		//put the model into a variable so we can call it statically
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config;
+		$options = $this->suppliedOptions;
+		$model = $this->config->getDataModel();
+		$relationship = $model->{$options['field_name']}();
 
-		//get an instance of the relationship object
-		$relationship = $model->{$field}();
+		//set the search fields to the name field if none exist
+		$searchFields = $this->validator->arrayGet($options, 'search_fields');
+		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
+		$options['search_fields'] = empty($searchFields) ? array($nameField) : $searchFields;
 
-		//get the name field option
-		$this->nameField = array_get($info, 'name_field', $this->nameField);
-		$this->autocomplete = array_get($info, 'autocomplete', $this->autocomplete);
-		$this->numOptions = array_get($info, 'num_options', $this->numOptions);
-		$this->searchFields = array_get($info, 'search_fields', array($this->nameField));
-		$this->selfRelationship = $relationship->getRelated()->getTable() === $model->getTable();
+		//determine if this is a self-relationship
+		$options['self_relationship'] = $relationship->getRelated()->getTable() === $model->getTable();
 
 		//set up and check the constraints
-		$this->setUpConstraints($info, $model);
+		$this->setUpConstraints($options);
 
-		//if we want all of the possible items on the other model, load them up, otherwise leave the options empty
-		$options = array();
+		//load up the relationship options
+		$this->loadRelationshipOptions($options);
 
-		if (array_get($info, 'load_relationships', false))
-		{
-			$options = $relationship->getRelated()->orderBy($this->nameField)->get();
-		}
-		//otherwise if there are relationship items, we need them in the initial options list
-		else if ($relationshipItems = $relationship->get())
-		{
-			$options = $relationshipItems;
-		}
-
-		$nameField = $this->nameField;
-
-		//map the options to the options property where array('id': [key], 'text': [nameField])
-
-		foreach ($options as $option)
-		{
-			$this->options[] = array(
-				'id' => $option->id,
-				'text' => $option->{$nameField}
-			);
-		}
-
+		$this->suppliedOptions = $options;
 	}
 
 	/**
 	 * Sets up the constraints for a relationship field if provided. We do this so we can assume later that it will just work
 	 *
-	 * @param  array 		$info
-	 * @param  Eloquent		$model
-	 * @param  Relationship	$relationship
+	 * @param  array 		$options
 	 *
 	 * @return  void
 	 */
-	private function setupConstraints($info, $model)
+	public function setUpConstraints(&$options)
 	{
-		$constraints = array_get($info, 'constraints', $this->constraints);
+		$constraints = $this->validator->arrayGet($options, 'constraints');
+		$model = $this->config->getDataModel();
 
 		//set up and check the constraints
-		if (is_array($constraints) && sizeof($constraints))
+		if (sizeof($constraints))
 		{
-			$this->constraints = array();
+			$validConstraints = array();
 
 			//iterate over the constraints and only include the valid ones
 			foreach ($constraints as $field => $rel)
@@ -175,54 +105,89 @@ abstract class Relationship extends Field {
 				//check if the supplied values are strings and that their methods exist on their respective models
 				if (is_string($field) && is_string($rel) && method_exists($model, $field))
 				{
-					$this->constraints[$field] = $rel;
+					$validConstraints[$field] = $rel;
 				}
 			}
+
+			$options['constraints'] = $validConstraints;
 		}
 	}
 
 	/**
-	 * Constrains a query object with this item's relation to a third model
+	 * Loads the relationship options and sets the options option if load_relationships is true
 	 *
-	 * @param Query		$query
-	 * @param Eloquent	$model
-	 * @param string	$key //the relationship name on this model
-	 * @param string	$relationshipName //the relationship name on the constraint model
-	 * @param array		$constraints
+	 * @param  array 		$options
 	 *
-	 * @return void
+	 * @return  void
 	 */
-	public function applyConstraints(&$query, $model, $key, $relationshipName, $constraints)
+	public function loadRelationshipOptions(&$options)
 	{
-		//first we get the other model and the relationship field on it
-		$relatedModel = $model->{$this->field}()->getRelated();
-		$otherModel = $model->{$key}()->getRelated();
-		$otherField = Field::get($relationshipName, array('type' => 'relationship'), $otherModel, false);
+		//if we want all of the possible items on the other model, load them up, otherwise leave the options empty
+		$items = array();
+		$model = $this->config->getDataModel();
+		$relationship = $model->{$options['field_name']}();
+		$relatedModel = $relationship->getRelated();
 
-		$otherField->constrainQuery($query, $relatedModel, $constraints);
+		if ($this->validator->arrayGet($options, 'load_relationships'))
+		{
+			//if a sort field was supplied, order the results by it
+			if ($optionsSortField = $this->validator->arrayGet($options, 'options_sort_field'))
+			{
+				$optionsSortDirection = $this->validator->arrayGet($options, 'options_sort_direction', $this->defaults['options_sort_direction']);
+
+				$items = $relatedModel->orderBy($this->db->raw($optionsSortField), $optionsSortDirection)->get();
+			}
+			//otherwise just pull back an unsorted list
+			else
+			{
+				$items = $relatedModel->get();
+			}
+		}
+		//otherwise if there are relationship items, we need them in the initial options list
+		else if ($relationshipItems = $relationship->get())
+		{
+			$items = $relationshipItems;
+		}
+
+		//map the options to the options property where array('id': [key], 'text': [nameField])
+		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
+		$keyField = $relatedModel->getKeyName();
+		$options['options'] = $this->mapRelationshipOptions($items, $nameField, $keyField);
 	}
 
 	/**
-	 * Turn this item into an array
+	 * Maps the relationship options to an array with 'id' and 'text' keys
+	 *
+	 * @param array		$items
+	 * @param string	$nameField
+	 * @param string	$keyField
 	 *
 	 * @return array
 	 */
-	public function toArray()
+	public function mapRelationshipOptions($items, $nameField, $keyField)
 	{
-		$arr = parent::toArray();
+		$result = array();
 
-		$arr['table'] = $this->table;
-		$arr['column'] = $this->column;
-		$arr['foreignKey'] = $this->foreignKey;
-		$arr['name_field'] = $this->nameField;
-		$arr['external'] = $this->external;
-		$arr['options'] = $this->options;
-		$arr['selfRelationship'] = $this->selfRelationship;
-		$arr['autocomplete'] = $this->autocomplete;
-		$arr['num_options'] = $this->numOptions;
-		$arr['search_fields'] = $this->searchFields;
-		$arr['constraints'] = $this->constraints;
+		foreach ($items as $option)
+		{
+			$result[] = array(
+				'id' => $option->{$keyField},
+				'text' => $option->{$nameField}
+			);
+		}
 
-		return $arr;
+		return $result;
+	}
+
+	/**
+	 * Gets all default values
+	 *
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		$defaults = parent::getDefaults();
+
+		return array_merge($defaults, $this->relationshipDefaults);
 	}
 }

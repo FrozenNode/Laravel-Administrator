@@ -50,9 +50,12 @@ The `belongsTo` filter lets you filter a result set for items that are related t
 		'type' => 'relationship',
 		'title' => 'Actors',
 		'name_field' => 'full_name', //using the getFullNameAttribute accessor
+		'options_sort_field' => "CONCAT(first_name, ' ' , last_name)",
 	)
 
-In this case, the `name_field` supplied is an accessor on the `User` model that combines the `first_name` field and the `last_name` field. This field might be used in this model
+In this case, the `name_field` supplied is an accessor on the `User` model that combines the `first_name` field and the `last_name` field. However, since the `name_field` is an accessor and not a column in the database, you must also specify an `options_sort_field` if you want to order the options. The `options_sort_field` isn't required, but without it the options will be ordered by ascending order on the primary key column. You can also set the `options_sort_direction` to either `asc` or `desc`.
+
+This field might be used in this model:
 
 	class Film extends Eloquent {
 
@@ -64,7 +67,7 @@ In this case, the `name_field` supplied is an accessor on the `User` model that 
 
 With this setup, the user will be presented with a multi-select field to choose all of the actors in the film.
 
-If you want to let your admin users reorder the selected values, you can create an integer-based sorting column on your intermediate relationship table and then specify that column as an option in the field. In our example above, we may wish to reorder the actors arbitrarily by dragging and dropping them in the UI. In order to do this, you would need to add an integer field (let's call it `ordering`) to the `films_actors` table. Then in your model config, you would provide that column name in the `sort_field` option:
+If you want to let your admin users reorder the selected values, you can create an integer-based sorting column on your pivot table and then specify that column as an option in the field. In our example above, we may wish to reorder the actors arbitrarily by dragging and dropping them in the UI. In order to do this, you would need to add an integer field (let's call it `ordering`) to the `films_actors` table. Then in your model config, you would provide that column name in the `sort_field` option:
 
 	'actors' => array(
 		'type' => 'relationship',

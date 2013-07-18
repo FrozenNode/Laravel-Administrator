@@ -1,36 +1,31 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 use Frozennode\Administrator\Includes\Multup;
 use Illuminate\Support\Facades\URL;
 
 class Image extends File {
 
 	/**
-	 * If provided, the user can specify thumbnail sizes and locations. Example:
-	 * array(
-	 *		array(65, 57, 'crop', 'public/uimg/listings/thumbs/small/', 100),
-	 *		array(220, 138, 'crop', 'public/uimg/listings/thumbs/medium/', 100),
-	 *		array(383, 276, 'crop', 'public/uimg/listings/thumbs/full/', 100)
-	 *	)
+	 * The specific defaults for the image class
 	 *
 	 * @var array
 	 */
-	public $sizes = array();
+	protected $imageDefaults = array(
+		'sizes' => array(),
+	);
 
 	/**
-	 * Constructor function
+	 * The specific rules for the image class
 	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
+	 * @var array
 	 */
-	public function __construct($field, $info, $config)
-	{
-		parent::__construct($field, $info, $config);
-
-		$this->sizes = array_get($info, 'sizes', $this->sizes);
-	}
+	protected $imageRules = array(
+		'sizes' => 'array',
+	);
 
 	/**
 	 * This static function is used to perform the actual upload and resizing using the Multup class
@@ -40,11 +35,36 @@ class Image extends File {
 	public function doUpload()
 	{
 		//use the multup library to perform the upload
-		$result = Multup::open('file', 'image|max:' . $this->sizeLimit * 1000, $this->location, $this->naming)
-			->sizes($this->sizes)
-			->set_length($this->length)
+		$result = Multup::open('file', 'image|max:' . $this->getOption('size_limit') * 1000, $this->getOption('location'),
+									$this->getOption('naming') === 'random')
+			->sizes($this->getOption('sizes'))
+			->set_length($this->getOption('length'))
 			->upload();
 
 		return $result[0];
+	}
+
+	/**
+	 * Gets all rules
+	 *
+	 * @return array
+	 */
+	public function getRules()
+	{
+		$rules = parent::getRules();
+
+		return array_merge($rules, $this->imageRules);
+	}
+
+	/**
+	 * Gets all default values
+	 *
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		$defaults = parent::getDefaults();
+
+		return array_merge($defaults, $this->imageDefaults);
 	}
 }

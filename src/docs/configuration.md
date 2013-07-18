@@ -30,6 +30,7 @@ Below is a list of all the available options:
 - [Dashboard View](#dashboard-view)
 - [Home Page](#home-page)
 - [Login Path](#login-path)
+- [Logout Path](#logout-path)
 - [Redirect Key](#redirect-key)
 - [Global Rows Per Page](#global-rows-per-page)
 - [Locales](#locales)
@@ -181,6 +182,20 @@ The permission option lets you define a closure that determines whether or not t
 
 Provide any value that would work with Laravel's `URL::to()` method.
 
+<a name="logout-path"></a>
+### Logout Path
+
+	/**
+	 * The logout path is the path where Administrator will send the user when they click the logout link
+	 *
+	 * @type string
+	 */
+	'logout_path' => URL::route('logout'),
+
+If you would like to give your administrative users the option to log out from the admin interface, you can specify a string `logout_path`. When provided, an anchor will show up at the top right of the screen that will send the user to your specified path. By default, the `logout_path` option is set to `false`.
+
+<img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/logout-button.png" />
+
 <a name="redirect-key"></a>
 ### Redirect Key
 
@@ -191,7 +206,7 @@ Provide any value that would work with Laravel's `URL::to()` method.
 	 */
 	'login_redirect_key' => 'redirect',
 
-When a user is redirected to the `login_path`, the redirect path is sent with them. This option lets you define the key. Using the above as an example, you would retrieve the redirect url by doing `Input::get('redirect')`.
+When a user is redirected to the `login_path`, the redirect path is sent with them. This option lets you define the key. Using the above as an example, you would retrieve the redirect url by doing `Session::get('redirect')`.
 
 <a name="global-rows-per-page"></a>
 ### Global Rows Per Page

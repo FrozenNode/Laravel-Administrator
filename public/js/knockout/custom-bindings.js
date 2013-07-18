@@ -306,21 +306,20 @@
 			//else we will try to parse the number using the user-supplied thousands and decimal separators
 			else
 			{
-				floatVal = value.toString().split(options.thousandsSeparator).join('').split(options.decimalSeparator).join('.');
+				floatVal = parseFloat(value.toString().trim().split(options.thousandsSeparator).join('').split(options.decimalSeparator).join('.'));
 			}
 
 			//if the value is not a number, set the value equal to ''
 			if (isNaN(floatVal))
 			{
-				if (value !== '')
-				{
-					//if this is an uneditable field, set the text
-					if ($element.hasClass('uneditable'))
-						$element.text('');
-					//otherwise we know it's an input
-					else
-						$element.val('');
-				}
+				allBindingsAccessor().value(null);
+
+				//if this is an uneditable field, set the text
+				if ($element.hasClass('uneditable'))
+					$element.text('');
+				//otherwise we know it's an input
+				else
+					$element.val('');
 			}
 			//else set up the value up using the accounting library with the user-supplied separators
 			else
@@ -552,9 +551,15 @@
 				{
 					window.admin.resizePage();
 				}, 50)
-			})
+			});
 
-			editor.setData(value);
+			//handle destroying an editor (based on what jQuery plugin does)
+	        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+	            var existingEditor = CKEDITOR.instances[element.name];
+
+	            if (existingEditor)
+		            existingEditor.destroy(true);
+	        });
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
@@ -663,7 +668,7 @@
 					viewModel[options.field](data.filename);
 				} else {
 					//error
-					alert(data.errors.messages.file[0]);
+					alert(data.errors);
 				}
 
 				setTimeout(function()

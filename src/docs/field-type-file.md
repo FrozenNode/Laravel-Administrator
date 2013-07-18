@@ -12,7 +12,7 @@ The `file` field type should be a text-like type in your database. The file's na
 	'media_document' => array(
 		'title' => 'File',
 		'type' => 'file',
-		'location' => path('storage') . 'media_documents/',
+		'location' => storage_path() . '/media_documents/',
 		'naming' => 'random',
 		'length' => 20,
 		'size_limit' => 2,

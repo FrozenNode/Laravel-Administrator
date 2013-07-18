@@ -1,44 +1,40 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class BelongsTo extends Relationship {
 
 	/**
-	 * Determines if this column is a normal field on this table
+	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $foreignKey;
+	protected $relationshipDefaults = array(
+		'external' => false
+	);
 
 	/**
-	 * If this is true, the field is an external field (i.e. it's a relationship but not a belongs_to)
-	 *
-	 * @var bool
+	 * Builds a few basic options
 	 */
-	public $external = false;
-
-	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
-	 */
-	public function __construct($field, $info, $config)
+	public function build()
 	{
-		parent::__construct($field, $info, $config);
+		parent::build();
 
-		//set up the model depending on what's passed in
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config;
+		$options = $this->suppliedOptions;
 
-		$relationship = $model->{$field}();
-		$otherModel = $relationship->getRelated();
+		$model = $this->config->getDataModel();
+		$relationship = $model->{$options['field_name']}();
+		$relatedModel = $relationship->getRelated();
 
-		$this->table = $otherModel->getTable();
-		$this->column = $otherModel->getKeyName();
-		$this->foreignKey = $relationship->getForeignKey();
+		$options['table'] = $relatedModel->getTable();
+		$options['column'] = $relatedModel->getKeyName();
+		$options['foreign_key'] = $relationship->getForeignKey();
+
+		$this->suppliedOptions = $options;
 	}
-
 
 	/**
 	 * Fill a model with input data
@@ -49,32 +45,31 @@ class BelongsTo extends Relationship {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->foreignKey} = $input !== 'false' ? $input : null;
+		$model->{$this->getOption('foreign_key')} = $input !== 'false' ? $input : null;
 
-		$model->__unset($this->field);
+		$model->__unset($this->getOption('field_name'));
 	}
 
 	/**
 	 * Filters a query object with this item's data given a model
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$this->getOption('value'))
 		{
 			return;
 		}
 
-		$query->where($this->foreignKey, '=', $this->value);
+		$query->where($this->getOption('foreign_key'), '=', $this->getOption('value'));
 	}
 
 }

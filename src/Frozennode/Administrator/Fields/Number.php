@@ -1,73 +1,66 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class Number extends Field {
 
 	/**
-	 * Determines whether this field's filter uses a min/max range
+	 * The specific defaults for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $minMax = true;
+	protected $defaults = array(
+		'min_max' => true,
+		'symbol' => '',
+		'decimals' => 0,
+		'thousands_separator' => ',',
+		'decimal_separator' => '.',
+	);
 
 	/**
-	 * The symbol to use in front of the number
+	 * The specific rules for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $symbol = '';
+	protected $rules = array(
+		'symbol' => 'string',
+		'decimals' => 'integer',
+		'thousands_separator' => 'string',
+		'decimal_separator' => 'string',
+	);
 
 	/**
-	 * The number of decimal places after the number
+	 * Sets the filter options for this item
 	 *
-	 * @var int
-	 */
-	public $decimals = 0;
-
-	/**
-	 * The thousands separator
+	 * @param array		$filter
 	 *
-	 * @var string
+	 * @return void
 	 */
-	public $thousandsSeparator = ',';
-
-	/**
-	 * The decimal separator
-	 *
-	 * @var int
-	 */
-	public $decimalSeparator = '.';
-
-
-	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
-	 */
-	public function __construct($field, $info, $config)
+	public function setFilter($filter)
 	{
-		parent::__construct($field, $info, $config);
+		parent::setFilter($filter);
 
-		$this->symbol = array_get($info, 'symbol', $this->symbol);
-		$this->decimals = array_get($info, 'decimals', $this->decimals);
-		$this->decimalSeparator = array_get($info, 'decimal_separator', $this->decimalSeparator);
-		$this->thousandsSeparator = array_get($info, 'thousands_separator', $this->thousandsSeparator);
-		$this->minValue = $this->minValue ? str_replace(',', '', $this->minValue) : $this->minValue;
-		$this->maxValue = $this->maxValue ? str_replace(',', '', $this->maxValue) : $this->maxValue;
+		$minValue = $this->getOption('min_value');
+		$maxValue = $this->getOption('max_value');
+
+		$this->userOptions['min_value'] = $minValue ? str_replace(',', '', $minValue) : $minValue;
+		$this->userOptions['max_value'] = $maxValue ? str_replace(',', '', $maxValue) : $maxValue;
 	}
 
 	/**
 	 * Fill a model with input data
 	 *
 	 * @param Eloquent	$model
+	 * @param mixed		$input
 	 *
 	 * @return array
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = is_null($input) ? '' : $this->parseNumber($input);
+		$model->{$this->getOption('field_name')} = is_null($input) || $input === '' ? null : $this->parseNumber($input);
 	}
 
 	/**
@@ -77,25 +70,8 @@ class Number extends Field {
 	 *
 	 * @return string
 	 */
-	private function parseNumber($number)
+	public function parseNumber($number)
 	{
-		return str_replace($this->decimalSeparator, '.', str_replace($this->thousandsSeparator, '', $number));
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['symbol'] = $this->symbol;
-		$arr['decimals'] = $this->decimals;
-		$arr['decimalSeparator'] = $this->decimalSeparator;
-		$arr['thousandsSeparator'] = $this->thousandsSeparator;
-
-		return $arr;
+		return str_replace($this->getOption('decimal_separator'), '.', str_replace($this->getOption('thousands_separator'), '', $number));
 	}
 }
