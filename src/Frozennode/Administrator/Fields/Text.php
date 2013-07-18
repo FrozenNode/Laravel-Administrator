@@ -1,72 +1,51 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class Text extends Field {
 
 	/**
-	 * The character limit
+	 * The specific defaults for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $limit = 0;
+	protected $defaults = array(
+		'limit' => 0,
+		'height' => 100,
+	);
 
 	/**
-	 * The starting height of the textarea (if applicable)
+	 * The specific rules for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $height = 100;
-
-	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
-	 */
-	public function __construct($field, $info, $config)
-	{
-		parent::__construct($field, $info, $config);
-
-		$this->limit = array_get($info, 'limit', $this->limit);
-		$this->height = array_get($info, 'height', $this->height);
-	}
+	protected $rules = array(
+		'limit' => 'integer|min:0',
+		'height' => 'integer|min:0',
+	);
 
 	/**
 	 * Filters a query object given
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$this->getOption('value'))
 		{
 			return;
 		}
 
-		$query->where($model->getTable().'.'.$this->field, 'LIKE', '%' . $this->value . '%');
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['limit'] = $this->limit;
-		$arr['height'] = $this->height;
-
-		return $arr;
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), 'LIKE', '%' . $this->getOption('value') . '%');
 	}
 }

@@ -2,7 +2,7 @@
 <div class="panel_contents">
 
 	<!-- ko foreach: $root.filters -->
-		<div data-bind="attr: {class: type + ' ' + (minMax ? 'min_max' : '')}">
+		<div data-bind="attr: {class: type + ' ' + (min_max ? 'min_max' : '')}">
 			<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
 
 		<!-- ko if: type === 'key' -->
@@ -20,13 +20,13 @@
 		<!-- ko if: type === 'number' -->
 			<span class="symbol" data-bind="text: symbol"></span>
 
-			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, number: {decimals: decimals, key: field,
-																					thousandsSeparator: thousandsSeparator,
-																					decimalSeparator: decimalSeparator}" />
+			<input type="text" data-bind="value: min_value, attr: {id: field_id + '_min'}, number: {decimals: decimals, key: field_name,
+																					thousandsSeparator: thousands_separator,
+																					decimalSeparator: decimal_separator}" />
 			<span>-</span>
-			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, number: {decimals: decimals, key: field,
-																					thousandsSeparator: thousandsSeparator,
-																					decimalSeparator: decimalSeparator}" />
+			<input type="text" data-bind="value: max_value, attr: {id: field_id + '_max'}, number: {decimals: decimals, key: field_name,
+																					thousandsSeparator: thousands_separator,
+																					decimalSeparator: decimal_separator}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'bool' -->
@@ -38,22 +38,22 @@
 		<!-- /ko -->
 
 		<!-- ko if: type === 'date' -->
-			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, datepicker: {dateFormat: date_format}" />
+			<input type="text" data-bind="value: min_value, attr: {id: field_id + '_min'}, datepicker: {dateFormat: date_format}" />
 			<span>-</span>
-			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, datepicker: {dateFormat: date_format}" />
+			<input type="text" data-bind="value: max_value, attr: {id: field_id + '_max'}, datepicker: {dateFormat: date_format}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'time' -->
-			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'}, timepicker: {timeFormat: time_format}" />
+			<input type="text" data-bind="value: min_value, attr: {id: field_id + '_min'}, timepicker: {timeFormat: time_format}" />
 			<span>-</span>
-			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'}, timepicker: {timeFormat: time_format}" />
+			<input type="text" data-bind="value: max_value, attr: {id: field_id + '_max'}, timepicker: {timeFormat: time_format}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'datetime' -->
-			<input type="text" data-bind="value: minValue, attr: {id: field_id + '_min'},
+			<input type="text" data-bind="value: min_value, attr: {id: field_id + '_min'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 			<span>-</span>
-			<input type="text" data-bind="value: maxValue, attr: {id: field_id + '_max'},
+			<input type="text" data-bind="value: max_value, attr: {id: field_id + '_max'},
 																	datetimepicker: {dateFormat: date_format, timeFormat: time_format}" />
 		<!-- /ko -->
 
@@ -61,10 +61,10 @@
 			<div class="loader" data-bind="visible: loadingOptions"></div>
 
 			<!-- ko if: autocomplete -->
-			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2Remote: {field: field, type: 'filter', filterIndex: $index()}"/>
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2Remote: {field: field_name, type: 'filter', filterIndex: $index()}"/>
 			<!-- /ko -->
 			<!-- ko ifnot: autocomplete -->
-			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2: {data: {results: $root.listOptions[field]}}" />
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2: {data: {results: $root.listOptions[field_name]}}" />
 			<!-- /ko -->
 		<!-- /ko -->
 
@@ -72,11 +72,11 @@
 			<div class="loader" data-bind="visible: loadingOptions"></div>
 
 			<!-- ko if: autocomplete -->
-			<input type="hidden" size="7" data-bind="select2Remote: {field: field, type: 'filter', multiple: true, filterIndex: $index()},
+			<input type="hidden" size="7" data-bind="select2Remote: {field: field_name, type: 'filter', multiple: true, filterIndex: $index()},
 													attr: {id: field_id}, value: value" />
 			<!-- /ko -->
 			<!-- ko ifnot: autocomplete -->
-			<input type="hidden" size="7" multiple="true" data-bind="select2: {data:{results: $root.listOptions[field]}, multiple: true},
+			<input type="hidden" size="7" multiple="true" data-bind="select2: {data:{results: $root.listOptions[field_name]}, multiple: true},
 													attr: {id: field_id}, value: value" />
 			<!-- /ko -->
 		<!-- /ko -->

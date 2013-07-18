@@ -28,6 +28,7 @@ return array(
 	'itemsperpage'   => 'pozycji na stronie',
 	'noresults'      => 'Brak wynikow',
 	'backtosite'     => 'Powrót do strony',
+	'logout' 		 => 'Wyloguj',
 
 	'previous' => 'poprzedni',
 	'next'     => 'następny',

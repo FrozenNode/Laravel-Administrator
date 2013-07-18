@@ -4,9 +4,23 @@ namespace Frozennode\Administrator\Fields;
 class Password extends Text {
 
 	/**
-	 * When a field is a setter, no value will be returned from the database and the value will be unset before saving
+	 * The specific defaults for the image class
 	 *
-	 * @var bool
+	 * @var array
 	 */
-	public $setter = true;
+	protected $passwordDefaults = array(
+		'setter' => true,
+	);
+
+	/**
+	 * Gets all default values
+	 *
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		$defaults = parent::getDefaults();
+
+		return array_merge($defaults, $this->passwordDefaults);
+	}
 }

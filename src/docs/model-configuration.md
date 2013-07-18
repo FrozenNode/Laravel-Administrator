@@ -7,9 +7,9 @@
 <a name="introduction"></a>
 ## Introduction
 
-Any Eloquent model (or any object that ultimately extends from an Eloquent model) can be represented by a model configuration file. These files can be kept anywhere in your application directory structure and you provide the path to their location in the main `administrator.php` config with the [`model_config_path`](/docs/configuration#model-config-path) option. The names of these files correspond to the values supplied in the [`menu`](/docs/configuration#menu) option in the `administrator.php` config.
+Any Eloquent model (or any object that ultimately extends from an Eloquent model) can be represented by a model configuration file. These files can be kept anywhere in your application directory structure. All you do is provide the path to their location in the `app/config/packages/frozennode/administrator/administrator.php` config file with the [`model_config_path`](/docs/configuration#model-config-path) option. The **file names** of these files correspond to the values supplied in the [`menu`](/docs/configuration#menu) option, also in the `administrator.php` config.
 
-> **Note**: These are also the uris for each model in the admin interface.
+> **Note**: These are also the **uris** for each model in the admin interface.
 
 There are several required fields that must be supplied in order for a model config file to work. Apart from those, you can also define a number of optional fields that help you customize your admin interface on a per-model basis. For instance, if one of your models needs a WYSIWYG field, you'll probably want the edit form to be wider than the default width. All you would have to do is set the `form_width` option in that model's config.
 
@@ -32,6 +32,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Permission](#permission)
 - [Action Permissions](#action-permissions)
 - [Custom Actions](#custom-actions)
+- [Validation Rules](#validation-rules)
 - [Sort](#sort)
 - [Form Width](#form-width)
 - [Link](#link)
@@ -182,7 +183,8 @@ The permission option lets you define a closure that determines whether or not t
 ## Action Permissions
 
 	/**
-	 * The action_permissions option lets you define permissions on the three primary actions: 'create', 'update', and 'delete'.
+	 * The action_permissions option lets you define permissions on the four primary actions: 'create', 'update', 'delete', and 'view'.
+	 * It also provides a secondary place to define permissions for your custom actions.
 	 *
 	 * @type array
 	 */
@@ -193,7 +195,7 @@ The permission option lets you define a closure that determines whether or not t
 		}
 	),
 
-Action permissions can be supplied to give you access control over the three primary actions (`create`, `update`, and `delete`) and any custom actions that you define. `read` access is assumed if the user passes the [`permission`](#permission) check. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should be an anonymous function that returns either true or false.
+Action permissions can be supplied to give you access control over the four primary actions (`create`, `update`, `delete`, and `view`) and any custom actions that you define. None of these options are required and should only be supplied if you want to restrict access. In the above example, only users with role `developer` will be able to delete an item for this model. The keys of the `action_permissions` array should be the names of the actions, and each item should either be an anonymous function that returns either true or false, or simply a boolean value.
 
 <a name="custom-actions"></a>
 ## Custom Actions
@@ -233,6 +235,21 @@ You can define custom actions for your model if you want to provide the administ
 When the user clicks on either button, the `action` property above is called and passed the relevant Eloquent model.
 
 > For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
+
+<a name="validation-rules"></a>
+### Validation Rules
+
+	/**
+	 * The validation rules for the form, based on the Laravel validation class
+	 *
+	 * @type array
+	 */
+	'rules' => array(
+		'name' => 'required',
+		'age' => 'required|integer|min:18',
+	),
+
+The validation rules for your models can be set using the `rules` option. Administrator uses [Laravel's validation](http://laravel.com/docs/validation) to validate your models. If the form is invalid, it will notify the admin user without saving the form.
 
 <a name="sort"></a>
 ## Sort

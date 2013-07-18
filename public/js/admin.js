@@ -23,7 +23,6 @@
 		 */
 		historyStarted: false,
 
-
 		/*
 		 * Filters view model
 		 */
@@ -56,6 +55,12 @@
 			 */
 			model: {},
 
+			/*
+			 * If this is true, all the values have been initialized and we can
+			 *
+			 * bool
+			 */
+			initialized: ko.observable(false),
 
 			/* The model name for this data model
 			 * string
@@ -225,9 +230,9 @@
 				//iterate over the edit fields and ensure that the belongs_to relationships are false if they are an empty string
 				$.each(self.editFields(), function(ind, field)
 				{
-					if (field.relationship && !field.external && saveData[field.field] === '')
+					if (field.relationship && !field.external && saveData[field.field_name] === '')
 					{
-						saveData[field.field] = false;
+						saveData[field.field_name] = false;
 					}
 				});
 
@@ -247,10 +252,9 @@
 					{
 						if (response.success) {
 							self.statusMessage(self.languages['saved']).statusMessageType('success');
-							self[self.primaryKey](response.data[self.primaryKey]);
-							self.activeItem(response.data[self.primaryKey]);
 							self.updateRows();
 							self.updateSelfRelationships();
+							self.setData(response.data);
 
 							setTimeout(function()
 							{
@@ -258,10 +262,7 @@
 							}, 200);
 						}
 						else
-						{
-							var error = typeof response.errors == 'string' ? response.errors : response.errors.join(' ');
-							self.statusMessage(error).statusMessageType('error');
-						}
+							self.statusMessage(response.errors).statusMessageType('error');
 					}
 				});
 			},
@@ -309,7 +310,7 @@
 			 */
 			clickItem: function(id)
 			{
-				if (!this.loadingItem() && this.activeItem() !== id)
+				if (!this.loadingItem() && this.activeItem() !== id && this.actionPermissions.view)
 				{
 					History.pushState({modelName: this.modelName(), id: id}, null, route + this.modelName() + '/' + id);
 				}
@@ -356,6 +357,13 @@
 					dataType: 'json',
 					success: function(data)
 					{
+						//if there was an error, kick out
+						if (data.success === false && data.errors)
+						{
+							alert(data.errors);
+							return;
+						}
+
 						if (self.itemLoadingId() !== id)
 						{
 							//if there are no currently-loading items, clear the form
@@ -368,52 +376,65 @@
 							return;
 						}
 
-						//set the active item and update the model data
-						self.activeItem(data[self.primaryKey]);
-						self.loadingItem(false);
-
-						//update the edit fields
-						adminData.edit_fields = data.administrator_edit_fields;
-						self.editFields(window.admin.prepareEditFields());
-
-						//update the action permissions
-						self.actions(data.administrator_actions);
-						self.actionPermissions = data.administrator_action_permissions;
-
-						//set the new options for relationships
-						$.each(adminData.edit_fields, function(ind, el)
-						{
-							if (el.relationship && el.autocomplete)
-							{
-								self[el.field + '_autocomplete'] = data[el.field + '_autocomplete'];
-							}
-						});
-
-						//set the item link if it exists
-						if (data.admin_item_link)
-						{
-							self.itemLink(data.admin_item_link);
-						}
-
-						//set the last item property which helps manage the animation states
-						self.lastItem = id;
-
-						//fixes an error where the relationships wouldn't load
-						setTimeout(function()
-						{
-							//first clear the data
-							ko.mapping.updateData(self, self.model, self.model);
-
-							//then update the data
-							ko.mapping.updateData(self, self.model, data);
-
-							//unfreeze the relationship constraint updates
-							self.freezeConstraints = false;
-
-							window.admin.resizePage();
-						}, 50);
+						self.setData(data);
 					}
 				});
+			},
+
+			/**
+			 * Overrides the data in the view model
+			 *
+			 * @param object	data
+			 * @param
+			 */
+			setData: function(data)
+			{
+				var self = this;
+
+				//set the active item and update the model data
+				self.activeItem(data[self.primaryKey]);
+				self.loadingItem(false);
+
+				//update the edit fields
+				adminData.edit_fields = data.administrator_edit_fields;
+				self.editFields(window.admin.prepareEditFields());
+
+				//update the action permissions
+				self.actions(data.administrator_actions);
+				self.actionPermissions = data.administrator_action_permissions;
+
+				//set the new options for relationships
+				$.each(adminData.edit_fields, function(ind, el)
+				{
+					if (el.relationship && el.autocomplete)
+					{
+						self[el.field_name + '_autocomplete'] = data[el.field_name + '_autocomplete'];
+					}
+				});
+
+				//set the item link if it exists
+				if (data.admin_item_link)
+				{
+					self.itemLink(data.admin_item_link);
+				}
+
+				//set the last item property which helps manage the animation states
+				self.lastItem = data[self.primaryKey];
+
+				//fixes an error where the relationships wouldn't load
+				setTimeout(function()
+				{
+					//first clear the data
+					ko.mapping.updateData(self, self.model, self.model);
+
+					//then update the data
+					ko.mapping.updateData(self, self.model, data);
+
+					//unfreeze the relationship constraint updates
+					self.freezeConstraints = false;
+
+					window.admin.resizePage();
+				}, 50);
 			},
 
 			/**
@@ -452,10 +473,18 @@
 			 *
 			 * @param string	action
 			 * @param object	messages
+			 * @param string	confirmation
 			 */
-			customAction: function(action, messages)
+			customAction: function(action, messages, confirmation)
 			{
 				var self = this;
+
+				//if a confirmation string was supplied, flash it in a confirm()
+				if (confirmation)
+				{
+					if (!confirm(confirmation))
+						return false;
+				}
 
 				self.statusMessage(messages.active).statusMessageType('');
 				self.freezeForm(true);
@@ -475,6 +504,7 @@
 						{
 							self.statusMessage(messages.success).statusMessageType('success');
 							self.updateRows();
+							self.setData(response.data);
 						}
 						else
 							self.statusMessage(response.error).statusMessageType('error');
@@ -498,6 +528,10 @@
 						filters: self.getFilters(),
 						page: self.pagination.page()
 					};
+
+				//if the page hasn't been initialized yet, don't update the rows
+				if (!this.initialized())
+					return;
 
 				//if we're on page 0 (i.e. there is currently no result set, set the page to 1)
 				if (!data.page)
@@ -525,7 +559,6 @@
 						self.pagination.total(response.total);
 						self.rows(response.results);
 						self.loadingRows(false);
-
 					}
 				});
 			},
@@ -543,7 +576,7 @@
 				//iterate over the columns to check if it's a valid sort_field or field
 				$.each(this.columns, function(i, col)
 				{
-					if (field === col.sort_field || field === col.field)
+					if (field === col.sort_field || field === col.column_name)
 					{
 						found = true;
 						return false;
@@ -644,12 +677,12 @@
 			getFilters: function()
 			{
 				var filters = [],
-					observables = ['value', 'minValue', 'maxValue'];
+					observables = ['value', 'min_value', 'max_value'];
 
 				$.each(window.admin.filtersViewModel.filters, function(ind, el)
 				{
 					var filter = {
-						field: el.field,
+						field_name: el.field_name,
 						type: el.type,
 						value: el.value() ? el.value() : null,
 					};
@@ -686,9 +719,9 @@
 				$.each(window.admin.filtersViewModel.filters, function(ind, filter)
 				{
 					var fieldIndex = ind,
-						fieldName = filter.field;
+						fieldName = filter.field_name;
 
-					if ((!filter.constraints || !filter.constraints.length) && filter.selfRelationship)
+					if ((!filter.constraints || !filter.constraints.length) && filter.self_relationship)
 					{
 						window.admin.filtersViewModel.filters[fieldIndex].loadingOptions(true);
 
@@ -719,10 +752,10 @@
 				$.each(self.editFields(), function(ind, field)
 				{
 					var fieldIndex = ind,
-						fieldName = field.field;
+						fieldName = field.field_name;
 
 					//if there are constraints to maintain, set up the subscriptions
-					if ((!field.constraints || !field.constraints.length) && field.selfRelationship)
+					if ((!field.constraints || !field.constraints.length) && field.self_relationship)
 					{
 						field.loadingOptions(true);
 
@@ -760,6 +793,8 @@
 		 */
 		init: function()
 		{
+			var self = this;
+
 			//set up the basic pieces of data
 			this.viewModel.model = adminData.data_model;
 			this.$container = $('#admin_content');
@@ -820,6 +855,12 @@
 			//run an initial page resize
 			this.resizePage();
 
+			//finally run a timer to overcome bugs with select2
+			setTimeout(function()
+			{
+				self.viewModel.initialized(true);
+			}, 1000);
+
 			return this;
 		},
 
@@ -834,7 +875,7 @@
 
 			$.each(adminData.filters, function(ind, filter)
 			{
-				var observables = ['value', 'minValue', 'maxValue'];
+				var observables = ['value', 'min_value', 'max_value'];
 
 				//iterate over the desired observables and check if they're there. if so, assign them an observable slot
 				$.each(observables, function(i, obs)
@@ -851,7 +892,7 @@
 					filter.loadingOptions = ko.observable(false);
 				}
 
-				filter.field_id = 'filter_field_' + filter.field;
+				filter.field_id = 'filter_field_' + filter.field_name;
 
 				filters.push(filter);
 			});
@@ -947,13 +988,13 @@
 
 
 				//check if there's a min and max value. if so, subscribe to those as well
-				if ('minValue' in filter)
+				if ('min_value' in filter)
 				{
-					self.filtersViewModel.filters[ind].minValue.subscribe(runFilter);
+					self.filtersViewModel.filters[ind].min_value.subscribe(runFilter);
 				}
-				if ('maxValue' in filter)
+				if ('max_value' in filter)
 				{
-					self.filtersViewModel.filters[ind].maxValue.subscribe(runFilter);
+					self.filtersViewModel.filters[ind].max_value.subscribe(runFilter);
 				}
 
 
@@ -969,7 +1010,7 @@
 					$.each(field.constraints, function(key, relationshipName)
 					{
 						var fieldIndex = ind,
-							fieldName = field.field;
+							fieldName = field.field_name;
 
 						self.viewModel[key].subscribe(function(val)
 						{

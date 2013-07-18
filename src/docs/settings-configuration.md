@@ -31,6 +31,7 @@ Below is a list of all the available options for settings pages. Required option
 - [Before Save](#before-save)
 - [Permission](#permission)
 - [Custom Actions](#custom-actions)
+- [Storage Path](#storage-path)
 
 <a name="title"></a>
 ### Title *(required)*
@@ -170,3 +171,15 @@ You can define custom actions for your settings page if you want to provide the 
 When the user clicks on either button, the `action` property for that button is called. The currently-saved settings data is passed into the function by reference with the `$data` parameter. This means that you can change the data however you like prior to it being saved in the JSON.
 
 > For a detailed description of custom actions, see the **[actions docs](/docs/actions)**.
+
+<a name="storage-path"></a>
+### Storage Path
+
+	/**
+	 * The storage path in which to save the raw settings data
+	 *
+	 * @type string
+	 */
+	'storage_path' => storage_path() . '/my_custom_directory',
+
+You can optionally provide a `storage_path` option that will determine in which directory the raw settings data will be saved. If you've saving the data via other means in the `before_save` callback, or if you're comfortable with the default location (`/app/storage/administrator_settings`), you can omit this option.

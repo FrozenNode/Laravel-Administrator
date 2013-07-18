@@ -1,86 +1,51 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
 use Frozennode\Administrator\Includes\Multup;
 
 class File extends Field {
 
 	/**
-	 * The naming mechanism for the file (can be either 'keep' or 'random').
+	 * The specific defaults for subclasses to override
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $naming = 'random';
+	protected $defaults = array(
+		'naming' => 'random',
+		'length' => 32,
+		'mimes' => false,
+		'size_limit' => 2,
+	);
 
 	/**
-	 * Length of file name if naming is set to random
+	 * The specific rules for subclasses to override
 	 *
-	 * @var int
+	 * @var array
 	 */
-	public $length = 32;
+	protected $rules = array(
+		'location' => 'required|string|directory',
+		'naming' => 'in:keep,random',
+		'length' => 'integer|min:0',
+		'mimes' => 'string',
+	);
 
 	/**
-	 * The directory location used to store the file
-	 *
-	 * @var string
+	 * Builds a few basic options
 	 */
-	public $location;
-
-	/**
-	 * The upload url for this field
-	 *
-	 * @var string
-	 */
-	public $uploadUrl;
-
-	/**
-	 * The file size limit in MB
-	 *
-	 * @var int
-	 */
-	public $sizeLimit = 2;
-
-	/**
-	 * The mime types that this field should be limited to separated by commas
-	 *
-	 * @var false | string
-	 */
-	public $mimes = false;
-
-	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
-	 */
-	public function __construct($field, $info, $config)
+	public function build()
 	{
-		parent::__construct($field, $info, $config);
-		$isSettings = is_a($config, 'Frozennode\\Administrator\\SettingsConfig');
+		parent::build();
 
-		$this->mimes = array_get($info, 'mimes', $this->mimes);
-		$this->naming = array_get($info, 'naming', $this->naming);
-		$this->length = array_get($info, 'length', $this->length);
-		$this->location = array_get($info, 'location');
-		$this->sizeLimit = (int) array_get($info, 'size_limit', $this->sizeLimit);
+		//set the upload url depending on the type of config this is
+		$url = $this->validator->getUrlInstance();
+		$route = $this->config->getType() === 'settings' ? 'admin_settings_file_upload' : 'admin_file_upload';
 
-		if ($isSettings)
-		{
-			$this->uploadUrl = URL::route('admin_settings_file_upload', array($config->name, $this->field));
-		}
-		else
-		{
-			$this->uploadUrl = URL::route('admin_file_upload', array($config->name, $this->field));
-		}
-
-		//make sure the naming is one of the two accepted values
-		$this->naming = in_array($this->naming, array('keep', 'random')) ? $this->naming : 'random';
-
-		// Satisfy params for Multup, for keep we return false so we don't random filename
-		$this->naming = ($this->naming == 'keep') ? false : true;
+		//set the upload url to the proper route
+		$this->suppliedOptions['upload_url'] = $url->route($route, array($this->config->getOption('name'), $this->suppliedOptions['field_name']));
 	}
 
 	/**
@@ -90,29 +55,14 @@ class File extends Field {
 	 */
 	public function doUpload()
 	{
-		$mimes = $this->mimes ? '|mimes:' . $this->mimes : '';
+		$mimes = $this->getOption('mimes') ? '|mimes:' . $this->getOption('mimes') : '';
 
 		//use the multup library to perform the upload
-		$result = Multup::open('file', 'max:' . $this->sizeLimit * 1000 . $mimes, $this->location, $this->naming)
-			->set_length($this->length)
+		$result = Multup::open('file', 'max:' . $this->getOption('size_limit') * 1000 . $mimes, $this->getOption('location'),
+									$this->getOption('naming') === 'random')
+			->set_length($this->getOption('length'))
 			->upload();
 
 		return $result[0];
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['location'] = $this->location;
-		$arr['size_limit'] = $this->sizeLimit;
-		$arr['upload_url'] = $this->uploadUrl;
-
-		return $arr;
 	}
 }

@@ -6,7 +6,14 @@
 <a name="introduction"></a>
 ## Introduction
 
-Administrator uses [Laravel's validation](http://laravel.com/docs/validation) to validate your models. All you need to provide is a static `$rules` property in your Eloquent models like this:
+Administrator uses [Laravel's validation](http://laravel.com/docs/validation) to validate your models. You can either provide a [`rules`](/docs/model-configuration#validation-rules) option in your configuration files:
+
+	'rules' => array(
+		'name' => 'required',
+		'age' => 'required|integer|min:18',
+	)
+
+ Or for model pages, you can provide a static `$rules` property in your Eloquent models like this:
 
 	class Movie extends Eloquent {
 

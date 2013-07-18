@@ -1,160 +1,144 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
-use Frozennode\Administrator\Column;
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
 
 class BelongsToMany extends Relationship {
 
+	/**
+	 * The relationship-type-specific defaults for the relationship subclasses to override
+	 *
+	 * @var array
+	 */
+	protected $relationshipDefaults = array(
+		'column2' => '',
+		'multiple_values' => true,
+		'sort_field' => false,
+	);
 
 	/**
-	 * The field type which matches a $fieldTypes key
-	 *
-	 * @var string
+	 * Builds a few basic options
 	 */
-	public $column2 = '';
-
-	/**
-	 * This determines if there are potentially multiple related values (i.e. whether to use an array of items or just a single value)
-	 *
-	 * @var bool
-	 */
-	public $multipleValues = true;
-
-	/**
-	 * If provided, the sort field is used to reorder values in the UI and then saved to the intermediate relationship table
-	 *
-	 * @var bool
-	 */
-	public $sortField = false;
-
-
-	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param array|string	$info
-	 * @param ModelConfig 	$config
-	 */
-	public function __construct($field, $info, $config)
+	public function build()
 	{
-		parent::__construct($field, $info, $config);
+		parent::build();
 
-		//set up the model depending on what's passed in
-		$model = is_a($config, 'Frozennode\\Administrator\\ModelConfig') ? $config->model : $config;
+		$options = $this->suppliedOptions;
 
-		$relationship = $model->{$field}();
-		$related_model = $relationship->getRelated();
+		$model = $this->config->getDataModel();
+		$relationship = $model->{$options['field_name']}();
+		$relatedModel = $relationship->getRelated();
 
-		$this->table = $relationship->getTable();
-		$this->column = $relationship->getForeignKey();
-		$this->column2 = $relationship->getOtherKey();
-		$this->foreignKey = $related_model->getKeyName();
-		$this->sortField = array_get($info, 'sort_field', $this->sortField);
-	}
+		$options['table'] = $relationship->getTable();
+		$options['column'] = $relationship->getForeignKey();
+		$options['column2'] = $relationship->getOtherKey();
+		$options['foreign_key'] = $relatedModel->getKeyName();
 
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['column2'] = $this->column2;
-		$arr['sort_field'] = $this->sortField;
-
-		return $arr;
+		$this->suppliedOptions = $options;
 	}
 
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
+	 * @param Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 *
 	 * @return array
 	 */
 	public function fillModel(&$model, $input)
 	{
 		$input = $input ? explode(',', $input) : array();
+		$fieldName = $this->getOption('field_name');
+		$relationship = $model->{$fieldName}();
 
 		//if this field is sortable, delete all the old records and insert the new ones one at a time
-		if ($this->sortField)
+		if ($sortField = $this->getOption('sort_field'))
 		{
 			//first delete all the old records
-			$model->{$this->field}()->delete();
+			$relationship->delete();
 
+			//then re-attach them in the correct order
 			foreach ($input as $i => $item)
 			{
-				$model->{$this->field}()->attach($item, array($this->sortField => $i));
+				$relationship->attach($item, array($sortField => $i));
 			}
 		}
 		else
 		{
-			$model->{$this->field}()->sync($input);
+			//elsewise the order doesn't matter, so use sync
+			$relationship->sync($input);
 		}
 
-		$model->__unset($this->field);
+		//unset the attribute on the model
+		$model->__unset($fieldName);
 	}
 
 
 	/**
-	 * Filters a query object with this item's data given a model
+	 * Filters a query object with this item's data
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
+
+		//get the values
+		$value = $this->getOption('value');
+		$table = $this->getOption('table');
+		$column = $this->getOption('column');
+		$column2 = $this->getOption('column2');
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$value)
 		{
 			return;
 		}
 
+		$model = $this->config->getDataModel();
+
 		//if the table hasn't been joined yet, join it
-		if (!Column::isJoined($query, $this->table))
+		if (!$this->validator->isJoined($query, $table))
 		{
-			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column);
+			$query->join($table, $model->getTable().'.'.$model->getKeyName(), '=', $column);
 		}
 
 		//add where clause
-		$query->whereIn($this->column2, $this->value);
+		$query->whereIn($column2, $value);
 
 		//add having clauses
-		$query->havingRaw('COUNT(DISTINCT '.$this->column2.') = '. count($this->value));
+		$query->havingRaw('COUNT(DISTINCT '.$column2.') = '. count($value));
 
 		//add select field
-		if (!in_array($this->column2, $selects))
+		if ($selects && !in_array($column2, $selects))
 		{
-			$selects[] = $this->column2;
+			$selects[] = $column2;
 		}
 	}
 
 	/**
 	 * Constrains a query by a given set of constraints
 	 *
-	 * @param  Query 		$query
-	 * @param  Eloquent 	$model
-	 * @param  array 		$constraints
+	 * @param  Query 								$query
+	 * @param  Illuminate\Database\Eloquent\Model 	$relatedModel
+	 * @param  string 								$constraint
 	 *
 	 * @return void
 	 */
-	public function constrainQuery(&$query, $model, $constraints)
+	public function constrainQuery(&$query, $relatedModel, $constraint)
 	{
 		//if the column hasn't been joined yet, join it
-		if (!Column::isJoined($query, $this->table))
+		if (!$this->validator->isJoined($query, $this->getOption('table')))
 		{
-			$query->join($this->table, $model->getTable().'.'.$model->getKeyName(), '=', $this->column2);
+			$query->join($this->getOption('table'), $relatedModel->getTable().'.'.$relatedModel->getKeyName(), '=', $this->getOption('column2'));
 		}
 
-		$query->where($this->column, '=', $constraints);
+		$query->where($this->getOption('column'), '=', $constraint);
 	}
 }

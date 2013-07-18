@@ -12,7 +12,14 @@
 <a name="introduction"></a>
 ## Introduction
 
-In each model's config file, you must specify a `columns` option. This should be an array of the columns that you wish to display in a model's result set. At its very simplest, this could just be a simple array of attribute names (including [accessors](http://laravel.com/docs/eloquent#accessors-and-mutators)). However, you also have the ability to control the column's header through the `title` option, the column's `sort_field` (if you're using an accessor), a custom SQL select statement, whether or not to use a column on another table (through an Eloquent relationship), and what the output of the column should be.
+In each model's config file you must specify a `columns` option. This should be an array of the columns that you wish to display in a model's results table. Columns can be made up of any of the following:
+
+* Attribute names on your model
+* [Accessors](http://laravel.com/docs/eloquent#accessors-and-mutators)
+* [Relationships](#relationship-columns) (inlcuding [nested relationships](/docs/relationship-columns#nested-relationships))
+
+You can control the column's header through the `title` option, the `sort_field` that will be used if you sort by that columns, and any custom output you want for that column.
+
 
 <a name="simple-columns"></a>
 ## Simple Columns

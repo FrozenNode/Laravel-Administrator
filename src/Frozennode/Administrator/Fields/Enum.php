@@ -1,6 +1,10 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Config\ConfigInterface;
+use Illuminate\Database\DatabaseManager as DB;
+
 class Enum extends Field {
 
 	/**
@@ -8,29 +12,32 @@ class Enum extends Field {
 	 *
 	 * @var array
 	 */
-	public $options = array();
+	protected $rules = array(
+		'options' => 'array|not_empty',
+	);
 
 	/**
-	 * Constructor function
-	 *
-	 * @param string|int	$field
-	 * @param ModelConfig 	$config
+	 * Builds a few basic options
 	 */
-	public function __construct($field, $info, $config)
+	public function build()
 	{
-		parent::__construct($field, $info, $config);
+		parent::build();
 
-		$this->value = $this->value === '' ? null : $this->value;
-		$options = array_get($info, 'options', $this->options);
+		$options = $this->suppliedOptions;
+
+		$dataOptions = $this->getOption('options');
+		$options['options'] = array();
 
 		//iterate over the options to create the options assoc array
-		foreach ($options as $val => $text)
+		foreach ($dataOptions as $val => $text)
 		{
-			$this->options[] = array(
+			$options['options'][] = array(
 				'id' => is_numeric($val) ? $text : $val,
 				'text' => $text,
 			);
 		}
+
+		$this->suppliedOptions = $options;
 	}
 
 	/**
@@ -41,43 +48,42 @@ class Enum extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->field} = $input;
+		$model->{$this->getOption('field_name')} = $input;
+	}
+
+	/**
+	 * Sets the filter options for this item
+	 *
+	 * @param array		$filter
+	 *
+	 * @return void
+	 */
+	public function setFilter($filter)
+	{
+		parent::setFilter($filter);
+
+		$this->userOptions['value'] = $this->getOption('value') === '' ? null : $this->getOption('value');
 	}
 
 	/**
 	 * Filters a query object
 	 *
 	 * @param Query		$query
-	 * @param Eloquent	$model
 	 * @param array		$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, $model, &$selects)
+	public function filterQuery(&$query, &$selects = null)
 	{
 		//run the parent method
-		parent::filterQuery($query, $model, $selects);
+		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->value)
+		if (!$this->getOption('value'))
 		{
 			return;
 		}
 
-		$query->where($model->getTable().'.'.$this->field, '=', $this->value);
-	}
-
-	/**
-	 * Turn this item into an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = parent::toArray();
-
-		$arr['options'] = $this->options;
-
-		return $arr;
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), '=', $this->getOption('value'));
 	}
 }

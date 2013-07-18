@@ -192,9 +192,8 @@ class Multup {
 		$resizes = '';
 
 		if($validation->fails()){
-			dd($validation->messages());
 			/* use the messages object for the erros */
-			$errors = $validation->errors();
+			$errors = implode('. ', $validation->messages()->all());
 		} else {
 
 			if($this->random){
