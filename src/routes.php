@@ -3,7 +3,7 @@
 /**
  * Routes
  */
-Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 'before' => 'validate_admin'), function()
+Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 'before' => array('validate_admin')), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(
@@ -12,7 +12,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	));
 
 	//The route group for all other requests needs to validate admin, model, and add assets
-	Route::group(array('before' => 'validate_model|post_validate'), function()
+	Route::group(array('before' => array('validate_model', 'post_validate')), function()
 	{
 		//Model Index
 		Route::get('{model}', array(
@@ -47,7 +47,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	});
 
 	//CSRF protection in forms
-	Route::group(array('before' => 'validate_model|post_validate|csrf'), function()
+	Route::group(array('before' => array('validate_model', 'post_validate', 'csrf')), function()
 	{
 		//Save Item
 		Route::post('{model}/{id?}/save', array(
@@ -78,7 +78,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	});
 
 	//Standard validation without csrf
-	Route::group(array('before' => 'validate_model|post_validate'), function()
+	Route::group(array('before' => array('validate_model', 'post_validate')), function()
 	{
 		//File Uploads
 		Route::post('{model}/{field}/file_upload', array(
@@ -96,12 +96,12 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	//Settings Pages
 	Route::get('settings/{settings}', array(
 		'as' => 'admin_settings',
-		'before' => 'validate_settings|post_validate',
+		'before' => array('validate_settings','post_validate'),
 		'uses' => 'Frozennode\Administrator\AdminController@settings'
 	));
 
 	//Settings POSTs
-	Route::group(array('before' => 'validate_settings|post_validate|csrf'), function()
+	Route::group(array('before' => array('validate_settings','post_validate','csrf')), function()
 	{
 		//Save Item
 		Route::post('settings/{settings}/save', array(
@@ -118,14 +118,14 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 
 	//Settings file upload
 	Route::post('settings/{settings}/{field}/file_upload', array(
-		'before' => 'validate_settings|post_validate',
+		'before' => array('validate_settings','post_validate'),
 		'as' => 'admin_settings_file_upload',
 		'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
 	));
 
 	//Display a settings file
 	Route::get('settings/{settings}/file', array(
-		'before' => 'validate_settings|post_validate',
+		'before' => array('validate_settings','post_validate'),
 		'as' => 'admin_settings_display_file',
 		'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 	));
