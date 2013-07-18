@@ -13,7 +13,7 @@ class Enum extends Field {
 	 * @var array
 	 */
 	protected $rules = array(
-		'options' => 'array|not_empty',
+		'options' => 'required|array|not_empty',
 	);
 
 	/**
@@ -25,7 +25,7 @@ class Enum extends Field {
 
 		$options = $this->suppliedOptions;
 
-		$dataOptions = $this->getOption('options');
+		$dataOptions = $options['options'];
 		$options['options'] = array();
 
 		//iterate over the options to create the options assoc array

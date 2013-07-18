@@ -60,8 +60,12 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 				->shouldReceive('getOption')->times(2);
 		$columns = array($column);
 		$this->columnFactory->shouldReceive('getColumns')->once()->andReturn($columns);
+		$countQuery = m::mock('Illuminate\Database\Query\Builder');
+		$connection = m::mock('Illuminate\Database\Connection');
+		$connection->shouldReceive('table')->once()->andReturn(m::mock(array('groupBy' => $countQuery)));
 		$dbQuery = m::mock('Illuminate\Database\Query\Builder');
-		$dbQuery->shouldReceive('select')->twice();
+		$dbQuery->shouldReceive('select')->twice()
+				->shouldReceive('getConnection')->once()->andReturn($connection);
 		$query = m::mock('Illuminate\Database\Query\Builder');
 		$query->shouldReceive('getQuery')->twice()->andReturn($dbQuery)
 				->shouldReceive('toSql')->once()
@@ -73,9 +77,7 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 		$model->shouldReceive('getTable')->once()->andReturn('table')
 				->shouldReceive('getKeyName')->once()->andReturn('id')
 				->shouldReceive('groupBy')->once()->andReturn($query);
-		$countQuery = m::mock('Illuminate\Database\Query\Builder');
 		$db = m::mock('Illuminate\Database\DatabaseManager');
-		$db->shouldReceive('table')->once()->andReturn(m::mock(array('groupBy' => $countQuery)));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$countResults = array('page' => 30, 'last' => 60, 'total' => 4000);
 		$this->dataTable->shouldReceive('setSort')->once()
