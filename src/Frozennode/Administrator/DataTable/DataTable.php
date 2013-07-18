@@ -86,7 +86,7 @@ class DataTable {
 		$keyName = $model->getKeyName();
 		$query = $model->groupBy($table . '.' . $keyName);
 		$dbQuery = $query->getQuery();
-		$countQuery = $db->table($table)->groupBy($table . '.' . $keyName);
+		$countQuery = $dbQuery->getConnection()->table($table)->groupBy($table . '.' . $keyName);
 
 		//set up initial array states for the selects
 		$selects = array($table.'.*');
