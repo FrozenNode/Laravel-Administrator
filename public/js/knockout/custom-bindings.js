@@ -520,28 +520,30 @@
 		}
 	};
 
+	var editors = {};
+
 	/**
 	 * The wysiwyg binding makes the field a ckeditor wysiwyg
 	 */
 	ko.bindingHandlers.wysiwyg = {
 		init: function (element, valueAccessor, allBindingsAccessor, context)
 		{
-			var value = ko.utils.unwrapObservable(valueAccessor()),
-				$element = $(element);
+			var options = valueAccessor(),
+				value = ko.utils.unwrapObservable(options.value),
+				$element = $(element),
+				editor;
 
 			value = value ? value : '';
 
 			$element.html(value);
-			$element.ckeditor({ language : language });
 
-			var editor = $element.ckeditorGet();
-
-			//wire up the blur event to ensure our observable is properly updated
-			editor.focusManager.blur = function()
+			if (options.id in editors)
+				editor = editors[options.id];
+			else
 			{
-				var observable = valueAccessor();
-
-				observable($element.val());
+				$element.ckeditor({ language : language });
+				editor = $element.ckeditorGet();
+				editors[options.id] = editor;
 			}
 
 			//when the editor is loaded, we want to resize our page
@@ -553,19 +555,32 @@
 				}, 50)
 			});
 
-			//handle destroying an editor (based on what jQuery plugin does)
-	        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-	            var existingEditor = CKEDITOR.instances[element.name];
+			//wire up the blur event to ensure our observable is properly updated
+			editor.focusManager.blur = function()
+			{
+				var observable = valueAccessor().value;
 
-		        existingEditor.destroy(true);
+				observable($('#' + options.id).val());
+			}
+
+			//handle destroying an editor (based on what jQuery plugin does)
+	        ko.utils.domNodeDisposal.addDisposeCallback(element, function (test) {
+	            var editor = editors[options.id];
+
+	            if (editor)
+	        	{
+		        	editor.destroy();
+		        	delete editors[options.id];
+	        	}
 	        });
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			//handle programmatic updates to the observable
-			var value = ko.utils.unwrapObservable(valueAccessor()),
+			var options = valueAccessor(),
+				value = ko.utils.unwrapObservable(options.value),
 				$element = $(element),
-				editor = $element.ckeditorGet();
+				editor = editors[options.id];
 
 			value = value ? value : '';
 
@@ -584,7 +599,6 @@
 					editor.setData(value);
 				}, 50);
 			}
-
 		}
 	};
 
