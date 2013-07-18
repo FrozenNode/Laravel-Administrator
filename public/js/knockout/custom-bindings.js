@@ -668,7 +668,7 @@
 					viewModel[options.field](data.filename);
 				} else {
 					//error
-					alert(data.errors.messages.file[0]);
+					alert(data.errors);
 				}
 
 				setTimeout(function()
