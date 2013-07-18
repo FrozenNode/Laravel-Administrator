@@ -557,8 +557,7 @@
 	        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
 	            var existingEditor = CKEDITOR.instances[element.name];
 
-	            if (existingEditor)
-		            existingEditor.destroy(true);
+		        existingEditor.destroy(true);
 	        });
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
