@@ -155,6 +155,12 @@
 				}
 			}
 
+			//make sure we're monitoring the change event for page resizing
+			$(element).on('change', function()
+			{
+				window.admin.resizePage();
+			});
+
 			setTimeout(function()
 			{
 				$(element).trigger('change');
@@ -552,7 +558,12 @@
 				setTimeout(function()
 				{
 					window.admin.resizePage();
-				}, 50)
+				}, 50);
+
+				editor.on('resize', function()
+				{
+					window.admin.resizePage();
+				});
 			});
 
 			//wire up the blur event to ensure our observable is properly updated
