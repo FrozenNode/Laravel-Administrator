@@ -72,4 +72,71 @@ class Relationship extends Column {
 		return array();
 	}
 
+	/**
+	 * Sets up the existing relationship wheres
+	 *
+	 * @param Illuminate\Database\Eloquent\Relations\Relation		$relationship
+	 * @param string												$tableAlias
+	 *
+	 * @return string
+	 */
+	public function getRelationshipWheres($relationship, $tableAlias)
+	{
+		//get the query instance
+		$query = $relationship->getQuery()->getQuery();
+
+		//get the connection instance
+		$connection = $query->getConnection();
+
+		//fetch the where values and their bindings
+		array_shift($query->wheres);
+
+		//iterate over the wheres to properly alias the columns
+		foreach ($query->wheres as &$where)
+		{
+			$where['column'] = $tableAlias . '.' . $where['column'];
+		}
+
+		$sql = $query->toSql();
+		$fullQuery = $this->interpolateQuery($sql, $connection->prepareBindings($query->getBindings()));
+		$split = explode(' where ', $fullQuery);
+		return isset($split[1]) ? $split[1] : '';
+	}
+
+	/**
+	 * Replaces any parameter placeholders in a query with the value of that
+	 * parameter.
+	 *
+	 * @param string $query The sql query with parameter placeholders
+	 * @param array $params The array of substitution parameters
+	 *
+	 * @return string The interpolated query
+	 */
+	public function interpolateQuery($query, array $params) {
+		$keys = array();
+		$values = $params;
+
+		//build a regular expression for each parameter
+		foreach ($params as $key => $value) {
+			if (is_string($key)) {
+				$keys[] = "/:" . $key . "/";
+			} else {
+				$keys[] = '/[?]/';
+			}
+
+			if (is_string($value))
+				$values[$key] = "'" . $value . "'";
+
+			if (is_array($value))
+				$values[$key] = implode(',', $value);
+
+			if (is_null($value))
+				$values[$key] = 'NULL';
+		}
+
+		$query = preg_replace($keys, $values, $query, 1, $count);
+
+		return $query;
+	}
+
 }

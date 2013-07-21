@@ -1,5 +1,7 @@
 ## Changelog
 
+- Relationship columns now respect WHERE filters in your Eloquent model
+
 ### 4.3.0
 - Unit testing
 - A fourth basic action permission is now available: 'view'. This dictates whether or not the admin user can click an item to open it
