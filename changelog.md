@@ -1,6 +1,7 @@
 ## Changelog
 
 - Relationship columns now respect WHERE filters in your Eloquent model
+- Bugfix: BelongsToMany filters now work with table prefixes
 - Bugfix: Non-string name_fields and search_fields no longer break select2
 
 ### 4.3.0
