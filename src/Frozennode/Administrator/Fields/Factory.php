@@ -750,7 +750,7 @@ class Factory {
 		{
 			return array(
 				'id' => $m->{$model->getKeyName()},
-				'text' => $m->{$field->getOption('name_field')},
+				'text' => strval($m->{$field->getOption('name_field')}),
 			);
 		}, $results);
 	}

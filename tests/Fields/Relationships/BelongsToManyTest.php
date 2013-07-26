@@ -102,10 +102,13 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFilterQueryWithValueNotJoined()
 	{
+		$connection = m::mock('Illuminate\Database\Connection');
+		$connection->shouldReceive('getTablePrefix')->once()->andReturn('');
 		$query = m::mock('Illuminate\Database\Query\Builder');
 		$query->shouldReceive('whereIn')->once()
 				->shouldReceive('join')->once()
-				->shouldReceive('havingRaw')->once();
+				->shouldReceive('havingRaw')->once()
+				->shouldReceive('getConnection')->once()->andReturn($connection);
 		$this->validator->shouldReceive('isJoined')->once()->andReturn(false);
 		$model = m::mock(array('getTable' => 'table', 'getKeyName' => 'id'));
 		$this->config->shouldReceive('getDataModel')->twice()->andReturn($model);
@@ -116,10 +119,13 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFilterQueryWithValueAlreadyJoined()
 	{
+		$connection = m::mock('Illuminate\Database\Connection');
+		$connection->shouldReceive('getTablePrefix')->once()->andReturn('');
 		$query = m::mock('Illuminate\Database\Query\Builder');
 		$query->shouldReceive('whereIn')->once()
 				->shouldReceive('join')->never()
-				->shouldReceive('havingRaw')->once();
+				->shouldReceive('havingRaw')->once()
+				->shouldReceive('getConnection')->once()->andReturn($connection);
 		$this->validator->shouldReceive('isJoined')->once()->andReturn(true);
 		$model = m::mock(array('getTable' => 'table', 'getKeyName' => 'id'));
 		$this->config->shouldReceive('getDataModel')->twice()->andReturn($model);
@@ -131,7 +137,8 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 	public function testFilterQueryWithoutValue()
 	{
 		$query = m::mock('Illuminate\Database\Query\Builder');
-		$query->shouldReceive('whereIn')->never();
+		$query->shouldReceive('whereIn')->never()
+				->shouldReceive('getConnection')->never();
 		$this->validator->shouldReceive('isJoined')->never();
 		$model = m::mock(array('getTable' => 'table', 'getKeyName' => 'id'));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);

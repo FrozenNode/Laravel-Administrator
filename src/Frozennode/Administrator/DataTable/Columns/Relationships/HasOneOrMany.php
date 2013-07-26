@@ -20,9 +20,13 @@ class HasOneOrMany extends Relationship {
 		$from_table = $this->tablePrefix . $relationship->getRelated()->getTable();
 		$field_table = $columnName . '_' . $from_table;
 
+		//grab the existing where clauses that the user may have set on the relationship
+		$relationshipWheres = $this->getRelationshipWheres($relationship, $field_table);
+
 		$where = $this->tablePrefix . $model->getTable() . '.' . $model->getKeyName() .
 				' = ' .
-				$field_table . '.' . $relationship->getPlainForeignKey();
+				$field_table . '.' . $relationship->getPlainForeignKey()
+				. ($relationshipWheres ? ' AND ' . $relationshipWheres : '');
 
 		$selects[] = $this->db->raw("(SELECT " . $this->getOption('select') . "
 										FROM " . $from_table." AS " . $field_table . ' ' . $joins . "
