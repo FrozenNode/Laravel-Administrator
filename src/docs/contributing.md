@@ -20,11 +20,13 @@ If you've found a bug with Administrator, if you have a question, or if you have
 
 We love it when people submit pull requests. They don't always get merged into the core, but they almost always make us think about what is possible with Administrator and whether or not our current approach is adequate. If you'd like to submit a pull request, there are a few things that you should do in order to ensure a timely response:
 
-- Fork from the latest development branch. This is usually the next version number up from the master branch, or if none have been created above the master's version number, you can fork directly from master.
+- Fork from the `dev` branch. Also submit your PR to the `dev` branch. PRs that are submitted to the `master` branch will be closed immediately.
 
-- Merge the latest changes from the branch you forked before you submit the pull request. If you have a request that can't be automatically merged, you may be asked to marge the latest changes and resubmit it.
+- Merge the latest changes from the `dev` branch before you submit the pull request. If you have a request that can't be automatically merged, you may be asked to marge the latest changes and resubmit it.
 
 - Add documentation for your changes to the relevant section in the `/docs` directory.
+
+- Add any necessary unit tests
 
 - Follow the [style guide](/docs/style-guide)!
 
