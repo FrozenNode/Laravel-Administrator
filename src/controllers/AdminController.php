@@ -148,9 +148,9 @@ class AdminController extends Controller
 			'error' => "There was an error deleting this item. Please reload the page and try again.",
 		);
 
-		//if the model or the id don't exist, send back 404
+		//if the model or the id don't exist, send back an error
 		$permissions = $actionFactory->getActionPermissions();
-		
+
 		if (!$model->exists || !$permissions['delete'])
 		{
 			return Response::json($errorResponse);
