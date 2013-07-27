@@ -149,7 +149,8 @@ class AdminController extends Controller
 		);
 
 		//if the model or the id don't exist, send back 404
-		if (!$model->exists || !$actionFactory->getActionPermissions()['delete'])
+		$actionPermissions = $actionFactory->getActionPermissions();
+		if (!$model->exists || !$actionPermissions['delete'])
 		{
 			return Response::json($errorResponse);
 		}
