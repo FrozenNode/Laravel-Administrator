@@ -5,7 +5,7 @@
 //validate_admin filter
 Route::filter('validate_admin', function ()
 {
-	$configFactory = $this->app->make('admin_config_factory');
+	$configFactory = App::make('admin_config_factory');
 
 	//set the locale
 	$locale = Session::get('administrator_locale');
