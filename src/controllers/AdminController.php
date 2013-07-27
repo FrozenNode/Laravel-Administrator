@@ -235,17 +235,17 @@ class AdminController extends Controller
 			//first try to find it if it's a model config item
 			$config = $configFactory->make($home);
 
-			if ($config->getType() === 'model')
+			if (!$config)
+			{
+				throw new \InvalidArgumentException("Administrator: " .  trans('administrator::administrator.valid_home_page'));
+			}
+			else if ($config->getType() === 'model')
 			{
 				return Redirect::route('admin_index', array($config->getOption('name')));
 			}
 			else if ($config->getType() === 'settings')
 			{
 				return Redirect::route('admin_settings', array($config->getOption('name')));
-			}
-			else
-			{
-				throw new \InvalidArgumentException("Administrator: " .  trans('administrator::administrator.valid_home_page'));
 			}
 		}
 	}
