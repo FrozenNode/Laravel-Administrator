@@ -336,23 +336,28 @@
 			{
 				var self = this;
 
+				self.loadingItem(true);
+
+				if (window.admin)
+				{
+					//override the edit fields to the original non-existent model
+					adminData.edit_fields = self.originalEditFields;
+					self.editFields(window.admin.prepareEditFields());
+				}
+
+				//update all the info to the new item state
+				ko.mapping.updateData(self, self.model, self.model);
+
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
-					if (window.admin)
-					{
-						//override the edit fields to the original non-existent model
-						adminData.edit_fields = self.originalEditFields;
-						self.editFields(window.admin.prepareEditFields());
-					}
-
-					//update all the info to the new item state
-					ko.mapping.updateData(self, self.model, self.model);
 					self.itemLoadingId(null);
 					self.activeItem(0);
 
 					//set the last item property which helps manage the animation states
 					self.lastItem = id;
+
+					self.loadingItem(false);
 
 					return;
 				}
@@ -360,7 +365,6 @@
 				//freeze the relationship constraint updates
 				self.freezeConstraints = true;
 
-				self.loadingItem(true);
 				self.itemLoadingId(id);
 
 				$.ajax({
