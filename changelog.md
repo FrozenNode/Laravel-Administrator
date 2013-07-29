@@ -1,5 +1,6 @@
 ## Changelog
 
+- You can now provide custom actions to a "global_actions" option in model configs. These actions are passed the current filtered query object and can be used to perform table-wide actions.
 - There is now a query_filter option for model configs that lets you filter a model's results query before it's constructed
 - Relationship columns now respect WHERE filters in your Eloquent model
 - New translations (ru)
