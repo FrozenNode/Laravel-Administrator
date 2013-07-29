@@ -11,6 +11,12 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		'uses' => 'Frozennode\Administrator\AdminController@dashboard',
 	));
 
+	//File Downloads
+	Route::get('file_download', array(
+		'as' => 'admin_file_download',
+		'uses' => 'Frozennode\Administrator\AdminController@fileDownload'
+	));
+
 	//The route group for all other requests needs to validate admin, model, and add assets
 	Route::group(array('before' => 'validate_model|post_validate'), function()
 	{
@@ -80,10 +86,17 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 				'uses' => 'Frozennode\Administrator\AdminController@results'
 			));
 
-			//Custom Action
+			//Custom Model Action
+			Route::post('{model}/custom_action', array(
+				'as' => 'admin_custom_model_action',
+				'uses' => 'Frozennode\Administrator\AdminController@customModelAction'
+			))
+			->where('id', '[0-9]+');
+
+			//Custom Item Action
 			Route::post('{model}/{id}/custom_action', array(
-				'as' => 'admin_custom_action',
-				'uses' => 'Frozennode\Administrator\AdminController@customAction'
+				'as' => 'admin_custom_model_item_action',
+				'uses' => 'Frozennode\Administrator\AdminController@customModelItemAction'
 			))
 			->where('id', '[0-9]+');
 		});

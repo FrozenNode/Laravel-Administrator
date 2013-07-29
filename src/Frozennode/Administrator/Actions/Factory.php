@@ -42,6 +42,20 @@ class Factory {
 	protected $actionPermissions = array();
 
 	/**
+	 * The global actions array
+	 *
+	 * @var array
+	 */
+	protected $globalActions = array();
+
+	/**
+	 * The array of global actions options
+	 *
+	 * @var array
+	 */
+	protected $globalActionsOptions = array();
+
+	/**
 	 * The action permissions defaults
 	 *
 	 * @var array
@@ -130,13 +144,16 @@ class Factory {
 	 * Gets an action by name
 	 *
 	 * @param string	$name
+	 * @param bool		$global //if true, search the global actions
 	 *
 	 * @return mixed
 	 */
-	public function getByName($name)
+	public function getByName($name, $global = false)
 	{
+		$actions = $global ? $this->getGlobalActions() : $this->getActions();
+
 		//loop over the actions to find our culprit
-		foreach ($this->getActions() as $action)
+		foreach ($actions as $action)
 		{
 			if ($action->getOption('action_name') === $name)
 			{
@@ -193,6 +210,54 @@ class Factory {
 		}
 
 		return $this->actionsOptions;
+	}
+
+	/**
+	 * Gets all global actions
+	 *
+	 * @param bool	$override
+	 *
+	 * @return array of Action objects
+	 */
+	public function getGlobalActions($override = false)
+	{
+		//make sure we only run this once and then return the cached version
+		if (!sizeof($this->globalActions) || $override)
+		{
+			$this->globalActions = array();
+
+			//loop over the actions to build the list
+			foreach ($this->config->getOption('global_actions') as $name => $options)
+			{
+				$this->globalActions[] = $this->make($name, $options);
+			}
+		}
+
+		return $this->globalActions;
+	}
+
+	/**
+	 * Gets all actions as arrays of options
+	 *
+	 * @param bool	$override
+	 *
+	 * @return array of Action options
+	 */
+	public function getGlobalActionsOptions($override = false)
+	{
+		//make sure we only run this once and then return the cached version
+		if (!sizeof($this->globalActionsOptions) || $override)
+		{
+			$this->globalActionsOptions = array();
+
+			//loop over the global actions to build the list
+			foreach ($this->getGlobalActions($override) as $name => $action)
+			{
+				$this->globalActionsOptions[] = $action->getOptions();
+			}
+		}
+
+		return $this->globalActionsOptions;
 	}
 
 	/**

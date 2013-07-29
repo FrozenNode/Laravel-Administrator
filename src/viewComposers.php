@@ -28,6 +28,7 @@ View::composer('administrator::index', function($view)
 	$view->dataModel = $fieldFactory->getDataModel();
 	$view->columnModel = $columnFactory->getColumnOptions();
 	$view->actions = $actionFactory->getActionsOptions();
+	$view->globalActions = $actionFactory->getGlobalActionsOptions();
 	$view->actionPermissions = $actionFactory->getActionPermissions();
 	$view->filters = $fieldFactory->getFiltersArrays();
 	$view->formWidth = $config->getOption('form_width');

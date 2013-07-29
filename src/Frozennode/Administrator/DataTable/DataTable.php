@@ -71,8 +71,38 @@ class DataTable {
 	 * @param int									$page
 	 * @param array									$sort (with 'field' and 'direction' keys)
 	 * @param array									$filters
+	 *
+	 * @return array
 	 */
 	public function getRows(\Illuminate\Database\DatabaseManager $db, $page = 1, $sort = null, $filters = null)
+	{
+		//prepare the query
+		extract($this->prepareQuery($db, $page, $sort, $filters));
+
+		//run the count query
+		$output = $this->performCountQuery($countQuery, $querySql, $page);
+
+		//now we need to limit and offset the rows in remembrance of our dear lost friend paginate()
+		$query->take($this->rowsPerPage);
+		$query->skip($this->rowsPerPage * ($output['page'] === 0 ? $output['page'] : $output['page'] - 1));
+
+		//parse the results
+		$output['results'] = $this->parseResults($query->get());
+
+		return $output;
+	}
+
+	/**
+	 * Builds a results array (with results and pagination info)
+	 *
+	 * @param Illuminate\Database\DatabaseManager 	$db
+	 * @param int									$page
+	 * @param array									$sort (with 'field' and 'direction' keys)
+	 * @param array									$filters
+	 *
+	 * @return array
+	 */
+	public function prepareQuery(\Illuminate\Database\DatabaseManager $db, $page = 1, $sort = null, $filters = null)
 	{
 		//grab the model instance
 		$model = $this->config->getDataModel();
@@ -128,12 +158,8 @@ class DataTable {
 			$sort['field'] = $table . '.' . $sort['field'];
 		}
 
-		//run the count query
-		$output = $this->performCountQuery($countQuery, $query->toSql(), $page);
-
-		//now we need to limit and offset the rows in remembrance of our dear lost friend paginate()
-		$query->take($this->rowsPerPage);
-		$query->skip($this->rowsPerPage * ($output['page'] === 0 ? $output['page'] : $output['page'] - 1));
+		//grab the query sql for later
+		$querySql = $query->toSql();
 
 		//order the set by the model table's id
 		$query->orderBy($sort['field'], $sort['direction']);
@@ -141,10 +167,10 @@ class DataTable {
 		//then retrieve the rows
 		$query->getQuery()->select($selects);
 
-		//parse the results
-		$output['results'] = $this->parseResults($query->distinct()->get());
+		//only select distinct rows
+		$query->distinct();
 
-		return $output;
+		return compact('query', 'querySql', 'countQuery', 'sort', 'selects');
 	}
 
 	/**

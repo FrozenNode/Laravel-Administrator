@@ -33,6 +33,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Permission](#permission)
 - [Action Permissions](#action-permissions)
 - [Custom Actions](#custom-actions)
+- [Global Custom Actions](#global-custom-actions)
 - [Validation Rules](#validation-rules)
 - [Sort](#sort)
 - [Form Width](#form-width)
@@ -256,6 +257,39 @@ You can define custom actions for your model if you want to provide the administ
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/custom-actions.png" />
 
 When the user clicks on either button, the `action` property above is called and passed the relevant Eloquent model.
+
+> For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
+
+<a name="global-custom-actions"></a>
+### Global Custom Actions
+
+	/**
+	 * This is where you can define the model's global custom actions
+	 */
+	'global_actions' => array(
+		//Create Excel Download
+		'download_excel' => array(
+			'title' => 'Download XLS',
+			'messages' => array(
+				'active' => 'Creating the spreadsheet...',
+				'success' => 'Spreadsheet created! Downloading now...',
+				'error' => 'There was an error while creating the spreadsheet',
+			),
+			//the Eloquent query builder is passed to the closure
+			'action' => function($query)
+			{
+				//get all the rows for this query
+				$result = $query->get();
+
+				//do something to put it into excel
+
+				//return a download response
+				return Response::download($filePath);
+			}
+		),
+	),
+
+Global custom actions are buttons that can be pressed at any time on a model's page. In most ways, this works just like regular custom actions. However, instead of the model being passed into the `action` callback function, the query builder is passed in with all the filters already applied (except for the limit/offset).
 
 > For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
 

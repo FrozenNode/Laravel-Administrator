@@ -309,12 +309,24 @@ body{
 					}
 				}
 
-				a.new_item {
-					.greyButton;
-					text-shadow: none;
+				div.actions {
 					position: absolute;
 					top: 8px;
 					right: 9px;
+
+					a, input {
+						display: inline-block;
+						.greyButton;
+						text-shadow: none;
+						margin-left: 10px;
+					}
+				}
+
+				div.action_message {
+					text-align: right;
+					margin-left: 500px;
+					padding-bottom: 10px;
+					margin-right: 12px;
 				}
 			}
 

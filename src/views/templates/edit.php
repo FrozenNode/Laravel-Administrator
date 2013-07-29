@@ -216,7 +216,7 @@
 		<div class="custom_buttons">
 			<!-- ko foreach: actions -->
 				<!-- ko if: has_permission && $root.actionPermissions[action_name] !== false -->
-					<input type="button" data-bind="click: function(){$root.customAction(action_name, messages, confirmation)}, value: title,
+					<input type="button" data-bind="click: function(){$root.customAction(true, action_name, messages, confirmation)}, value: title,
 																	attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 				<!-- /ko -->
 			<!-- /ko -->

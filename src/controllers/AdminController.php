@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\File as SFile;
 use Illuminate\Support\Facades\Validator as LValidator;
 use Frozennode\Administrator\Fields\Field;
@@ -170,14 +171,67 @@ class AdminController extends Controller
 	}
 
 	/**
-	 * POST method for handling custom actions
+	 * POST method for handling custom model actions
+	 *
+	 * @param string		$modelName
+	 *
+	 * @return JSON
+	 */
+	public function customModelAction($modelName)
+	{
+		$config = App::make('itemconfig');
+		$actionFactory = App::make('admin_action_factory');
+		$actionName = Input::get('action_name', false);
+		$dataTable = App::make('admin_datatable');
+
+		//get the sort options and filters
+		$page = Input::get('page', 1);
+		$sortOptions = Input::get('sortOptions', array());
+		$filters = Input::get('filters', array());
+
+		//get the prepared query options
+		$prepared = $dataTable->prepareQuery(App::make('db'), $page, $sortOptions, $filters);
+
+		//get the action and perform the custom action
+		$action = $actionFactory->getByName($actionName, true);
+		$result = $action->perform($prepared['query']);
+
+		//if the result is a string, return that as an error.
+		if (is_string($result))
+		{
+			return Response::json(array('success' => false, 'error' => $result));
+		}
+		//if it's falsy, return the standard error message
+		else if (!$result)
+		{
+			$messages = $action->getOption('messages');
+
+			return Response::json(array('success' => false, 'error' => $messages['error']));
+		}
+		//if it's a download response, flash the response to the seession and return the download link
+		else if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+		{
+			$file = $result->getFile()->getRealPath();
+			$headers = $result->headers->all();
+			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+			return Response::json(array('success' => true, 'download' => URL::route('admin_file_download')));
+		}
+		else
+		{
+			return Response::json(array('success' => true));
+		}
+	}
+
+	/**
+	 * POST method for handling custom model item actions
 	 *
 	 * @param string		$modelName
 	 * @param int			$id
 	 *
 	 * @return JSON
 	 */
-	public function customAction($modelName, $id = null)
+	public function customModelItemAction($modelName, $id = null)
 	{
 		$config = App::make('itemconfig');
 		$actionFactory = App::make('admin_action_factory');
@@ -197,7 +251,8 @@ class AdminController extends Controller
 		//if it's falsy, return the standard error message
 		else if (!$result)
 		{
-			return Response::json(array('success' => false, 'error' => $action->getOption('messages')['error']));
+			$messages = $action->getOption('messages');
+			return Response::json(array('success' => false, 'error' => $messages['error']));
 		}
 		else
 		{
@@ -211,7 +266,19 @@ class AdminController extends Controller
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
 
-			return Response::json(array('success' => true, 'data' => $model->toArray()));
+			$response = array('success' => true, 'data' => $model->toArray());
+
+			//if it's a download response, flash the response to the seession and return the download link
+			if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+			{
+				$file = $result->getFile()->getRealPath();
+				$headers = $result->headers->all();
+				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+				$response['download'] = URL::route('admin_file_download');
+			}
+
+			return Response::json($response);
 		}
 	}
 
@@ -334,6 +401,26 @@ class AdminController extends Controller
 	}
 
 	/**
+	 * The GET method that runs when a user needs to download a file
+	 *
+	 * @return JSON
+	 */
+	public function fileDownload()
+	{
+		if ($response = Session::get('administrator_download_response'))
+		{
+			Session::forget('administrator_download_response');
+			$filename = substr($response['headers']['content-disposition'][0], 22, -1);
+
+			return Response::download($response['file'], $filename, $response['headers']);
+		}
+		else
+		{
+			return Redirect::back();
+		}
+	}
+
+	/**
 	 * The POST method for setting a user's rows per page
 	 *
 	 * @param string	$modelName
@@ -417,6 +504,15 @@ class AdminController extends Controller
 		else if (!$result)
 		{
 			return Response::json(array('success' => false, 'error' => $action->messages['error']));
+		}
+		//if it's a download response, flash the response to the seession and return the download link
+		else if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+		{
+			$file = $result->getFile()->getRealPath();
+			$headers = $result->headers->all();
+			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+			return Response::json(array('success' => true, 'download' => URL::route('admin_file_download')));
 		}
 		else
 		{

@@ -197,6 +197,11 @@
 			 */
 			actions: ko.observableArray(),
 
+			/* If custom global actions are supplied, they are stored here
+			 * array
+			 */
+			globalActions: ko.observableArray(),
+
 			/* Holds the per-action permissions
 			 * object
 			 */
@@ -212,6 +217,12 @@
 			 */
 			statusMessage: ko.observable(''),
 			statusMessageType: ko.observable(''),
+
+			/* The global status message and the type ('', 'success', 'error')
+			 * strings
+			 */
+			globalStatusMessage: ko.observable(''),
+			globalStatusMessageType: ko.observable(''),
 
 			/**
 			 * Saves the item with the current settings. If id is 0, the server interprets it as a new item
@@ -469,15 +480,18 @@
 			},
 
 			/**
-			 * Performs a custom action
+			 * Performs a custom action on an item or the whole model
 			 *
+			 * @param bool		isItem
 			 * @param string	action
 			 * @param object	messages
 			 * @param string	confirmation
 			 */
-			customAction: function(action, messages, confirmation)
+			customAction: function(isItem, action, messages, confirmation)
 			{
-				var self = this;
+				var self = this,
+					data = {_token: csrf, action_name: action},
+					url;
 
 				//if a confirmation string was supplied, flash it in a confirm()
 				if (confirmation)
@@ -486,12 +500,27 @@
 						return false;
 				}
 
-				self.statusMessage(messages.active).statusMessageType('');
+				//if this is an item action (compared to a global model action), set the proper url
+				if (isItem)
+				{
+					url = base_url + self.modelName() + '/' + self[self.primaryKey]() + '/custom_action';
+					self.statusMessage(messages.active).statusMessageType('');
+				}
+				//otherwise set the url and add the filters
+				else
+				{
+					url = base_url + self.modelName() + '/custom_action';
+					data.sortOptions = self.sortOptions;
+					data.filters = self.getFilters();
+					data.page = self.pagination.page();
+					self.globalStatusMessage(messages.active).globalStatusMessageType('');
+				}
+
 				self.freezeForm(true);
 
 				$.ajax({
-					url: base_url + self.modelName() + '/' + self[self.primaryKey]() + '/custom_action',
-					data: {_token: csrf, action_name: action},
+					url: url,
+					data: data,
 					dataType: 'json',
 					type: 'POST',
 					complete: function()
@@ -502,14 +531,52 @@
 					{
 						if (response.success)
 						{
-							self.statusMessage(messages.success).statusMessageType('success');
+							if (isItem)
+							{
+								self.statusMessage(messages.success).statusMessageType('success');
+								self.setData(response.data);
+							}
+							else
+							{
+								self.globalStatusMessage(messages.success).globalStatusMessageType('success');
+							}
+
+							//if there was a file download initiated, redirect the user to the file download address
+							if (response.download)
+								self.downloadFile(response.download);
+
 							self.updateRows();
-							self.setData(response.data);
 						}
 						else
-							self.statusMessage(response.error).statusMessageType('error');
+						{
+							if (isItem)
+								self.statusMessage(response.error).statusMessageType('error');
+							else
+								self.globalStatusMessage(response.error).globalStatusMessageType('error');
+						}
 					}
 				});
+			},
+
+			/**
+			 * Initiates a file download
+			 *
+			 * @param string	url
+			 */
+			downloadFile: function(url)
+			{
+				var hiddenIFrameId = 'hiddenDownloader',
+					iframe = document.getElementById(hiddenIFrameId);
+
+				if (iframe === null)
+				{
+					iframe = document.createElement('iframe');
+					iframe.id = hiddenIFrameId;
+					iframe.style.display = 'none';
+					document.body.appendChild(iframe);
+				}
+
+				iframe.src = url;
 			},
 
 			/**
@@ -817,6 +884,7 @@
 			this.viewModel.rowsPerPage(adminData.rows_per_page);
 			this.viewModel.primaryKey = adminData.primary_key;
 			this.viewModel.actions(adminData.actions);
+			this.viewModel.globalActions(adminData.global_actions);
 			this.viewModel.actionPermissions = adminData.action_permissions;
 			this.viewModel.languages = adminData.languages;
 
