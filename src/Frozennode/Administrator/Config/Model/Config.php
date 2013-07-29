@@ -26,6 +26,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 */
 	protected $defaults = array(
 		'filters' => array(),
+		'query_filter' => null,
 		'permission' => true,
 		'action_permissions' => array(
 			'create' => true,
@@ -59,6 +60,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'columns' => 'required|array|not_empty',
 		'edit_fields' => 'required|array|not_empty',
 		'filters' => 'array',
+		'query_filter' => 'callable',
 		'permission' => 'callable',
 		'action_permissions' => 'array',
 		'actions' => 'array',
@@ -491,6 +493,21 @@ class Config extends ConfigBase implements ConfigInterface {
 		else
 		{
 			return false;
+		}
+	}
+
+	/**
+	 * Runs a user-supplied query filter if one is supplied
+	 *
+	 * @param Illuminate\Database\Query\Builder
+	 *
+	 * @return void
+	 */
+	public function runQueryFilter(\Illuminate\Database\Query\Builder &$query)
+	{
+		if ($filter = $this->getOption('query_filter'))
+		{
+			$filter($query);
 		}
 	}
 }

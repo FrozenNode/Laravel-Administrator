@@ -85,8 +85,14 @@ class DataTable {
 		$table = $model->getTable();
 		$keyName = $model->getKeyName();
 		$query = $model->groupBy($table . '.' . $keyName);
+
+		//get the Illuminate\Database\Query\Builder instance and set up the count query
 		$dbQuery = $query->getQuery();
 		$countQuery = $dbQuery->getConnection()->table($table)->groupBy($table . '.' . $keyName);
+
+		//run the supplied query filter for both queries if it was provided
+		$this->config->runQueryFilter($dbQuery);
+		$this->config->runQueryFilter($countQuery);
 
 		//set up initial array states for the selects
 		$selects = array($table.'.*');

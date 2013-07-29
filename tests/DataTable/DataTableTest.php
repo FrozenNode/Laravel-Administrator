@@ -78,7 +78,8 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 				->shouldReceive('getKeyName')->once()->andReturn('id')
 				->shouldReceive('groupBy')->once()->andReturn($query);
 		$db = m::mock('Illuminate\Database\DatabaseManager');
-		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
+		$this->config->shouldReceive('getDataModel')->once()->andReturn($model)
+						->shouldReceive('runQueryFilter')->twice();
 		$countResults = array('page' => 30, 'last' => 60, 'total' => 4000);
 		$this->dataTable->shouldReceive('setSort')->once()
 						->shouldReceive('getSort')->once()->andReturn(array('field' => 'id', 'direction' => 'asc'))
