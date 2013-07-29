@@ -161,20 +161,10 @@
   margin-bottom: 0;
   vertical-align: top;
 }
-.editForm > div ul.chzn-choices {
-  border: 1px solid #cccccc;
-  -webkit-transition: all 0.2s ease 0s;
-  -moz-transition: all 0.2s ease 0s;
-  -ms-transition: all 0.2s ease 0s;
-  -o-transition: all 0.2s ease 0s;
-  transition: all 0.2s ease 0s;
-}
-.editForm > div div.chzn-container-active ul.chzn-choices {
-  border-color: rgba(82,168,236,0.8);
-  -moz-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  -webkit-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  outline: 0;
+.editForm > div select,
+.editForm > div input[type=hidden],
+.editForm > div .select2-container {
+  width: 226px;
 }
 .editForm > div div.characters_left {
   position: absolute;
@@ -272,6 +262,130 @@
   color: #444;
   text-shadow: #DDD 0 1px 0;
   margin-bottom: 15px;
+}
+#settings_page form.settings_form {
+  color: #444;
+  text-shadow: white 0 1px 0;
+}
+#settings_page form.settings_form a.item_link {
+  position: absolute;
+  top: 38px;
+  right: 41px;
+}
+#settings_page form.settings_form > div {
+  margin-bottom: 15px;
+  position: relative;
+}
+#settings_page form.settings_form > div div.loader {
+  position: absolute;
+  top: 26px;
+  left: -21px;
+  width: 16px;
+  height: 16px;
+  background: url(../img/loader.gif) no-repeat;
+  zoom: 1;
+  filter: alpha(opacity=30);
+  opacity: 0.3;
+}
+#settings_page form.settings_form > div select,
+#settings_page form.settings_form > div textarea,
+#settings_page form.settings_form > div input {
+  margin-bottom: 0;
+  vertical-align: top;
+}
+#settings_page form.settings_form > div select,
+#settings_page form.settings_form > div input[type=hidden],
+#settings_page form.settings_form > div .select2-container {
+  width: 226px;
+}
+#settings_page form.settings_form > div div.characters_left {
+  position: absolute;
+  top: 1px;
+  right: 40px;
+  font-size: 11px;
+}
+#settings_page form.settings_form > div.number span.symbol {
+  position: absolute;
+  top: 27px;
+  left: -15px;
+}
+#settings_page form.settings_form > div.key label,
+#settings_page form.settings_form > div.bool label {
+  display: inline-block;
+}
+#settings_page form.settings_form > div div.uneditable {
+  margin-right: 32px;
+}
+#settings_page form.settings_form > div div.uneditable p {
+  margin-bottom: 7px;
+}
+#settings_page form.settings_form > div.markdown {
+  padding-bottom: 10px;
+}
+#settings_page form.settings_form > div.markdown div.markdown_container {
+  position: relative;
+}
+#settings_page form.settings_form > div.markdown div.markdown_container div.preview {
+  display: inline-block;
+  margin-left: 10px;
+  height: 100%;
+  vertical-align: top;
+  overflow-y: auto;
+  padding: 4px 0 5px;
+}
+#settings_page form.settings_form > div.markdown div.markdown_container div.preview p {
+  margin-bottom: 7px;
+}
+#settings_page form.settings_form > div.markdown div.markdown_container textarea {
+  height: 100%;
+}
+#settings_page form.settings_form > div.image div.upload_container,
+#settings_page form.settings_form > div.file div.upload_container {
+  padding: 4px 0;
+}
+#settings_page form.settings_form > div.image div.upload_container div.uploader,
+#settings_page form.settings_form > div.file div.upload_container div.uploader {
+  background: url(../img/upload.png) no-repeat;
+  padding-left: 25px;
+}
+#settings_page form.settings_form > div.image div.image_container,
+#settings_page form.settings_form > div.file div.image_container {
+  position: relative;
+}
+#settings_page form.settings_form > div.image div.image_container input[type=button],
+#settings_page form.settings_form > div.file div.image_container input[type=button] {
+  position: absolute;
+  top: 5px;
+  right: -5px;
+}
+#settings_page form.settings_form > div.image div.file_container a,
+#settings_page form.settings_form > div.image div.file_container input,
+#settings_page form.settings_form > div.file div.file_container a,
+#settings_page form.settings_form > div.file div.file_container input {
+  vertical-align: middle;
+}
+#settings_page form.settings_form > div.image div.file_container a,
+#settings_page form.settings_form > div.file div.file_container a {
+  display: inline-block;
+  max-width: 83%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#settings_page form.settings_form > div.color div.color_preview {
+  height: 8px;
+  margin: 0 33px 0 1px;
+  -moz-box-shadow: 0px 1px 2px #aaa;
+  -webkit-box-shadow: 0px 1px 2px #aaa;
+  box-shadow: 0px 1px 2px #aaa;
+}
+#settings_page form.settings_form div.control_buttons {
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+#settings_page form.settings_form div.control_buttons span.message {
+  display: block;
+  margin: 10px 30px 0 3px;
 }
 #settings_page form.settings_form > div {
   display: inline-block;
@@ -652,21 +766,6 @@ body label {
 #admin_page div#sidebar div.panel_contents > div input[type=hidden] {
   width: 225px;
 }
-#admin_page div#sidebar div.panel_contents > div ul.chzn-choices {
-  border: 1px solid #cccccc;
-  -webkit-transition: all 0.2s ease 0s;
-  -moz-transition: all 0.2s ease 0s;
-  -ms-transition: all 0.2s ease 0s;
-  -o-transition: all 0.2s ease 0s;
-  transition: all 0.2s ease 0s;
-}
-#admin_page div#sidebar div.panel_contents > div div.chzn-container-active ul.chzn-choices {
-  border-color: rgba(82,168,236,0.8);
-  -moz-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  -webkit-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  outline: 0;
-}
 #admin_page div#sidebar div.panel_contents > div div.loader {
   position: absolute;
   top: 26px;
@@ -982,20 +1081,10 @@ body label {
   margin-bottom: 0;
   vertical-align: top;
 }
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div ul.chzn-choices {
-  border: 1px solid #cccccc;
-  -webkit-transition: all 0.2s ease 0s;
-  -moz-transition: all 0.2s ease 0s;
-  -ms-transition: all 0.2s ease 0s;
-  -o-transition: all 0.2s ease 0s;
-  transition: all 0.2s ease 0s;
-}
-#admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.chzn-container-active ul.chzn-choices {
-  border-color: rgba(82,168,236,0.8);
-  -moz-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  -webkit-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
-  outline: 0;
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div select,
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div input[type=hidden],
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div .select2-container {
+  width: 226px;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div div.characters_left {
   position: absolute;

@@ -4,6 +4,7 @@
 - There is now a query_filter option for model configs that lets you filter a model's results query before it's constructed
 - Relationship columns now respect WHERE filters in your Eloquent model
 - New translations (ru)
+- Bugfix: Enum fields were having issues on settings pages
 - Bugfix: Submenu titles weren't properly translating in the presence of multiple locales
 - Bugfix: BelongsToMany filters now work with table prefixes
 - Bugfix: Non-string name_fields and search_fields no longer break select2
