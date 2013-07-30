@@ -55,6 +55,29 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetRows()
 	{
+		$countQuery = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query->shouldReceive('take')->once()
+				->shouldReceive('skip')->once()
+				->shouldReceive('get')->once()->andReturn(array('foo'));
+		$prepared = array(
+			'query' => $query,
+			'countQuery' => $countQuery,
+			'querySql' => 'foo',
+			'sort' => array('field' => 'foo', 'direction' => 'asc'),
+			'selects' => array(),
+		);
+		$countResults = array('page' => 30, 'last' => 60, 'total' => 4000);
+		$this->dataTable->shouldReceive('prepareQuery')->once()->andReturn($prepared)
+						->shouldReceive('performCountQuery')->once()->andReturn($countResults)
+						->shouldReceive('parseResults')->once()->andReturn(array('funky'));
+		$db = m::mock('Illuminate\Database\DatabaseManager');
+		$output = array_merge($countResults, array('results' => array('funky')));
+		$this->assertEquals($this->dataTable->getRows($db), $output);
+	}
+
+	public function testPrepareQuery()
+	{
 		$column = m::mock('Frozennode\Administrator\DataTable\Columns\Column');
 		$column->shouldReceive('filterQuery')->once()
 				->shouldReceive('getOption')->times(2);
@@ -66,27 +89,29 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 		$dbQuery = m::mock('Illuminate\Database\Query\Builder');
 		$dbQuery->shouldReceive('select')->twice()
 				->shouldReceive('getConnection')->once()->andReturn($connection);
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('getQuery')->twice()->andReturn($dbQuery)
-				->shouldReceive('toSql')->once()
-				->shouldReceive('take')->once()
-				->shouldReceive('skip')->once()
+				->shouldReceive('toSql')->once()->andReturn('sql string')
 				->shouldReceive('orderBy')->once()
-				->shouldReceive('distinct')->once()->andReturn(m::mock(array('get' => 'foo')));
+				->shouldReceive('distinct')->once();
 		$model = m::mock('Illuminate\Database\Eloquent\Model');
 		$model->shouldReceive('getTable')->once()->andReturn('table')
 				->shouldReceive('getKeyName')->once()->andReturn('id')
 				->shouldReceive('groupBy')->once()->andReturn($query);
 		$db = m::mock('Illuminate\Database\DatabaseManager');
-		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
-		$countResults = array('page' => 30, 'last' => 60, 'total' => 4000);
+		$this->config->shouldReceive('getDataModel')->once()->andReturn($model)
+						->shouldReceive('runQueryFilter')->twice();
 		$this->dataTable->shouldReceive('setSort')->once()
 						->shouldReceive('getSort')->once()->andReturn(array('field' => 'id', 'direction' => 'asc'))
-						->shouldReceive('setFilters')->once()
-						->shouldReceive('performCountQuery')->once()->andReturn($countResults)
-						->shouldReceive('parseResults')->once()->andReturn('funky');
-		$output = array_merge($countResults, array('results' => 'funky'));
-		$this->assertEquals($this->dataTable->getRows($db), $output);
+						->shouldReceive('setFilters')->once();
+		$output = array(
+			'query' => $query,
+			'querySql' => 'sql string',
+			'countQuery' => $countQuery,
+			'sort' => array('field' => 'table.id', 'direction' => 'asc'),
+			'selects' => array('table.*'),
+		);
+		$this->assertEquals($this->dataTable->prepareQuery($db), $output);
 	}
 
 	public function testPerformCountQuery()

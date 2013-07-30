@@ -40,6 +40,15 @@ In this case, the relationship "name" that we will want to reference is `phone` 
 
 In this case, the relationship "name" that we will want to reference is `films`.
 
+Administrator will respect any conditional filters you have on your relationships. This is especially relevant for `hasMany` or `belongsToMany` relationships. For example, if you set up your relationship like this:
+
+	public function alerts()
+	{
+		return $this->hasMany('Alert')->whereNotified(false); //only gets unnotified alerts
+	}
+
+And you use a select to count the number of alerts, it will only count those where the `notified` column is `0`.
+
 <a name="simple-select"></a>
 ## Simple Select
 

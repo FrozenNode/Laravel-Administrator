@@ -29,9 +29,11 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Columns](#columns) *(required)*
 - [Edit Fields](#edit-fields) *(required)*
 - [Filters](#filters)
+- [Query Filter](#query-filter)
 - [Permission](#permission)
 - [Action Permissions](#action-permissions)
 - [Custom Actions](#custom-actions)
+- [Global Custom Actions](#global-custom-actions)
 - [Validation Rules](#validation-rules)
 - [Sort](#sort)
 - [Form Width](#form-width)
@@ -163,6 +165,28 @@ The `filters` array lets you define filters for a model. These work just like th
 
 > For a detailed description of all the filter types and options, see the **[filters docs](/docs/fields#filters)**
 
+<a name="query-filter"></a>
+## Query Filter
+
+	/**
+	 * The query filter option lets you modify the query parameters before Administrator begins to construct the query. For example, if you want
+	 * to have one page show only deleted items and another page show all of the items that aren't deleted, you can use the query filter to do
+	 * that.
+	 *
+	 * @type closure
+	 */
+	'query_filter'=> function($query)
+	{
+		if (!Auth::user()->hasRole('super_admin'))
+		{
+			$query->whereDeleted(false);
+		}
+	},
+
+The query filter option lets you define a closure that is run before Administrator constructs the query that will fetch the results for your model. The query builder object is passed to this function, and you can use it to restrict the rows that are visible to the current user. You can use this in conjunction with your auth system as seen above, or you can come up with any reason to use this.
+
+> **Note:** The query builder object passed into the `query_filter` function is unfiltered, but it is already grouped on the current table's primary key field.
+
 <a name="permission"></a>
 ## Permission
 
@@ -174,7 +198,7 @@ The `filters` array lets you define filters for a model. These work just like th
 	 */
 	'permission'=> function()
 	{
-		return Auth::user()->has_role('developer');
+		return Auth::user()->hasRole('developer');
 	},
 
 The permission option lets you define a closure that determines whether or not the current user can access this model. If this field is provided (it isn't required), the user will only be given access if this resolves to a truthy value. If you return something falsey, it will redirect to your `login_path`. If you return a `Response` or `Redirect` object, it will respect those requests. Returned `Redirect` object will have the login redirect path added to the "with" data.
@@ -233,6 +257,39 @@ You can define custom actions for your model if you want to provide the administ
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/custom-actions.png" />
 
 When the user clicks on either button, the `action` property above is called and passed the relevant Eloquent model.
+
+> For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
+
+<a name="global-custom-actions"></a>
+### Global Custom Actions
+
+	/**
+	 * This is where you can define the model's global custom actions
+	 */
+	'global_actions' => array(
+		//Create Excel Download
+		'download_excel' => array(
+			'title' => 'Download XLS',
+			'messages' => array(
+				'active' => 'Creating the spreadsheet...',
+				'success' => 'Spreadsheet created! Downloading now...',
+				'error' => 'There was an error while creating the spreadsheet',
+			),
+			//the Eloquent query builder is passed to the closure
+			'action' => function($query)
+			{
+				//get all the rows for this query
+				$result = $query->get();
+
+				//do something to put it into excel
+
+				//return a download response
+				return Response::download($filePath);
+			}
+		),
+	),
+
+Global custom actions are buttons that can be pressed at any time on a model's page. In most ways, this works just like regular custom actions. However, instead of the model being passed into the `action` callback function, the query builder is passed in with all the filters already applied (except for the limit/offset).
 
 > For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
 

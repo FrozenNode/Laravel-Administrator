@@ -27,6 +27,9 @@ class AdministratorServiceProvider extends ServiceProvider {
 	{
 		$this->package('frozennode/administrator');
 
+		//set the locale
+		$this->setLocale();
+
 		//make sure the Laravel Validator is using our custom Validator that we can pass to various constructors
 		LValidator::resolver(function($translator, $data, $rules, $messages)
 		{
@@ -99,6 +102,19 @@ class AdministratorServiceProvider extends ServiceProvider {
 	public function provides()
 	{
 		return array();
+	}
+
+	/**
+	 * Sets the locale if it exists in the session and also exists in the locales option
+	 *
+	 * @return void
+	 */
+	public function setLocale()
+	{
+		if ($locale = $this->app->session->get('administrator_locale'))
+		{
+			$this->app->setLocale($locale);
+		}
 	}
 
 }

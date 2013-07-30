@@ -67,4 +67,32 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->column->getIncludedColumn(), array());
 	}
 
+	public function testGetRelationshipWheres()
+	{
+		$connection = m::mock('Illuminate\Database\Connection');
+		$connection->shouldReceive('prepareBindings')->once()->andReturn(array());
+		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query->shouldReceive('getConnection')->once()->andReturn($connection)
+				->shouldReceive('getBindings')->once()->andReturn(array())
+				->shouldReceive('toSql')->once()->andReturn('');
+		$query->wheres = array(array(), array('column' => 'bar'));
+		$eloquentQuery = m::mock('Illuminate\Database\Eloquent\Builder');
+		$eloquentQuery->shouldReceive('getQuery')->once()->andReturn($query);
+		$relationship = m::mock('Illuminate\Database\Eloquent\Relations\Relation');
+		$relationship->shouldReceive('getQuery')->once()->andReturn($eloquentQuery);
+		$this->column->shouldReceive('interpolateQuery')->once()->andReturn('foo where test');
+		$result = $this->column->getRelationshipWheres($relationship, 'fooalias');
+		$this->assertEquals($result, 'test');
+		$this->assertEquals($query->wheres[0]['column'], 'fooalias.bar');
+	}
+
+	public function testInterpolateQuery()
+	{
+		$query = "select herp from derp where foo = ? AND bar = ? AND num = ? AND IN ?";
+		$params = array(null, 'test', 5, array(1, 2));
+		$result = $this->column->interpolateQuery($query, $params);
+		$expectedQuery = "select herp from derp where foo = NULL AND bar = 'test' AND num = 5 AND IN 1,2";
+		$this->assertEquals($result, $expectedQuery);
+	}
+
 }

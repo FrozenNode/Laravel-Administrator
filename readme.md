@@ -4,7 +4,7 @@ Administrator is a database interface package for the Laravel PHP framework. Adm
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.3.0
+- **Version:** 4.4.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,18 +53,12 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.3.0
-- Unit testing
-- A fourth basic action permission is now available: 'view'. This dictates whether or not the admin user can click an item to open it
-- There is now an optional 'rules' property in model configuration files which works just like the $rules static property in Eloquent models
-- You can now define where the raw settings data is stored by providing a 'storage_path' option to settings configs
-- You can now supply a 'confirmation' string option to your custom actions which will require a confirmation from the admin user before the action can go through
-- The active item now updates itself when you perform a custom action or when you save an item
-- You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields, and as such require ordering on something other than the name_field
-- 'logout_path' option is now available in the main config. By default this is false, but if you provide a string value it will show a logout button and link the user to that path if clicked
-- Bugfix: Tons of other bugs that I caught while creating the unit tests :D
-- Bugfix: The model results no longer require an ajax load on pageload
-- Bugfix: Table prefixes are now taken into consideration
-- Bugfix: Number fields would take two tries to clear
-- Bugfix: Saving empty number field would result in 0
-- Bugfix: Using an accessor for a name_field in a relationship field would previously cause SQL errors
+### 4.4.0
+- You can now provide custom actions to a "global_actions" option in model configs. These actions are passed the current filtered query object and can be used to perform table-wide actions.
+- There is now a query_filter option for model configs that lets you filter a model's results query before it's constructed
+- Relationship columns now respect WHERE filters in your Eloquent model
+- New translations (ru)
+- Bugfix: Enum fields were having issues on settings pages
+- Bugfix: Submenu titles weren't properly translating in the presence of multiple locales
+- Bugfix: BelongsToMany filters now work with table prefixes
+- Bugfix: Non-string name_fields and search_fields no longer break select2

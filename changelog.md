@@ -1,5 +1,15 @@
 ## Changelog
 
+### 4.4.0
+- You can now provide custom actions to a "global_actions" option in model configs. These actions are passed the current filtered query object and can be used to perform table-wide actions.
+- There is now a query_filter option for model configs that lets you filter a model's results query before it's constructed
+- Relationship columns now respect WHERE filters in your Eloquent model
+- New translations (ru)
+- Bugfix: Enum fields were having issues on settings pages
+- Bugfix: Submenu titles weren't properly translating in the presence of multiple locales
+- Bugfix: BelongsToMany filters now work with table prefixes
+- Bugfix: Non-string name_fields and search_fields no longer break select2
+
 ### 4.3.0
 - Unit testing
 - A fourth basic action permission is now available: 'view'. This dictates whether or not the admin user can click an item to open it
