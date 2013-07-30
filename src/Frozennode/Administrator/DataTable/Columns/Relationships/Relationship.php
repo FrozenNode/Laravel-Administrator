@@ -77,10 +77,11 @@ class Relationship extends Column {
 	 *
 	 * @param Illuminate\Database\Eloquent\Relations\Relation		$relationship
 	 * @param string												$tableAlias
+	 * @param string												$pivotAlias
 	 *
 	 * @return string
 	 */
-	public function getRelationshipWheres($relationship, $tableAlias)
+	public function getRelationshipWheres($relationship, $tableAlias, $pivotAlias = null)
 	{
 		//get the query instance
 		$query = $relationship->getQuery()->getQuery();
@@ -94,7 +95,17 @@ class Relationship extends Column {
 		//iterate over the wheres to properly alias the columns
 		foreach ($query->wheres as &$where)
 		{
-			$where['column'] = $tableAlias . '.' . $where['column'];
+			//split the $where column on '.' which indicates that the clause is for a pivot table
+			$split = explode('.', $where['column']);
+
+			if (isset($split[1]))
+			{
+				$where['column'] = $pivotAlias . '.' . $split[1];
+			}
+			else
+			{
+				$where['column'] = $tableAlias . '.' . $where['column'];
+			}
 		}
 
 		$sql = $query->toSql();
