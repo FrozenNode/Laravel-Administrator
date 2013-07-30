@@ -188,7 +188,7 @@ class Column {
 	{
 		if ($select = $this->getOption('select'))
 		{
-			$selects[] = $this->db->raw($select . ' AS `' . $this->getOption('column_name') . '`');
+			$selects[] = $this->db->raw($select . ' AS ' . $this->db->getQueryGrammar()->wrap($this->getOption('column_name')));
 		}
 	}
 
