@@ -78,10 +78,8 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
-				<select data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name], chosen: true, options: options,
-															optionsValue: function(item) {return item.value},
-															optionsText: function(item) {return item.text},
-															optionsCaption: '<?php echo trans('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
+												select2: {data: {results: options}}" />
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->

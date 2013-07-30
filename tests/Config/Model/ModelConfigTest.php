@@ -390,4 +390,23 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->config->getModelLink(), false);
 	}
 
+	public function testRunQueryFilterNoFilter()
+	{
+		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query->shouldReceive('where')->never();
+		$this->config->shouldReceive('getOption')->once();
+		$this->config->runQueryFilter($query);
+	}
+
+	public function testRunQueryFilterWithFilter()
+	{
+		$filter = function($query) {
+			$query->where('test', '=', 'herp');
+		};
+		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query->shouldReceive('where')->once();
+		$this->config->shouldReceive('getOption')->once()->andReturn($filter);
+		$this->config->runQueryFilter($query);
+	}
+
 }

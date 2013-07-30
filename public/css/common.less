@@ -1,11 +1,11 @@
 /* fonts */
-@verdana {
+.verdana {
 	font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
-@arial {
+.arial {
 	font-family:Arial, Helvetica, sans-serif;
 }
-@centuryGothic {
+.centuryGothic {
 	font-family:'century gothic',verdana,arial,helvetica,sans-serif;
 }
 
@@ -25,13 +25,13 @@
  * BORDER RADIUS
  *
  */
-@borderRadius (@radius: 5px) {
+.borderRadius (@radius: 5px) {
 	-moz-border-radius:@radius;
 	border-radius:@radius;
 	-webkit-border-radius:@radius;
 	background-clip:padding-box;
 }
-@borderRadiusLeft (@radius: 5px) {
+.borderRadiusLeft (@radius: 5px) {
 	-moz-border-top-left-radius:@radius;
 	border-top-left-radius:@radius;
 	-webkit-border-top-left-radius:@radius;
@@ -40,7 +40,7 @@
 	-webkit-border-bottom-left-radius:@radius;
 	background-clip:padding-box;
 }
-@borderRadiusRight (@radius: 5px) {
+.borderRadiusRight (@radius: 5px) {
 	-moz-border-top-right-radius:@radius;
 	border-top-right-radius:@radius;
 	-webkit-border-top-right-radius:@radius;
@@ -49,7 +49,7 @@
 	-webkit-border-bottom-right-radius:@radius;
 	background-clip:padding-box;
 }
-@borderRadiusTop (@radius: 5px) {
+.borderRadiusTop (@radius: 5px) {
 	-moz-border-top-right-radius:@radius;
 	border-top-right-radius:@radius;
 	-webkit-border-top-right-radius:@radius;
@@ -58,19 +58,19 @@
 	-webkit-border-top-left-radius:@radius;
 	background-clip:padding-box;
 }
-@borderRadiusTopLeft (@radius: 5px) {
+.borderRadiusTopLeft (@radius: 5px) {
 	-moz-border-top-left-radius:@radius;
 	border-top-left-radius:@radius;
 	-webkit-border-top-left-radius:@radius;
 	background-clip:padding-box;
 }
-@borderRadiusTopRight (@radius: 5px) {
+.borderRadiusTopRight (@radius: 5px) {
 	-moz-border-top-right-radius:@radius;
 	border-top-right-radius:@radius;
 	-webkit-border-top-right-radius:@radius;
 	background-clip:padding-box;
 }
-@borderRadiusBottom (@radius: 5px) {
+.borderRadiusBottom (@radius: 5px) {
 	-moz-border-bottom-right-radius:@radius;
 	border-bottom-right-radius:@radius;
 	-webkit-border-bottom-right-radius:@radius;
@@ -80,7 +80,7 @@
 	background-clip:padding-box;
 }
 /* clears the border radius from an element */
-@noBorderRadius {
+.noBorderRadius {
 	-moz-border-radius:0;
 	border-radius:0;
 	-webkit-border-radius:0;
@@ -94,29 +94,29 @@
  * BOX SHADOWS
  *
  */
-@boxShadow (@hOffset: 0px, @vOffset: 1px, @blurRadius: 40px, @color: #000) {
+.boxShadow (@hOffset: 0px, @vOffset: 1px, @blurRadius: 40px, @color: #000) {
 	-moz-box-shadow: @hOffset @vOffset @blurRadius @color;
 	-webkit-box-shadow: @hOffset @vOffset @blurRadius @color;
 	box-shadow: @hOffset @vOffset @blurRadius @color;
 }
-@innerBoxShadow(@hOffset: 0px, @vOffset: 0px, @blurRadius: 2px, @color: #ccc) {
+.innerBoxShadow (@hOffset: 0px, @vOffset: 0px, @blurRadius: 2px, @color: #ccc) {
 	-moz-box-shadow: inset @hOffset @vOffset @blurRadius @color;
 	-webkit-box-shadow: inset @hOffset @vOffset @blurRadius @color;
 	box-shadow: inset @hOffset @vOffset @blurRadius @color;
 }
 /* same as above, except with spread. not sure what uses above so i may screw it up */
-@insetShadow(@hOffset: 0px, @vOffset: 0px, @blurRadius: 8px, @spread: 1px, @color: #999) {
+.insetShadow (@hOffset: 0px, @vOffset: 0px, @blurRadius: 8px, @spread: 1px, @color: #999) {
 	-moz-box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
 	-webkit-box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
 	box-shadow: inset @hOffset @vOffset @blurRadius @spread @color;
 }
-@innerOuterShadow(@inHOffset: 0, @inVOffset: 1px, @inBlurRadius: 2px, @inSpread: 1px, @inColor: #eee,
+.innerOuterShadow (@inHOffset: 0, @inVOffset: 1px, @inBlurRadius: 2px, @inSpread: 1px, @inColor: #eee,
 					@outHOffset: 0, @outVOffset: 0, @outBlurRadius: 8px, @outColor: rgba(82, 168, 236, 0.6)) {
 	-moz-box-shadow: inset @inHOffset @inVOffset @inBlurRadius @inSpread @inColor, @outHOffset @outVOffset @outBlurRadius @outColor;
 	-webkit-box-shadow: inset @inHOffset @inVOffset @inBlurRadius @inSpread @inColor, @outHOffset @outVOffset @outBlurRadius @outColor;
 	box-shadow: inset @inHOffset @inVOffset @inBlurRadius @inSpread @inColor, @outHOffset @outVOffset @outBlurRadius @outColor;
 }
-@noBoxShadow {
+.noBoxShadow {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
@@ -131,7 +131,7 @@
  * GRADIENTS
  *
  */
-@verticalGradient(@topColor, @bottomColor) {
+.verticalGradient (@topColor, @bottomColor) {
 	background: @topColor; /* Old browsers */
 	background: -moz-linear-gradient(top,  @topColor 0%, @bottomColor 100%); /* FF3.6+ */
 	/* Chrome,Safari4+ */
@@ -154,40 +154,12 @@
  */
 
 
-@transition(@property: all, @duration: 0.2s, @ease: ease, @delay: 0s) {
+.transition (@property: all, @duration: 0.2s, @ease: ease, @delay: 0s) {
 	-webkit-transition: @property @duration @ease @delay;
 	-moz-transition: @property @duration @ease @delay;
 	-ms-transition: @property @duration @ease @delay;
 	-o-transition: @property @duration @ease @delay;
 	transition: @property @duration @ease @delay;
-}
-@transitionProperty(@property) {
-	-webkit-transition-property: @property;
-	-moz-transition-property: @property;
-	-ms-transition-property: @property;
-	-o-transition-property: @property;
-	transition-property: @property;
-}
-@transitionDuration(@duration) {
-	-webkit-transition-duration: @duration;
-	-moz-transition-duration: @duration;
-	-ms-transition-duration: @duration;
-	-o-transition-duration: @duration;
-	transition-duration: @duration;
-}
-@transitionTimingFunction(@timingFunction) {
-	-webkit-transition-timing-function: @timingFunction;
-	-moz-transition-timing-function: @timingFunction;
-	-ms-transition-timing-function: @timingFunction;
-	-o-transition-timing-function: @timingFunction;
-	transition-timing-function: @timingFunction;
-}
-@transitionDelay(@delay) {
-	-webkit-transition-delay: @delay;
-	-moz-transition-delay: @delay;
-	-ms-transition-delay: @delay;
-	-o-transition-delay: @delay;
-	transition-delay: @delay;
 }
 
 
@@ -200,7 +172,7 @@
  */
 
 /* simple table */
-@simpleTable {
+.simpleTable {
 	th, td, tr, tbody {
 		border:none;
 		background:none;
@@ -211,36 +183,36 @@
 
 
 /* disables selection */
-@noSelect {
+.noSelect {
 	-moz-user-select:none;
 	-webkit-user-select:none;
 	user-select:none;
 }
 
 /* enables selection */
-@select {
+.select {
 	-moz-user-select:auto;
 	-webkit-user-select:auto;
 	user-select:auto;
 }
 
 /* overflow ellipsis */
-@overflowEllipsis {
+.overflowEllipsis {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 /* opacity */
-@opacity(@value: 0.5) {
+.opacity (@value: 0.5) {
 	@msValue: @value * 100;
 	zoom: 1;
-	filter: alpha(opacity=@msValue);
+	filter: ~"alpha(opacity=@{msValue})";
 	opacity: @value;
 }
 
 /* clearfix */
-@clearfix{
+.clearfix {
 	zoom:1;
 
 	&:before, &:after{

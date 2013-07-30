@@ -14,11 +14,25 @@
 											allowClear: false}" />
 			<span> <?php echo trans('administrator::administrator.itemsperpage') ?></span>
 		</div>
-		<!-- ko if: actionPermissions.create -->
-			<a class="new_item"
-				data-bind="attr: {href: base_url + modelName() + '/new'},
-							text: '<?php echo trans('administrator::administrator.new') ?> ' + modelSingle()"></a>
-		<!-- /ko -->
+
+		<div class="actions">
+			<!-- ko if: globalActions().length -->
+				<!-- ko foreach: globalActions -->
+					<!-- ko if: has_permission -->
+						<input type="button" data-bind="click: function(){$root.customAction(false, action_name, messages, confirmation)}, value: title,
+																		attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
+					<!-- /ko -->
+				<!-- /ko -->
+			<!-- /ko -->
+			<!-- ko if: actionPermissions.create -->
+				<a class="new_item"
+					data-bind="attr: {href: base_url + modelName() + '/new'},
+								text: '<?php echo trans('administrator::administrator.new') ?> ' + modelSingle()"></a>
+			<!-- /ko -->
+		</div>
+
+		<div class="action_message" data-bind="css: { error: globalStatusMessageType() == 'error', success: globalStatusMessageType() == 'success' },
+										notification: globalStatusMessage "></div>
 	</div>
 	<table class="results" border="0" cellspacing="0" id="customers" cellpadding="0">
 		<thead>

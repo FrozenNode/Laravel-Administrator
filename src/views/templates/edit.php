@@ -175,9 +175,9 @@
 					<!-- /ko -->
 				</div>
 
-				<!-- ko if: $root[field_name] -->
+				<!-- ko if: $root[field_name]() && !$root.loadingItem() -->
 					<div class="image_container">
-						<img data-bind="attr: {src: file_url + '?path=' + location + $root[field_name]()}" />
+						<img data-bind="attr: {src: file_url + '?path=' + location + $root[field_name]()}" onload="window.admin.resizePage()" />
 						<input type="button" class="remove_button" data-bind="click: function() {$root[field_name](null)}" value="x" />
 					</div>
 				<!-- /ko -->
@@ -216,7 +216,7 @@
 		<div class="custom_buttons">
 			<!-- ko foreach: actions -->
 				<!-- ko if: has_permission && $root.actionPermissions[action_name] !== false -->
-					<input type="button" data-bind="click: function(){$root.customAction(action_name, messages, confirmation)}, value: title,
+					<input type="button" data-bind="click: function(){$root.customAction(true, action_name, messages, confirmation)}, value: title,
 																	attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 				<!-- /ko -->
 			<!-- /ko -->

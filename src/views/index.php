@@ -27,6 +27,7 @@
 			model_single: "<?php echo $config->getOption('single') ?>",
 			expand_width: <?php echo $formWidth ?>,
 			actions: <?php echo json_encode($actions) ?>,
+			global_actions: <?php echo json_encode($globalActions) ?>,
 			filters: <?php echo json_encode($filters) ?>,
 			edit_fields: <?php echo json_encode($arrayFields) ?>,
 			data_model: <?php echo json_encode($dataModel) ?>,

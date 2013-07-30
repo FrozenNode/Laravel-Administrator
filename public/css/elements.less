@@ -1,58 +1,58 @@
 /* Fonts */
 @import url(http://fonts.googleapis.com/css?family=Oxygen:400,700&subset=latin-ext,latin);
 
-@oxygen {
+.oxygen {
 	font-family: 'Oxygen', sans-serif;
 }
 
 
 /* Elements */
 
-@input {
+.input {
 	display: inline-block;
 	vertical-align: middle;
 	height: 18px;
-	@oxygen;
-	@insetShadow(0px, 1px, 2px, 1px, #eee);
+	.oxygen;
+	.insetShadow(0px, 1px, 2px, 1px, #eee);
 	color:#333;
 	padding:4px 7px;
 	border:1px solid #cccccc;
 	font-size: 13px;
-	@semiBold;
-	@borderRadius(1px);
-	@transition;
+	.semiBold;
+	.borderRadius(1px);
+	.transition;
 	width: 210px;
 
 	&:focus {
 		border-color: rgba(82, 168, 236, 0.8);
-		@innerOuterShadow;
+		.innerOuterShadow;
 		outline: 0;
 	}
 }
 
-@greyButton {
+.greyButton {
 	padding: 7px 13px;
 	margin: 0;
 	border: none;
-	@verticalGradient(#818181, #646464);
-	@boxShadow(0, 1px, 5px, #444);
+	.verticalGradient(#818181, #646464);
+	.boxShadow(0, 1px, 5px, #444);
 	color: #fff;
 	font-size: 13px;
 	font-weight: normal;
 	cursor: pointer;
-	@borderRadius(2px);
-	@noSelect;
+	.borderRadius(2px);
+	.noSelect;
 
 	&:hover, &:focus {
-		@verticalGradient(#929292, #646464);
+		.verticalGradient(#929292, #646464);
 	}
 
 	&:active {
-		@innerOuterShadow(0, 5px, 7px, 1px, #666, 0, 1px, 2px, #777);
+		.innerOuterShadow(0, 5px, 7px, 1px, #666, 0, 1px, 2px, #777);
 	}
 }
 
-@editForm {
+.editForm {
 	color: #444;
 	text-shadow: white 0 1px 0;
 
@@ -73,7 +73,7 @@
 			width: 16px;
 			height: 16px;
 			background: url(../img/loader.gif) no-repeat;
-			@opacity(0.3);
+			.opacity(0.3);
 		}
 
 		select, textarea, input {
@@ -81,17 +81,8 @@
 			vertical-align: top;
 		}
 
-		ul.chzn-choices {
-			border: 1px solid #cccccc;
-			@transition;
-		}
-
-		div.chzn-container-active {
-			ul.chzn-choices {
-				border-color: rgba(82, 168, 236, 0.8);
-				@innerOuterShadow;
-				outline: 0;
-			}
+		select, input[type=hidden], .select2-container {
+			width: 226px;
 		}
 
 		div.characters_left {
@@ -188,7 +179,7 @@
 			div.color_preview {
 				height: 8px;
 				margin: 0 33px 0 1px;
-				@boxShadow(0px, 1px, 2px, #aaa);
+				.boxShadow(0px, 1px, 2px, #aaa);
 			}
 		}
 	}
