@@ -1,6 +1,7 @@
 ## Changelog
 
 - It is now possible to specify as many submenus in the `menus` array as you want
+- Bugfix: The CKEditor in WYSIWYG fields no longer jumps around and removes text selection on blur
 - Bugfix: Relationship where clauses now work when you pre-specify the table name
 - Bugfix: Time fields weren't saving properly
 
