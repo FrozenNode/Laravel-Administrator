@@ -4,7 +4,7 @@ Administrator is a database interface package for the Laravel PHP framework. Adm
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.4.0
+- **Version:** 4.4.1
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,12 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Changelog
+
+### 4.4.1
+
+- Bugfix: Removed reliance on MySQL-specific backticks in queries
+- Bugfix: New validateArray method in Laravel core Validator class was messing with custom version in Administrator's Validator
+- Bugfix: In relationship where clauses, there would be issues with values defined on the pivot table
 
 ### 4.4.0
 - You can now provide custom actions to a "global_actions" option in model configs. These actions are passed the current filtered query object and can be used to perform table-wide actions.
