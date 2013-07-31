@@ -102,7 +102,7 @@ class Time extends Field {
 		}
 		else
 		{
-			date('H:i:s', $time);
+			return date('H:i:s', $time);
 		}
 	}
 }

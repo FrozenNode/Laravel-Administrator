@@ -1,6 +1,7 @@
 ## Changelog
 
 - It is now possible to specify as many submenus in the `menus` array as you want
+- Bugfix: Time fields weren't saving properly
 
 ### 4.4.1
 - Bugfix: Removed reliance on MySQL-specific backticks in queries
