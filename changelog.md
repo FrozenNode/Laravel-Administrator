@@ -1,5 +1,11 @@
 ## Changelog
 
+### 4.4.1
+
+- Bugfix: Removed reliance on MySQL-specific backticks in queries
+- Bugfix: New validateArray method in Laravel core Validator class was messing with custom version in Administrator's Validator
+- Bugfix: In relationship where clauses, there would be issues with values defined on the pivot table
+
 ### 4.4.0
 - You can now provide custom actions to a "global_actions" option in model configs. These actions are passed the current filtered query object and can be used to perform table-wide actions.
 - There is now a query_filter option for model configs that lets you filter a model's results query before it's constructed
