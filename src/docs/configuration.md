@@ -89,21 +89,31 @@ This is the directory location of your application's settings config files. If y
 	 *	)
 	 */
 	'menu' => array(
-		'E-Commerce' => array('collections', 'products', 'product_images', 'orders'),
-		'homepage_sliders',
+		'E-Commerce' => array(
+			'collections',
+			'orders',
+			'Products' => array(
+				'products',
+				'product_images',
+			),
+		),
 		'users',
 		'roles',
 		'colors',
-		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
+		'Settings' => array(
+			'settings.site',
+			'settings.ecommerce',
+			'settings.social'
+		),
 	),
 
 The menu option is where you set the menu structure of the site. If you don't want any submenus, simply provide the name of your model or settings config file. The value has to be exactly equal (if you're using Linux, that means case-sensitive) to the name of the model or settings config php file.
 
-So in the above example, there would need to be (in the directory you specified in the `model_config_path`), config files called `collections.php`, `products.php`, `product_images.php`, `orders.php`, `homepage_sliders.php`, `users.php`, `roles.php`, and `colors.php`.
+So in the above example, there would need to be (in the directory you specified in the `model_config_path`), config files called `collections.php`, `orders.php`, `products.php`, `product_images.php`, `users.php`, `roles.php`, and `colors.php`.
 
 There would also need to be (in the directory you specified in the `settings_config_path`), config files called `site.php`, `ecommerce.php`, and `social.php`.
 
-If you want to have a submenu, instead of passing in a string, pass in an array of strings. The index of this slot will be the submenu's title in the UI.
+If you want to have a submenu, instead of passing in a string, pass in an array of strings. The index of this slot will be the submenu's title in the UI. Submenus can themselves have submenus and there is no depth limit.
 
 <img src="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/menu.png" />
 

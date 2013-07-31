@@ -1,7 +1,8 @@
 ## Changelog
 
-### 4.4.1
+- It is now possible to specify as many submenus in the `menus` array as you want
 
+### 4.4.1
 - Bugfix: Removed reliance on MySQL-specific backticks in queries
 - Bugfix: New validateArray method in Laravel core Validator class was messing with custom version in Administrator's Validator
 - Bugfix: In relationship where clauses, there would be issues with values defined on the pivot table
