@@ -59,10 +59,13 @@ class HasOneOrManyTest extends \PHPUnit_Framework_TestCase {
 	{
 		$relationship = m::mock(array('getPlainForeignKey' => '', 'getRelated' => m::mock(array('getTable' => 'table'))));
 		$model = m::mock(array('getTable' => 'table', 'getKeyName' => '', 'method' => $relationship));
+		$grammar = m::mock('Illuminate\Database\Query\Grammars');
+		$grammar->shouldReceive('wrap')->once()->andReturn('');
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$this->column->shouldReceive('getOption')->times(3)->andReturn('column_name', 'method', 'select')
 						->shouldReceive('getRelationshipWheres')->once()->andReturn('');
-		$this->db->shouldReceive('raw')->once()->andReturn('foo');
+		$this->db->shouldReceive('raw')->once()->andReturn('foo')
+					->shouldReceive('getQueryGrammar')->once()->andReturn($grammar);
 		$selects = array();
 		$this->column->filterQuery($selects);
 		$this->assertEquals($selects, array('foo'));

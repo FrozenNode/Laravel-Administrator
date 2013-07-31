@@ -127,7 +127,7 @@ class BelongsTo extends Relationship {
 
 		$selects[] = $this->db->raw("(SELECT " . $this->getOption('select') . "
 										FROM " . $from_table." AS " . $field_table . ' ' . $joins . "
-										WHERE " . $where . ") AS `" . $columnName . "`");
+										WHERE " . $where . ") AS " . $this->db->getQueryGrammar()->wrap($columnName));
 	}
 
 	/**

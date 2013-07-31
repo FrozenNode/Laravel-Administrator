@@ -87,7 +87,10 @@ class ColumnTest extends \PHPUnit_Framework_TestCase {
 	public function testFilterQueryAddsSelect()
 	{
 		$this->column->shouldReceive('getOption')->twice()->andReturn('foo');
-		$this->db->shouldReceive('raw')->once()->andReturn('foo');
+		$grammar = m::mock('Illuminate\Database\Query\Grammars');
+		$grammar->shouldReceive('wrap')->once()->andReturn('');
+		$this->db->shouldReceive('raw')->once()->andReturn('foo')
+					->shouldReceive('getQueryGrammar')->once()->andReturn($grammar);
 		$selects = array();
 		$this->column->filterQuery($selects);
 		$this->assertEquals($selects, array('foo'));
@@ -96,6 +99,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase {
 	public function testFilterQueryDoesntAddSelect()
 	{
 		$this->column->shouldReceive('getOption')->once();
+		$this->db->shouldReceive('raw')->never()
+					->shouldReceive('getQueryGrammar')->never();
 		$selects = array();
 		$this->column->filterQuery($selects);
 		$this->assertEquals($selects, array());
