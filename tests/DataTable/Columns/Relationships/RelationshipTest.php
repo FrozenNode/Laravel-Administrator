@@ -80,10 +80,28 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 		$eloquentQuery->shouldReceive('getQuery')->once()->andReturn($query);
 		$relationship = m::mock('Illuminate\Database\Eloquent\Relations\Relation');
 		$relationship->shouldReceive('getQuery')->once()->andReturn($eloquentQuery);
-		$this->column->shouldReceive('interpolateQuery')->once()->andReturn('foo where test');
+		$this->column->shouldReceive('interpolateQuery')->once()->andReturn('foo where test')
+					->shouldReceive('aliasRelationshipWhere')->once()->andReturn('foo');
 		$result = $this->column->getRelationshipWheres($relationship, 'fooalias');
 		$this->assertEquals($result, 'test');
-		$this->assertEquals($query->wheres[0]['column'], 'fooalias.bar');
+	}
+
+	public function testAliasRelationshipWhereUnaliasedColumnOtherTable()
+	{
+		$result = $this->column->aliasRelationshipWhere('column', 'table_alias', 'pivot_alias', 'pivot');
+		$this->assertEquals($result, 'table_alias.column');
+	}
+
+	public function testAliasRelationshipWhereAliasedColumnOtherTable()
+	{
+		$result = $this->column->aliasRelationshipWhere('table.column', 'table_alias', 'pivot_alias', 'pivot');
+		$this->assertEquals($result, 'table_alias.column');
+	}
+
+	public function testAliasRelationshipWhereAliasedColumnPivotTable()
+	{
+		$result = $this->column->aliasRelationshipWhere('pivot.column', 'table_alias', 'pivot_alias', 'pivot');
+		$this->assertEquals($result, 'pivot_alias.column');
 	}
 
 	public function testInterpolateQuery()
