@@ -336,7 +336,7 @@ class AdminController extends Controller
 		$filters = Input::get('filters', array());
 
 		//return the rows
-		return Response::json($dataTable->getRows(App::make('db'), $page, $sortOptions, $filters));
+		return Response::json($dataTable->getRows(App::make('db'), $filters, $page, $sortOptions));
 	}
 
 	/**

@@ -151,6 +151,35 @@ The `filters` option in your [model config](/docs/model-configuration) lets you 
 
 Just as with all fields, if you provide a simple string instead of an array, the default behavior is to make it a `text` field with a title equal to the attribute name. When you provide an array of options with an index equal to the name of the attribute or the relationship method name, you can control the interface more.
 
+You can set a default value for your filters by providing a `value` option to the filter array. For filters that have minimum and maximum input fields, you can set the `min_value` and `max_value` options.
+
+	'filters' => array(
+		'name' => array(
+			'title' => 'Name',
+			'value' => 'John',
+		),
+		'collection' => array(
+			'type' => 'relationship',
+			'title' => 'Collection',
+			'name_field' => 'name',
+			'value' => 13, //the id of the selected item
+		),
+		'price' => array(
+			'type' => 'number',
+			'title' => 'Price',
+			'symbol' => '$',
+			'decimals' => 2,
+			'min_value' => 19.00,
+			'max_value' => 255.45,
+		),
+		'colors' => array(
+			'type' => 'relationship',
+			'title' => 'Colors',
+			'name_field' => 'name',
+			'value' => array(3, 4), //an array of ids
+		),
+	),
+
 <a name="settings-page"></a>
 ## Settings Page
 
