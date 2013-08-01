@@ -1,6 +1,8 @@
 <?php
 
-class CreateBoxOffice {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateBoxOffice extends Migration {
 
 	/**
 	 * Make changes to the database.

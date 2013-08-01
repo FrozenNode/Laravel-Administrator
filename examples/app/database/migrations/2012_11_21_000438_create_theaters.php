@@ -1,6 +1,8 @@
 <?php
 
-class CreateTheaters {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateTheaters extends Migration {
 
 	/**
 	 * Make changes to the database.
