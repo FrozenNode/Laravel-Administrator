@@ -78,8 +78,11 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 		$query->wheres = array(array(), array('column' => 'bar'));
 		$eloquentQuery = m::mock('Illuminate\Database\Eloquent\Builder');
 		$eloquentQuery->shouldReceive('getQuery')->once()->andReturn($query);
+		$relatedModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$relatedModel->shouldReceive('isSoftDeleting')->once();
 		$relationship = m::mock('Illuminate\Database\Eloquent\Relations\Relation');
-		$relationship->shouldReceive('getQuery')->once()->andReturn($eloquentQuery);
+		$relationship->shouldReceive('getQuery')->once()->andReturn($eloquentQuery)
+						->shouldReceive('getRelated')->once()->andReturn($relatedModel);
 		$this->column->shouldReceive('interpolateQuery')->once()->andReturn('foo where test')
 					->shouldReceive('aliasRelationshipWhere')->once()->andReturn('foo');
 		$result = $this->column->getRelationshipWheres($relationship, 'fooalias');
