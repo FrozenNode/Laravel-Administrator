@@ -1,6 +1,6 @@
 <?php
 
-class Director extends Model {
+class Director extends Eloquent {
 
 	protected $with = array('films');
 

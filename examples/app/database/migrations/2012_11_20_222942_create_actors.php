@@ -1,6 +1,8 @@
 <?php
 
-class Create_Actors {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateActors extends Migration {
 
 	/**
 	 * Make changes to the database.

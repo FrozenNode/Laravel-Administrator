@@ -53,6 +53,12 @@ class BoolTest extends \PHPUnit_Framework_TestCase {
 		m::close();
 	}
 
+	public function testBuild()
+	{
+		$this->validator->shouldReceive('arrayGet')->times(3);
+		$this->field->build();
+	}
+
 	public function testFillModelTrue()
 	{
 		$model = new \stdClass();

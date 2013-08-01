@@ -53,11 +53,13 @@ return array(
 			'title' => 'Director',
 			'type' => 'relationship',
 			'name_field' => 'name',
+			'options_sort_field' => "CONCAT(first_name, ' ' , last_name)",
 		),
 		'actors' => array(
 			'title' => 'Actors',
 			'type' => 'relationship',
 			'name_field' => 'name',
+			'options_sort_field' => "CONCAT(first_name, ' ' , last_name)",
 		),
 	),
 
@@ -75,11 +77,13 @@ return array(
 			'title' => 'Director',
 			'type' => 'relationship',
 			'name_field' => 'name',
+			'options_sort_field' => "CONCAT(first_name, ' ' , last_name)",
 		),
 		'actors' => array(
 			'title' => 'Actors',
 			'type' => 'relationship',
 			'name_field' => 'name',
+			'options_sort_field' => "CONCAT(first_name, ' ' , last_name)",
 		),
 		'theaters' => array(
 			'title' => 'Theater',

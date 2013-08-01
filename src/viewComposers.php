@@ -22,7 +22,6 @@ View::composer('administrator::index', function($view)
 	$view->config = $config;
 	$view->dataTable = $dataTable;
 	$view->primaryKey = $model->getKeyName();
-	$view->rows = $dataTable->getRows(App::make('db'));
 	$view->editFields = $fieldFactory->getEditFields();
 	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
 	$view->dataModel = $fieldFactory->getDataModel();
@@ -31,6 +30,7 @@ View::composer('administrator::index', function($view)
 	$view->globalActions = $actionFactory->getGlobalActionsOptions();
 	$view->actionPermissions = $actionFactory->getActionPermissions();
 	$view->filters = $fieldFactory->getFiltersArrays();
+	$view->rows = $dataTable->getRows(App::make('db'), $view->filters);
 	$view->formWidth = $config->getOption('form_width');
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = URL::to('packages/frozennode/administrator/');
@@ -58,8 +58,60 @@ View::composer('administrator::settings', function($view)
 });
 
 //header view
-View::composer(array('administrator::partials.header', 'administrator::dashboard'), function($view)
+View::composer(array('administrator::partials.header'), function($view)
 {
 	$view->menu = App::make('admin_menu')->getMenu();
 	$view->settingsPrefix = App::make('admin_config_factory')->getSettingsPrefix();
+});
+
+//layout view
+View::composer(array('administrator::layouts.default'), function($view)
+{
+	//css assets
+	$view->css = array(
+		'jquery-ui' => asset('packages/frozennode/administrator/css/ui/jquery-ui-1.9.1.custom.min.css'),
+		'jquery-ui-timepicker' => asset('packages/frozennode/administrator/css/ui/jquery.ui.timepicker.css'),
+		'select2' => asset('packages/frozennode/administrator/js/jquery/select2/select2.css'),
+		'jquery-colorpicker' => asset('packages/frozennode/administrator/css/jquery.lw-colorpicker.css'),
+		'main' => asset('packages/frozennode/administrator/css/main.css'),
+	);
+
+	//js assets
+	$view->js = array(
+		'jquery' => asset('packages/frozennode/administrator/js/jquery/jquery-1.8.2.min.js'),
+		'select2' => asset('packages/frozennode/administrator/js/jquery/select2/select2.js'),
+		'jquery-ui' => asset('packages/frozennode/administrator/js/jquery/jquery-ui-1.10.3.custom.min.js'),
+		'jquery-ui-timepicker' => asset('packages/frozennode/administrator/js/jquery/jquery-ui-timepicker-addon.js'),
+		'ckeditor' => asset('packages/frozennode/administrator/js/ckeditor/ckeditor.js'),
+		'ckeditor-jquery' => asset('packages/frozennode/administrator/js/ckeditor/adapters/jquery.js'),
+		'markdown' => asset('packages/frozennode/administrator/js/markdown.js'),
+		'plupload' => asset('packages/frozennode/administrator/js/plupload/js/plupload.full.js'),
+	);
+
+	//localization js assets
+	$locale = Config::get('app.locale');
+
+	if ($locale !== 'en')
+	{
+		$view->js += array(
+			'plupload-l18n' => asset('packages/frozennode/administrator/js/plupload/js/i18n/'.$locale.'.js'),
+			'timepicker-l18n' => asset('packages/frozennode/administrator/js/jquery/localization/jquery-ui-timepicker-'.$locale.'.js'),
+			'datepicker-l18n' => asset('packages/frozennode/administrator/js/jquery/i18n/jquery.ui.datepicker-'.$locale.'.js'),
+		);
+	}
+
+	//remaining js assets
+	$view->js += array(
+		'knockout' => asset('packages/frozennode/administrator/js/knockout/knockout-2.2.0.js'),
+		'knockout-mapping' => asset('packages/frozennode/administrator/js/knockout/knockout.mapping.js'),
+		'knockout-notification' => asset('packages/frozennode/administrator/js/knockout/KnockoutNotification.knockout.min.js'),
+		'knockout-update-data' => asset('packages/frozennode/administrator/js/knockout/knockout.updateData.js'),
+		'knockout-custom-bindings' => asset('packages/frozennode/administrator/js/knockout/custom-bindings.js'),
+		'accounting' => asset('packages/frozennode/administrator/js/accounting.js'),
+		'colorpicker' => asset('packages/frozennode/administrator/js/jquery/jquery.lw-colorpicker.min.js'),
+		'history' => asset('packages/frozennode/administrator/js/history/native.history.js'),
+		'page' => asset('packages/frozennode/administrator/js/page.js'),
+		'admin' => asset('packages/frozennode/administrator/js/admin.js'),
+		'settings' => asset('packages/frozennode/administrator/js/settings.js'),
+	);
 });

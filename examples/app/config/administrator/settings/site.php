@@ -32,10 +32,10 @@ return array(
 			'title' => 'Image (200 x 150)',
 			'type' => 'image',
 			'naming' => 'random',
-			'location' => 'public/uploads/config/logo/originals/',
+			'location' => public_path(),
 			'size_limit' => 2,
 			'sizes' => array(
-		 		array(200, 150, 'crop', 'public/uploads/config/logo/resize/', 100),
+		 		array(200, 150, 'crop', public_path() . '/resize/', 100),
 		 	)
 		),
 	),
@@ -72,7 +72,8 @@ return array(
 	 */
 	'permission'=> function()
 	{
-		return Auth::user()->has_role('developer');
+		return true;
+		//return Auth::user()->hasRole('developer');
 	},
 
 	/**

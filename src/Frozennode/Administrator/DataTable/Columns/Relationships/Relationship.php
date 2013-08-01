@@ -78,40 +78,72 @@ class Relationship extends Column {
 	 * @param Illuminate\Database\Eloquent\Relations\Relation		$relationship
 	 * @param string												$tableAlias
 	 * @param string												$pivotAlias
+	 * @param string												$pivot
 	 *
 	 * @return string
 	 */
-	public function getRelationshipWheres($relationship, $tableAlias, $pivotAlias = null)
+	public function getRelationshipWheres($relationship, $tableAlias, $pivotAlias = null, $pivot = null)
 	{
+		//get the relationship model
+		$relationshipModel = $relationship->getRelated();
+
 		//get the query instance
 		$query = $relationship->getQuery()->getQuery();
 
 		//get the connection instance
 		$connection = $query->getConnection();
 
-		//fetch the where values and their bindings
-		array_shift($query->wheres);
+		//one element of the relationship query's wheres is always useless (it will say pivot_table.other_id is null)
+		//depending on whether or not softdeletes are enabled on the other model, this will be in either position 0
+		//or 1 of the wheres array
+		array_splice($query->wheres, ($relationshipModel->isSoftDeleting() ? 1 : 0), 1);
 
 		//iterate over the wheres to properly alias the columns
 		foreach ($query->wheres as &$where)
 		{
-			//split the $where column on '.' which indicates that the clause is for a pivot table
-			$split = explode('.', $where['column']);
-
-			if (isset($split[1]))
-			{
-				$where['column'] = $pivotAlias . '.' . $split[1];
-			}
-			else
-			{
-				$where['column'] = $tableAlias . '.' . $where['column'];
-			}
+			//alias the where columns
+			$where['column'] = $this->aliasRelationshipWhere($where['column'], $tableAlias, $pivotAlias, $pivot);
 		}
 
 		$sql = $query->toSql();
 		$fullQuery = $this->interpolateQuery($sql, $connection->prepareBindings($query->getBindings()));
 		$split = explode(' where ', $fullQuery);
 		return isset($split[1]) ? $split[1] : '';
+	}
+
+	/**
+	 * Aliases an existing where column
+	 *
+	 * @param string	$column
+	 * @param string	$tableAlias
+	 * @param string	$pivotAlias
+	 * @param string	$pivot
+	 *
+	 * @return string
+	 */
+	public function aliasRelationshipWhere($column, $tableAlias, $pivotAlias, $pivot)
+	{
+		//first explode the string on "." in case it was given with the table already included
+		$split = explode('.', $column);
+
+		//if the second split item exists, there was a "."
+		if (isset($split[1]))
+		{
+			//if the table name is the pivot table, append the pivot alias
+			if ($split[0] === $pivot)
+			{
+				return $pivotAlias . '.' . $split[1];
+			}
+			//otherwise append the table alias
+			else
+			{
+				return $tableAlias . '.' . $split[1];
+			}
+		}
+		else
+		{
+			return $tableAlias . '.' . $column;
+		}
 	}
 
 	/**

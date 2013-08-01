@@ -127,4 +127,10 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->field->getDateString(strtotime('3/3/2013 4:45pm')), '2013-03-03 16:45:00');
 	}
 
+	public function testGetDateStringParsesTime()
+	{
+		$this->field->shouldReceive('getOption')->twice()->andReturn('time');
+		$this->assertEquals($this->field->getDateString(strtotime('4:45pm')), '16:45:00');
+	}
+
 }

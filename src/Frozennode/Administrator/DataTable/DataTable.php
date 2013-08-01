@@ -68,13 +68,13 @@ class DataTable {
 	 * Builds a results array (with results and pagination info)
 	 *
 	 * @param Illuminate\Database\DatabaseManager 	$db
+	 * @param array									$filters
 	 * @param int									$page
 	 * @param array									$sort (with 'field' and 'direction' keys)
-	 * @param array									$filters
 	 *
 	 * @return array
 	 */
-	public function getRows(\Illuminate\Database\DatabaseManager $db, $page = 1, $sort = null, $filters = null)
+	public function getRows(\Illuminate\Database\DatabaseManager $db, $filters = null, $page = 1, $sort = null)
 	{
 		//prepare the query
 		extract($this->prepareQuery($db, $page, $sort, $filters));

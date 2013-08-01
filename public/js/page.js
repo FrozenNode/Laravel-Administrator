@@ -11,7 +11,7 @@
 		$menu.find('li.menu').each(function()
 		{
 			var $this = $(this),
-				$submenu = $this.find('ul');
+				$submenu = $this.children('ul');
 
 			//bind events for the top-level menu item
 			$this.bind({
@@ -33,7 +33,14 @@
 			//make the submenu slide down on hover
 			$this.hover(function()
 			{
-				$submenu.stop(true, true).slideDown(200);
+				//if this is a sub-submenu, slide it right instead of down
+				if ($this.parent().closest('li.menu').length)
+				{
+					$this.addClass('current');
+					$submenu.stop(true, true).show('slide', { direction: 'left' }, 200);;
+				}
+				else
+					$submenu.stop(true, true).slideDown(200);
 			});
 		});
 	});

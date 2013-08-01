@@ -101,6 +101,8 @@ abstract class Field {
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @return void
 	 */
 	public function build()
 	{
