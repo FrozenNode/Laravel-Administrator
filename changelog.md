@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.5.0
 - You can now provide `value`, `min_value`, and `max_value` options in filter fields to set default values
 - It is now possible to specify as many submenus in the `menus` array as you want
 - The examples directory is now properly adjusted for L4
