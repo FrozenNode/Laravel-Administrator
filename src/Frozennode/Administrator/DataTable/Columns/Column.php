@@ -161,7 +161,6 @@ class Column {
 		if ($select = $this->validator->arrayGet($options, 'select'))
 		{
 			$options['select'] = str_replace('(:table)', $this->tablePrefix . $model->getTable(), $select);
-			$options['sortable'] = true;
 		}
 
 		//now we do some final organization to categorize these columns (useful later in the sorting)

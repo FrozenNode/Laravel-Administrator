@@ -81,6 +81,17 @@ If you're using an accessor, you may also want to define a `sort_field` that Adm
 		'sort_field' => 'salary',
 	)
 
+<a name="unsortable-columns"></a>
+## Unsortable Columns
+
+If you want to disable sorting for a column, you can set the `sortable` option to false:
+
+	'image' => array(
+		'title' => 'Image',
+		'output' => '<img src="/uploads/products/resize/(:value)" height="100" />',
+		'sortable' => false,
+	)
+
 <a name="custom-selects"></a>
 ## Custom Selects
 
