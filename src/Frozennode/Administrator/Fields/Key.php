@@ -13,6 +13,15 @@ class Key extends Field {
 	);
 
 	/**
+	 * Fill a model with input data
+	 *
+	 * @param Eloquent	$model
+	 *
+	 * @return array
+	 */
+	public function fillModel(&$model, $input) {}
+
+	/**
 	 * Filters a query object
 	 *
 	 * @param Query		$query
