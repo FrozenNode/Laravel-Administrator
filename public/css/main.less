@@ -93,7 +93,7 @@ body{
 
 				}
 
-				> ul {
+				ul {
 					position: absolute;
 					top: 35px;
 					left: 0;
@@ -116,6 +116,26 @@ body{
 					li:last-child {
 						a {
 							border-bottom: none;
+						}
+					}
+
+					li.menu {
+						position: relative;
+
+						&.current {
+							.verticalGradient(#333, #444);
+						}
+
+						&:hover {
+							> ul {
+
+							}
+						}
+
+						ul {
+							top: 0;
+							left: 100%;
+							z-index: -1;
 						}
 					}
 				}

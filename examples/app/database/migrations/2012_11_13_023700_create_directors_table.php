@@ -1,6 +1,8 @@
 <?php
 
-class Create_Directors_Table {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateDirectorsTable extends Migration {
 
 	/**
 	 * Make changes to the database.

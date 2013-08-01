@@ -1,6 +1,8 @@
 <?php
 
-class Create_Actors_Films {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateFilmsTheaters extends Migration {
 
 	/**
 	 * Make changes to the database.
@@ -9,11 +11,11 @@ class Create_Actors_Films {
 	 */
 	public function up()
 	{
-		Schema::create('actors_films', function($table)
+		Schema::create('films_theaters', function($table)
 		{
 			$table->increments('id');
-			$table->integer('actor_id')->unsigned();
 			$table->integer('film_id')->unsigned();
+			$table->integer('theater_id')->unsigned();
 			$table->timestamps();
 		});
 	}
@@ -25,7 +27,7 @@ class Create_Actors_Films {
 	 */
 	public function down()
 	{
-		Schema::drop('actors_films');
+		Schema::drop('films_theaters');
 	}
 
 }

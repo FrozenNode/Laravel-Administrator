@@ -1,6 +1,6 @@
 <?php
 
-class BoxOffice extends Model {
+class BoxOffice extends Eloquent {
 
 	protected $table = 'box_office';
 

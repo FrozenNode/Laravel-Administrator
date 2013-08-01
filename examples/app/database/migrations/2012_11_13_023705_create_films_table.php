@@ -1,6 +1,8 @@
 <?php
 
-class Create_Box_Office {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateFilmsTable extends Migration {
 
 	/**
 	 * Make changes to the database.
@@ -9,12 +11,12 @@ class Create_Box_Office {
 	 */
 	public function up()
 	{
-		Schema::create('box_office', function($table)
+		Schema::create('films', function($table)
 		{
 			$table->increments('id');
-			$table->decimal('revenue', 10, 2);
-			$table->integer('film_id')->unsigned();
-			$table->integer('theater_id')->unsigned();
+			$table->string('name');
+			$table->date('release_date');
+			$table->integer('director_id');
 			$table->timestamps();
 		});
 	}
@@ -26,7 +28,7 @@ class Create_Box_Office {
 	 */
 	public function down()
 	{
-		Schema::drop('box_office');
+		Schema::drop('films');
 	}
 
 }

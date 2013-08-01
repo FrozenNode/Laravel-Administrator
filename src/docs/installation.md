@@ -40,6 +40,22 @@ After the package is installed, you need to publish the package's assets like th
 
 	php artisan asset:publish frozennode/administrator
 
+It is best to publish the assets whenever Administrator updates. Instead of doing this manually, you can add the above command to your `scripts` object in your composer.json file:
+
+	"scripts": {
+		"pre-update-cmd": [
+			"php artisan clear-compiled"
+		],
+		"post-install-cmd": [
+			"php artisan optimize",
+			"php artisan asset:publish frozennode/administrator"
+		],
+		"post-update-cmd": [
+			"php artisan optimize",
+			"php artisan asset:publish frozennode/administrator"
+		]
+	},
+
 <a name="administrator-config"></a>
 ## Administrator Config
 

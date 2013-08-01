@@ -42,7 +42,7 @@ class BelongsToMany extends Relationship {
 				.' LEFT JOIN '.$other_table.' AS '.$other_alias.' ON '.$other_alias.'.'.$other_key.' = '.$int_alias.'.'.$column2;
 
 		//grab the existing where clauses that the user may have set on the relationship
-		$relationshipWheres = $this->getRelationshipWheres($relationship, $other_alias, $int_alias);
+		$relationshipWheres = $this->getRelationshipWheres($relationship, $other_alias, $int_alias, $int_table);
 
 		$where = $this->tablePrefix . $model->getTable() . '.' . $model->getKeyName() . ' = ' . $int_alias . '.' . $column1
 					. ($relationshipWheres ? ' AND ' . $relationshipWheres : '');
