@@ -1,6 +1,6 @@
 <?php
 
-class Create_Actors {
+class CreateActors {
 
 	/**
 	 * Make changes to the database.

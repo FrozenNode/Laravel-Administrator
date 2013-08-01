@@ -1,6 +1,6 @@
 <?php
 
-class Create_Directors_Table {
+class CreateBoxOffice {
 
 	/**
 	 * Make changes to the database.
@@ -9,15 +9,14 @@ class Create_Directors_Table {
 	 */
 	public function up()
 	{
-		Schema::create('directors', function($table)
+		Schema::create('box_office', function($table)
 		{
 			$table->increments('id');
-			$table->string('first_name');
-			$table->string('last_name');
-			$table->decimal('salary', 10, 2);
+			$table->decimal('revenue', 10, 2);
+			$table->integer('film_id')->unsigned();
+			$table->integer('theater_id')->unsigned();
 			$table->timestamps();
 		});
-
 	}
 
 	/**
@@ -27,7 +26,7 @@ class Create_Directors_Table {
 	 */
 	public function down()
 	{
-		Schema::drop('directors');
+		Schema::drop('box_office');
 	}
 
 }

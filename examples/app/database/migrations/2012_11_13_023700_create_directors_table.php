@@ -1,6 +1,6 @@
 <?php
 
-class Create_Theaters {
+class CreateDirectorsTable {
 
 	/**
 	 * Make changes to the database.
@@ -9,12 +9,15 @@ class Create_Theaters {
 	 */
 	public function up()
 	{
-		Schema::create('theaters', function($table)
+		Schema::create('directors', function($table)
 		{
 			$table->increments('id');
-			$table->text('name');
+			$table->string('first_name');
+			$table->string('last_name');
+			$table->decimal('salary', 10, 2);
 			$table->timestamps();
 		});
+
 	}
 
 	/**
@@ -24,7 +27,7 @@ class Create_Theaters {
 	 */
 	public function down()
 	{
-		Schema::drop('theaters');
+		Schema::drop('directors');
 	}
 
 }

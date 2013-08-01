@@ -1,6 +1,6 @@
 <?php
 
-class Create_Actors_Films {
+class CreateFilmsTable {
 
 	/**
 	 * Make changes to the database.
@@ -9,11 +9,12 @@ class Create_Actors_Films {
 	 */
 	public function up()
 	{
-		Schema::create('actors_films', function($table)
+		Schema::create('films', function($table)
 		{
 			$table->increments('id');
-			$table->integer('actor_id')->unsigned();
-			$table->integer('film_id')->unsigned();
+			$table->string('name');
+			$table->date('release_date');
+			$table->integer('director_id');
 			$table->timestamps();
 		});
 	}
@@ -25,7 +26,7 @@ class Create_Actors_Films {
 	 */
 	public function down()
 	{
-		Schema::drop('actors_films');
+		Schema::drop('films');
 	}
 
 }

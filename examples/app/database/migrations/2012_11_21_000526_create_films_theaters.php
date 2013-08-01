@@ -1,6 +1,6 @@
 <?php
 
-class Create_Films_Table {
+class CreateFilmsTheaters {
 
 	/**
 	 * Make changes to the database.
@@ -9,12 +9,11 @@ class Create_Films_Table {
 	 */
 	public function up()
 	{
-		Schema::create('films', function($table)
+		Schema::create('films_theaters', function($table)
 		{
 			$table->increments('id');
-			$table->string('name');
-			$table->date('release_date');
-			$table->integer('director_id');
+			$table->integer('film_id')->unsigned();
+			$table->integer('theater_id')->unsigned();
 			$table->timestamps();
 		});
 	}
@@ -26,7 +25,7 @@ class Create_Films_Table {
 	 */
 	public function down()
 	{
-		Schema::drop('films');
+		Schema::drop('films_theaters');
 	}
 
 }

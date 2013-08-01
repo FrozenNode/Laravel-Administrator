@@ -1,6 +1,6 @@
 <?php
 
-class Create_Box_Office {
+class CreateActorsFilms {
 
 	/**
 	 * Make changes to the database.
@@ -9,12 +9,11 @@ class Create_Box_Office {
 	 */
 	public function up()
 	{
-		Schema::create('box_office', function($table)
+		Schema::create('actors_films', function($table)
 		{
 			$table->increments('id');
-			$table->decimal('revenue', 10, 2);
+			$table->integer('actor_id')->unsigned();
 			$table->integer('film_id')->unsigned();
-			$table->integer('theater_id')->unsigned();
 			$table->timestamps();
 		});
 	}
@@ -26,7 +25,7 @@ class Create_Box_Office {
 	 */
 	public function down()
 	{
-		Schema::drop('box_office');
+		Schema::drop('actors_films');
 	}
 
 }
