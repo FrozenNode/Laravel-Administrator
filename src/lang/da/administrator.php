@@ -13,7 +13,7 @@ return array(
 
 	'dashboard' => 'Dashboard',
 	'edit' => 'Redigér',
-	'filters' => 'Filtre',
+	'filters' => 'Filtrer på:',
 	'loading' => 'Henter...',
 	'createnew' => 'Opret ny',
 	'new' => 'Ny',
