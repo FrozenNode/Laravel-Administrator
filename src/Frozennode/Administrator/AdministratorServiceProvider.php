@@ -30,14 +30,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set the locale
 		$this->setLocale();
 
-		//make sure the Laravel Validator is using our custom Validator that we can pass to various constructors
-		LValidator::resolver(function($translator, $data, $rules, $messages)
-		{
-			$validator = new \Frozennode\Administrator\Validator($translator, $data, $rules, $messages);
-			$validator->setUrlInstance(\App::make('url'));
-			return $validator;
-		});
-
 		//set up the shared instances
 		$this->app['admin_config_factory'] = $this->app->share(function($app)
 		{
