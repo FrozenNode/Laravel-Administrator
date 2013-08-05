@@ -114,6 +114,10 @@ class AdminController extends Controller
 		}
 		else
 		{
+			//override the config options so that we can get the latest
+			App::make('admin_config_factory')->updateConfigOptions();
+
+			//grab the latest model data
 			$columnFactory = App::make('admin_column_factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
@@ -242,6 +246,9 @@ class AdminController extends Controller
 		//get the action and perform the custom action
 		$action = $actionFactory->getByName($actionName);
 		$result = $action->perform($model);
+
+		//override the config options so that we can get the latest
+		App::make('admin_config_factory')->updateConfigOptions();
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
@@ -470,9 +477,13 @@ class AdminController extends Controller
 		}
 		else
 		{
+			//override the config options so that we can get the latest
+			App::make('admin_config_factory')->updateConfigOptions();
+
 			return Response::json(array(
 				'success' => true,
 				'data' => $config->getDataModel(),
+				'actions' => App::make('admin_action_factory')->getActionsOptions(),
 			));
 		}
 	}
@@ -495,6 +506,9 @@ class AdminController extends Controller
 		$data = $config->getDataModel();
 		$result = $action->perform($data);
 
+		//override the config options so that we can get the latest
+		App::make('admin_config_factory')->updateConfigOptions();
+
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
@@ -512,11 +526,18 @@ class AdminController extends Controller
 			$headers = $result->headers->all();
 			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-			return Response::json(array('success' => true, 'download' => URL::route('admin_file_download')));
+			return Response::json(array(
+				'success' => true,
+				'download' => URL::route('admin_file_download'),
+				'actions' => $actionFactory->getActionsOptions(true)
+			));
 		}
 		else
 		{
-			return Response::json(array('success' => true));
+			return Response::json(array(
+				'success' => true,
+				'actions' => $actionFactory->getActionsOptions(true)
+			));
 		}
 	}
 

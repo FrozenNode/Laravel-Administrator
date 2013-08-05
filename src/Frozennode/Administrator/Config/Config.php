@@ -135,6 +135,22 @@ abstract class Config {
 	}
 
 	/**
+	 * Sets the user options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
+	 */
+	public function setOptions(array $options)
+	{
+		//unset the current options
+		$this->options = array();
+
+		//override the supplied options
+		$this->suppliedOptions = $options;
+	}
+
+	/**
 	 * Validates the supplied data against the options rules
 	 *
 	 * @param array		$data
