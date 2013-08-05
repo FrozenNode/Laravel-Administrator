@@ -1,5 +1,7 @@
 ## Changelog
 
+- Custom actions and saves now rebuild the supplied config file after performing the action
+- New translations (da, it)
 - Bugfix: The key field is no longer set on models. This would cause some bugs on some setups
 
 ### 4.5.0
