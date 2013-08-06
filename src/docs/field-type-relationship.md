@@ -6,6 +6,7 @@
 - [Belongs To Many](#belongs-to-many)
 - [Belongs To Many Filter](#belongs-to-many-filter)
 - [Large Datasets and Autocomplete](#large-datasets-and-autocomplete)
+- [Filtering Relationship Options](#filtering-relationship-options)
 - [Constraining Relationships](#constraining-relationships)
 
 <a name="overview"></a>
@@ -104,6 +105,23 @@ A relationship field with `autocomplete` set to `true` will wait for a user to t
 Once a value is typed in, the `num_options` option determines how many results are returned to the user for each search.
 
 The `search_fields` option should be an array of valid SQL select fields that can be searched with the `LIKE` operator. In the above example, the admin user will be able to search for "Liam N" and get "Liam Neeson" back. The default value for this field is just the name_field supplied in all relationship fields.
+
+<a name="filtering-relationship-options"></a>
+## Filtering Relationship Options
+
+In some instances you may want to limit the available options for a relationship. This is easy to do with the `options_filter` option:
+
+	'actors' => array(
+		'type' => 'relationship',
+		'title' => 'Actors',
+		'name_field' => 'full_name',
+		'options_filter' => function($query)
+		{
+			$query->whereNull('died_at'); //only returns living actors
+		},
+	)
+
+The `options_filter` is passed the query builder instance so that you can modify query however you like.
 
 <a name="constraining-relationships"></a>
 ## Constraining Relationships

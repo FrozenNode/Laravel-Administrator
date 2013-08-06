@@ -613,6 +613,10 @@ class Factory {
 		//if there is a search term, limit the result set by that term
 		$this->filterBySearchTerm($term, $query, $fieldObject, $selectedItems, $relatedKeyTable);
 
+		//perform any user-supplied options filter
+		$filter = $fieldObject->getOption('options_filter');
+		$filter($query);
+
 		//finally we can return the options
 		return $this->formatSelectOptions($relatedModel, $fieldObject, $query->get());
 	}
