@@ -60,7 +60,7 @@ class HasOneOrManyTest extends \PHPUnit_Framework_TestCase {
 		$relationship = m::mock(array('getRelated' => $relatedModel, 'getForeignKey' => 'some_id', 'getPlainForeignKey' => 'some_other_id'));
 		$model = m::mock(array('field' => $relationship, 'getTable' => 'table'));
 		$this->config->shouldReceive('getDataModel')->twice()->andReturn($model);
-		$this->validator->shouldReceive('arrayGet')->times(4);
+		$this->validator->shouldReceive('arrayGet')->times(5);
 		$this->field->shouldReceive('setUpConstraints')->once()
 					->shouldReceive('loadRelationshipOptions')->once();
 		$this->field->build();

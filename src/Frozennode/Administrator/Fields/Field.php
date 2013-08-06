@@ -111,12 +111,20 @@ abstract class Field {
 		//set the title if it doesn't exist
 		$options['title'] = $this->validator->arrayGet($options, 'title', $options['field_name']);
 
-		//make sure the visible callback is run if it's supplied
+		//run the visible property closure if supplied
 		$visible = $this->validator->arrayGet($options, 'visible');
 
 		if (is_callable($visible))
 		{
 			$options['visible'] = $visible($this->config->getDataModel()) ? true : false;
+		}
+
+		//run the editable property's closure if supplied
+		$editable = $this->validator->arrayGet($options, 'editable');
+
+		if (isset($editable) && is_callable($editable))
+		{
+			$options['editable'] = $editable($this->config->getDataModel());
 		}
 
 		$this->suppliedOptions = $options;

@@ -1,6 +1,7 @@
 ## Changelog
 
 - Custom actions and saves now rebuild the supplied config file after performing the action
+- The `editable` property now accepts a closure and is passed the current page's data object
 - New translations (da, it)
 - Bugfix: The key field is no longer set on models. This would cause some bugs on some setups
 

@@ -55,7 +55,7 @@ class BoolTest extends \PHPUnit_Framework_TestCase {
 
 	public function testBuild()
 	{
-		$this->validator->shouldReceive('arrayGet')->times(3);
+		$this->validator->shouldReceive('arrayGet')->times(4);
 		$this->field->build();
 	}
 

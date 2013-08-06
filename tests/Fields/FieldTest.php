@@ -55,13 +55,20 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 
 	public function testBuild()
 	{
-		$this->validator->shouldReceive('arrayGet')->twice();
+		$this->validator->shouldReceive('arrayGet')->times(3);
 		$this->field->build();
 	}
 
 	public function testBuildRunsVisibleCheck()
 	{
-		$this->validator->shouldReceive('arrayGet')->twice()->andReturn(null, function($param) {});
+		$this->validator->shouldReceive('arrayGet')->times(3)->andReturn(null, function($param) {}, null);
+		$this->config->shouldReceive('getDataModel')->once()->andReturn('test');
+		$this->field->build();
+	}
+
+	public function testBuildRunsEditableCheck()
+	{
+		$this->validator->shouldReceive('arrayGet')->times(3)->andReturn(null, null, function($param) {});
 		$this->config->shouldReceive('getDataModel')->once()->andReturn('test');
 		$this->field->build();
 	}

@@ -64,7 +64,7 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 		$relationship = m::mock(array('getRelated' => m::mock(array('getTable' => 'table'))));
 		$model = m::mock(array('getTable' => 'table', 'field' => $relationship));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
-		$this->validator->shouldReceive('arrayGet')->times(4);
+		$this->validator->shouldReceive('arrayGet')->times(5);
 		$this->field->shouldReceive('setUpConstraints')->once()
 					->shouldReceive('loadRelationshipOptions')->once();
 		$this->field->build();
