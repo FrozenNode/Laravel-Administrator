@@ -31,7 +31,7 @@ interface ConfigInterface {
 	/**
 	 * Saves the data
 	 *
-	 * @param Illuminate\Http\Request	$input
+	 * @param \Illuminate\Http\Request	$input
 	 * @param array						$fields
 	 */
 	public function save(\Illuminate\Http\Request $input, array $fields);

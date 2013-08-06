@@ -10,14 +10,14 @@ class Factory {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
@@ -71,7 +71,7 @@ class Factory {
 	/**
 	 * Create a new config Factory instance
 	 *
-	 * @param Frozennode\Administrator\Validator 	$validator
+	 * @param \Frozennode\Administrator\Validator 	$validator
 	 * @param array 								$options
 	 */
 	public function __construct(Validator $validator, array $options)
@@ -131,7 +131,7 @@ class Factory {
 	/**
 	 * Gets the current config item
 	 *
-	 * @return Frozennode\Administrator\Config\ConfigInterface
+	 * @return \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	public function getConfig()
 	{
@@ -250,7 +250,7 @@ class Factory {
 	 *
 	 * @param array		$options
 	 *
-	 * @return Frozennode\Administrator\Config\ConfigInterface
+	 * @return \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	public function getItemConfigObject(array $options)
 	{

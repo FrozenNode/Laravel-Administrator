@@ -9,7 +9,7 @@ abstract class Config {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
@@ -44,7 +44,7 @@ abstract class Config {
 	/**
 	 * Create a new model Config instance
 	 *
-	 * @param Frozennode\Administrator\Validator 	$validator
+	 * @param \Frozennode\Administrator\Validator 	$validator
 	 * @param array 								$options
 	 */
 	public function __construct(Validator $validator, array $options)

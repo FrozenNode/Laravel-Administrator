@@ -9,14 +9,14 @@ class Factory {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
@@ -70,8 +70,8 @@ class Factory {
 	/**
 	 * Create a new action Factory instance
 	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param \Frozennode\Administrator\Validator 				$validator
+	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
 	 */
 	public function __construct(Validator $validator, ConfigInterface $config)
 	{
@@ -85,7 +85,7 @@ class Factory {
 	 * @param string		$name		//the key name for this action
 	 * @param array			$options
 	 *
-	 * @return Frozennode\Administrator\Actions\Action
+	 * @return \Frozennode\Administrator\Actions\Action
 	 */
 	public function make($name, array $options)
 	{
@@ -133,7 +133,7 @@ class Factory {
 	 *
 	 * @param array		$options
 	 *
-	 * @return Frozennode\Administrator\Actions\Action
+	 * @return \Frozennode\Administrator\Actions\Action
 	 */
 	public function getActionObject(array $options)
 	{

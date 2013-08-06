@@ -10,21 +10,21 @@ class Column {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Illuminate\Database\DatabaseManager
+	 * @var \Illuminate\Database\DatabaseManager
 	 */
 	protected $db;
 
@@ -105,9 +105,9 @@ class Column {
 	/**
 	 * Create a new action Factory instance
 	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager 				$db
+	 * @param \Frozennode\Administrator\Validator 				$validator
+	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param \Illuminate\Database\DatabaseManager 				$db
 	 * @param array												$options
 	 */
 	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)

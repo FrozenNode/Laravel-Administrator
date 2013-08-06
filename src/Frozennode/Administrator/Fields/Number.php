@@ -1,10 +1,6 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
-
 class Number extends Field {
 
 	/**
@@ -53,8 +49,8 @@ class Number extends Field {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
-	 * @param mixed		$input
+	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 *
 	 * @return array
 	 */

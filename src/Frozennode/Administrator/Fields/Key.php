@@ -1,6 +1,8 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
+
 class Key extends Field {
 
 	/**
@@ -15,7 +17,7 @@ class Key extends Field {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 *
 	 * @return array
 	 */
@@ -24,12 +26,12 @@ class Key extends Field {
 	/**
 	 * Filters a query object
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		//run the parent method
 		parent::filterQuery($query, $selects);

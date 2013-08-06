@@ -2,9 +2,6 @@
 namespace Frozennode\Administrator\Fields\Relationships;
 
 use Frozennode\Administrator\Fields\Field;
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
 
 abstract class Relationship extends Field {
 

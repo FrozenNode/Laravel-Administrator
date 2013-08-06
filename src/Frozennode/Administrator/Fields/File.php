@@ -1,10 +1,6 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
-use Illuminate\Support\Facades\URL;
 use Frozennode\Administrator\Includes\Multup;
 
 class File extends Field {

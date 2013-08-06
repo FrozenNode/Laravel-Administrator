@@ -1,9 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Bool extends Field {
 
@@ -35,8 +33,8 @@ class Bool extends Field {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
-	 * @param mixed		$input
+	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 */
 	public function fillModel(&$model, $input)
 	{
@@ -66,12 +64,12 @@ class Bool extends Field {
 	/**
 	 * Filters a query object
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		//if the field isn't empty
 		if ($this->getOption('value') !== '')
