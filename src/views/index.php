@@ -40,29 +40,29 @@
 <style type="text/css">
 
 	div.item_edit form.edit_form select, div.item_edit form.edit_form input[type=hidden], div.item_edit form.edit_form .select2-container {
-		width: <?php echo $formWidth - 59 ?>px;
+		width: <?php echo $formWidth - 59 ?>px !important;
 	}
 
 	div.item_edit form.edit_form .cke {
-		width: <?php echo $formWidth - 67 ?>px;
+		width: <?php echo $formWidth - 67 ?>px !important;
 	}
 
 	div.item_edit form.edit_form div.markdown textarea {
-		width: <?php echo intval(($formWidth - 75) / 2) - 12 ?>px;
-		max-width: <?php echo intval(($formWidth - 75) / 2) - 12 ?>px;
+		width: <?php echo intval(($formWidth - 75) / 2) - 12 ?>px !important;
+		max-width: <?php echo intval(($formWidth - 75) / 2) - 12 ?>px !important;
 	}
 
 	div.item_edit form.edit_form div.markdown div.preview {
-		width: <?php echo intval(($formWidth - 75) / 2) ?>px;
+		width: <?php echo intval(($formWidth - 75) / 2) ?>px !important;
 	}
 
 	div.item_edit form.edit_form input[type="text"], div.item_edit form.edit_form input[type="password"], div.item_edit form.edit_form textarea {
-		max-width: <?php echo $formWidth - 75 ?>px;
-		width: <?php echo $formWidth - 75 ?>px;
+		max-width: <?php echo $formWidth - 75 ?>px !important;
+		width: <?php echo $formWidth - 75 ?>px !important;
 	}
 
 	div.item_edit form.edit_form > div.image img, div.item_edit form.edit_form > div.image div.image_container {
-		max-width: <?php echo $formWidth - 65 ?>px;
+		max-width: <?php echo $formWidth - 65 ?>px !important;
 	}
 
 </style>
