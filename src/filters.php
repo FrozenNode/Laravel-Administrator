@@ -5,14 +5,6 @@
 //validate_admin filter
 Route::filter('validate_admin', function ()
 {
-	//before all else, register administrator's custom validator
-	Validator::resolver(function($translator, $data, $rules, $messages)
-	{
-		$validator = new \Frozennode\Administrator\Validator($translator, $data, $rules, $messages);
-		$validator->setUrlInstance(App::make('url'));
-		return $validator;
-	});
-
 	$configFactory = App::make('admin_config_factory');
 
 	//get the admin check closure that should be supplied in the config

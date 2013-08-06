@@ -30,17 +30,43 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set the locale
 		$this->setLocale();
 
+		//the admin validator
+		$this->app['admin_validator'] = $this->app->share(function($app)
+		{
+			//get the original validator class so we can set it back after creating our own
+			$originalValidator = LValidator::make(array(), array());
+			$originalValidatorClass = get_class($originalValidator);
+
+			//temporarily override the core resolver
+			LValidator::resolver(function($translator, $data, $rules, $messages) use ($app)
+			{
+				$validator = new Validator($translator, $data, $rules, $messages);
+				$validator->setUrlInstance($app->make('url'));
+				return $validator;
+			});
+
+			//grab our validator instance
+			$validator = LValidator::make(array(), array());
+
+			//set the validator resolver back to the original validator
+			LValidator::resolver(function($translator, $data, $rules, $messages) use ($originalValidatorClass)
+			{
+				return new $originalValidatorClass($translator, $data, $rules, $messages);
+			});
+
+			//return our validator instance
+			return $validator;
+		});
+
 		//set up the shared instances
 		$this->app['admin_config_factory'] = $this->app->share(function($app)
 		{
-			$validator = LValidator::make(array(), array());
-			return new ConfigFactory($validator, Config::get('administrator::administrator'));
+			return new ConfigFactory($app->make('admin_validator'), Config::get('administrator::administrator'));
 		});
 
 		$this->app['admin_field_factory'] = $this->app->share(function($app)
 		{
-			$validator = LValidator::make(array(), array());
-			return new FieldFactory($validator, $app->make('itemconfig'), $app->make('db'));
+			return new FieldFactory($app->make('admin_validator'), $app->make('itemconfig'), $app->make('db'));
 		});
 
 		$this->app['admin_datatable'] = $this->app->share(function($app)
@@ -53,14 +79,12 @@ class AdministratorServiceProvider extends ServiceProvider {
 
 		$this->app['admin_column_factory'] = $this->app->share(function($app)
 		{
-			$validator = LValidator::make(array(), array());
-			return new ColumnFactory($validator, $app->make('itemconfig'), $app->make('db'));
+			return new ColumnFactory($app->make('admin_validator'), $app->make('itemconfig'), $app->make('db'));
 		});
 
 		$this->app['admin_action_factory'] = $this->app->share(function($app)
 		{
-			$validator = LValidator::make(array(), array());
-			return new ActionFactory($validator, $app->make('itemconfig'), $app->make('db'));
+			return new ActionFactory($app->make('admin_validator'), $app->make('itemconfig'), $app->make('db'));
 		});
 
 		$this->app['admin_menu'] = $this->app->share(function($app)
