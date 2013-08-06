@@ -121,7 +121,7 @@ In some instances you may want to limit the available options for a relationship
 		},
 	)
 
-The `options_filter` is passed the query builder instance so that you can modify query however you like.
+The `options_filter` is passed the query builder instance so that you can modify the query however you like.
 
 <a name="constraining-relationships"></a>
 ## Constraining Relationships
