@@ -608,7 +608,7 @@ body label {
   background: -o-linear-gradient(top,#444 0%,#333 100%);
   background: -ms-linear-gradient(top,#444 0%,#333 100%);
   background: linear-gradient(top,#444 0%,#333 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444',endColorstr='#333',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #wrapper header a,
 #wrapper header span {
@@ -656,7 +656,7 @@ body label {
   background: -o-linear-gradient(top,#333 0%,#444 100%);
   background: -ms-linear-gradient(top,#333 0%,#444 100%);
   background: linear-gradient(top,#333 0%,#444 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333',endColorstr='#444',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333',endColorstr='#444444',GradientType=0);
   -moz-box-shadow: 0 2px 3px #555;
   -webkit-box-shadow: 0 2px 3px #555;
   box-shadow: 0 2px 3px #555;
@@ -696,7 +696,7 @@ body label {
   background: -o-linear-gradient(top,#333 0%,#444 100%);
   background: -ms-linear-gradient(top,#333 0%,#444 100%);
   background: linear-gradient(top,#333 0%,#444 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333',endColorstr='#444',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333',endColorstr='#444444',GradientType=0);
 }
 #wrapper header ul#menu > li ul li.menu ul,
 #wrapper header ul#lang_menu > li ul li.menu ul {
@@ -715,7 +715,7 @@ body label {
   background: -o-linear-gradient(top,#444 0%,#333 100%);
   background: -ms-linear-gradient(top,#444 0%,#333 100%);
   background: linear-gradient(top,#444 0%,#333 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444',endColorstr='#333',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #wrapper header ul#menu > li:first-child,
 #wrapper header ul#lang_menu > li:first-child {
@@ -744,7 +744,7 @@ body label {
   background: -o-linear-gradient(top,#444 0%,#333 100%);
   background: -ms-linear-gradient(top,#444 0%,#333 100%);
   background: linear-gradient(top,#444 0%,#333 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444',endColorstr='#333',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #wrapper header div#right_nav a#logout {
   display: inline-block;
@@ -759,7 +759,7 @@ body label {
   background: -o-linear-gradient(top,#444 0%,#333 100%);
   background: -ms-linear-gradient(top,#444 0%,#333 100%);
   background: linear-gradient(top,#444 0%,#333 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444',endColorstr='#333',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #admin_page {
   position: relative;
