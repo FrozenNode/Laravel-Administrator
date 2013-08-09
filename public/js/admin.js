@@ -1082,7 +1082,8 @@
 					$.each(field.constraints, function(key, relationshipName)
 					{
 						var fieldIndex = ind,
-							fieldName = field.field_name;
+							fieldName = field.field_name,
+							f = field;
 
 						self.viewModel[key].subscribe(function(val)
 						{
@@ -1094,14 +1095,14 @@
 							var constraints = {};
 
 							//iterate over this field's constraints
-							$.each(field.constraints, function(key, relationshipName)
+							$.each(f.constraints, function(key, relationshipName)
 							{
 								constraints[key] = self.viewModel[key]();
 							});
 
 							//freeze the actions
 							self.viewModel.freezeActions(true);
-							field.loadingOptions(true);
+							f.loadingOptions(true);
 
 							$.ajax({
 								url: base_url + self.viewModel.modelName() + '/update_options',
@@ -1116,7 +1117,7 @@
 								complete: function()
 								{
 									self.viewModel.freezeActions(false);
-									field.loadingOptions(false);
+									f.loadingOptions(false);
 								},
 								success: function(response)
 								{
