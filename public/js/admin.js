@@ -1215,13 +1215,22 @@
 			//if the admin data had an id supplied, it means this is either the edit page or the new item page
 			if ('id' in adminData)
 			{
-				this.viewModel.getItem(adminData.id);
-				historyData.id = adminData.id;
-				uri += '/' + (historyData.id ? historyData.id : 'new');
-			}
+				//if the view model hasn't been set up yet, wait for it to be set up
+				var timer = setInterval(function()
+				{
+					if (window.admin)
+					{
+						window.admin.viewModel.getItem(adminData.id);
+						historyData.id = adminData.id;
+						uri += '/' + (historyData.id ? historyData.id : 'new');
 
-			//now call the same to trigger the statechange event
-			History.pushState(historyData, null, uri);
+						//now call the same to trigger the statechange event
+						History.pushState(historyData, null, uri);
+
+						clearInterval(timer);
+					}
+				}, 100);
+			}
 
 			this.historyStarted = true;
 		},

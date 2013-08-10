@@ -54,7 +54,7 @@ class AdminController extends Controller
 	 * @param string		$modelName
 	 * @param mixed			$itemId
 	 */
-	public function item($modelName, $itemId = false)
+	public function item($modelName, $itemId = 0)
 	{
 		$config = App::make('itemconfig');
 		$fieldFactory = App::make('admin_field_factory');

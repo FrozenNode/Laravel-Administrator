@@ -16,7 +16,7 @@
 		language = "<?php echo Config::get('app.locale') ?>",
 		adminData = {
 			primary_key: "<?php echo $primaryKey ?>",
-			<?php if ($itemId) {?>
+			<?php if ($itemId !== null) {?>
 				id: <?php echo $itemId ?>,
 			<?php } ?>
 			rows: <?php echo json_encode($rows) ?>,
