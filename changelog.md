@@ -1,9 +1,11 @@
 ## Changelog
 
+- Relationship constraints now work with hasMany and hasOne fields
 - There is now an `options_filter` option for relationship fields that lets you modify the query before getting the relationship options
 - Custom actions and saves now rebuild the supplied config file after performing the action
 - The `editable` property now accepts a closure and is passed the current page's data object
 - New translations (da, it)
+- Bugfix: Constraint fields no longer make multiple requests at a single time
 - Bugfix: The key field is no longer set on models. This would cause some bugs on some setups
 
 ### 4.5.0
