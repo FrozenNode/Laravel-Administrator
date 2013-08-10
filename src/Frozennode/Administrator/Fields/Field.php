@@ -263,7 +263,7 @@ abstract class Field {
 
 		if (!array_key_exists($key, $options))
 		{
-			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $this->userOptions['field_name'] . "' field");
+			throw new \InvalidArgumentException("An invalid option '$key' was searched for in the '" . $this->userOptions['field_name'] . "' field");
 		}
 
 		return $options[$key];
