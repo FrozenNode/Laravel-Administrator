@@ -65,4 +65,12 @@ class HasOneOrManyTest extends \PHPUnit_Framework_TestCase {
 					->shouldReceive('loadRelationshipOptions')->once();
 		$this->field->build();
 	}
+
+	public function testConstrainQuery()
+	{
+		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query->shouldReceive('where')->once();
+		$this->field->shouldReceive('getOption')->once();
+		$this->field->constrainQuery($query, m::mock(array()), 'foo');
+	}
 }

@@ -207,7 +207,7 @@
 							});
 						}
 
-						return data;
+						return {fields: [data]};
 					},
 					results: function(returndata, page)
 					{
@@ -224,7 +224,7 @@
 						}
 
 						//iterate over the results and put them in the autocomplete array
-						$.each(returndata, function(ind, el)
+						$.each(returndata[options.field], function(ind, el)
 						{
 							data[el.id] = el;
 						});
@@ -232,7 +232,7 @@
 						admin.viewModel[options.field + '_autocomplete'] = data;
 
 						return {
-							results: returndata
+							results: returndata[options.field]
 						}
 					}
 				},

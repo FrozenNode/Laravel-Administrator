@@ -51,4 +51,18 @@ class HasOneOrMany extends Relationship {
 	 * @return array
 	 */
 	public function fillModel(&$model, $input) {}
+
+	/**
+	 * Constrains a query by a given set of constraints
+	 *
+	 * @param  \Illuminate\Database\Query\Builder	$query
+	 * @param  \Illuminate\Database\Eloquent\Model 	$relatedModel
+	 * @param  string 								$constraint
+	 *
+	 * @return void
+	 */
+	public function constrainQuery(QueryBuilder &$query, $relatedModel, $constraint)
+	{
+		$query->where($this->getOption('column'), '=', $constraint);
+	}
 }

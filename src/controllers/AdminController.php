@@ -356,16 +356,22 @@ class AdminController extends Controller
 	public function updateOptions($modelName)
 	{
 		$fieldFactory = App::make('admin_field_factory');
+		$response = array();
 
-		//get the constraints, the search term, and the currently-selected items
-		$constraints = Input::get('constraints', array());
-		$term = Input::get('term', '');
-		$type = Input::get('type', false);
-		$field = Input::get('field', false);
-		$selectedItems = Input::get('selectedItems', false);
+		//iterate over the supplied constrained fields
+		foreach (Input::get('fields', array()) as $field)
+		{
+			//get the constraints, the search term, and the currently-selected items
+			$constraints = array_get($field, 'constraints', array());
+			$term = array_get($field, 'term', array());
+			$type = array_get($field, 'type', false);
+			$fieldName = array_get($field, 'field', false);
+			$selectedItems = array_get($field, 'selectedItems', false);
 
-		//return the rows
-		return Response::json($fieldFactory->updateRelationshipOptions($field, $type, $constraints, $selectedItems, $term));
+			$response[$fieldName] = $fieldFactory->updateRelationshipOptions($fieldName, $type, $constraints, $selectedItems, $term);
+		}
+
+		return Response::json($response);
 	}
 
 	/**
