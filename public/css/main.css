@@ -18,6 +18,13 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.noTransition {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  -o-transition: none;
+  transition: none;
+}
 .simpleTable th,
 .simpleTable td,
 .simpleTable tr,
