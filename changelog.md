@@ -1,5 +1,6 @@
 ## Changelog
 
+- Support for smaller screens and mobile devices
 - Visible option for columns that accepts either a boolean or closure
 - Relationship constraints now work with hasMany and hasOne fields
 - There is now an `options_filter` option for relationship fields that lets you modify the query before getting the relationship options

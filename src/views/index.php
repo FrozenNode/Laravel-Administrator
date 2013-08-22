@@ -62,7 +62,7 @@
 	}
 
 	div.item_edit form.edit_form > div.image img, div.item_edit form.edit_form > div.image div.image_container {
-		max-width: <?php echo $formWidth - 65 ?>px !important;
+		max-width: <?php echo $formWidth - 65 ?>px;
 	}
 
 </style>

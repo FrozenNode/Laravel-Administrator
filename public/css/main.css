@@ -138,6 +138,24 @@
   -webkit-box-shadow: inset 0 5px 7px 1px #666, 0 1px 2px #777;
   box-shadow: inset 0 5px 7px 1px #666, 0 1px 2px #777;
 }
+.headerButtonPadding {
+  padding: 9px 12px 8px;
+}
+.headerButton {
+  display: inline-block;
+  padding: 9px 12px 8px;
+}
+.headerButton:hover,
+.headerButton.current {
+  background: #444;
+  background: -moz-linear-gradient(top,#444 0%,#333 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
+  background: -webkit-linear-gradient(top,#444 0%,#333 100%);
+  background: -o-linear-gradient(top,#444 0%,#333 100%);
+  background: -ms-linear-gradient(top,#444 0%,#333 100%);
+  background: linear-gradient(top,#444 0%,#333 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
+}
 .editForm {
   color: #444;
   text-shadow: white 0 1px 0;
@@ -167,6 +185,9 @@
 .editForm > div input {
   margin-bottom: 0;
   vertical-align: top;
+}
+.editForm > div textarea {
+  width: 98%;
 }
 .editForm > div select,
 .editForm > div input[type=hidden],
@@ -223,6 +244,10 @@
   background: url(../img/upload.png) no-repeat;
   padding-left: 25px;
 }
+.editForm > div.image div.upload_container div.plupload,
+.editForm > div.file div.upload_container div.plupload {
+  width: 100% !important;
+}
 .editForm > div.image div.image_container,
 .editForm > div.file div.image_container {
   position: relative;
@@ -262,8 +287,31 @@
   display: block;
   margin: 10px 30px 0 3px;
 }
+.full_screen_fields {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 30px;
+  margin-right: 30px;
+}
+.full_screen_fields.control_buttons,
+.full_screen_fields.image,
+.full_screen_fields.wysiwyg,
+.full_screen_fields.markdown,
+.full_screen_fields.textarea {
+  display: block;
+  margin-right: 0;
+}
+.full_screen_fields.custom_buttons {
+  display: block;
+}
+.full_screen_fields div.characters_left {
+  right: 3px;
+}
+.full_screen_fields select {
+  width: 226px;
+}
 #settings_page {
-  padding: 25px 30px 0;
+  padding: 60px 30px 0;
 }
 #settings_page h2 {
   color: #444;
@@ -299,6 +347,9 @@
 #settings_page form.settings_form > div input {
   margin-bottom: 0;
   vertical-align: top;
+}
+#settings_page form.settings_form > div textarea {
+  width: 98%;
 }
 #settings_page form.settings_form > div select,
 #settings_page form.settings_form > div input[type=hidden],
@@ -355,6 +406,10 @@
   background: url(../img/upload.png) no-repeat;
   padding-left: 25px;
 }
+#settings_page form.settings_form > div.image div.upload_container div.plupload,
+#settings_page form.settings_form > div.file div.upload_container div.plupload {
+  width: 100% !important;
+}
 #settings_page form.settings_form > div.image div.image_container,
 #settings_page form.settings_form > div.file div.image_container {
   position: relative;
@@ -407,6 +462,9 @@
 #settings_page form.settings_form > div.textarea {
   display: block;
   margin-right: 0;
+}
+#settings_page form.settings_form > div.custom_buttons {
+  display: block;
 }
 #settings_page form.settings_form > div div.characters_left {
   right: 3px;
@@ -510,7 +568,6 @@ body {
   font-size: 13px;
   line-height: 18px;
   color: #333333;
-  min-width: 1020px;
 }
 body h2 {
   font-size: 24px;
@@ -596,6 +653,10 @@ body label {
   overflow: visible;
   position: relative;
   z-index: 900;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
 }
 #wrapper header h1 {
   float: left;
@@ -603,9 +664,22 @@ body label {
   border-right: 1px solid #999;
 }
 #wrapper header h1 a {
+  display: inline-block;
+  padding: 9px 12px 8px;
   padding: 8px 15px 9px;
   font-size: 19px;
   border-right: 1px solid #555;
+}
+#wrapper header h1 a:hover,
+#wrapper header h1 a.current {
+  background: #444;
+  background: -moz-linear-gradient(top,#444 0%,#333 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
+  background: -webkit-linear-gradient(top,#444 0%,#333 100%);
+  background: -o-linear-gradient(top,#444 0%,#333 100%);
+  background: -ms-linear-gradient(top,#444 0%,#333 100%);
+  background: linear-gradient(top,#444 0%,#333 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #wrapper header h1 a:hover {
   background: #444;
@@ -623,8 +697,115 @@ body label {
   display: inline-block;
   cursor: pointer;
 }
-#wrapper header .headerButtonPadding {
+#wrapper header .iconButton {
+  display: inline-block;
   padding: 9px 12px 8px;
+  padding: 0;
+  display: none;
+}
+#wrapper header .iconButton:hover,
+#wrapper header .iconButton.current {
+  background: #444;
+  background: -moz-linear-gradient(top,#444 0%,#333 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
+  background: -webkit-linear-gradient(top,#444 0%,#333 100%);
+  background: -o-linear-gradient(top,#444 0%,#333 100%);
+  background: -ms-linear-gradient(top,#444 0%,#333 100%);
+  background: linear-gradient(top,#444 0%,#333 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
+}
+#wrapper header .iconButton > div {
+  height: 35px;
+}
+#wrapper header a.menu_button {
+  display: inline-block;
+  padding: 9px 12px 8px;
+  padding: 0;
+  display: none;
+}
+#wrapper header a.menu_button:hover,
+#wrapper header a.menu_button.current {
+  background: #444;
+  background: -moz-linear-gradient(top,#444 0%,#333 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
+  background: -webkit-linear-gradient(top,#444 0%,#333 100%);
+  background: -o-linear-gradient(top,#444 0%,#333 100%);
+  background: -ms-linear-gradient(top,#444 0%,#333 100%);
+  background: linear-gradient(top,#444 0%,#333 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
+}
+#wrapper header a.menu_button > div {
+  height: 35px;
+}
+#wrapper header a.menu_button > div {
+  width: 45px;
+  background: url(../img/menu-icon.png) no-repeat center center;
+}
+#wrapper header a.filter_button {
+  display: inline-block;
+  padding: 9px 12px 8px;
+  padding: 0;
+  display: none;
+  margin-left: -3px;
+}
+#wrapper header a.filter_button:hover,
+#wrapper header a.filter_button.current {
+  background: #444;
+  background: -moz-linear-gradient(top,#444 0%,#333 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
+  background: -webkit-linear-gradient(top,#444 0%,#333 100%);
+  background: -o-linear-gradient(top,#444 0%,#333 100%);
+  background: -ms-linear-gradient(top,#444 0%,#333 100%);
+  background: linear-gradient(top,#444 0%,#333 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
+}
+#wrapper header a.filter_button > div {
+  height: 35px;
+}
+#wrapper header a.filter_button.hidden {
+  display: none !important;
+}
+#wrapper header a.filter_button > div {
+  width: 41px;
+  background: url(../img/filter-icon.png) no-repeat center center;
+}
+#wrapper header #mobile_menu_wrapper {
+  display: none;
+  position: fixed;
+  top: 36px;
+  bottom: 0;
+  left: 0;
+  min-width: 300px;
+}
+#wrapper header #mobile_menu_wrapper .mobileMenuPadding {
+  padding: 12px 14px;
+}
+#wrapper header #mobile_menu_wrapper ul#mobile_menu {
+  background: #333;
+  background: -moz-linear-gradient(top,#333 0%,#444 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#444),color-stop(100%,#444));
+  background: -webkit-linear-gradient(top,#333 0%,#444 100%);
+  background: -o-linear-gradient(top,#333 0%,#444 100%);
+  background: -ms-linear-gradient(top,#333 0%,#444 100%);
+  background: linear-gradient(top,#333 0%,#444 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333',endColorstr='#444444',GradientType=0);
+  min-width: 300px;
+  min-height: 100%;
+}
+#wrapper header #mobile_menu_wrapper ul#mobile_menu li {
+  border-bottom: 1px solid #44484b;
+}
+#wrapper header #mobile_menu_wrapper ul#mobile_menu li.menu > span {
+  display: block;
+  padding: 12px 14px;
+}
+#wrapper header #mobile_menu_wrapper ul#mobile_menu li.menu ul {
+  display: none;
+  border-left: 20px solid #222;
+}
+#wrapper header #mobile_menu_wrapper a {
+  padding: 12px 14px;
+  display: block;
 }
 #wrapper header ul#menu,
 #wrapper header ul#lang_menu {
@@ -740,10 +921,11 @@ body label {
 }
 #wrapper header div#right_nav a#back_to_site {
   display: inline-block;
-  margin-left: -3px;
   padding: 9px 12px 8px;
+  margin-left: -3px;
 }
-#wrapper header div#right_nav a#back_to_site:hover {
+#wrapper header div#right_nav a#back_to_site:hover,
+#wrapper header div#right_nav a#back_to_site.current {
   background: #444;
   background: -moz-linear-gradient(top,#444 0%,#333 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
@@ -755,10 +937,11 @@ body label {
 }
 #wrapper header div#right_nav a#logout {
   display: inline-block;
-  margin-left: -3px;
   padding: 9px 12px 8px;
+  margin-left: -3px;
 }
-#wrapper header div#right_nav a#logout:hover {
+#wrapper header div#right_nav a#logout:hover,
+#wrapper header div#right_nav a#logout.current {
   background: #444;
   background: -moz-linear-gradient(top,#444 0%,#333 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
@@ -778,7 +961,7 @@ body label {
 #admin_page div#sidebar {
   float: right;
   margin-right: 13px;
-  margin-top: 25px;
+  margin-top: 60px;
   width: 245px;
 }
 #admin_page div#sidebar h2 {
@@ -786,15 +969,15 @@ body label {
   text-shadow: #DDD 0 1px 0;
   margin-bottom: 15px;
 }
-#admin_page div#sidebar div.panel_contents > div {
+#admin_page div#sidebar div.filters > div {
   margin-bottom: 10px;
   position: relative;
 }
-#admin_page div#sidebar div.panel_contents > div select,
-#admin_page div#sidebar div.panel_contents > div input[type=hidden] {
+#admin_page div#sidebar div.filters > div select,
+#admin_page div#sidebar div.filters > div input[type=hidden] {
   width: 225px;
 }
-#admin_page div#sidebar div.panel_contents > div div.loader {
+#admin_page div#sidebar div.filters > div div.loader {
   position: absolute;
   top: 26px;
   left: -21px;
@@ -805,23 +988,26 @@ body label {
   filter: alpha(opacity=30);
   opacity: 0.3;
 }
-#admin_page div#sidebar div.panel_contents > div.min_max input[type=text] {
+#admin_page div#sidebar div.filters > div.min_max input[type=text] {
   width: 87px;
 }
-#admin_page div#sidebar div.panel_contents > div.min_max span.symbol {
+#admin_page div#sidebar div.filters > div.min_max span.symbol {
   position: absolute;
   top: 27px;
   left: -15px;
 }
-#admin_page div#sidebar div.panel_contents > div.min_max.datetime input[type=text] {
+#admin_page div#sidebar div.filters > div.min_max.datetime input[type=text] {
   font-size: 11px;
 }
-#admin_page div#sidebar div.panel_contents > div.color div.color_preview {
+#admin_page div#sidebar div.filters > div.color div.color_preview {
   height: 8px;
   margin: 0 33px 0 1px;
   -moz-box-shadow: 0px 1px 2px #aaa;
   -webkit-box-shadow: 0px 1px 2px #aaa;
   box-shadow: 0px 1px 2px #aaa;
+}
+#admin_page #content {
+  padding-top: 35px;
 }
 #admin_page #content div.table_container {
   position: relative;
@@ -849,33 +1035,12 @@ body label {
   position: relative;
   z-index: 800;
   margin-bottom: 3px;
+  padding: 6px 0;
 }
 #admin_page #content div.table_container div.results_header h2 {
   padding: 0 15px;
   display: inline-block;
   vertical-align: middle;
-}
-#admin_page #content div.table_container div.results_header div.paginator {
-  display: inline-block;
-  margin-left: 20px;
-  padding: 11px 15px 9px;
-  vertical-align: middle;
-}
-#admin_page #content div.table_container div.results_header div.paginator input {
-  display: inline-block;
-  vertical-align: baseline;
-  margin-bottom: 0;
-}
-#admin_page #content div.table_container div.results_header div.paginator input[type=text] {
-  width: 30px;
-}
-#admin_page #content div.table_container div.results_header div.per_page {
-  display: inline-block;
-  padding: 11px 15px 9px;
-  vertical-align: middle;
-}
-#admin_page #content div.table_container div.results_header div.per_page input[type=hidden] {
-  width: 70px;
 }
 #admin_page #content div.table_container div.results_header div.actions {
   position: absolute;
@@ -938,6 +1103,63 @@ body label {
   padding-bottom: 10px;
   margin-right: 12px;
 }
+#admin_page #content div.table_container div.page_container {
+  background: #efefef;
+  background: -moz-linear-gradient(top,#efefef 0%,#dfe1e2 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#dfe1e2),color-stop(100%,#dfe1e2));
+  background: -webkit-linear-gradient(top,#efefef 0%,#dfe1e2 100%);
+  background: -o-linear-gradient(top,#efefef 0%,#dfe1e2 100%);
+  background: -ms-linear-gradient(top,#efefef 0%,#dfe1e2 100%);
+  background: linear-gradient(top,#efefef 0%,#dfe1e2 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef',endColorstr='#dfe1e2',GradientType=0);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.37);
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.37);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.37);
+  text-shadow: white 0 1px 0;
+  border: solid 1px #d4d4d4;
+  border-top-color: #e6e6e6;
+  border-bottom-color: #EEE;
+  font-size: 1.0em;
+  font-weight: bold;
+  line-height: 18px;
+  color: #5e6469;
+  position: relative;
+  z-index: 801;
+  margin-bottom: 3px;
+  padding: 5px 0;
+}
+#admin_page #content div.table_container div.page_container div.paginator {
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+#admin_page #content div.table_container div.page_container div.paginator input {
+  display: inline-block;
+  vertical-align: baseline;
+  margin-bottom: 0;
+}
+#admin_page #content div.table_container div.page_container div.paginator input[type=text] {
+  width: 30px;
+}
+#admin_page #content div.table_container div.page_container div.per_page {
+  vertical-align: middle;
+  position: absolute;
+  right: 15px;
+  top: 5px;
+  overflow: hidden;
+}
+#admin_page #content div.table_container div.page_container div.per_page input {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  -o-transition: none;
+  transition: none;
+  border: none;
+}
+#admin_page #content div.table_container div.page_container div.per_page input[type=hidden] {
+  width: 70px;
+}
 #admin_page #content div.table_container table.results {
   width: 100%;
   margin-bottom: 10px;
@@ -974,6 +1196,8 @@ body label {
   text-decoration: none;
   display: block;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #admin_page #content div.table_container table.results th.sortable {
   cursor: pointer;
@@ -1022,7 +1246,7 @@ body label {
 }
 #admin_page #content div.table_container div.loading_rows {
   position: absolute;
-  top: 51px;
+  top: 95px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -1044,7 +1268,7 @@ body label {
 }
 #admin_page #content div.table_container div.no_results {
   position: absolute;
-  top: 120px;
+  top: 180px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -1057,7 +1281,7 @@ body label {
 }
 #admin_page #content div.item_edit_container {
   position: absolute;
-  top: 0;
+  top: 35px;
   bottom: 0;
   right: 0;
   width: 285px;
@@ -1108,6 +1332,9 @@ body label {
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div input {
   margin-bottom: 0;
   vertical-align: top;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div textarea {
+  width: 98%;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div select,
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div input[type=hidden],
@@ -1164,6 +1391,10 @@ body label {
   background: url(../img/upload.png) no-repeat;
   padding-left: 25px;
 }
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.upload_container div.plupload,
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.upload_container div.plupload {
+  width: 100% !important;
+}
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container,
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div.file div.image_container {
   position: relative;
@@ -1206,6 +1437,112 @@ body label {
 #admin_page #content div.item_edit_container div.item_edit div.loading {
   position: absolute;
   top: 200px;
-  left: 100px;
+  left: 50%;
   font-size: 20px;
+  margin-left: -36px;
+}
+.lw-colorpicker {
+  z-index: 807;
+}
+.select2-search input {
+  width: 100% !important;
+}
+@media only screen and (max-width: 949px) {
+  #wrapper header a.menu_button,
+  #wrapper header a.filter_button {
+    display: inline-block;
+  }
+  #wrapper header ul#menu {
+    display: none;
+  }
+  #wrapper div#sidebar {
+    display: none;
+    position: absolute;
+    background: #fff;
+    z-index: 830;
+    margin: 0;
+    top: 36px;
+    left: 0;
+    right: 0;
+    width: auto;
+    padding-top: 25px;
+    padding-left: 27px;
+  }
+  #wrapper div#sidebar.shown {
+    display: block;
+  }
+  #wrapper #content.hidden {
+    display: none;
+  }
+  #wrapper #content div.table_container {
+    margin-right: 0 !important;
+  }
+  #wrapper #content div.item_edit_container {
+    left: 0;
+    width: 100% !important;
+    z-index: 805;
+  }
+  #wrapper #content div.item_edit_container div.item_edit {
+    width: 100% !important;
+    height: 96%;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 30px;
+    margin-right: 30px;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.control_buttons,
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.image,
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.wysiwyg,
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.markdown,
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.textarea {
+    display: block;
+    margin-right: 0;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.custom_buttons {
+    display: block;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div div.characters_left {
+    right: 3px;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div select {
+    width: 226px;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.image {
+    display: block;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container {
+    max-width: 100%;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.image div.image_container img {
+    max-width: 88% !important;
+    max-height: 600px;
+  }
+  #wrapper #content div.item_edit_container div.item_edit form.edit_form > div.bool {
+    display: block;
+  }
+}
+@media only screen and (max-width: 529px) {
+  body:after {
+    content: 'mobile';
+    display: none;
+  }
+  #wrapper header #mobile_menu_wrapper {
+    right: 0;
+  }
+  #wrapper header #mobile_menu_wrapper ul#mobile_menu {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 530px) and (max-width: 949px) {
+  body:after {
+    content: 'tablet';
+    display: none;
+  }
+}
+@media only screen and (min-width: 950px) {
+  #wrapper header #mobile_menu_wrapper {
+    display: none !important;
+  }
 }

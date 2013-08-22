@@ -10,14 +10,12 @@
 
 </head>
 <body>
-	<div class="row-fluid">
-		<div id="wrapper">
-			@include('administrator::partials.header')
+	<div id="wrapper">
+		@include('administrator::partials.header')
 
-			{{ $content }}
+		{{ $content }}
 
-			@include('administrator::partials.footer')
-		</div>
+		@include('administrator::partials.footer')
 	</div>
 
 	@foreach ($js as $url)

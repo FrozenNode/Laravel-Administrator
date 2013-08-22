@@ -17,6 +17,27 @@
 		$container: null,
 
 		/*
+		 * The container for the datatable
+		 *
+		 * @type jQuery object
+		 */
+		$tableContainer: null,
+
+		/*
+		 * The data table
+		 *
+		 * @type jQuery object
+		 */
+		$dataTable: null,
+
+		/*
+		 * The pixel points where the columns are hidden
+		 *
+		 * @type object
+		 */
+		columnHidePoints: {},
+
+		/*
 		 * If this is true, history.js has started
 		 *
 		 * @type bool
@@ -1449,10 +1470,59 @@
 		resizePage: function()
 		{
 			var winHeight = $(window).height(),
-				itemEditHeight = $('div.item_edit').height() + 50,
-				usedHeight = winHeight > itemEditHeight ? winHeight - 45 : itemEditHeight;
+				itemEditHeight = $('form.edit_form').height() + 50,
+				usedHeight = winHeight > itemEditHeight ? winHeight - 45 : itemEditHeight,
+				size = window.getComputedStyle(document.body, ':after').getPropertyValue('content');
 
+			//resize the page height
 			$('#admin_page').css({minHeight: usedHeight});
+
+			//resize the data table
+			if (window.admin)
+				window.admin.resizeDataTable();
+		},
+
+		/**
+		 * Hides columns until the table container is at least as wide as the data table
+		 */
+		resizeDataTable: function()
+		{
+			var self = window.admin,
+				winWidth = $(window).width();
+
+			if (!self.$tableContainer)
+			{
+				self.$tableContainer = $('div.table_container');
+				self.$dataTable = self.$tableContainer.find('table.results');
+			}
+
+			//grab the columns
+			var columns = self.viewModel.columns();
+
+			//iterate over the column hide points to see if we should unhide any of them
+			$.each(self.columnHidePoints, function(i, el)
+			{
+				if (el < winWidth)
+					columns[i].visible(true);
+			});
+
+			//walk backwards over the columns to determine which ones to hide
+			for (var i = columns.length - 1; i >= 2; i--)
+			{
+				//if the datatable is visible and the table is large than its container
+				if (columns.length >= 2 && self.$dataTable.is(':visible') && (self.$tableContainer.width() < self.$dataTable.width()) )
+				{
+					//we don't want to hide all the columns
+					if (i <= 1)
+						return;
+					if (columns[i].visible())
+					{
+						columns[i].visible(false);
+						self.columnHidePoints[i] = winWidth;
+						break;
+					}
+				}
+			}
 		}
 	};
 
