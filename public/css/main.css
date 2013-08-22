@@ -717,14 +717,14 @@ body label {
 #wrapper header .iconButton > div {
   height: 35px;
 }
-#wrapper header a.menu_button {
+#wrapper header a#menu_button {
   display: inline-block;
   padding: 9px 12px 8px;
   padding: 0;
   display: none;
 }
-#wrapper header a.menu_button:hover,
-#wrapper header a.menu_button.current {
+#wrapper header a#menu_button:hover,
+#wrapper header a#menu_button.current {
   background: #444;
   background: -moz-linear-gradient(top,#444 0%,#333 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
@@ -734,22 +734,22 @@ body label {
   background: linear-gradient(top,#444 0%,#333 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
-#wrapper header a.menu_button > div {
+#wrapper header a#menu_button > div {
   height: 35px;
 }
-#wrapper header a.menu_button > div {
+#wrapper header a#menu_button > div {
   width: 45px;
   background: url(../img/menu-icon.png) no-repeat center center;
 }
-#wrapper header a.filter_button {
+#wrapper header a#filter_button {
   display: inline-block;
   padding: 9px 12px 8px;
   padding: 0;
   display: none;
   margin-left: -3px;
 }
-#wrapper header a.filter_button:hover,
-#wrapper header a.filter_button.current {
+#wrapper header a#filter_button:hover,
+#wrapper header a#filter_button.current {
   background: #444;
   background: -moz-linear-gradient(top,#444 0%,#333 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
@@ -759,13 +759,13 @@ body label {
   background: linear-gradient(top,#444 0%,#333 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
-#wrapper header a.filter_button > div {
+#wrapper header a#filter_button > div {
   height: 35px;
 }
-#wrapper header a.filter_button.hidden {
+#wrapper header a#filter_button.hidden {
   display: none !important;
 }
-#wrapper header a.filter_button > div {
+#wrapper header a#filter_button > div {
   width: 41px;
   background: url(../img/filter-icon.png) no-repeat center center;
 }
@@ -1448,8 +1448,8 @@ body label {
   width: 100% !important;
 }
 @media only screen and (max-width: 949px) {
-  #wrapper header a.menu_button,
-  #wrapper header a.filter_button {
+  #wrapper header a#menu_button,
+  #wrapper header a#filter_button {
     display: inline-block;
   }
   #wrapper header ul#menu {

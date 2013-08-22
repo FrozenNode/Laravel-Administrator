@@ -7,8 +7,8 @@
 	{
 		$menu = $('ul#menu, ul#lang_menu');
 		$mobileMenu = $('#mobile_menu_wrapper');
-		$menuButton = $('a.menu_button');
-		$filterButton = $('a.filter_button');
+		$menuButton = $('a#menu_button');
+		$filterButton = $('a#filter_button');
 		$filters = $('#sidebar');
 		$content = $('#content');
 
@@ -42,24 +42,38 @@
 				if ($this.parent().closest('li.menu').length)
 				{
 					$this.addClass('current');
-					$submenu.stop(true, true).show('slide', { direction: 'left' }, 200);;
+					$submenu.stop(true, true).show('slide', { direction: 'left' }, 200);
 				}
 				else
 					$submenu.stop(true, true).slideDown(200);
 			});
 		});
 
+		toggleMenu = function(toggle)
+		{
+			$menuButton.toggleClass('current', toggle);
+
+			if (toggle)
+				$mobileMenu.stop(true, true).show('slide', { direction: 'left' }, 100);
+			else
+				$mobileMenu.stop(true, true).hide('slide', { direction: 'left' }, 100);
+		}
+
+		toggleFilter = function(toggle)
+		{
+			$filterButton.toggleClass('current', toggle);
+			$filters.toggleClass('shown', toggle);
+			$content.toggleClass('hidden', toggle);
+
+			admin.resizePage();
+		}
+
 		//clicking the menu button hides/shows the mobile menu
 		$menuButton.click(function(e)
 		{
 			e.preventDefault();
 
-			$menuButton.toggleClass('current');
-			$mobileMenu.toggle();
-
-			//if the filter is visible, hide it
-			if ($filterButton.hasClass('current'))
-				$filterButton.click();
+			toggleMenu(!$menuButton.hasClass('current'));
 		});
 
 		//clicking the filter button hides/shows the filter
@@ -67,15 +81,22 @@
 		{
 			e.preventDefault();
 
-			$filterButton.toggleClass('current');
-			$filters.toggleClass('shown');
-			$content.toggleClass('hidden');
+			toggleFilter(!$filterButton.hasClass('current'));
+		});
 
-			//if the menu is visible, hide it
-			if ($menuButton.hasClass('current'))
-				$menuButton.click();
+		//hide the menu on document click outside
+		$(document).click(function(e)
+		{
+			var inMenuButton = $menuButton.is(e.target) || $menuButton.has(e.target).length !== 0,
+				inMenu = $mobileMenu.is(e.target) || $mobileMenu.has(e.target).length !== 0,
+				inFilterButton = $filterButton.is(e.target) || $filterButton.has(e.target).length !== 0,
+				inFilters = $filters.is(e.target) || $filters.has(e.target).length !== 0;
 
-			admin.resizePage();
+			if ($menuButton.hasClass('current') && !inMenu && !inMenuButton)
+				toggleMenu(false);
+
+			if ($filterButton.hasClass('current') && !inFilters && !inFilterButton)
+				toggleFilter(false);
 		});
 
 		//clicking menu items in the mobile menu hides/shows that submenu
