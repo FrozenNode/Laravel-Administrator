@@ -1,9 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Enum extends Field {
 
@@ -43,8 +41,8 @@ class Enum extends Field {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
-	 * @param mixed		$input
+	 * @param \Illuminate\Database\Eloquent\model	$model
+	 * @param mixed									$input
 	 */
 	public function fillModel(&$model, $input)
 	{
@@ -68,12 +66,12 @@ class Enum extends Field {
 	/**
 	 * Filters a query object
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		//run the parent method
 		parent::filterQuery($query, $selects);

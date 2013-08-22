@@ -9,22 +9,22 @@ class Menu {
 	/**
 	 * The config instance
 	 *
-	 * @var Illuminate\Config\Repository
+	 * @var \Illuminate\Config\Repository
 	 */
 	protected $config;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\Factory
+	 * @var \Frozennode\Administrator\Config\Factory
 	 */
 	protected $configFactory;
 
 	/**
 	 * Create a new Menu instance
 	 *
-	 * @param Illuminate\Config\Repository				$config
-	 * @param Frozennode\Administrator\Config\Factory	$config
+	 * @param \Illuminate\Config\Repository				$config
+	 * @param \Frozennode\Administrator\Config\Factory	$config
 	 */
 	public function __construct(Config $config, ConfigFactory $configFactory)
 	{

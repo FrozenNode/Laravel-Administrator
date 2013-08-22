@@ -142,7 +142,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Attempts to save a settings page
 	 *
-	 * @param Illuminate\Http\Request	$input
+	 * @param \Illuminate\Http\Request	$input
 	 * @param array						$fields
 	 *
 	 * @return mixed	//string if error, true if success

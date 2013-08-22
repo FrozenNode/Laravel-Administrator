@@ -64,7 +64,7 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 		$relationship = m::mock(array('getRelated' => m::mock(array('getTable' => 'table'))));
 		$model = m::mock(array('getTable' => 'table', 'field' => $relationship));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
-		$this->validator->shouldReceive('arrayGet')->times(4);
+		$this->validator->shouldReceive('arrayGet')->times(6);
 		$this->field->shouldReceive('setUpConstraints')->once()
 					->shouldReceive('loadRelationshipOptions')->once();
 		$this->field->build();
@@ -94,14 +94,16 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 
 	public function testLoadRelationshipOptionsAll()
 	{
-		$constraints = array();
-		$query = m::mock(array('get' => array()));
-		$relatedModel = m::mock(array('orderBy' => $query, 'getKeyName' => 'id', 'get' => array()));
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query->shouldReceive('get')->once()->andReturn(array());
+		$relatedModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$relatedModel->shouldReceive('newQuery')->once()->andReturn($query)
+					->shouldReceive('getKeyName')->once()->andReturn('id');
 		$relationship = m::mock(array('getRelated' => $relatedModel));
 		$model = m::mock(array('field' => $relationship));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$this->validator->shouldReceive('arrayGet')->times(3)->andReturn(true, false);
-		$options = array('field_name' => 'field');
+		$options = array('field_name' => 'field', 'options_filter' => function() {});
 		$this->field->shouldReceive('mapRelationshipOptions')->once()->andReturn(array('funky'));
 		$this->field->loadRelationshipOptions($options);
 		$this->assertEquals($options['options'], array('funky'));
@@ -109,15 +111,17 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 
 	public function testLoadRelationshipOptionsWithOptionsSortField()
 	{
-		$constraints = array();
-		$query = m::mock(array('get' => array()));
-		$relatedModel = m::mock(array('orderBy' => $query, 'getKeyName' => 'id', 'get' => array()));
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query->shouldReceive('get')->once()->andReturn(array());
+		$relatedModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$relatedModel->shouldReceive('orderBy')->once()->andReturn($query)
+					->shouldReceive('getKeyName')->once()->andReturn('id');
 		$relationship = m::mock(array('getRelated' => $relatedModel));
 		$model = m::mock(array('field' => $relationship));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$this->validator->shouldReceive('arrayGet')->times(4)->andReturn(true, true);
 		$this->db->shouldReceive('raw')->once();
-		$options = array('field_name' => 'field');
+		$options = array('field_name' => 'field', 'options_filter' => function() {});
 		$this->field->shouldReceive('mapRelationshipOptions')->once()->andReturn(array('funky'));
 		$this->field->loadRelationshipOptions($options);
 		$this->assertEquals($options['options'], array('funky'));
@@ -125,9 +129,8 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 
 	public function testLoadRelationshipOptionsSkipLoad()
 	{
-		$constraints = array();
-		$query = m::mock(array('get' => array()));
-		$relatedModel = m::mock(array('orderBy' => $query, 'getKeyName' => 'id', 'get' => array()));
+		$relatedModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$relatedModel->shouldReceive('getKeyName')->once()->andReturn('id');
 		$relationship = m::mock(array('getRelated' => $relatedModel, 'get' => array()));
 		$model = m::mock(array('field' => $relationship));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);

@@ -1,9 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class BelongsToMany extends Relationship {
 
@@ -42,7 +40,7 @@ class BelongsToMany extends Relationship {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Illuminate\Database\Eloquent\Model	$model
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 * @param mixed									$input
 	 *
 	 * @return array
@@ -79,12 +77,12 @@ class BelongsToMany extends Relationship {
 	/**
 	 * Filters a query object with this item's data
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		//run the parent method
 		parent::filterQuery($query, $selects);
@@ -125,13 +123,13 @@ class BelongsToMany extends Relationship {
 	/**
 	 * Constrains a query by a given set of constraints
 	 *
-	 * @param  Query 								$query
-	 * @param  Illuminate\Database\Eloquent\Model 	$relatedModel
+	 * @param  \Illuminate\Database\Query\Builder	$query
+	 * @param  \Illuminate\Database\Eloquent\Model 	$relatedModel
 	 * @param  string 								$constraint
 	 *
 	 * @return void
 	 */
-	public function constrainQuery(&$query, $relatedModel, $constraint)
+	public function constrainQuery(QueryBuilder &$query, $relatedModel, $constraint)
 	{
 		//if the column hasn't been joined yet, join it
 		if (!$this->validator->isJoined($query, $this->getOption('table')))

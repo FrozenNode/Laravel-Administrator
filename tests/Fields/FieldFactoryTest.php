@@ -405,7 +405,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$this->db->shouldReceive('raw')->once();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->once()->andReturn(false);
+		$field->shouldReceive('getOption')->twice()->andReturn(false, function() {});
 		$this->factory->shouldReceive('getFieldObjectByName')->once()->andReturn($field)
 						->shouldReceive('applyConstraints')->once()
 						->shouldReceive('filterBySearchTerm')->once()

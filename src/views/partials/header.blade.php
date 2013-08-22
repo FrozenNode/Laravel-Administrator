@@ -3,6 +3,17 @@
 		<a href="{{URL::route('admin_dashboard')}}">{{Config::get('administrator::administrator.title')}}</a>
 	</h1>
 
+	<a href="#" id="menu_button"><div></div></a>
+	<a href="#" id="filter_button" class="{{App::make('itemconfig')->getType() === 'model' ? '' : 'hidden'}}"><div></div></a>
+
+	<div id="mobile_menu_wrapper">
+		<ul id="mobile_menu">
+			@foreach ($menu as $key => $item)
+				@include('administrator::partials.menu_item')
+			@endforeach
+		</ul>
+	</div>
+
 	<ul id="menu">
 		@foreach ($menu as $key => $item)
 			@include('administrator::partials.menu_item')

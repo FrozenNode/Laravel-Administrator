@@ -1,9 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class HasOneOrMany extends Relationship {
 
@@ -38,19 +36,33 @@ class HasOneOrMany extends Relationship {
 	/**
 	 * Filters a query object with this item's data (currently empty because there's no easy way to represent this)
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null) {}
+	public function filterQuery(QueryBuilder &$query, &$selects = null) {}
 
 	/**
 	 * For the moment this is an empty function until I can figure out a way to display HasOne and HasMany relationships on this model
 	 *
-	 * @param Eloquent	$model
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 *
 	 * @return array
 	 */
 	public function fillModel(&$model, $input) {}
+
+	/**
+	 * Constrains a query by a given set of constraints
+	 *
+	 * @param  \Illuminate\Database\Query\Builder	$query
+	 * @param  \Illuminate\Database\Eloquent\Model 	$relatedModel
+	 * @param  string 								$constraint
+	 *
+	 * @return void
+	 */
+	public function constrainQuery(QueryBuilder &$query, $relatedModel, $constraint)
+	{
+		$query->where($this->getOption('column'), '=', $constraint);
+	}
 }

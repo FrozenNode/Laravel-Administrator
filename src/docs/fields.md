@@ -84,14 +84,22 @@ The `type` option lets you set the field's type. See the Field Types menu on the
 <a name="editable-option"></a>
 ## Editable Option
 
-The `editable` option determines whether or not a field can be edited. By default, this is set to `true`. Set this to false if you want to show a field to the admin user without letting them edit it. If a field isn't editable, it will only be visible to the admin user after the item has been created.
+The `editable` option determines whether or not a field can be edited. By default, this is set to `true`. Set this to false if you want to show a field to the admin user without letting them edit it.
 
 	'unique_hash' => array(
 		'title' => 'Unique Hash',
 		'editable' => false,
 	),
 
-> **Tip**: You may want to use the `editable` option together with Eloquent setters.
+You can also pass a closure to the `editable` option whose only parameter is the Eloquent model (if it's a model page) or the settings data (if it's a settings page):
+
+	'unique_hash' => array(
+		'title' => 'Unique Hash',
+		'editable' => function($model)
+		{
+			return !$model->exists; //will only be editable before an item is saved for the first time
+		},
+	),
 
 <a name="setter-option"></a>
 ## Setter Option

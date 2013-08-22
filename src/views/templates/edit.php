@@ -74,30 +74,38 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'belongs_to' -->
-				<div class="loader" data-bind="visible: loadingOptions"></div>
+				<!-- ko if: loadingOptions -->
+					<div class="loader"></div>
+				<!-- /ko -->
 
 				<!-- ko if: autocomplete -->
-				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || constraintLoading() || !editable,
+														id: field_id},
 											value: $root[field_name], select2Remote: {field: field_name, type: 'edit', constraints: constraints}" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || constraintLoading() || !editable,
+														id: field_id},
 											value: $root[field_name], select2: {data:{results: $root.listOptions[field_name]}}" />
 				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'belongs_to_many' -->
-				<div class="loader" data-bind="visible: loadingOptions"></div>
+				<!-- ko if: loadingOptions -->
+					<div class="loader"></div>
+				<!-- /ko -->
 
 				<!-- ko if: autocomplete -->
-				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || constraintLoading() || !editable,
+														id: field_id},
 									select2Remote: {field: field_name, type: 'edit', multiple: true, constraints: constraints, sort: sort_field},
 									value: $root[field_name]" />
 				<!-- /ko -->
 
 				<!-- ko ifnot: autocomplete -->
-				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || !editable, id: field_id},
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || constraintLoading() || !editable,
+														id: field_id},
 													select2: {data:{results: $root.listOptions[field_name]}, multiple: true, sort: sort_field},
 													value: $root[field_name]" />
 				<!-- /ko -->

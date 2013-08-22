@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
 - [Simple Columns](#simple-columns)
 - [Column Headers](#column-headers)
+- [Visible Option](#visible-option)
 - [Using Accessors](#using-accessors)
 - [Setting the Sort Field](#setting-the-sort-field)
 - [Custom Selects](#custom-selects)
@@ -52,6 +53,19 @@ If you want to control the output of a column's header, set the `title` option:
 	'id' => array(
 		'title' => 'ID'
 	)
+
+<a name="visible-option"></a>
+## Visible Option
+
+The `visible` option lets you determine if a column should be present. The default value is boolean true. Passing in boolean false will hide the column. You can also pass in a closure that accepts the current data model as the single parameter. You can return a truthy value if you want to show the column for that user, or you can return a falsey value if you hide it.
+
+	'secret_info' => array(
+		'title' => 'Secret Info',
+		'visible' => function($model)
+		{
+			return Auth::user()->hasRole('super_admin');
+		},
+	),
 
 <a name="using-accessors"></a>
 ## Using Accessors

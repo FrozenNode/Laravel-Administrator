@@ -1,9 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class BelongsTo extends Relationship {
 
@@ -39,7 +37,8 @@ class BelongsTo extends Relationship {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
+	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 *
 	 * @return array
 	 */
@@ -53,12 +52,12 @@ class BelongsTo extends Relationship {
 	/**
 	 * Filters a query object with this item's data given a model
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		//run the parent method
 		parent::filterQuery($query, $selects);

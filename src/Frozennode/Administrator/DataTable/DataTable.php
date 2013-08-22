@@ -4,27 +4,29 @@ namespace Frozennode\Administrator\DataTable;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
 use Frozennode\Administrator\Fields\Factory as FieldFactory;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\DatabaseManager as DB;
 
 class DataTable {
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\DataTable\Columns\Factory
+	 * @var \Frozennode\Administrator\DataTable\Columns\Factory
 	 */
 	protected $columnFactory;
 
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Fields\Factory
+	 * @var \Frozennode\Administrator\Fields\Factory
 	 */
 	protected $fieldFactory;
 
@@ -52,9 +54,9 @@ class DataTable {
 	/**
 	 * Create a new action DataTable instance
 	 *
-	 * @param Frozennode\Administrator\Config\ConfigInterface		$config
-	 * @param Frozennode\Administrator\DataTable\Columns\Factory	$columnFactory
-	 * @param Frozennode\Administrator\Fields\Factory				$fieldFactory
+	 * @param \Frozennode\Administrator\Config\ConfigInterface		$config
+	 * @param \Frozennode\Administrator\DataTable\Columns\Factory	$columnFactory
+	 * @param \Frozennode\Administrator\Fields\Factory				$fieldFactory
 	 */
 	public function __construct(ConfigInterface $config, ColumnFactory $columnFactory, FieldFactory $fieldFactory)
 	{
@@ -67,14 +69,14 @@ class DataTable {
 	/**
 	 * Builds a results array (with results and pagination info)
 	 *
-	 * @param Illuminate\Database\DatabaseManager 	$db
+	 * @param \Illuminate\Database\DatabaseManager 	$db
 	 * @param array									$filters
 	 * @param int									$page
 	 * @param array									$sort (with 'field' and 'direction' keys)
 	 *
 	 * @return array
 	 */
-	public function getRows(\Illuminate\Database\DatabaseManager $db, $filters = null, $page = 1, $sort = null)
+	public function getRows(DB $db, $filters = null, $page = 1, $sort = null)
 	{
 		//prepare the query
 		extract($this->prepareQuery($db, $page, $sort, $filters));
@@ -95,14 +97,14 @@ class DataTable {
 	/**
 	 * Builds a results array (with results and pagination info)
 	 *
-	 * @param Illuminate\Database\DatabaseManager 	$db
+	 * @param \Illuminate\Database\DatabaseManager 	$db
 	 * @param int									$page
 	 * @param array									$sort (with 'field' and 'direction' keys)
 	 * @param array									$filters
 	 *
 	 * @return array
 	 */
-	public function prepareQuery(\Illuminate\Database\DatabaseManager $db, $page = 1, $sort = null, $filters = null)
+	public function prepareQuery(DB $db, $page = 1, $sort = null, $filters = null)
 	{
 		//grab the model instance
 		$model = $this->config->getDataModel();
@@ -176,13 +178,13 @@ class DataTable {
 	/**
 	 * Performs the count query and returns info about the pages
 	 *
-	 * @param Illuminate\Database\Query\Builder		$countQuery
+	 * @param \Illuminate\Database\Query\Builder	$countQuery
 	 * @param string								$querySql
 	 * @param int									$page
 	 *
 	 * @return array
 	 */
-	public function performCountQuery(\Illuminate\Database\Query\Builder $countQuery, $querySql, $page)
+	public function performCountQuery(QueryBuilder $countQuery, $querySql, $page)
 	{
 		//grab the model instance
 		$model = $this->config->getDataModel();
@@ -208,11 +210,11 @@ class DataTable {
 	 * Sets the query filters when getting the rows
 	 *
 	 * @param mixed									$filters
-	 * @param Illuminate\Database\Query\Builder		$query
-	 * @param Illuminate\Database\Query\Builder		$countQuery
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param \Illuminate\Database\Query\Builder	$countQuery
 	 * @param array									$selects
 	 */
-	public function setFilters($filters, &$query, &$countQuery, &$selects)
+	public function setFilters($filters, QueryBuilder &$query, QueryBuilder &$countQuery, &$selects)
 	{
 		//then we set the filters
 		if ($filters && is_array($filters))
@@ -263,7 +265,7 @@ class DataTable {
 	/**
 	 * Goes through all related columns and sets the proper values for this row
 	 *
-	 * @param Illuminate\Database\Eloquent\Model	$item
+	 * @param \Illuminate\Database\Eloquent\Model	$item
 	 * @param array									$outputRow
 	 *
 	 * @return void
@@ -301,7 +303,7 @@ class DataTable {
 	/**
 	 * Goes through all computed columns and sets the proper values for this row
 	 *
-	 * @param Illuminate\Database\Eloquent\Model	$item
+	 * @param \Illuminate\Database\Eloquent\Model	$item
 	 * @param array									$outputRow
 	 *
 	 * @return void
@@ -356,7 +358,7 @@ class DataTable {
 	/**
 	 * Set the number of rows per page for this data table
 	 *
-	 * @param Illuminate\Session\Store	$session
+	 * @param \Illuminate\Session\Store	$session
 	 * @param int						$globalPerPage
 	 * @param int						$override	//if provided, this will set the session's rows per page value
 	 */
