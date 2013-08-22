@@ -11,9 +11,9 @@
 <a name="overview"></a>
 ##Overview
 
-Administrator is a database interface package for the Laravel PHP framework that provides a visual interface to administer Eloquent data models and their relationships.
+Administrator is an administrative interface builder for [Laravel](http://laravel.com). With Administrator you can visually manage your Eloquent models and their relations, and also create stand-alone settings pages for storing site data and performing site tasks.
 
-For each model you can define which fields an administrative user can edit, which columns to display in the results table, custom action buttons, and the filters that they will be able to use. These fields can also be "belongsTo" and "belongsToMany" relationships (but not "hasOne" and "hasMany" relationships), allowing your users to easily manage how data on your site is related.
+For each Eloquent model you can define which fields an administrative user can edit, which columns to display in the results table, custom action buttons, and the filters that they will be able to use. These fields can also be "belongsTo" and "belongsToMany" relationships (but not "hasOne" and "hasMany" relationships), allowing your users to easily manage how data on your site is related.
 
 
 <a name="authentication"></a>
