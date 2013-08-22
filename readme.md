@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.5.0
+- **Version:** 4.6.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,11 +53,13 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.5.0
-- You can now provide `value`, `min_value`, and `max_value` options in filter fields to set default values
-- It is now possible to specify as many submenus in the `menus` array as you want
-- The examples directory is now properly adjusted for L4
-- Bugfix: The CKEditor in WYSIWYG fields no longer jumps around and removes text selection on blur
-- Bugfix: Soft deleted values from a related table no longer get included in relationship columns
-- Bugfix: Relationship where clauses now work when you pre-specify the table name
-- Bugfix: Time fields weren't saving properly
+### 4.6.0
+- Support for smaller screens and mobile devices
+- Visible option for columns that accepts either a boolean or closure
+- Relationship constraints now work with hasMany and hasOne fields
+- There is now an `options_filter` option for relationship fields that lets you modify the query before getting the relationship options
+- Custom actions and saves now rebuild the supplied config file after performing the action
+- The `editable` property now accepts a closure and is passed the current page's data object
+- New translations (da, it)
+- Bugfix: Constraint fields no longer make multiple requests at a single time
+- Bugfix: The key field is no longer set on models. This would cause some bugs on some setups

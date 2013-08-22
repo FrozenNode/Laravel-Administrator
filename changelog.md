@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.6.0
 - Support for smaller screens and mobile devices
 - Visible option for columns that accepts either a boolean or closure
 - Relationship constraints now work with hasMany and hasOne fields
