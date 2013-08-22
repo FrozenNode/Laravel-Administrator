@@ -2,6 +2,7 @@
 <html lang="<?php echo Config::get('application.language') ?>">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
 	<title>{{ Config::get('administrator::administrator.title') }}</title>
 
 	@foreach ($css as $url)
