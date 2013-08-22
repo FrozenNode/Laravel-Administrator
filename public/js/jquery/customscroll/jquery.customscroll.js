@@ -122,8 +122,6 @@
 				// do not hide track and show
 				wrapper.addClass('keep');
 				show();
-				console.log('clicked');
-				$('div.results_header').click();
 			});
 
 			// placeholder and track hover
