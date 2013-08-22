@@ -75,7 +75,7 @@ class Relationship extends Column {
 	/**
 	 * Sets up the existing relationship wheres
 	 *
-	 * @param Illuminate\Database\Eloquent\Relations\Relation		$relationship
+	 * @param \Illuminate\Database\Eloquent\Relations\Relation		$relationship
 	 * @param string												$tableAlias
 	 * @param string												$pivotAlias
 	 * @param string												$pivot
@@ -150,10 +150,10 @@ class Relationship extends Column {
 	 * Replaces any parameter placeholders in a query with the value of that
 	 * parameter.
 	 *
-	 * @param string $query The sql query with parameter placeholders
-	 * @param array $params The array of substitution parameters
+	 * @param string	$query		//The sql query with parameter placeholders
+	 * @param array		$params		//The array of substitution parameters
 	 *
-	 * @return string The interpolated query
+	 * @return string 	//The interpolated query
 	 */
 	public function interpolateQuery($query, array $params) {
 		$keys = array();

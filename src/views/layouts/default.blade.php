@@ -2,6 +2,7 @@
 <html lang="<?php echo Config::get('application.language') ?>">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
 	<title>{{ Config::get('administrator::administrator.title') }}</title>
 
 	@foreach ($css as $url)
@@ -10,14 +11,12 @@
 
 </head>
 <body>
-	<div class="row-fluid">
-		<div id="wrapper">
-			@include('administrator::partials.header')
+	<div id="wrapper">
+		@include('administrator::partials.header')
 
-			{{ $content }}
+		{{ $content }}
 
-			@include('administrator::partials.footer')
-		</div>
+		@include('administrator::partials.footer')
 	</div>
 
 	@foreach ($js as $url)

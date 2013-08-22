@@ -57,7 +57,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 	{
 		$url = m::mock('Illuminate\Routing\UrlGenerator');
 		$url->shouldReceive('route')->once();
-		$this->validator->shouldReceive('arrayGet')->twice()
+		$this->validator->shouldReceive('arrayGet')->times(3)
 						->shouldReceive('getUrlInstance')->once()->andReturn($url);
 		$this->config->shouldReceive('getType')->once()
 						->shouldReceive('getOption')->once();

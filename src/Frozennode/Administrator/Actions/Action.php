@@ -9,14 +9,14 @@ class Action {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
@@ -64,8 +64,8 @@ class Action {
 	/**
 	 * Create a new action Factory instance
 	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param \Frozennode\Administrator\Validator 				$validator
+	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
 	 * @param array												$options
 	 */
 	public function __construct(Validator $validator, ConfigInterface $config, array $options)

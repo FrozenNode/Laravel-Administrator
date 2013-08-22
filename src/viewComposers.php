@@ -35,7 +35,7 @@ View::composer('administrator::index', function($view)
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = URL::to('packages/frozennode/administrator/');
 	$view->route = $route['path'].'/';
-	$view->itemId = isset($view->itemId) ? $view->itemId : false;
+	$view->itemId = isset($view->itemId) ? $view->itemId : null;
 });
 
 //admin settings view
@@ -73,6 +73,7 @@ View::composer(array('administrator::layouts.default'), function($view)
 		'jquery-ui-timepicker' => asset('packages/frozennode/administrator/css/ui/jquery.ui.timepicker.css'),
 		'select2' => asset('packages/frozennode/administrator/js/jquery/select2/select2.css'),
 		'jquery-colorpicker' => asset('packages/frozennode/administrator/css/jquery.lw-colorpicker.css'),
+		'customscroll' => asset('packages/frozennode/administrator/js/jquery/customscroll/customscroll.css'),
 		'main' => asset('packages/frozennode/administrator/css/main.css'),
 	);
 
@@ -86,6 +87,7 @@ View::composer(array('administrator::layouts.default'), function($view)
 		'ckeditor-jquery' => asset('packages/frozennode/administrator/js/ckeditor/adapters/jquery.js'),
 		'markdown' => asset('packages/frozennode/administrator/js/markdown.js'),
 		'plupload' => asset('packages/frozennode/administrator/js/plupload/js/plupload.full.js'),
+		'customscroll' => asset('packages/frozennode/administrator/js/jquery/customscroll/jquery.customscroll.js'),
 	);
 
 	//localization js assets

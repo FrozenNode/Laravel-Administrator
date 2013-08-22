@@ -80,7 +80,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase {
 	{
 		$this->config->shouldReceive('getDataModel')->once()->andReturn(m::mock(array()));
 		$this->db->shouldReceive('getTablePrefix')->once()->andReturn('');
-		$this->validator->shouldReceive('arrayGet')->times(3);
+		$this->validator->shouldReceive('arrayGet')->times(4);
 		$this->column->build();
 	}
 

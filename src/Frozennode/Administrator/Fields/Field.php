@@ -4,27 +4,28 @@ namespace Frozennode\Administrator\Fields;
 use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 abstract class Field {
 
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config interface instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Illuminate\Database\DatabaseManager
+	 * @var \Illuminate\Database\DatabaseManager
 	 */
 	protected $db;
 
@@ -86,9 +87,9 @@ abstract class Field {
 	/**
 	 * Create a new Field instance
 	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager				$db
+	 * @param \Frozennode\Administrator\Validator 				$validator
+	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param \Illuminate\Database\DatabaseManager				$db
 	 * @param array												$options
 	 */
 	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
@@ -111,12 +112,20 @@ abstract class Field {
 		//set the title if it doesn't exist
 		$options['title'] = $this->validator->arrayGet($options, 'title', $options['field_name']);
 
-		//make sure the visible callback is run if it's supplied
+		//run the visible property closure if supplied
 		$visible = $this->validator->arrayGet($options, 'visible');
 
 		if (is_callable($visible))
 		{
 			$options['visible'] = $visible($this->config->getDataModel()) ? true : false;
+		}
+
+		//run the editable property's closure if supplied
+		$editable = $this->validator->arrayGet($options, 'editable');
+
+		if (isset($editable) && is_callable($editable))
+		{
+			$options['editable'] = $editable($this->config->getDataModel());
 		}
 
 		$this->suppliedOptions = $options;
@@ -153,7 +162,8 @@ abstract class Field {
 	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
+	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 *
 	 * @return array
 	 */
@@ -179,12 +189,12 @@ abstract class Field {
 	/**
 	 * Filters a query object given
 	 *
-	 * @param Illuminate\Database\Query\Builder		$query
+	 * @param \Illuminate\Database\Query\Builder	$query
 	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		$model = $this->config->getDataModel();
 
@@ -253,7 +263,7 @@ abstract class Field {
 
 		if (!array_key_exists($key, $options))
 		{
-			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $this->userOptions['field_name'] . "' field");
+			throw new \InvalidArgumentException("An invalid option '$key' was searched for in the '" . $this->userOptions['field_name'] . "' field");
 		}
 
 		return $options[$key];

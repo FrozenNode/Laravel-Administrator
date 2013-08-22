@@ -16,14 +16,14 @@ class Validator extends \Illuminate\Validation\Validator {
 	/**
 	 * The URL instance
 	 *
-	 * @var Illuminate\Routing\UrlGenerator
+	 * @var \Illuminate\Routing\UrlGenerator
 	 */
 	protected $url;
 
 	/**
 	 * Injects the URL class instance
 	 *
-	 * @param Illuminate\Routing\UrlGenerator $url
+	 * @param \Illuminate\Routing\UrlGenerator $url
 	 *
 	 * @return void
 	 */
@@ -35,7 +35,7 @@ class Validator extends \Illuminate\Validation\Validator {
 	/**
 	 * Gets the URL class instance
 	 *
-	 * @return Illuminate\Routing\UrlGenerator
+	 * @return \Illuminate\Routing\UrlGenerator
 	 */
 	public function getUrlInstance()
 	{

@@ -51,7 +51,7 @@
 			/* If custom actions are supplied, they are stored here
 			 * array
 			 */
-			actions: [],
+			actions: ko.observableArray(),
 
 			/* The languages array holds text for the current language
 			 * object
@@ -94,6 +94,9 @@
 
 							//update the model
 							self.updateData(response.data);
+
+							//update the custom actions
+							self.actions(response.actions);
 						}
 						else
 							self.statusMessage(response.errors).statusMessageType('error');
@@ -136,6 +139,9 @@
 						if (response.success)
 						{
 							self.statusMessage(messages.success).statusMessageType('success');
+
+							//update the custom actions
+							self.actions(response.actions);
 
 							//if there was a file download initiated, redirect the user to the file download address
 							if (response.download)
@@ -204,7 +210,7 @@
 
 			this.viewModel.settingsName(adminData.name);
 			this.viewModel.settingsTitle(adminData.title);
-			this.viewModel.actions = adminData.actions;
+			this.viewModel.actions(adminData.actions);
 			this.viewModel.languages = adminData.languages;
 
 			//now that we have most of our data, we can set up the computed values

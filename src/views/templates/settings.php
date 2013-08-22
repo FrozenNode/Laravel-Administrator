@@ -166,7 +166,7 @@
 		<input type="submit" value="<?php echo trans('administrator::administrator.save') ?>"
 			data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 
-		<!-- ko if: actions.length -->
+		<!-- ko if: actions().length -->
 			<!-- ko foreach: actions -->
 				<!-- ko if: has_permission -->
 					<input type="button" data-bind="click: function(){$root.customAction(action_name, messages, confirmation)}, value: title,

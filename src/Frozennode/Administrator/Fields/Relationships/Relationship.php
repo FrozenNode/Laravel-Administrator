@@ -2,9 +2,6 @@
 namespace Frozennode\Administrator\Fields\Relationships;
 
 use Frozennode\Administrator\Fields\Field;
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
 
 abstract class Relationship extends Field {
 
@@ -51,6 +48,7 @@ abstract class Relationship extends Field {
 		'options_sort_direction' => 'string',
 		'num_options' => 'integer|min:0',
 		'search_fields' => 'array',
+		'options_filter' => 'callable',
 		'constraints' => 'array',
 	);
 
@@ -72,6 +70,9 @@ abstract class Relationship extends Field {
 
 		//determine if this is a self-relationship
 		$options['self_relationship'] = $relationship->getRelated()->getTable() === $model->getTable();
+
+		//make sure the options filter is set up
+		$options['options_filter'] = $this->validator->arrayGet($options, 'options_filter') ?: function() {};
 
 		//set up and check the constraints
 		$this->setUpConstraints($options);
@@ -135,13 +136,19 @@ abstract class Relationship extends Field {
 			{
 				$optionsSortDirection = $this->validator->arrayGet($options, 'options_sort_direction', $this->defaults['options_sort_direction']);
 
-				$items = $relatedModel->orderBy($this->db->raw($optionsSortField), $optionsSortDirection)->get();
+				$query = $relatedModel->orderBy($this->db->raw($optionsSortField), $optionsSortDirection);
 			}
 			//otherwise just pull back an unsorted list
 			else
 			{
-				$items = $relatedModel->get();
+				$query = $relatedModel->newQuery();
 			}
+
+			//run the options filter
+			$options['options_filter']($query);
+
+			//get the items
+			$items = $query->get();
 		}
 		//otherwise if there are relationship items, we need them in the initial options list
 		else if ($relationshipItems = $relationship->get())

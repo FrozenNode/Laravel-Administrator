@@ -10,16 +10,30 @@ class Factory {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
-	 * The main config array
+	 * The config instance
+	 *
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
+	 */
+	protected $config;
+
+	/**
+	 * The main options array
 	 *
 	 * @var array
 	 */
-	protected $config;
+	protected $options;
+
+	/**
+	 * The config name
+	 *
+	 * @var string
+	 */
+	protected $name;
 
 	/**
 	 * The config type (settings or model)
@@ -57,15 +71,15 @@ class Factory {
 	/**
 	 * Create a new config Factory instance
 	 *
-	 * @param Frozennode\Administrator\Validator 	$validator
-	 * @param array 								$config
+	 * @param \Frozennode\Administrator\Validator 	$validator
+	 * @param array 								$options
 	 */
-	public function __construct(Validator $validator, array $config)
+	public function __construct(Validator $validator, array $options)
 	{
 		//set the config, and then validate it
-		$this->config = $config;
+		$this->options = $options;
 		$this->validator = $validator;
-		$validator->override($this->config, $this->rules);
+		$validator->override($this->options, $this->rules);
 
 		//if the validator failed, throw an exception
 		if ($validator->fails())
@@ -75,22 +89,53 @@ class Factory {
 	}
 
 	/**
-	 * Fetch a config instance given an input string
+	 * Makes a config instance given an input string
 	 *
 	 * @param string	$name
+	 * @param string	$primary	//if true, this is the primary itemconfig object and we want to store the instance
 	 *
 	 * @return mixed
 	 */
-	public function make($name)
+	public function make($name, $primary = false)
 	{
-		//determine if this is a model or settings config
-		$this->parseType($name);
+		//set the name so we can rebuild the config later if necessary
+		$this->name = $primary ? $name : $this->name;
 
 		//search the config menu for our item
-		$config = $this->searchMenu($name);
+		$options = $this->searchMenu($name);
 
 		//return the config object if the file/array was found, or false if it wasn't
-		return $config ? $this->getItemConfigObject($config) : false;
+		$config = $options ? $this->getItemConfigObject($options) : false;
+
+		//set the primary config
+		$this->config = $primary ? $config : $this->config;
+
+		//return the config object (or false if it fails to build)
+		return $config;
+	}
+
+	/**
+	 * Updates the current item config's options
+	 *
+	 * @return void
+	 */
+	public function updateConfigOptions()
+	{
+		//search the config menu for our item
+		$options = $this->searchMenu($this->name);
+
+		//override the config's options
+		$this->getConfig()->setOptions($options);
+	}
+
+	/**
+	 * Gets the current config item
+	 *
+	 * @return \Frozennode\Administrator\Config\ConfigInterface
+	 */
+	public function getConfig()
+	{
+		return $this->config;
 	}
 
 	/**
@@ -126,8 +171,14 @@ class Factory {
 	 */
 	public function searchMenu($name, $menu = false)
 	{
+		//parse the type based on the config name if this is the top-level item
+		if ($menu === false)
+		{
+			$this->parseType($name);
+		}
+
 		$config = false;
-		$menu = $menu ? $menu : $this->config['menu'];
+		$menu = $menu ? $menu : $this->options['menu'];
 
 		//iterate over all the items in the menu array
 		foreach ($menu as $key => $item)
@@ -182,7 +233,7 @@ class Factory {
 	 */
 	public function getPath()
 	{
-		$path = $this->type === 'settings' ? $this->config['settings_config_path'] : $this->config['model_config_path'];
+		$path = $this->type === 'settings' ? $this->options['settings_config_path'] : $this->options['model_config_path'];
 		return rtrim($path, '/') . '/';
 	}
 
@@ -197,19 +248,19 @@ class Factory {
 	/**
 	 * Gets an instance of the config
 	 *
-	 * @param array		$config
+	 * @param array		$options
 	 *
-	 * @return Frozennode\Administrator\Config\ConfigInterface
+	 * @return \Frozennode\Administrator\Config\ConfigInterface
 	 */
-	public function getItemConfigObject(array $config)
+	public function getItemConfigObject(array $options)
 	{
 		if ($this->type === 'settings')
 		{
-			return new SettingsConfig($this->validator, $config);
+			return new SettingsConfig($this->validator, $options);
 		}
 		else
 		{
-			return new ModelConfig($this->validator, $config);
+			return new ModelConfig($this->validator, $options);
 		}
 	}
 
@@ -228,13 +279,13 @@ class Factory {
 		//check that this is a legitimate file
 		if (is_file($path))
 		{
-			//set the config var
-			$config = require $path;
+			//set the options var
+			$options = require $path;
 
 			//add the name in
-			$config['name'] = $name;
+			$options['name'] = $name;
 
-			return $config;
+			return $options;
 		}
 
 		return false;

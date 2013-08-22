@@ -78,7 +78,7 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 										'getTable' => 'table'));
 		$model = m::mock(array('field' => $relationship, 'getTable' => 'table'));
 		$this->config->shouldReceive('getDataModel')->twice()->andReturn($model);
-		$this->validator->shouldReceive('arrayGet')->times(4);
+		$this->validator->shouldReceive('arrayGet')->times(6);
 		$this->field->shouldReceive('setUpConstraints')->once()
 					->shouldReceive('loadRelationshipOptions')->once();
 		$this->field->build();

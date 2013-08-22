@@ -185,7 +185,9 @@ class ColumnFactoryTest extends \PHPUnit_Framework_TestCase {
 	public function testGetIncludedColumnsAddsPrimaryKey()
 	{
 		$this->validator->shouldReceive('arrayGet')->once()->andReturn(false);
-		$model = m::mock(array('getTable' => 'table', 'getKeyName' => 'id'));
+		$model = m::mock('Illuminate\Database\ELoquent\Model');
+		$model->shouldReceive('getTable')->once()->andReturn('table')
+				->shouldReceive('getKeyName')->times(3)->andReturn('id');
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$this->factory->shouldReceive('getColumns')->once()->andReturn(array());
 		$this->assertEquals($this->factory->getIncludedColumns(array()), array('id' => 'table.id'));
@@ -194,7 +196,9 @@ class ColumnFactoryTest extends \PHPUnit_Framework_TestCase {
 	public function testGetIncludedColumnsAddsBelongsToField()
 	{
 		$this->validator->shouldReceive('arrayGet')->once()->andReturn(true);
-		$model = m::mock(array('getTable' => 'table', 'getKeyName' => 'id'));
+		$model = m::mock('Illuminate\Database\ELoquent\Model');
+		$model->shouldReceive('getTable')->once()->andReturn('table')
+				->shouldReceive('getKeyName')->once()->andReturn('id');
 		$field = m::mock('Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo');
 		$field->shouldReceive('getOption')->twice()->andReturn('bt_id');
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);

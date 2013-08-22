@@ -6,6 +6,7 @@
 - [Belongs To Many](#belongs-to-many)
 - [Belongs To Many Filter](#belongs-to-many-filter)
 - [Large Datasets and Autocomplete](#large-datasets-and-autocomplete)
+- [Filtering Relationship Options](#filtering-relationship-options)
 - [Constraining Relationships](#constraining-relationships)
 
 <a name="overview"></a>
@@ -105,12 +106,90 @@ Once a value is typed in, the `num_options` option determines how many results a
 
 The `search_fields` option should be an array of valid SQL select fields that can be searched with the `LIKE` operator. In the above example, the admin user will be able to search for "Liam N" and get "Liam Neeson" back. The default value for this field is just the name_field supplied in all relationship fields.
 
+<a name="filtering-relationship-options"></a>
+## Filtering Relationship Options
+
+In some instances you may want to limit the available options for a relationship. This is easy to do with the `options_filter` option:
+
+	'actors' => array(
+		'type' => 'relationship',
+		'title' => 'Actors',
+		'name_field' => 'full_name',
+		'options_filter' => function($query)
+		{
+			$query->whereNull('died_at'); //only returns living actors
+		},
+	)
+
+The `options_filter` is passed the query builder instance so that you can modify the query however you like.
+
 <a name="constraining-relationships"></a>
 ## Constraining Relationships
 
-Occasionally you might be in a situation where you have two or more relationship fields in a model. These two fields might themselves be related on a pivot table. In this case, it's sometimes useful to be able to constrain the options of one of these fields based on the selected option of the other. An example might help clear things up...
+Occasionally you might be in a situation where you have two or more relationship fields in a model. These two fields might themselves be related via a `hasOne`, `hasMany`, or `belongsToMany` relationship. In this case, it's sometimes useful to be able to constrain the options of one of these fields based on the selected option of the other. An example might help clear things up...
 
-Let's pretend that we have two models: a `Film` model and a `Theater` model. There can be many films in a theater and each film can be in many theaters. This is a standard `belongsToMany` relationship. The `Film` model would look like this:
+### Has One or Has Many
+
+Let's say we have a `Theater` model and we want to let our admin users select which country and state a theater is in. We would also have a `Country` model and a `State` model. A state belongs to a country, and a country has many states. The `Theater` model belongs to both the `Country` and `State` models. When a user selects a particular country, the available states should be limited by those in that country.
+
+So our `Theater` model would look like this:
+
+	class Theater extends Eloquent {
+
+		public function country()
+		{
+			return $this->belongsTo('Country');
+		}
+
+		public function state()
+		{
+			return $this->belongsTo('State');
+		}
+	}
+
+
+Our `Country` model would look like this:
+
+	class Country extends Eloquent {
+
+		public function states()
+		{
+			return $this->hasMany('State');
+		}
+	}
+
+And the `State` model would look like this:
+
+	class State extends Eloquent {
+
+		public function country()
+		{
+			return $this->belongsTo('Country');
+		}
+	}
+
+Now when we create the `Theater` [model config](/docs/model-configuration), we'd set up the [edit fields](/docs/fields) to something like this:
+
+	'edit_fields' => array
+	(
+		'country' => array(
+			'title' => 'Country',
+			'type' => 'relationship',
+			'name_field' => 'name',
+		),
+		'state' => array(
+			'title' => 'State',
+			'type' => 'relationship',
+			'name_field' => 'name',
+			'constraints' => array('country' => 'states') //this is the important bit!
+		),
+	)
+
+The constraint we've set on the `state` field takes a key of the relationship name on the `Theater` model (i.e. the other field's name) and a value of the `states` relationship method name on the `Country` model. Now when the user selects a country, it will automatically limit the available states to those in that particular country.
+
+### Belongs To Many
+
+We can do the same sort of thing for two fields that are connected by a `belongsToMany` relationship. Let's pretend that we have two models: a `Film` model and a `Theater` model. There can be many films in a theater and each film can be in many theaters. This is a standard `belongsToMany` relationship. The `Film` model would look like this:
 
 	class Film extends Eloquent {
 
@@ -159,42 +238,14 @@ Now when we create the `BoxOffice` [model config](/docs/model-configuration), we
 			'title' => 'Film',
 			'type' => 'relationship',
 			'name_field' => 'name',
+			'constraints' => array('theater' => 'films') //films matches the relationship method name on the Theater model
 		),
 		'theater' => array(
 			'title' => 'Theater',
 			'type' => 'relationship',
 			'name_field' => 'name',
+			'constraints' => array('film' => 'theaters') //theaters matches the relationship method name on the Film model
 		),
 	)
 
-When we open up the admin screen for the `BoxOffice` model and create a new item, we will see 3 fields: the `revenue` for the box office take, a select field to choose the film, and a select field to choose the theater. But there's a problem: you can select any theater regardless of what film you've chosen, and you can select any film regardless of what theater you've chosen! This is a problem if you're trying to keep your data consistent. If you select the `Cineplex 5` theater, you want your admin users to only be able to select the films that have been in the `Cineplex 5`. If you select `The Matrix`, you want your admin users to only be able to select the theaters that `The Matrix` has played in.
-
-Fortunately we can use `constraints` to make two relationship fields dependent on one another. Using constraints, this is what our `edit_fields` array would look like:
-
-	'edit_fields' => array
-	(
-		'revenue' => array(
-			'title' => 'Revenue',
-			'type' => 'number',
-			'symbol' => '$',
-			'decimals' => 2,
-		),
-		'film' => array(
-			'title' => 'Film',
-			'type' => 'relationship',
-			'name_field' => 'name',
-			'constraints' => array('theater' => 'films')
-		),
-		'theater' => array(
-			'title' => 'Theater',
-			'type' => 'relationship',
-			'name_field' => 'name',
-			'constraints' => array('film' => 'theaters')
-		),
-	)
-
-A relationship field's `constraints` should be an array of items where the index is the other relationship *on this model* to which you want to constrain this relationship field.
-
-For the `film` field, the array key is `theater`, which is the relationship method name on the `BoxOffice` model. The array value is `films` which is this field's relationship method name on the `Theater` model.
-
-For the `theater` field, the array key is `film`, which is the relationship method name on the `BoxOffice` model. The array value is `theaters` which is this field's relationship method name on the `Film` model.
+So now when you select a particular film, it will limit the available theaters by those that have played that film. When you select a particular theater, it will only give the the ability to choose a film that's been in that theater.

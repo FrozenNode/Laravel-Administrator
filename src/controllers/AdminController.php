@@ -54,7 +54,7 @@ class AdminController extends Controller
 	 * @param string		$modelName
 	 * @param mixed			$itemId
 	 */
-	public function item($modelName, $itemId = false)
+	public function item($modelName, $itemId = 0)
 	{
 		$config = App::make('itemconfig');
 		$fieldFactory = App::make('admin_field_factory');
@@ -114,6 +114,10 @@ class AdminController extends Controller
 		}
 		else
 		{
+			//override the config options so that we can get the latest
+			App::make('admin_config_factory')->updateConfigOptions();
+
+			//grab the latest model data
 			$columnFactory = App::make('admin_column_factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
@@ -243,6 +247,9 @@ class AdminController extends Controller
 		$action = $actionFactory->getByName($actionName);
 		$result = $action->perform($model);
 
+		//override the config options so that we can get the latest
+		App::make('admin_config_factory')->updateConfigOptions();
+
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
@@ -349,16 +356,22 @@ class AdminController extends Controller
 	public function updateOptions($modelName)
 	{
 		$fieldFactory = App::make('admin_field_factory');
+		$response = array();
 
-		//get the constraints, the search term, and the currently-selected items
-		$constraints = Input::get('constraints', array());
-		$term = Input::get('term', '');
-		$type = Input::get('type', false);
-		$field = Input::get('field', false);
-		$selectedItems = Input::get('selectedItems', false);
+		//iterate over the supplied constrained fields
+		foreach (Input::get('fields', array()) as $field)
+		{
+			//get the constraints, the search term, and the currently-selected items
+			$constraints = array_get($field, 'constraints', array());
+			$term = array_get($field, 'term', array());
+			$type = array_get($field, 'type', false);
+			$fieldName = array_get($field, 'field', false);
+			$selectedItems = array_get($field, 'selectedItems', false);
 
-		//return the rows
-		return Response::json($fieldFactory->updateRelationshipOptions($field, $type, $constraints, $selectedItems, $term));
+			$response[$fieldName] = $fieldFactory->updateRelationshipOptions($fieldName, $type, $constraints, $selectedItems, $term);
+		}
+
+		return Response::json($response);
 	}
 
 	/**
@@ -470,9 +483,13 @@ class AdminController extends Controller
 		}
 		else
 		{
+			//override the config options so that we can get the latest
+			App::make('admin_config_factory')->updateConfigOptions();
+
 			return Response::json(array(
 				'success' => true,
 				'data' => $config->getDataModel(),
+				'actions' => App::make('admin_action_factory')->getActionsOptions(),
 			));
 		}
 	}
@@ -495,6 +512,9 @@ class AdminController extends Controller
 		$data = $config->getDataModel();
 		$result = $action->perform($data);
 
+		//override the config options so that we can get the latest
+		App::make('admin_config_factory')->updateConfigOptions();
+
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
@@ -512,11 +532,18 @@ class AdminController extends Controller
 			$headers = $result->headers->all();
 			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-			return Response::json(array('success' => true, 'download' => URL::route('admin_file_download')));
+			return Response::json(array(
+				'success' => true,
+				'download' => URL::route('admin_file_download'),
+				'actions' => $actionFactory->getActionsOptions(true)
+			));
 		}
 		else
 		{
-			return Response::json(array('success' => true));
+			return Response::json(array(
+				'success' => true,
+				'actions' => $actionFactory->getActionsOptions(true)
+			));
 		}
 	}
 
