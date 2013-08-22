@@ -108,9 +108,9 @@
 			rowsPerPageOptions: [],
 
 			/* The columns for the current data model
-			 * object
+			 * array
 			 */
-			columns: [],
+			columns: ko.observableArray(),
 
 			/* The options lists for any fields
 			 * object
@@ -666,7 +666,7 @@
 				var found = false;
 
 				//iterate over the columns to check if it's a valid sort_field or field
-				$.each(this.columns, function(i, col)
+				$.each(this.columns(), function(i, col)
 				{
 					if (field === col.sort_field || field === col.column_name)
 					{
@@ -900,7 +900,7 @@
 			this.viewModel.pagination.total(adminData.rows.total);
 			this.viewModel.sortOptions.field(adminData.sortOptions.field);
 			this.viewModel.sortOptions.direction(adminData.sortOptions.direction);
-			this.viewModel.columns = adminData.column_model;
+			this.viewModel.columns(this.prepareColumns());
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.modelSingle(adminData.model_single);
@@ -1025,6 +1025,25 @@
 			});
 
 			return fields;
+		},
+
+		/**
+		 * Sets up the column model with various observable values
+		 *
+		 * @return array
+		 */
+		prepareColumns: function()
+		{
+			var self = this,
+				columns = [];
+
+			$.each(adminData.column_model, function(ind, column)
+			{
+				column.visible = ko.observable(column.visible);
+				columns.push(column);
+			});
+
+			return columns;
 		},
 
 		/**

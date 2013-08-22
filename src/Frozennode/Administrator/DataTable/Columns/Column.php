@@ -59,6 +59,7 @@ class Column {
 		'is_included' => false,
 		'external' => false,
 		'belongs_to_many' => false,
+		'visible' => true,
 	);
 
 	/**
@@ -171,6 +172,14 @@ class Column {
 		else
 		{
 			$options['is_included'] = true;
+		}
+
+		//run the visible property closure if supplied
+		$visible = $this->validator->arrayGet($options, 'visible');
+
+		if (is_callable($visible))
+		{
+			$options['visible'] = $visible($this->config->getDataModel()) ? true : false;
 		}
 
 		$this->suppliedOptions = $options;
