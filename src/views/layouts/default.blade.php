@@ -9,6 +9,10 @@
 		<link href="{{$url}}" media="all" type="text/css" rel="stylesheet">
 	@endforeach
 
+	<!--[if lte IE 9]>
+		<link href="{{asset('packages/frozennode/administrator/css/browsers/lte-ie9.css')}}" media="all" type="text/css" rel="stylesheet">
+	<![endif]-->
+
 </head>
 <body>
 	<div id="wrapper">

@@ -1,15 +1,37 @@
 /* Fonts */
-@import url(http://fonts.googleapis.com/css?family=Oxygen:400,700&subset=latin-ext,latin);
+@font-face {
+	font-family: 'Oxygen';
+	src: url('fonts/Oxygen/oxygen-regular-webfont.eot');
+	src: url('fonts/Oxygen/oxygen-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('fonts/Oxygen/oxygen-regular-webfont.woff') format('woff'),
+		 url('fonts/Oxygen/oxygen-regular-webfont.ttf') format('truetype'),
+		 url('fonts/Oxygen/oxygen-regular-webfont.svg#oxygenregular') format('svg');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Oxygen';
+	src: url('fonts/Oxygen/oxygen-bold-webfont.eot');
+	src: url('fonts/Oxygen/oxygen-bold-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('fonts/Oxygen/oxygen-bold-webfont.woff') format('woff'),
+		 url('fonts/Oxygen/oxygen-bold-webfont.ttf') format('truetype'),
+		 url('fonts/Oxygen/oxygen-bold-webfont.svg#oxygenbold') format('svg');
+	font-weight: 700;
+	font-style: normal;
+}
+
+
 
 @highdensity: ~"only screen and (-webkit-min-device-pixel-ratio: 1.5)",
-              ~"only screen and (min--moz-device-pixel-ratio: 1.5)",
-              ~"only screen and (-o-min-device-pixel-ratio: 3/2)",
-              ~"only screen and (min-device-pixel-ratio: 1.5)";
-@mobile:      ~"only screen and (max-width: 529px)";
-@tablet:      ~"only screen and (min-width: 530px) and (max-width: 949px)";
-@mobileAndTablet:      ~"only screen and (max-width: 949px)";
+			  ~"only screen and (min--moz-device-pixel-ratio: 1.5)",
+			  ~"only screen and (-o-min-device-pixel-ratio: 3/2)",
+			  ~"only screen and (min-device-pixel-ratio: 1.5)";
+@mobile:	  ~"only screen and (max-width: 529px)";
+@tablet:	  ~"only screen and (min-width: 530px) and (max-width: 949px)";
+@mobileAndTablet:	  ~"only screen and (max-width: 949px)";
 @desktopPlus: ~"only screen and (min-width: 950px)";
-@desktop:     ~"only screen and (min-width: 950px) and (max-width: 1128px)";
+@desktop:	 ~"only screen and (min-width: 950px) and (max-width: 1128px)";
 @desktopXl:  ~"only screen and (min-width: 1129px)";
 
 .oxygen {
