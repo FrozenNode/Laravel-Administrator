@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.6.1
+- Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection
+- Bugfix: <=IE9 was having issues with the dropdown menu
+
 ### 4.6.0
 - Support for smaller screens and mobile devices
 - Visible option for columns that accepts either a boolean or closure
