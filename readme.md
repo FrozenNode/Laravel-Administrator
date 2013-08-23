@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.6.0
+- **Version:** 4.6.1
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,10 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Changelog
+
+### 4.6.1
+- Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection
+- Bugfix: <=IE9 was having issues with the dropdown menu
 
 ### 4.6.0
 - Support for smaller screens and mobile devices
