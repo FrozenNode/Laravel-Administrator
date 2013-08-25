@@ -4,7 +4,7 @@
 	</h1>
 
 	<a href="#" id="menu_button"><div></div></a>
-	<a href="#" id="filter_button" class="{{App::make('itemconfig')->getType() === 'model' ? '' : 'hidden'}}"><div></div></a>
+	<a href="#" id="filter_button" class="{{$configType === 'model' ? '' : 'hidden'}}"><div></div></a>
 
 	<div id="mobile_menu_wrapper">
 		<ul id="mobile_menu">
