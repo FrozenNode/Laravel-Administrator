@@ -54,6 +54,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 ## Changelog
 
 ### 4.6.1
+- Bugfix: Call to App::make('itemconfig') in the header would cause an error on dashboard pages
 - Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection
 - Bugfix: <=IE9 was having issues with the dropdown menu
 
