@@ -62,6 +62,7 @@ View::composer(array('administrator::partials.header'), function($view)
 {
 	$view->menu = App::make('admin_menu')->getMenu();
 	$view->settingsPrefix = App::make('admin_config_factory')->getSettingsPrefix();
+	$view->pagesPrefix = App::make('admin_config_factory')->getPagesPrefix();
 	$view->configType = App::bound('itemconfig') ? App::make('itemconfig')->getType() : false;
 });
 

@@ -62,6 +62,10 @@ class Menu {
 				{
 					$menu[$item] = $config->getOption('title');
 				}
+				else if (empty($config)) 
+				{
+					$menu[$item] = $key;
+				}
 			}
 			//if the item is an array, recursively run this method on it
 			else if (is_array($item))

@@ -47,6 +47,17 @@ class AdminController extends Controller
 		$this->layout->content = View::make("administrator::index");
 	}
 
+	/**
+	 * The pages view
+	 *
+	 * @return Response
+	 */
+	public function pages($page=null)
+	{
+		//set the layout content and title
+		$this->layout->content = View::make(Config::get('administrator::administrator.custom_page_view_path').".".$page);
+	}
+
 
 	/**
 	 * Gets the item edit page / information
