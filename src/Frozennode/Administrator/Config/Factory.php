@@ -247,6 +247,14 @@ class Factory {
 		}
 		return '';
 	}
+	
+	/**
+	 * Gets the type for the currently-searched item
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
 
 	/**
 	 * Gets the config directory path for the currently-searched item
