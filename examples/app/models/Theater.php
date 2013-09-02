@@ -1,6 +1,6 @@
 <?php
 
-class Theater extends Model {
+class Theater extends Eloquent {
 
 	public static $rules = array
 	(

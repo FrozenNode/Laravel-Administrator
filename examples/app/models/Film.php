@@ -1,6 +1,6 @@
 <?php
 
-class Film extends Model {
+class Film extends Eloquent {
 
 	public static $rules = array
 	(

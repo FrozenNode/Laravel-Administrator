@@ -1,9 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Bool extends Field {
 
@@ -15,10 +13,28 @@ class Bool extends Field {
 	public $value = false;
 
 	/**
+	 * Builds a few basic options
+	 *
+	 * @return void
+	 */
+	public function build()
+	{
+		parent::build();
+
+		$value = $this->validator->arrayGet($this->suppliedOptions, 'value', true);
+
+		//we need to set the value to 'false' when it is falsey so it plays nicely with select2
+		if (!$value && $value !== '')
+		{
+			$this->suppliedOptions['value'] = 'false';
+		}
+	}
+
+	/**
 	 * Fill a model with input data
 	 *
-	 * @param Eloquent	$model
-	 * @param mixed		$input
+	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param mixed									$input
 	 */
 	public function fillModel(&$model, $input)
 	{
@@ -41,19 +57,19 @@ class Bool extends Field {
 		//if it isn't null, we have to check the 'true'/'false' string
 		if ($this->userOptions['value'] !== '')
 		{
-			$this->userOptions['value'] = $this->userOptions['value'] === 'true' ? 1 : 0;
+			$this->userOptions['value'] = $this->userOptions['value'] === 'false' || !$this->userOptions['value'] ?  : 1;
 		}
 	}
 
 	/**
 	 * Filters a query object
 	 *
-	 * @param Query		$query
-	 * @param array		$selects
+	 * @param \Illuminate\Database\Query\Builder	$query
+	 * @param array									$selects
 	 *
 	 * @return void
 	 */
-	public function filterQuery(&$query, &$selects = null)
+	public function filterQuery(QueryBuilder &$query, &$selects = null)
 	{
 		//if the field isn't empty
 		if ($this->getOption('value') !== '')

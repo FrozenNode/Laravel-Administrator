@@ -40,7 +40,7 @@ Route::filter('validate_model', function($route, $request)
 	App::singleton('itemconfig', function($app) use ($modelName)
 	{
 		$configFactory = App::make('admin_config_factory');
-		return $configFactory->make($modelName);
+		return $configFactory->make($modelName, true);
 	});
 });
 
@@ -52,7 +52,7 @@ Route::filter('validate_settings', function($route, $request)
 	App::singleton('itemconfig', function($app) use ($settingsName)
 	{
 		$configFactory = App::make('admin_config_factory');
-		return $configFactory->make($configFactory->getSettingsPrefix() . $settingsName);
+		return $configFactory->make($configFactory->getSettingsPrefix() . $settingsName, true);
 	});
 });
 

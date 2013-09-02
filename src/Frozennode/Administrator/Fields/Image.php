@@ -1,11 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
-use Frozennode\Administrator\Config\ConfigInterface;
-use Illuminate\Database\DatabaseManager as DB;
 use Frozennode\Administrator\Includes\Multup;
-use Illuminate\Support\Facades\URL;
 
 class Image extends File {
 

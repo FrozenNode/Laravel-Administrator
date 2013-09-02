@@ -17,6 +17,27 @@
 		$container: null,
 
 		/*
+		 * The container for the datatable
+		 *
+		 * @type jQuery object
+		 */
+		$tableContainer: null,
+
+		/*
+		 * The data table
+		 *
+		 * @type jQuery object
+		 */
+		$dataTable: null,
+
+		/*
+		 * The pixel points where the columns are hidden
+		 *
+		 * @type object
+		 */
+		columnHidePoints: {},
+
+		/*
 		 * If this is true, history.js has started
 		 *
 		 * @type bool
@@ -108,9 +129,9 @@
 			rowsPerPageOptions: [],
 
 			/* The columns for the current data model
-			 * object
+			 * array
 			 */
-			columns: [],
+			columns: ko.observableArray(),
 
 			/* The options lists for any fields
 			 * object
@@ -192,10 +213,25 @@
 			 */
 			freezeConstraints: false,
 
+			/* The current constraints queue
+			 * object
+			 */
+			constraintsQueue: {},
+
+			/* If this is set to true, the relationship constraints queue won't process
+			 * bool
+			 */
+			holdConstraintsQueue: true,
+
 			/* If custom actions are supplied, they are stored here
 			 * array
 			 */
 			actions: ko.observableArray(),
+
+			/* If custom global actions are supplied, they are stored here
+			 * array
+			 */
+			globalActions: ko.observableArray(),
 
 			/* Holds the per-action permissions
 			 * object
@@ -212,6 +248,12 @@
 			 */
 			statusMessage: ko.observable(''),
 			statusMessageType: ko.observable(''),
+
+			/* The global status message and the type ('', 'success', 'error')
+			 * strings
+			 */
+			globalStatusMessage: ko.observable(''),
+			globalStatusMessageType: ko.observable(''),
 
 			/**
 			 * Saves the item with the current settings. If id is 0, the server interprets it as a new item
@@ -325,31 +367,28 @@
 			{
 				var self = this;
 
+				self.loadingItem(true);
+
+				//override the edit fields to the original non-existent model
+				adminData.edit_fields = self.originalEditFields;
+				self.editFields(window.admin.prepareEditFields());
+
+				//make sure constraints are only loaded once
+				self.holdConstraintsQueue = true;
+
+				//update all the info to the new item state
+				ko.mapping.updateData(self, self.model, self.model);
+
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
-					if (window.admin)
-					{
-						//override the edit fields to the original non-existent model
-						adminData.edit_fields = self.originalEditFields;
-						self.editFields(window.admin.prepareEditFields());
-					}
-
-					//update all the info to the new item state
-					ko.mapping.updateData(self, self.model, self.model);
-					self.itemLoadingId(null);
-					self.activeItem(0);
-
-					//set the last item property which helps manage the animation states
-					self.lastItem = id;
-
+					self.setUpNewItem();
 					return;
 				}
 
 				//freeze the relationship constraint updates
 				self.freezeConstraints = true;
 
-				self.loadingItem(true);
 				self.itemLoadingId(id);
 
 				$.ajax({
@@ -372,13 +411,28 @@
 								self.loadingItem(false);
 								self.clearItem();
 							}
-
-							return;
 						}
-
-						self.setData(data);
+						else
+							self.setData(data);
 					}
 				});
+			},
+
+			/**
+			 * Sets the edit form up as a new item
+			 */
+			setUpNewItem: function()
+			{
+				this.itemLoadingId(null);
+				this.activeItem(0);
+
+				//set the last item property which helps manage the animation states
+				this.lastItem = 0;
+
+				this.loadingItem(false);
+
+				//run the constraints queue
+				window.admin.runConstraintsQueue();
 			},
 
 			/**
@@ -434,6 +488,9 @@
 					self.freezeConstraints = false;
 
 					window.admin.resizePage();
+
+					//run the constraints queue
+					window.admin.runConstraintsQueue();
 				}, 50);
 			},
 
@@ -469,15 +526,18 @@
 			},
 
 			/**
-			 * Performs a custom action
+			 * Performs a custom action on an item or the whole model
 			 *
+			 * @param bool		isItem
 			 * @param string	action
 			 * @param object	messages
 			 * @param string	confirmation
 			 */
-			customAction: function(action, messages, confirmation)
+			customAction: function(isItem, action, messages, confirmation)
 			{
-				var self = this;
+				var self = this,
+					data = {_token: csrf, action_name: action},
+					url;
 
 				//if a confirmation string was supplied, flash it in a confirm()
 				if (confirmation)
@@ -486,12 +546,27 @@
 						return false;
 				}
 
-				self.statusMessage(messages.active).statusMessageType('');
+				//if this is an item action (compared to a global model action), set the proper url
+				if (isItem)
+				{
+					url = base_url + self.modelName() + '/' + self[self.primaryKey]() + '/custom_action';
+					self.statusMessage(messages.active).statusMessageType('');
+				}
+				//otherwise set the url and add the filters
+				else
+				{
+					url = base_url + self.modelName() + '/custom_action';
+					data.sortOptions = self.sortOptions;
+					data.filters = self.getFilters();
+					data.page = self.pagination.page();
+					self.globalStatusMessage(messages.active).globalStatusMessageType('');
+				}
+
 				self.freezeForm(true);
 
 				$.ajax({
-					url: base_url + self.modelName() + '/' + self[self.primaryKey]() + '/custom_action',
-					data: {_token: csrf, action_name: action},
+					url: url,
+					data: data,
 					dataType: 'json',
 					type: 'POST',
 					complete: function()
@@ -502,14 +577,52 @@
 					{
 						if (response.success)
 						{
-							self.statusMessage(messages.success).statusMessageType('success');
+							if (isItem)
+							{
+								self.statusMessage(messages.success).statusMessageType('success');
+								self.setData(response.data);
+							}
+							else
+							{
+								self.globalStatusMessage(messages.success).globalStatusMessageType('success');
+							}
+
+							//if there was a file download initiated, redirect the user to the file download address
+							if (response.download)
+								self.downloadFile(response.download);
+
 							self.updateRows();
-							self.setData(response.data);
 						}
 						else
-							self.statusMessage(response.error).statusMessageType('error');
+						{
+							if (isItem)
+								self.statusMessage(response.error).statusMessageType('error');
+							else
+								self.globalStatusMessage(response.error).globalStatusMessageType('error');
+						}
 					}
 				});
+			},
+
+			/**
+			 * Initiates a file download
+			 *
+			 * @param string	url
+			 */
+			downloadFile: function(url)
+			{
+				var hiddenIFrameId = 'hiddenDownloader',
+					iframe = document.getElementById(hiddenIFrameId);
+
+				if (iframe === null)
+				{
+					iframe = document.createElement('iframe');
+					iframe.id = hiddenIFrameId;
+					iframe.style.display = 'none';
+					document.body.appendChild(iframe);
+				}
+
+				iframe.src = url;
 			},
 
 			/**
@@ -574,7 +687,7 @@
 				var found = false;
 
 				//iterate over the columns to check if it's a valid sort_field or field
-				$.each(this.columns, function(i, col)
+				$.each(this.columns(), function(i, col)
 				{
 					if (field === col.sort_field || field === col.column_name)
 					{
@@ -729,11 +842,11 @@
 							url: base_url + self.modelName() + '/update_options',
 							type: 'POST',
 							dataType: 'json',
-							data: {
+							data: {fields: [{
 								type: 'filter',
 								field: fieldName,
 								selectedItems: filter.value()
-							},
+							}]},
 							complete: function()
 							{
 								window.admin.filtersViewModel.filters[fieldIndex].loadingOptions(false);
@@ -741,7 +854,7 @@
 							success: function(response)
 							{
 								//update the options
-								window.admin.filtersViewModel.listOptions[fieldName](response);
+								window.admin.filtersViewModel.listOptions[fieldName](response[fieldName]);
 							}
 						});
 
@@ -751,10 +864,9 @@
 				//then we'll update the edit fields
 				$.each(self.editFields(), function(ind, field)
 				{
-					var fieldIndex = ind,
-						fieldName = field.field_name;
+					var fieldName = field.field_name;
 
-					//if there are constraints to maintain, set up the subscriptions
+					//if there are no constraints for this field and if it is a self-relationship, update the options
 					if ((!field.constraints || !field.constraints.length) && field.self_relationship)
 					{
 						field.loadingOptions(true);
@@ -763,11 +875,11 @@
 							url: base_url + self.modelName() + '/update_options',
 							type: 'POST',
 							dataType: 'json',
-							data: {
+							data: {fields: [{
 								type: 'edit',
 								field: fieldName,
 								selectedItems: self[fieldName]()
-							},
+							}]},
 							complete: function()
 							{
 								field.loadingOptions(false);
@@ -775,7 +887,7 @@
 							success: function(response)
 							{
 								//update the options
-								self.listOptions[fieldName] = response;
+								self.listOptions[fieldName] = response[fieldName];
 							}
 						});
 
@@ -809,7 +921,7 @@
 			this.viewModel.pagination.total(adminData.rows.total);
 			this.viewModel.sortOptions.field(adminData.sortOptions.field);
 			this.viewModel.sortOptions.direction(adminData.sortOptions.direction);
-			this.viewModel.columns = adminData.column_model;
+			this.viewModel.columns(this.prepareColumns());
 			this.viewModel.modelName(adminData.model_name);
 			this.viewModel.modelTitle(adminData.model_title);
 			this.viewModel.modelSingle(adminData.model_single);
@@ -817,6 +929,7 @@
 			this.viewModel.rowsPerPage(adminData.rows_per_page);
 			this.viewModel.primaryKey = adminData.primary_key;
 			this.viewModel.actions(adminData.actions);
+			this.viewModel.globalActions(adminData.global_actions);
 			this.viewModel.actionPermissions = adminData.action_permissions;
 			this.viewModel.languages = adminData.languages;
 
@@ -916,6 +1029,7 @@
 				if (field.relationship)
 				{
 					field.loadingOptions = ko.observable(false);
+					field.constraintLoading = ko.observable(false);
 				}
 
 				//if this is an image field, set the upload params
@@ -932,6 +1046,25 @@
 			});
 
 			return fields;
+		},
+
+		/**
+		 * Sets up the column model with various observable values
+		 *
+		 * @return array
+		 */
+		prepareColumns: function()
+		{
+			var self = this,
+				columns = [];
+
+			$.each(adminData.column_model, function(ind, column)
+			{
+				column.visible = ko.observable(column.visible);
+				columns.push(column);
+			});
+
+			return columns;
 		},
 
 		/**
@@ -985,8 +1118,6 @@
 					self.viewModel.updateRows();
 				});
 
-
-
 				//check if there's a min and max value. if so, subscribe to those as well
 				if ('min_value' in filter)
 				{
@@ -996,8 +1127,6 @@
 				{
 					self.filtersViewModel.filters[ind].max_value.subscribe(runFilter);
 				}
-
-
 			});
 
 			//iterate over the edit fields
@@ -1006,64 +1135,7 @@
 				//if there are constraints to maintain, set up the subscriptions
 				if (field.constraints && self.getObjectSize(field.constraints))
 				{
-					//we want to subscribe to changes on the OTHER fields since that's what defines changes to this one
-					$.each(field.constraints, function(key, relationshipName)
-					{
-						var fieldIndex = ind,
-							fieldName = field.field_name;
-
-						self.viewModel[key].subscribe(function(val)
-						{
-							if (self.viewModel.freezeConstraints)
-								return;
-
-							//when this value changes, we will want to update the listOptions for the other field
-							//this shouldn't affect the currently-selected item
-							var constraints = {};
-
-							//iterate over this field's constraints
-							$.each(field.constraints, function(key, relationshipName)
-							{
-								constraints[key] = self.viewModel[key]();
-							});
-
-							//freeze the actions
-							self.viewModel.freezeActions(true);
-							field.loadingOptions(true);
-
-							$.ajax({
-								url: base_url + self.viewModel.modelName() + '/update_options',
-								type: 'POST',
-								dataType: 'json',
-								data: {
-									constraints: constraints,
-									type: 'edit',
-									field: fieldName,
-									selectedItems: self.viewModel[fieldName]()
-								},
-								complete: function()
-								{
-									self.viewModel.freezeActions(false);
-									field.loadingOptions(false);
-								},
-								success: function(response)
-								{
-									var data = {};
-
-									//iterate over the results and put them in the autocomplete array
-									$.each(response, function(ind, el)
-									{
-										data[el.id] = el;
-									});
-
-									self.viewModel[fieldName + '_autocomplete'] = data;
-
-									//update the options
-									self.viewModel.listOptions[fieldName] = response;
-								}
-							});
-						});
-					});
+					self.establishFieldConstraints(field);
 				}
 			});
 
@@ -1078,6 +1150,199 @@
 			{
 				self.viewModel.updateRowsPerPage(parseInt(val));
 			});
+		},
+
+		/**
+		 * Establish constraints
+		 *
+		 * @param object	field
+		 */
+		establishFieldConstraints: function(field)
+		{
+			var self = this;
+
+			//we want to subscribe to changes on the OTHER fields since that's what defines changes to this one
+			$.each(field.constraints, function(key, relationshipName)
+			{
+				var fieldName = field.field_name,
+					f = field,
+					constraintsLength = self.getFieldConstraintsLength(key);
+
+				self.viewModel[key].subscribe(function(val)
+				{
+					if (self.viewModel.freezeConstraints || f.loadingOptions())
+						return;
+
+					//if this key hasn't been set up yet, set it
+					if (!self.viewModel.constraintsQueue[key])
+						self.viewModel.constraintsQueue[key] = {};
+
+					//add the constraint to the queue
+					self.viewModel.constraintsQueue[key][fieldName] = f;
+
+					var currentQueueLength = Object.keys(self.viewModel.constraintsQueue[key]).length;
+
+					if (!self.viewModel.holdConstraintsQueue && (currentQueueLength === constraintsLength))
+						self.runConstraintsQueue();
+				});
+			});
+		},
+
+		/**
+		 * Sets the constrainer's constraintLoading field to true
+		 *
+		 * @param string	key
+		 *
+		 * @return int
+		 */
+		getFieldConstraintsLength: function(key)
+		{
+			var length = 0;
+
+			//iterate over the edit fields until we find our match
+			$.each(this.viewModel.editFields(), function(ind, field)
+			{
+				if (field.constraints && field.constraints[key])
+				{
+					length++;
+				}
+			});
+
+			return length;
+		},
+
+		/**
+		 * Sets the constrainer's constraintLoading field to true
+		 *
+		 * @param string	key
+		 * @param bool		freeze
+		 */
+		setConstrainerFreeze: function(key, freeze)
+		{
+			//iterate over the edit fields until we find our match
+			$.each(this.viewModel.editFields(), function(ind, field)
+			{
+				if (field.field_name === key)
+				{
+					field.constraintLoading(freeze);
+					return false;
+				}
+			});
+		},
+
+		/**
+		 * Sets a field's loadingOptions
+		 *
+		 * @param string	fieldName
+		 * @param bool		type
+		 */
+		setFieldLoadingOptions: function(fieldName, type)
+		{
+			//iterate over the edit fields until we find our match
+			$.each(this.viewModel.editFields(), function(ind, field)
+			{
+				if (field.field_name === fieldName)
+				{
+					field.loadingOptions(type);
+					return false;
+				}
+			});
+		},
+
+		/**
+		 * Runs the constraints queue
+		 */
+		runConstraintsQueue: function()
+		{
+			var self = this,
+				fields = self.buildConstraintsFromQueue();
+
+			//if there are no fields, exit out
+			if (!fields.length)
+				return;
+
+			//freeze the actions
+			self.viewModel.freezeActions(true);
+
+			$.ajax({
+				url: base_url + self.viewModel.modelName() + '/update_options',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					fields: fields
+				},
+				complete: function()
+				{
+					self.viewModel.freezeActions(false);
+
+					$.each(self.viewModel.constraintsQueue, function(key, fieldConstraints)
+					{
+						$.each(fieldConstraints, function(fieldName, field)
+						{
+							self.setFieldLoadingOptions(fieldName, false);
+							self.setConstrainerFreeze(key, false);
+						});
+					});
+
+					//clear the constraints queue
+					self.viewModel.constraintsQueue = {};
+					self.viewModel.holdConstraintsQueue = false;
+				},
+				success: function(response)
+				{
+					//iterate over the results and put them in the autocomplete array
+					$.each(response, function(fieldName, el)
+					{
+						var data = {};
+
+						$.each(el, function(i, e)
+						{
+							data[e.id] = e;
+						});
+
+						self.viewModel[fieldName + '_autocomplete'] = data;
+
+						//update the options
+						self.viewModel.listOptions[fieldName] = el;
+					});
+				}
+			});
+		},
+
+		/**
+		 * Prepares the constraints for the queue job
+		 */
+		buildConstraintsFromQueue: function()
+		{
+			var self = this,
+				allConstraints = [];
+
+			$.each(self.viewModel.constraintsQueue, function(key, fieldConstraints)
+			{
+				$.each(fieldConstraints, function(fieldName, field)
+				{
+					var constraints = {};
+
+					//set the field to loading and freeze the constrainer
+					self.setFieldLoadingOptions(fieldName, true);
+					self.setConstrainerFreeze(key, true);
+
+					//iterate over this field's constraints
+					$.each(field.constraints, function(key, relationshipName)
+					{
+						constraints[key] = self.viewModel[key]();
+					});
+
+					allConstraints.push({
+						constraints: constraints,
+						type: 'edit',
+						field: fieldName,
+						selectedItems: self.viewModel[fieldName]()
+					});
+				});
+			});
+
+			return allConstraints;
 		},
 
 		/**
@@ -1142,13 +1407,22 @@
 			//if the admin data had an id supplied, it means this is either the edit page or the new item page
 			if ('id' in adminData)
 			{
-				this.viewModel.getItem(adminData.id);
-				historyData.id = adminData.id;
-				uri += '/' + (historyData.id ? historyData.id : 'new');
-			}
+				//if the view model hasn't been set up yet, wait for it to be set up
+				var timer = setInterval(function()
+				{
+					if (window.admin)
+					{
+						window.admin.viewModel.getItem(adminData.id);
+						historyData.id = adminData.id;
+						uri += '/' + (historyData.id ? historyData.id : 'new');
 
-			//now call the same to trigger the statechange event
-			History.pushState(historyData, null, uri);
+						//now call the same to trigger the statechange event
+						History.pushState(historyData, null, uri);
+
+						clearInterval(timer);
+					}
+				}, 100);
+			}
 
 			this.historyStarted = true;
 		},
@@ -1196,10 +1470,59 @@
 		resizePage: function()
 		{
 			var winHeight = $(window).height(),
-				itemEditHeight = $('div.item_edit').height() + 50,
-				usedHeight = winHeight > itemEditHeight ? winHeight - 45 : itemEditHeight;
+				itemEditHeight = $('form.edit_form').height() + 50,
+				usedHeight = winHeight > itemEditHeight ? winHeight - 45 : itemEditHeight,
+				size = window.getComputedStyle(document.body, ':after').getPropertyValue('content');
 
+			//resize the page height
 			$('#admin_page').css({minHeight: usedHeight});
+
+			//resize the data table
+			if (window.admin)
+				window.admin.resizeDataTable();
+		},
+
+		/**
+		 * Hides columns until the table container is at least as wide as the data table
+		 */
+		resizeDataTable: function()
+		{
+			var self = window.admin,
+				winWidth = $(window).width();
+
+			if (!self.$tableContainer)
+			{
+				self.$tableContainer = $('div.table_container');
+				self.$dataTable = self.$tableContainer.find('table.results');
+			}
+
+			//grab the columns
+			var columns = self.viewModel.columns();
+
+			//iterate over the column hide points to see if we should unhide any of them
+			$.each(self.columnHidePoints, function(i, el)
+			{
+				if (el < winWidth)
+					columns[i].visible(true);
+			});
+
+			//walk backwards over the columns to determine which ones to hide
+			for (var i = columns.length - 1; i >= 2; i--)
+			{
+				//if the datatable is visible and the table is large than its container
+				if (columns.length >= 2 && self.$dataTable.is(':visible') && (self.$tableContainer.width() < self.$dataTable.width()) )
+				{
+					//we don't want to hide all the columns
+					if (i <= 1)
+						return;
+					if (columns[i].visible())
+					{
+						columns[i].visible(false);
+						self.columnHidePoints[i] = winWidth;
+						break;
+					}
+				}
+			}
 		}
 	};
 

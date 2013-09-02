@@ -1,5 +1,5 @@
 <h2><?php echo trans('administrator::administrator.filters') ?></h2>
-<div class="panel_contents">
+<div class="filters">
 
 	<!-- ko foreach: $root.filters -->
 		<div data-bind="attr: {class: type + ' ' + (min_max ? 'min_max' : '')}">

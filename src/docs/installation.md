@@ -10,9 +10,12 @@
 <a name="composer"></a>
 ## Composer
 
-To install Administrator as a Composer package to be used with Laravel 4, simply add this to your composer.json:
+To install Administrator as a Composer package to be used with Laravel 4, simply add administrator to your composer.json `require` key:
 
-	"frozennode/administrator": "dev-master"
+	"require": {
+		"laravel/framework": "4.0.*",
+		"frozennode/administrator": "dev-master"
+	}
 
 ..and run `composer update`.  Once it's installed, you can register the service provider in `app/config/app.php` in the `providers` array:
 
@@ -39,6 +42,22 @@ After you've installed Administrator in the bundles directory, add this to your 
 After the package is installed, you need to publish the package's assets like this:
 
 	php artisan asset:publish frozennode/administrator
+
+It is best to publish the assets whenever Administrator updates. Instead of doing this manually, you can add the above command to your `scripts` object in your composer.json file:
+
+	"scripts": {
+		"pre-update-cmd": [
+			"php artisan clear-compiled"
+		],
+		"post-install-cmd": [
+			"php artisan optimize",
+			"php artisan asset:publish frozennode/administrator"
+		],
+		"post-update-cmd": [
+			"php artisan optimize",
+			"php artisan asset:publish frozennode/administrator"
+		]
+	},
 
 <a name="administrator-config"></a>
 ## Administrator Config

@@ -3,6 +3,13 @@
 return array(
 
 	/**
+	 * Package URI
+	 *
+	 * @type string
+	 */
+	'uri' => 'admin',
+
+	/**
 	 * Page title
 	 *
 	 * @type string
@@ -14,14 +21,14 @@ return array(
 	 *
 	 * @type string
 	 */
-	'model_config_path' => path('app') . 'config/administrator',
+	'model_config_path' => app('path') . '/config/administrator',
 
 	/**
 	 * The path to your settings config directory
 	 *
 	 * @type string
 	 */
-	'settings_config_path' => path('app') . 'config/administrator/settings',
+	'settings_config_path' => app('path') . '/config/administrator/settings',
 
 	/**
 	 * The menu structure of the site. Each item should either be the name of the model's config file or an array of names of model config files.
@@ -51,7 +58,8 @@ return array(
 	 */
 	'permission'=> function()
 	{
-		return Auth::check();
+		return true;
+		//return Auth::user()->hasRole('admin');
 	},
 
 	/**
@@ -107,5 +115,13 @@ return array(
 	 * If you set this to an integer value greater than 0, it will override the $per_page static property in ALL of your models
 	 */
 	'global_rows_per_page' => 20,
+
+	/**
+	 * An array of available locale strings. This determines which locales are available in the languages menu at the top right of the Administrator
+	 * interface.
+	 *
+	 * @type array
+	 */
+	'locales' => array(),
 
 );

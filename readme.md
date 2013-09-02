@@ -1,10 +1,10 @@
 # Laravel Administrator
 
-Administrator is a database interface package for the Laravel PHP framework. Administrator provides a visual interface to manage the data models on your site as you define them. In its most basic configuration, all you have to do is reference your application's Eloquent data models and provide a couple more configuration options.
+Administrator is an administrative interface builder for [Laravel](http://laravel.com). With Administrator you can visually manage your Eloquent models and their relations, and also create stand-alone settings pages for storing site data and performing site tasks.
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.3.0
+- **Version:** 4.6.1
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,18 +53,18 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.3.0
-- Unit testing
-- A fourth basic action permission is now available: 'view'. This dictates whether or not the admin user can click an item to open it
-- There is now an optional 'rules' property in model configuration files which works just like the $rules static property in Eloquent models
-- You can now define where the raw settings data is stored by providing a 'storage_path' option to settings configs
-- You can now supply a 'confirmation' string option to your custom actions which will require a confirmation from the admin user before the action can go through
-- The active item now updates itself when you perform a custom action or when you save an item
-- You can now specify an options_sort_field and an options_sort_direction for relationship fields that use accessors as name fields, and as such require ordering on something other than the name_field
-- 'logout_path' option is now available in the main config. By default this is false, but if you provide a string value it will show a logout button and link the user to that path if clicked
-- Bugfix: Tons of other bugs that I caught while creating the unit tests :D
-- Bugfix: The model results no longer require an ajax load on pageload
-- Bugfix: Table prefixes are now taken into consideration
-- Bugfix: Number fields would take two tries to clear
-- Bugfix: Saving empty number field would result in 0
-- Bugfix: Using an accessor for a name_field in a relationship field would previously cause SQL errors
+### 4.6.1
+- Bugfix: Call to App::make('itemconfig') in the header would cause an error on dashboard pages
+- Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection
+- Bugfix: <=IE9 was having issues with the dropdown menu
+
+### 4.6.0
+- Support for smaller screens and mobile devices
+- Visible option for columns that accepts either a boolean or closure
+- Relationship constraints now work with hasMany and hasOne fields
+- There is now an `options_filter` option for relationship fields that lets you modify the query before getting the relationship options
+- Custom actions and saves now rebuild the supplied config file after performing the action
+- The `editable` property now accepts a closure and is passed the current page's data object
+- New translations (da, it)
+- Bugfix: Constraint fields no longer make multiple requests at a single time
+- Bugfix: The key field is no longer set on models. This would cause some bugs on some setups

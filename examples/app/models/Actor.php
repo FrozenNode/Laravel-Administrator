@@ -1,6 +1,6 @@
 <?php
 
-class Actor extends Model {
+class Actor extends Eloquent {
 
 	public static $rules = array
 	(

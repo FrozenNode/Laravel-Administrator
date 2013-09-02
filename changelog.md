@@ -1,7 +1,41 @@
 ## Changelog
 
+### 4.6.1
+- Bugfix: Call to App::make('itemconfig') in the header would cause an error on dashboard pages
+- Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection
+- Bugfix: <=IE9 was having issues with the dropdown menu
+
+### 4.6.0
+- Support for smaller screens and mobile devices
+- Visible option for columns that accepts either a boolean or closure
+- Relationship constraints now work with hasMany and hasOne fields
+- There is now an `options_filter` option for relationship fields that lets you modify the query before getting the relationship options
+- Custom actions and saves now rebuild the supplied config file after performing the action
+- The `editable` property now accepts a closure and is passed the current page's data object
+- New translations (da, it)
+- Bugfix: Constraint fields no longer make multiple requests at a single time
+- Bugfix: The key field is no longer set on models. This would cause some bugs on some setups
+
+### 4.5.0
+- You can now provide `value`, `min_value`, and `max_value` options in filter fields to set default values
+- It is now possible to specify as many submenus in the `menus` array as you want
+- The examples directory is now properly adjusted for L4
+- Bugfix: The CKEditor in WYSIWYG fields no longer jumps around and removes text selection on blur
+- Bugfix: Soft deleted values from a related table no longer get included in relationship columns
+- Bugfix: Relationship where clauses now work when you pre-specify the table name
+- Bugfix: Time fields weren't saving properly
+
+### 4.4.1
+- Bugfix: Removed reliance on MySQL-specific backticks in queries
+- Bugfix: New validateArray method in Laravel core Validator class was messing with custom version in Administrator's Validator
+- Bugfix: In relationship where clauses, there would be issues with values defined on the pivot table
+
+### 4.4.0
+- You can now provide custom actions to a "global_actions" option in model configs. These actions are passed the current filtered query object and can be used to perform table-wide actions.
 - There is now a query_filter option for model configs that lets you filter a model's results query before it's constructed
 - Relationship columns now respect WHERE filters in your Eloquent model
+- New translations (ru)
+- Bugfix: Enum fields were having issues on settings pages
 - Bugfix: Submenu titles weren't properly translating in the presence of multiple locales
 - Bugfix: BelongsToMany filters now work with table prefixes
 - Bugfix: Non-string name_fields and search_fields no longer break select2

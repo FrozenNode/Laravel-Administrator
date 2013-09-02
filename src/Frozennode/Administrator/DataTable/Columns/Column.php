@@ -10,21 +10,21 @@ class Column {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Illuminate\Database\DatabaseManager
+	 * @var \Illuminate\Database\DatabaseManager
 	 */
 	protected $db;
 
@@ -59,6 +59,7 @@ class Column {
 		'is_included' => false,
 		'external' => false,
 		'belongs_to_many' => false,
+		'visible' => true,
 	);
 
 	/**
@@ -105,9 +106,9 @@ class Column {
 	/**
 	 * Create a new action Factory instance
 	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager 				$db
+	 * @param \Frozennode\Administrator\Validator 				$validator
+	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param \Illuminate\Database\DatabaseManager 				$db
 	 * @param array												$options
 	 */
 	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
@@ -161,7 +162,6 @@ class Column {
 		if ($select = $this->validator->arrayGet($options, 'select'))
 		{
 			$options['select'] = str_replace('(:table)', $this->tablePrefix . $model->getTable(), $select);
-			$options['sortable'] = true;
 		}
 
 		//now we do some final organization to categorize these columns (useful later in the sorting)
@@ -172,6 +172,14 @@ class Column {
 		else
 		{
 			$options['is_included'] = true;
+		}
+
+		//run the visible property closure if supplied
+		$visible = $this->validator->arrayGet($options, 'visible');
+
+		if (is_callable($visible))
+		{
+			$options['visible'] = $visible($this->config->getDataModel()) ? true : false;
 		}
 
 		$this->suppliedOptions = $options;
@@ -188,7 +196,7 @@ class Column {
 	{
 		if ($select = $this->getOption('select'))
 		{
-			$selects[] = $this->db->raw($select . ' AS `' . $this->getOption('column_name') . '`');
+			$selects[] = $this->db->raw($select . ' AS ' . $this->db->getQueryGrammar()->wrap($this->getOption('column_name')));
 		}
 	}
 

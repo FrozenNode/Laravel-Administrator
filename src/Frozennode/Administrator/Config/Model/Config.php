@@ -35,6 +35,7 @@ class Config extends ConfigBase implements ConfigInterface {
 			'view' => true,
 		),
 		'actions' => array(),
+		'global_actions' => array(),
 		'sort' => array(),
 		'form_width' => 285,
 		'link' => null,
@@ -44,7 +45,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * An instance of the Eloquent model object for this model
 	 *
-	 * @var Illuminate\Database\Eloquent\Model
+	 * @var \Illuminate\Database\Eloquent\Model
 	 */
 	protected $model;
 
@@ -64,6 +65,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'permission' => 'callable',
 		'action_permissions' => 'array',
 		'actions' => 'array',
+		'global_actions' => 'array',
 		'sort' => 'array',
 		'form_width' => 'integer',
 		'link' => 'callable',
@@ -73,7 +75,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fetches the data model for a config
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function getDataModel()
 	{
@@ -89,7 +91,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Sets the data model for a config
 	 *
-	 * @param Illuminate\Database\Eloquent\Model	$model
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 *
 	 * @return  void
 	 */
@@ -105,7 +107,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * @param array										$fields
 	 * @param array										$columns
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function getModel($id = 0, array $fields, array $columns)
 	{
@@ -124,7 +126,6 @@ class Config extends ConfigBase implements ConfigInterface {
 		//get the model by id
 		$model = $model->find($id, $columns);
 		$model = $model ? $model : $originalModel;
-
 		//if the model exists, load up the existing related items
 		if ($model->exists)
 		{
@@ -137,8 +138,8 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fills a model with the data it needs before being sent back to the user
 	 *
-	 * @param array		$fields
-	 * @param Eloquent	$model
+	 * @param array									$fields
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 *
 	 * @return void
 	 */
@@ -163,8 +164,8 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fills a model with the necessary relationship values for a field
 	 *
-	 * @param Illuminate\Database\Eloquent\Model		$model
-	 * @param Frozennode\Administrator\Fields\Field		$field
+	 * @param \Illuminate\Database\Eloquent\Model		$model
+	 * @param \Frozennode\Administrator\Fields\Field	$field
 	 *
 	 * @return void
 	 */
@@ -238,10 +239,10 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fills a model with the necessary relationship values
 	 *
-	 * @param Illuminate\Database\Eloquent\Model		$model
-	 * @param Frozennode\Administrator\Fields\Field		$field
+	 * @param \Illuminate\Database\Eloquent\Model		$model
+	 * @param \Frozennode\Administrator\Fields\Field		$field
 	 *
-	 * @return Illuminate\Database\Eloquent\Collection
+	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public function getModelRelatedItems($model, Field $field)
 	{
@@ -268,11 +269,11 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Updates a model with the latest permissions, links, and fields
 	 *
-	 * @param Eloquent									$model
-	 * @param Frozennode\Administrator\Fields\Factory	$fieldFactory
-	 * @param Frozennode\Administrator\Actions\Factory	$actionFactory
+	 * @param \Illuminate\Database\Eloquent\Model		$model
+	 * @param \Frozennode\Administrator\Fields\Factory	$fieldFactory
+	 * @param \Frozennode\Administrator\Actions\Factory	$actionFactory
 	 *
-	 * @return Eloquent
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function updateModel($model, FieldFactory $fieldFactory, ActionFactory $actionFactory)
 	{
@@ -298,7 +299,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Saves the model
 	 *
-	 * @param Illuminate\Http\Request	$input
+	 * @param \Illuminate\Http\Request	$input
 	 * @param array						$fields
 	 * @param array						$actionPermissions
 	 * @param int						$id
@@ -355,7 +356,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Sets the proper data attributes and rules arrays depending on whether or not the model exists
 	 *
-	 * @param $model	Eloquent
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 *
 	 * @return array	//'data' and 'rules' indexes both arrays
 	 */
@@ -385,8 +386,8 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Prepare a model for saving given a post input array
 	 *
-	 * @param Illuminate\Database\Eloquent\Model	$model
-	 * @param Illuminate\Http\Request				$input
+	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param \Illuminate\Http\Request				$input
 	 * @param array									$fields
 	 *
 	 * @return void
@@ -459,8 +460,8 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * After a model has been saved, this is called to save the relationships
 	 *
-	 * @param Illuminate\Http\Request				$model
-	 * @param Illuminate\Database\Eloquent\Model	$model
+	 * @param \Illuminate\Http\Request				$input
+	 * @param \Illuminate\Database\Eloquent\Model	$model
 	 * @param array									$fields
 	 *
 	 * @return void
@@ -499,7 +500,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Runs a user-supplied query filter if one is supplied
 	 *
-	 * @param Illuminate\Database\Query\Builder
+	 * @param \Illuminate\Database\Query\Builder	$query
 	 *
 	 * @return void
 	 */

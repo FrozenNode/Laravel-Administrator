@@ -51,21 +51,21 @@ class Factory {
 	/**
 	 * The validator instance
 	 *
-	 * @var Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
 
 	/**
 	 * The config interface instance
 	 *
-	 * @var Frozennode\Administrator\Config\ConfigInterface
+	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
 
 	/**
 	 * The config instance
 	 *
-	 * @var Illuminate\Database\DatabaseManager
+	 * @var \Illuminate\Database\DatabaseManager
 	 */
 	protected $db;
 
@@ -107,9 +107,9 @@ class Factory {
 	/**
 	 * Create a new model Config instance
 	 *
-	 * @param Frozennode\Administrator\Validator 				$validator
-	 * @param Frozennode\Administrator\Config\ConfigInterface	$config
-	 * @param Illuminate\Database\DatabaseManager 				$db
+	 * @param \Frozennode\Administrator\Validator 				$validator
+	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
+	 * @param \Illuminate\Database\DatabaseManager 				$db
 	 */
 	public function __construct(Validator $validator, ConfigInterface $config, DB $db)
 	{
@@ -288,7 +288,7 @@ class Factory {
 	}
 
 	/**
-	 * Given a field name and Eloquent model object, returns the type key or false
+	 * Given a field name, returns the type key or false
 	 *
 	 * @param string 	$field  	the field type to check
 	 *
@@ -337,7 +337,7 @@ class Factory {
 	 *
 	 * @param string	 	$field
 	 *
-	 * @return Frozennode\Administrator\Fields\Field
+	 * @return \Frozennode\Administrator\Fields\Field
 	 */
 	public function findField($field)
 	{
@@ -357,7 +357,7 @@ class Factory {
 	 *
 	 * @param string	 	$field
 	 *
-	 * @return Frozennode\Administrator\Fields\Field
+	 * @return \Frozennode\Administrator\Fields\Field
 	 */
 	public function findFilter($field)
 	{
@@ -559,11 +559,11 @@ class Factory {
 	/**
 	 * Given a model, field, type (filter or edit), and constraints (either int or array), returns an array of options
 	 *
-	 * @param string								$field
-	 * @param string								$type			//either 'filter' or 'edit'
-	 * @param array									$constraints	//an array of ids of the other model's items
-	 * @param array									$selectedItems	//an array of ids that are currently selected
-	 * @param string								$term			//the search term
+	 * @param string	$field
+	 * @param string	$type			//either 'filter' or 'edit'
+	 * @param array		$constraints	//an array of ids of the other model's items
+	 * @param array		$selectedItems	//an array of ids that are currently selected
+	 * @param string	$term			//the search term
 	 *
 	 * @return array
 	 */
@@ -613,6 +613,10 @@ class Factory {
 		//if there is a search term, limit the result set by that term
 		$this->filterBySearchTerm($term, $query, $fieldObject, $selectedItems, $relatedKeyTable);
 
+		//perform any user-supplied options filter
+		$filter = $fieldObject->getOption('options_filter');
+		$filter($query);
+
 		//finally we can return the options
 		return $this->formatSelectOptions($relatedModel, $fieldObject, $query->get());
 	}
@@ -621,12 +625,12 @@ class Factory {
 	 * Filters a relationship options query by a search term
 	 *
 	 * @param mixed										$term
-	 * @param Illuminate\Database\Query\Builder			$query
+	 * @param \Illuminate\Database\Query\Builder		$query
 	 * @param array										$selectedItems
-	 * @param Frozennode\Administrator\Fields\Field		$fieldObject
+	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
 	 * @param string									$relatedKeyTable
 	 */
-	public function filterBySearchTerm($term, &$query, Field $fieldObject, array $selectedItems, $relatedKeyTable)
+	public function filterBySearchTerm($term, QueryBuilder &$query, Field $fieldObject, array $selectedItems, $relatedKeyTable)
 	{
 		if ($term)
 		{
@@ -670,9 +674,9 @@ class Factory {
 	/**
 	 * Takes the supplied $selectedItems mixed value and formats it to a usable array
 	 *
-	 * @param Illuminate\Database\Query\Builder			$query
+	 * @param \Illuminate\Database\Query\Builder		$query
 	 * @param array										$selectedItems
-	 * @param Frozennode\Administrator\Fields\Field		$fieldObject
+	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
 	 * @param string									$relatedKeyTable
 	 *
 	 * @return array
@@ -697,8 +701,8 @@ class Factory {
 	 * Takes the supplied $selectedItems mixed value and formats it to a usable array
 	 *
 	 * @param mixed										$constraints
-	 * @param Illuminate\Database\Query\Builder			$query
-	 * @param Frozennode\Administrator\Fields\Field		$fieldObject
+	 * @param \Illuminate\Database\Query\Builder		$query
+	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
 	 *
 	 * @return array
 	 */
@@ -736,9 +740,9 @@ class Factory {
 	/**
 	 * Takes an eloquent result array and turns it into an options array that can be used in the UI
 	 *
-	 * @param Illuminate\Database\Eloquent\Model 	$model
-	 * @param Frozennode\Administrator\Fields\Field	$field
-	 * @param array 								$results
+	 * @param \Illuminate\Database\Eloquent\Model 		$model
+	 * @param \Frozennode\Administrator\Fields\Field	$field
+	 * @param array 									$results
 	 *
 	 * @return array
 	 */

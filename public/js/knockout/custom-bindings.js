@@ -207,7 +207,7 @@
 							});
 						}
 
-						return data;
+						return {fields: [data]};
 					},
 					results: function(returndata, page)
 					{
@@ -224,7 +224,7 @@
 						}
 
 						//iterate over the results and put them in the autocomplete array
-						$.each(returndata, function(ind, el)
+						$.each(returndata[options.field], function(ind, el)
 						{
 							data[el.id] = el;
 						});
@@ -232,7 +232,7 @@
 						admin.viewModel[options.field + '_autocomplete'] = data;
 
 						return {
-							results: returndata
+							results: returndata[options.field]
 						}
 					}
 				},
@@ -569,9 +569,13 @@
 			//wire up the blur event to ensure our observable is properly updated
 			editor.focusManager.blur = function()
 			{
-				var observable = valueAccessor().value;
+				var observable = valueAccessor().value,
+					$el = $('#' + options.id);
 
-				observable($('#' + options.id).val());
+				//set the blur attribute to true so we know now to set the editor data in the update method
+				$el.data('blur', true);
+
+				observable($el.val());
 			}
 
 			//handle destroying an editor (based on what jQuery plugin does)
@@ -607,7 +611,12 @@
 				setTimeout(function()
 				{
 					$element.html(value);
-					editor.setData(value);
+
+					if ($element.data('blur'))
+						$element.removeData('blur');
+					else
+						editor.setData(value);
+
 				}, 50);
 			}
 		}

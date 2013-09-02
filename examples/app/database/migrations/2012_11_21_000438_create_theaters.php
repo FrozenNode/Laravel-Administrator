@@ -1,6 +1,8 @@
 <?php
 
-class Create_Films_Table {
+use Illuminate\Database\Migrations\Migration;
+
+class CreateTheaters extends Migration {
 
 	/**
 	 * Make changes to the database.
@@ -9,12 +11,10 @@ class Create_Films_Table {
 	 */
 	public function up()
 	{
-		Schema::create('films', function($table)
+		Schema::create('theaters', function($table)
 		{
 			$table->increments('id');
-			$table->string('name');
-			$table->date('release_date');
-			$table->integer('director_id');
+			$table->text('name');
 			$table->timestamps();
 		});
 	}
@@ -26,7 +26,7 @@ class Create_Films_Table {
 	 */
 	public function down()
 	{
-		Schema::drop('films');
+		Schema::drop('theaters');
 	}
 
 }

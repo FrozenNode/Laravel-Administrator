@@ -3,32 +3,20 @@
 		<a href="{{URL::route('admin_dashboard')}}">{{Config::get('administrator::administrator.title')}}</a>
 	</h1>
 
+	<a href="#" id="menu_button"><div></div></a>
+	<a href="#" id="filter_button" class="{{$configType === 'model' ? '' : 'hidden'}}"><div></div></a>
+
+	<div id="mobile_menu_wrapper">
+		<ul id="mobile_menu">
+			@foreach ($menu as $key => $item)
+				@include('administrator::partials.menu_item')
+			@endforeach
+		</ul>
+	</div>
+
 	<ul id="menu">
 		@foreach ($menu as $key => $item)
-			@if (is_array($item))
-				<li class="menu">
-					<span>{{$key}}</span>
-					<ul>
-						@foreach ($item as $k => $subitem)
-							<li>
-								@if (strpos($k, $settingsPrefix) === false)
-									<a href="{{URL::route('admin_index', array($k))}}">{{$subitem}}</a>
-								@else
-									<a href="{{URL::route('admin_settings', array(substr($k, strlen($settingsPrefix))))}}">{{$subitem}}</a>
-								@endif
-							</li>
-						@endforeach
-					</ul>
-				</li>
-			@else
-				<li class="item">
-					@if (strpos($key, $settingsPrefix) === false)
-						<a href="{{URL::route('admin_index', array($key))}}">{{$item}}</a>
-					@else
-						<a href="{{URL::route('admin_settings', array(substr($key, strlen($settingsPrefix))))}}">{{$item}}</a>
-					@endif
-				</li>
-			@endif
+			@include('administrator::partials.menu_item')
 		@endforeach
 	</ul>
 	<div id="right_nav">

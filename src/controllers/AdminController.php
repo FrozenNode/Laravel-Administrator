@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\File as SFile;
 use Illuminate\Support\Facades\Validator as LValidator;
 use Frozennode\Administrator\Fields\Field;
@@ -53,7 +54,7 @@ class AdminController extends Controller
 	 * @param string		$modelName
 	 * @param mixed			$itemId
 	 */
-	public function item($modelName, $itemId = false)
+	public function item($modelName, $itemId = 0)
 	{
 		$config = App::make('itemconfig');
 		$fieldFactory = App::make('admin_field_factory');
@@ -113,6 +114,10 @@ class AdminController extends Controller
 		}
 		else
 		{
+			//override the config options so that we can get the latest
+			App::make('admin_config_factory')->updateConfigOptions();
+
+			//grab the latest model data
 			$columnFactory = App::make('admin_column_factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
@@ -170,14 +175,67 @@ class AdminController extends Controller
 	}
 
 	/**
-	 * POST method for handling custom actions
+	 * POST method for handling custom model actions
+	 *
+	 * @param string		$modelName
+	 *
+	 * @return JSON
+	 */
+	public function customModelAction($modelName)
+	{
+		$config = App::make('itemconfig');
+		$actionFactory = App::make('admin_action_factory');
+		$actionName = Input::get('action_name', false);
+		$dataTable = App::make('admin_datatable');
+
+		//get the sort options and filters
+		$page = Input::get('page', 1);
+		$sortOptions = Input::get('sortOptions', array());
+		$filters = Input::get('filters', array());
+
+		//get the prepared query options
+		$prepared = $dataTable->prepareQuery(App::make('db'), $page, $sortOptions, $filters);
+
+		//get the action and perform the custom action
+		$action = $actionFactory->getByName($actionName, true);
+		$result = $action->perform($prepared['query']);
+
+		//if the result is a string, return that as an error.
+		if (is_string($result))
+		{
+			return Response::json(array('success' => false, 'error' => $result));
+		}
+		//if it's falsy, return the standard error message
+		else if (!$result)
+		{
+			$messages = $action->getOption('messages');
+
+			return Response::json(array('success' => false, 'error' => $messages['error']));
+		}
+		//if it's a download response, flash the response to the seession and return the download link
+		else if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+		{
+			$file = $result->getFile()->getRealPath();
+			$headers = $result->headers->all();
+			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+			return Response::json(array('success' => true, 'download' => URL::route('admin_file_download')));
+		}
+		else
+		{
+			return Response::json(array('success' => true));
+		}
+	}
+
+	/**
+	 * POST method for handling custom model item actions
 	 *
 	 * @param string		$modelName
 	 * @param int			$id
 	 *
 	 * @return JSON
 	 */
-	public function customAction($modelName, $id = null)
+	public function customModelItemAction($modelName, $id = null)
 	{
 		$config = App::make('itemconfig');
 		$actionFactory = App::make('admin_action_factory');
@@ -189,6 +247,9 @@ class AdminController extends Controller
 		$action = $actionFactory->getByName($actionName);
 		$result = $action->perform($model);
 
+		//override the config options so that we can get the latest
+		App::make('admin_config_factory')->updateConfigOptions();
+
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
@@ -197,7 +258,8 @@ class AdminController extends Controller
 		//if it's falsy, return the standard error message
 		else if (!$result)
 		{
-			return Response::json(array('success' => false, 'error' => $action->getOption('messages')['error']));
+			$messages = $action->getOption('messages');
+			return Response::json(array('success' => false, 'error' => $messages['error']));
 		}
 		else
 		{
@@ -211,7 +273,19 @@ class AdminController extends Controller
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
 
-			return Response::json(array('success' => true, 'data' => $model->toArray()));
+			$response = array('success' => true, 'data' => $model->toArray());
+
+			//if it's a download response, flash the response to the seession and return the download link
+			if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+			{
+				$file = $result->getFile()->getRealPath();
+				$headers = $result->headers->all();
+				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+				$response['download'] = URL::route('admin_file_download');
+			}
+
+			return Response::json($response);
 		}
 	}
 
@@ -269,7 +343,7 @@ class AdminController extends Controller
 		$filters = Input::get('filters', array());
 
 		//return the rows
-		return Response::json($dataTable->getRows(App::make('db'), $page, $sortOptions, $filters));
+		return Response::json($dataTable->getRows(App::make('db'), $filters, $page, $sortOptions));
 	}
 
 	/**
@@ -282,16 +356,22 @@ class AdminController extends Controller
 	public function updateOptions($modelName)
 	{
 		$fieldFactory = App::make('admin_field_factory');
+		$response = array();
 
-		//get the constraints, the search term, and the currently-selected items
-		$constraints = Input::get('constraints', array());
-		$term = Input::get('term', '');
-		$type = Input::get('type', false);
-		$field = Input::get('field', false);
-		$selectedItems = Input::get('selectedItems', false);
+		//iterate over the supplied constrained fields
+		foreach (Input::get('fields', array()) as $field)
+		{
+			//get the constraints, the search term, and the currently-selected items
+			$constraints = array_get($field, 'constraints', array());
+			$term = array_get($field, 'term', array());
+			$type = array_get($field, 'type', false);
+			$fieldName = array_get($field, 'field', false);
+			$selectedItems = array_get($field, 'selectedItems', false);
 
-		//return the rows
-		return Response::json($fieldFactory->updateRelationshipOptions($field, $type, $constraints, $selectedItems, $term));
+			$response[$fieldName] = $fieldFactory->updateRelationshipOptions($fieldName, $type, $constraints, $selectedItems, $term);
+		}
+
+		return Response::json($response);
 	}
 
 	/**
@@ -331,6 +411,26 @@ class AdminController extends Controller
 		$field = $fieldFactory->findField($fieldName);
 
 		return Response::JSON($field->doUpload());
+	}
+
+	/**
+	 * The GET method that runs when a user needs to download a file
+	 *
+	 * @return JSON
+	 */
+	public function fileDownload()
+	{
+		if ($response = Session::get('administrator_download_response'))
+		{
+			Session::forget('administrator_download_response');
+			$filename = substr($response['headers']['content-disposition'][0], 22, -1);
+
+			return Response::download($response['file'], $filename, $response['headers']);
+		}
+		else
+		{
+			return Redirect::back();
+		}
 	}
 
 	/**
@@ -383,9 +483,13 @@ class AdminController extends Controller
 		}
 		else
 		{
+			//override the config options so that we can get the latest
+			App::make('admin_config_factory')->updateConfigOptions();
+
 			return Response::json(array(
 				'success' => true,
 				'data' => $config->getDataModel(),
+				'actions' => App::make('admin_action_factory')->getActionsOptions(),
 			));
 		}
 	}
@@ -408,6 +512,9 @@ class AdminController extends Controller
 		$data = $config->getDataModel();
 		$result = $action->perform($data);
 
+		//override the config options so that we can get the latest
+		App::make('admin_config_factory')->updateConfigOptions();
+
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
@@ -418,9 +525,25 @@ class AdminController extends Controller
 		{
 			return Response::json(array('success' => false, 'error' => $action->messages['error']));
 		}
+		//if it's a download response, flash the response to the seession and return the download link
+		else if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+		{
+			$file = $result->getFile()->getRealPath();
+			$headers = $result->headers->all();
+			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+			return Response::json(array(
+				'success' => true,
+				'download' => URL::route('admin_file_download'),
+				'actions' => $actionFactory->getActionsOptions(true)
+			));
+		}
 		else
 		{
-			return Response::json(array('success' => true));
+			return Response::json(array(
+				'success' => true,
+				'actions' => $actionFactory->getActionsOptions(true)
+			));
 		}
 	}
 

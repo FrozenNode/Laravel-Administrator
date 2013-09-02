@@ -78,10 +78,8 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
-				<select data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name], chosen: true, options: options,
-															optionsValue: function(item) {return item.value},
-															optionsText: function(item) {return item.text},
-															optionsCaption: '<?php echo trans('administrator::administrator.none') ?>'"></select>
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
+												select2: {data: {results: options}}" />
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->
@@ -168,7 +166,7 @@
 		<input type="submit" value="<?php echo trans('administrator::administrator.save') ?>"
 			data-bind="attr: {disabled: $root.freezeForm() || $root.freezeActions()}" />
 
-		<!-- ko if: actions.length -->
+		<!-- ko if: actions().length -->
 			<!-- ko foreach: actions -->
 				<!-- ko if: has_permission -->
 					<input type="button" data-bind="click: function(){$root.customAction(action_name, messages, confirmation)}, value: title,

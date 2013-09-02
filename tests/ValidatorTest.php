@@ -106,5 +106,4 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->validator->validateEloquent(null, null, null));
 	}
 
-
 }

@@ -63,8 +63,7 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 	{
 		$configMock = m::mock('Frozennode\Administrator\Config\Model\Config');
 		$factory = m::mock('Frozennode\Administrator\Config\Factory[parseType,searchMenu,getItemConfigObject]', array($this->validator, array()));
-		$factory->shouldReceive('parseType')->once()
-				->shouldReceive('searchMenu')->once()->andReturn(array('test'))
+		$factory->shouldReceive('searchMenu')->once()->andReturn(array('test'))
 				->shouldReceive('getItemConfigObject')->once()->with(array('test'))->andReturn($configMock);
 		$this->assertEquals($factory->make('some_model'), $configMock);
 	}
@@ -73,9 +72,18 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 	{
 		$configMock = m::mock('Frozennode\Administrator\Config\Model\Config');
 		$factory = m::mock('Frozennode\Administrator\Config\Factory[parseType,searchMenu]', array($this->validator, array()));
-		$factory->shouldReceive('parseType')->once()
-				->shouldReceive('searchMenu')->once()->andReturn(false);
+		$factory->shouldReceive('searchMenu')->once()->andReturn(false);
 		$this->assertEquals($factory->make('some_model'), false);
+	}
+
+	public function testUpdateConfigOptions()
+	{
+		$config = m::mock('Frozennode\Administrator\Config\Config');
+		$config->shouldReceive('setOptions')->once();
+		$factory = m::mock('Frozennode\Administrator\Config\Factory[searchMenu,getConfig]', array($this->validator, array()));
+		$factory->shouldReceive('searchMenu')->once()->andReturn(array())
+				->shouldReceive('getConfig')->once()->andReturn($config);
+		$factory->updateConfigOptions();
 	}
 
 	public function testParseTypeModel()
