@@ -364,7 +364,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testUpdateRelationshipsAutocompleteNoSearchTerm()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('select')->once()
 				->shouldReceive('get')->once()->andReturn(array());
 		$relatedModel = m::mock(array('getTable' => 'table', 'getKeyName' => 'id', 'groupBy' => m::mock(array('getQuery' => $query))));
@@ -382,7 +382,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testUpdateRelationshipsAutocompleteNoSearchTermNoSelectedItems()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('select')->once();
 		$relatedModel = m::mock(array('getTable' => 'table', 'getKeyName' => 'id', 'groupBy' => m::mock(array('getQuery' => $query))));
 		$model = m::mock(array('field' => m::mock(array('getRelated' => $relatedModel))));
@@ -397,7 +397,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testUpdateRelationshipsReturnsOptions()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('select')->once()
 				->shouldReceive('get')->once()->andReturn(array());
 		$relatedModel = m::mock(array('getTable' => 'table', 'getKeyName' => 'id', 'groupBy' => m::mock(array('getQuery' => $query))));
@@ -415,7 +415,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFilterBySearchTermNoTerm()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
 		$field->shouldReceive('getOption')->never();
 		$this->factory->filterBySearchTerm(null, $query, $field, array(), '');
@@ -423,7 +423,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFilterBySearchTermSelectedItems()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('where')->twice()
 				->shouldReceive('take')->once()
 				->shouldReceive('whereNotIn')->once();
@@ -435,7 +435,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFilterBySearchTermNoSelectedItems()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('where')->twice()
 				->shouldReceive('take')->once();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
@@ -461,7 +461,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFilterQueryBySelectedItems()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('whereIn')->once()
 				->shouldReceive('orderBy')->once();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
@@ -480,7 +480,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 		$otherField->shouldReceive('constrainQuery')->once();
 		$this->config->shouldReceive('setDataModel')->twice()
 						->shouldReceive('getDataModel')->once()->andReturn($model);
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$this->factory->shouldReceive('make')->once()->andReturn($otherField);
 		$this->factory->applyConstraints(array('key' => array(1, 2)), $query, $field);
 	}
@@ -489,7 +489,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 	{
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
 		$field->shouldReceive('getOption')->once()->andReturn(array());
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$this->factory->applyConstraints(array(), $query, $field);
 	}
 
@@ -497,13 +497,12 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 	{
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
 		$field->shouldReceive('getOption')->once()->andReturn(array('other_key' => 'relationship'));
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$this->factory->applyConstraints(array('key' => array(1, 2)), $query, $field);
 	}
 
 	public function testFormatSelectOptions()
 	{
-		$model = m::mock(array('getKeyName' => 'id'));
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
 		$field->shouldReceive('getOption')->twice()->andReturn('name_field');
 		$firstResult = new \stdClass();
@@ -512,10 +511,9 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 		$secondResult = new \stdClass();
 		$secondResult->id = 2;
 		$secondResult->name_field = 'second';
-		$results = array($firstResult, $secondResult);
-		$this->config->shouldReceive('getDataModel')->andReturn($model);
+		$results = new \ArrayObject(array($firstResult, $secondResult));
 		$output = array(array('id' => 1, 'text' => 'first'), array('id' => 2, 'text' => 'second'));
-		$this->assertEquals($this->factory->formatSelectOptions($model, $field, $results), $output);
+		$this->assertEquals($this->factory->formatSelectOptions($field, $results), $output);
 	}
 
 }
