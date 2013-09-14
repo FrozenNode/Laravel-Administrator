@@ -585,7 +585,7 @@ class Factory {
 		}
 
 		//make sure we're grouping by the model's id
-		$query = $relatedModel::query();
+		$query = $relatedModel->newQuery();
 
 		//set up the selects
 		$query->select(array($this->db->raw($this->db->getTablePrefix() . $relatedTable.'.*')));
