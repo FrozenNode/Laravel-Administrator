@@ -31,14 +31,6 @@ return array(
 	'settings_config_path' => app('path') . '/config/administrator/settings',
 
 	/**
-	 * The path to your custom page views, if empty the base path will be app/views
-	 * custom path should be any views dir inside of app/views such as app/views/{{custom_page_view_path}}
-	 * 
-	 * @type string
-	 */
-	'custom_page_view_path' => '',
-
-	/**
 	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
 	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. By providing an
 	 * array of names, you can group certain models or settings pages together. Each name needs to either have a config file in your model
@@ -54,7 +46,7 @@ return array(
 	 *		'roles',
 	 *		'colors',
 	 *		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
-	 * 		'Pages' => array('Home' => 'page.home', 'Contact Us' => 'page.contact'),
+	 * 		'Pages' => array('Home' => 'page.home', 'Contact Us' => 'page.contact', 'Info' => 'page.help.info'),
 	 *	)
 	 */
 	'menu' => array(),

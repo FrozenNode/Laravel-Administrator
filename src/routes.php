@@ -18,8 +18,8 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	));
 
 	//Custom Pages
-	Route::get('pages/{page}', array(
-		'as' => 'admin_pages',
+	Route::get('page/{page}', array(
+		'as' => 'admin_page',
 		'uses' => 'Frozennode\Administrator\AdminController@pages'
 	));
 
