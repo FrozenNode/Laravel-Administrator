@@ -50,6 +50,13 @@ class Factory {
 	protected $settingsPrefix = 'settings.';
 
 	/**
+	 * The config type (settings or model or page)
+	 *
+	 * @var string
+	 */
+	protected $pagePrefix = 'page.';
+
+	/**
 	 * The rules array
 	 *
 	 * @var array
@@ -148,11 +155,16 @@ class Factory {
 	public function parseType($name)
 	{
 		$isSettings = strpos($name, $this->settingsPrefix) !== false;
+		$isPage = strpos($name, $this->pagePrefix) !== false;
 
 		//if the name is prefixed with the settings prefix
 		if ($isSettings)
 		{
 			$this->type = 'settings';
+		}
+		elseif ($isPage) 
+		{
+			$this->type = 'page';
 		}
 		//otherwise it's a model
 		else
@@ -215,11 +227,28 @@ class Factory {
 	/**
 	 * Gets the prefix for the currently-searched item
 	 */
-	public function getPrefix()
+	public function getPagePrefix()
 	{
-		return $this->type === 'settings' ? $this->settingsPrefix : '';
+		return $this->pagePrefix;
 	}
 
+	/**
+	 * Gets the prefix for the currently-searched item
+	 */
+	public function getPrefix()
+	{
+		if($this->type === 'settings') 
+		{
+			return $this->settingsPrefix;
+		}
+		elseif ($this->type === 'page') 
+		{
+			return $this->pagePrefix;
+		}
+
+		return '';
+	}
+	
 	/**
 	 * Gets the type for the currently-searched item
 	 */

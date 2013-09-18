@@ -46,6 +46,7 @@ return array(
 	 *		'roles',
 	 *		'colors',
 	 *		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
+	 * 		'Pages' => array('Home' => 'page.home', 'Contact Us' => 'page.contact', 'Info' => 'page.help.info'),
 	 *	)
 	 */
 	'menu' => array(),
