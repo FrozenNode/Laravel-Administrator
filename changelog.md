@@ -1,5 +1,6 @@
 ## Changelog
 
+- New translations (ca)
 - Bugfix: Autocomplete relationship fields weren't respecting prefixed table names
 
 ### 4.6.1
