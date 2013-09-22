@@ -1,5 +1,6 @@
 ## Changelog
 
+- Custom pages are now available with the 'page.{path}.{to}.{view}' menu syntax
 - New translations (ca)
 - Bugfix: Autocomplete relationship fields weren't respecting prefixed table names
 

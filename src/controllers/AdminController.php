@@ -48,18 +48,6 @@ class AdminController extends Controller
 	}
 
 	/**
-	 * The pages view
-	 *
-	 * @return Response
-	 */
-	public function pages($page=null)
-	{
-		//set the layout content and title
-		$this->layout->content = View::make($page);
-	}
-
-
-	/**
 	 * Gets the item edit page / information
 	 *
 	 * @param string		$modelName
@@ -460,6 +448,20 @@ class AdminController extends Controller
 		$dataTable->setRowsPerPage(App::make('session'), 0, $rows);
 
 		return Response::JSON(array('success' => true));
+	}
+
+	/**
+	 * The pages view
+	 *
+	 * @return Response
+	 */
+	public function page($page)
+	{
+		//mark this as a custom page so assets can be loaded differently
+		$this->layout->page = $page;
+
+		//set the layout content and title
+		$this->layout->content = View::make($page);
 	}
 
 	/**

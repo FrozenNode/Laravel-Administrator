@@ -58,11 +58,12 @@ class Menu {
 				$config = $this->configFactory->make($item);
 
 				//if a config object was returned and if the permission passes, add the item to the menu
-				if ($config && $config->getOption('permission'))
+				if (is_a($config, 'Frozennode\Administrator\Config\Config') && $config->getOption('permission'))
 				{
 					$menu[$item] = $config->getOption('title');
 				}
-				else if (empty($config)) 
+				//otherwise if this is a custom page, add it to the menu
+				else if ($config === true)
 				{
 					$menu[$item] = $key;
 				}

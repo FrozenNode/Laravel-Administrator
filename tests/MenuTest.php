@@ -47,42 +47,54 @@ class MenuTest extends \PHPUnit_Framework_TestCase {
 	public function testGetMenuSimpleReturnWithPermission()
 	{
 		$this->config->shouldReceive('get')->once()->andReturn(array('test_name'));
-		$this->configFactory->shouldReceive('make')->once()->andReturn(m::mock(array('getOption' => 'test_title')));
+		$itemconfig = m::mock('Frozennode\Administrator\Config\Config');
+		$itemconfig->shouldReceive('getOption')->twice()->andReturn(true, 'test_title');
+		$this->configFactory->shouldReceive('make')->once()->andReturn($itemconfig);
 		$this->assertEquals($this->menu->getMenu(), array('test_name' => 'test_title'));
 	}
 
 	public function testGetMenuSimpleReturnWithoutPermission()
 	{
 		$this->config->shouldReceive('get')->once()->andReturn(array('test_name'));
-		$this->configFactory->shouldReceive('make')->once()->andReturn(m::mock(array('getOption' => false)));
+		$itemconfig = m::mock('Frozennode\Administrator\Config\Config');
+		$itemconfig->shouldReceive('getOption')->once()->andReturn(false);
+		$this->configFactory->shouldReceive('make')->once()->andReturn($itemconfig);
 		$this->assertEquals($this->menu->getMenu(), array());
 	}
 
 	public function testGetMenuNested()
 	{
 		$this->config->shouldReceive('get')->once()->andReturn(array('Header' => array('test_name')));
-		$this->configFactory->shouldReceive('make')->once()->andReturn(m::mock(array('getOption' => 'test_title')));
+		$itemconfig = m::mock('Frozennode\Administrator\Config\Config');
+		$itemconfig->shouldReceive('getOption')->twice()->andReturn(true, 'test_title');
+		$this->configFactory->shouldReceive('make')->once()->andReturn($itemconfig);
 		$this->assertEquals($this->menu->getMenu(), array('Header' => array('test_name' => 'test_title')));
 	}
 
 	public function testGetMenuNestedWithoutPermission()
 	{
 		$this->config->shouldReceive('get')->once()->andReturn(array('Header' => array('test_name')));
-		$this->configFactory->shouldReceive('make')->once()->andReturn(m::mock(array('getOption' => false)));
+		$itemconfig = m::mock('Frozennode\Administrator\Config\Config');
+		$itemconfig->shouldReceive('getOption')->once()->andReturn(false);
+		$this->configFactory->shouldReceive('make')->once()->andReturn($itemconfig);
 		$this->assertEquals($this->menu->getMenu(), array());
 	}
 
 	public function testGetMenuDeepNested()
 	{
 		$this->config->shouldReceive('get')->once()->andReturn(array('Header' => array('Header2' => array('test_name'))));
-		$this->configFactory->shouldReceive('make')->once()->andReturn(m::mock(array('getOption' => 'test_title')));
+		$itemconfig = m::mock('Frozennode\Administrator\Config\Config');
+		$itemconfig->shouldReceive('getOption')->twice()->andReturn(true, 'test_title');
+		$this->configFactory->shouldReceive('make')->once()->andReturn($itemconfig);
 		$this->assertEquals($this->menu->getMenu(), array('Header' => array('Header2' => array('test_name' => 'test_title'))));
 	}
 
 	public function testGetMenuDeepNestedWithoutPermission()
 	{
 		$this->config->shouldReceive('get')->once()->andReturn(array('Header' => array('Header2' => array('test_name'))));
-		$this->configFactory->shouldReceive('make')->once()->andReturn(m::mock(array('getOption' => false)));
+		$itemconfig = m::mock('Frozennode\Administrator\Config\Config');
+		$itemconfig->shouldReceive('getOption')->once()->andReturn(false);
+		$this->configFactory->shouldReceive('make')->once()->andReturn($itemconfig);
 		$this->assertEquals($this->menu->getMenu(), array());
 	}
 
