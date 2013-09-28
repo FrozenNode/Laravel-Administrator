@@ -149,7 +149,7 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 
 	public function testConstrainQueryNotJoined()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('join')->once()
 				->shouldReceive('where')->once();
 		$this->validator->shouldReceive('isJoined')->once();
@@ -160,7 +160,7 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 
 	public function testConstrainQueryAlreadyJoined()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('join')->never()
 				->shouldReceive('where')->once();
 		$this->validator->shouldReceive('isJoined')->once()->andReturn(true);

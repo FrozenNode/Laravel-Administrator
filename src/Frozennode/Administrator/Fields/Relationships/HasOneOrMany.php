@@ -1,6 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Fields\Relationships;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class HasOneOrMany extends Relationship {
@@ -55,13 +56,13 @@ class HasOneOrMany extends Relationship {
 	/**
 	 * Constrains a query by a given set of constraints
 	 *
-	 * @param  \Illuminate\Database\Query\Builder	$query
-	 * @param  \Illuminate\Database\Eloquent\Model 	$relatedModel
-	 * @param  string 								$constraint
+	 * @param  \Illuminate\Database\Eloquent\Builder	$query
+	 * @param  \Illuminate\Database\Eloquent\Model	 	$relatedModel
+	 * @param  string 									$constraint
 	 *
 	 * @return void
 	 */
-	public function constrainQuery(QueryBuilder &$query, $relatedModel, $constraint)
+	public function constrainQuery(EloquentBuilder &$query, $relatedModel, $constraint)
 	{
 		$query->where($this->getOption('column'), '=', $constraint);
 	}

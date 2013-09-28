@@ -14,8 +14,7 @@
     },
     "require-dev": {
         "laravel/framework": ">=4.0.0",
-        "mockery/mockery": "0.8.0",
-        "orchestra/testbench": "2.1.*"
+        "mockery/mockery": "0.8.0"
     },
     "autoload": {
         "classmap": [

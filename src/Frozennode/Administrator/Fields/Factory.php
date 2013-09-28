@@ -4,7 +4,8 @@ namespace Frozennode\Administrator\Fields;
 use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class Factory {
 
@@ -584,10 +585,10 @@ class Factory {
 		}
 
 		//make sure we're grouping by the model's id
-		$query = $relatedModel->groupBy($relatedKeyTable)->getQuery();
+		$query = $relatedModel->newQuery();
 
 		//set up the selects
-		$query->select(array($this->db->raw($relatedTable.'.*')));
+		$query->select(array($this->db->raw($this->db->getTablePrefix() . $relatedTable.'.*')));
 
 		//format the selected items into an array
 		$selectedItems = $this->formatSelectedItems($selectedItems);
@@ -599,7 +600,7 @@ class Factory {
 			{
 				$this->filterQueryBySelectedItems($query, $selectedItems, $fieldObject, $relatedKeyTable);
 
-				return $this->formatSelectOptions($relatedModel, $fieldObject, $query->get());
+				return $this->formatSelectOptions($fieldObject, $query->get());
 			}
 			else
 			{
@@ -618,7 +619,7 @@ class Factory {
 		$filter($query);
 
 		//finally we can return the options
-		return $this->formatSelectOptions($relatedModel, $fieldObject, $query->get());
+		return $this->formatSelectOptions($fieldObject, $query->get());
 	}
 
 	/**
@@ -630,7 +631,7 @@ class Factory {
 	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
 	 * @param string									$relatedKeyTable
 	 */
-	public function filterBySearchTerm($term, QueryBuilder &$query, Field $fieldObject, array $selectedItems, $relatedKeyTable)
+	public function filterBySearchTerm($term, EloquentBuilder &$query, Field $fieldObject, array $selectedItems, $relatedKeyTable)
 	{
 		if ($term)
 		{
@@ -681,7 +682,7 @@ class Factory {
 	 *
 	 * @return array
 	 */
-	public function filterQueryBySelectedItems(QueryBuilder &$query, array $selectedItems, Field $fieldObject, $relatedKeyTable)
+	public function filterQueryBySelectedItems(EloquentBuilder &$query, array $selectedItems, Field $fieldObject, $relatedKeyTable)
 	{
 		$query->whereIn($relatedKeyTable, $selectedItems);
 
@@ -706,7 +707,7 @@ class Factory {
 	 *
 	 * @return array
 	 */
-	public function applyConstraints($constraints, QueryBuilder &$query, Field $fieldObject)
+	public function applyConstraints($constraints, EloquentBuilder &$query, Field $fieldObject)
 	{
 		$configConstraints = $fieldObject->getOption('constraints');
 
@@ -740,22 +741,23 @@ class Factory {
 	/**
 	 * Takes an eloquent result array and turns it into an options array that can be used in the UI
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model 		$model
 	 * @param \Frozennode\Administrator\Fields\Field	$field
-	 * @param array 									$results
+	 * @param \Illuminate\Database\Eloquent\Collection	$results
 	 *
 	 * @return array
 	 */
-	public function formatSelectOptions($model, Field $field, array $results)
+	public function formatSelectOptions(Field $field, EloquentCollection $results)
 	{
-		$model = $this->config->getDataModel();
+		$return = array();
 
-		return array_map(function($m) use ($field, $model)
+		foreach ($results as $m)
 		{
-			return array(
-				'id' => $m->{$model->getKeyName()},
+			$return[] = array(
+				'id' => $m->getKey(),
 				'text' => strval($m->{$field->getOption('name_field')}),
 			);
-		}, $results);
+		}
+
+		return $return;
 	}
 }

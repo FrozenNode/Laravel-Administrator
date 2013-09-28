@@ -76,42 +76,50 @@ This is the directory location of your application's settings config files. If y
 
 	/**
 	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
-	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. By providing an
-	 * array of names, you can group certain models or settings pages together. Each name needs to either have a config file in your model
-	 * config path or settings config path with the same name. So 'users' would require a 'users.php' file in your model config path.
-	 * 'settings.site' would require a 'site.php' file in your settings config path.
+	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. You can also add
+	 * custom pages by prepending a view path with 'page.'. By providing an array of names, you can group certain models or settings pages
+	 * together. Each name needs to either have a config file in your model config path, settings config path with the same name, or a path to a
+	 * fully-qualified Laravel view. So 'users' would require a 'users.php' file in your model config path, 'settings.site' would require a
+	 * 'site.php' file in your settings config path, and 'page.foo.test' would require a 'test.php' or 'test.blade.php' file in a 'foo' directory
+	 * inside your view directory.
 	 *
 	 * @type array
 	 *
 	 * 	array(
-	 *		'Products' => array('products', 'product_images', 'orders'),
+	 *		'E-Commerce' => array('collections', 'products', 'product_images', 'orders'),
+	 *		'homepage_sliders',
 	 *		'users',
+	 *		'roles',
+	 *		'colors',
+	 *		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
+	 * 		'Analytics' => array('E-Commerce' => 'page.ecommerce.analytics'),
 	 *	)
 	 */
-	'menu' => array(
-		'E-Commerce' => array(
-			'collections',
-			'orders',
-			'Products' => array(
-				'products',
-				'product_images',
-			),
-		),
-		'users',
-		'roles',
-		'colors',
-		'Settings' => array(
-			'settings.site',
-			'settings.ecommerce',
-			'settings.social'
-		),
-	),
+	'menu' => array(),
 
 The menu option is where you set the menu structure of the site. If you don't want any submenus, simply provide the name of your model or settings config file. The value has to be exactly equal (if you're using Linux, that means case-sensitive) to the name of the model or settings config php file.
 
 So in the above example, there would need to be (in the directory you specified in the `model_config_path`), config files called `collections.php`, `orders.php`, `products.php`, `product_images.php`, `users.php`, `roles.php`, and `colors.php`.
 
 There would also need to be (in the directory you specified in the `settings_config_path`), config files called `site.php`, `ecommerce.php`, and `social.php`.
+
+You can also specify custom view pages that preserve the header navigation of Administrator, but give you complete control over the content section. For these you simply need to prefix `page.` to your view path and pass that to the menu array. You can use view composers to add JS or CSS assets to your custom page:
+
+	View::composer(array('administrator::layouts.default'), function($view)
+	{
+		//first check if this is a custom page
+		if ($view->page === 'ecommerce.analytics')
+		{
+			//add page-specific assets
+			$view->js += array(
+				'highcharts' => '/path/to/highcharts.js'
+			);
+
+			$view->css += array(
+				'mycss' => '/path/to/my.css'
+			);
+		}
+	});
 
 If you want to have a submenu, instead of passing in a string, pass in an array of strings. The index of this slot will be the submenu's title in the UI. Submenus can themselves have submenus and there is no depth limit.
 
