@@ -43,11 +43,18 @@ class Factory {
 	protected $type;
 
 	/**
-	 * The config type (settings or model)
+	 * The settings page menu prefix
 	 *
 	 * @var string
 	 */
 	protected $settingsPrefix = 'settings.';
+
+	/**
+	 * The custom view page menu prefix
+	 *
+	 * @var string
+	 */
+	protected $pagePrefix = 'page.';
 
 	/**
 	 * The rules array
@@ -105,7 +112,7 @@ class Factory {
 		$options = $this->searchMenu($name);
 
 		//return the config object if the file/array was found, or false if it wasn't
-		$config = $options ? $this->getItemConfigObject($options) : false;
+		$config = $options ? $this->getItemConfigObject($options) : ($this->type === 'page' ? true : false);
 
 		//set the primary config
 		$this->config = $primary ? $config : $this->config;
@@ -147,17 +154,20 @@ class Factory {
 	 */
 	public function parseType($name)
 	{
-		$isSettings = strpos($name, $this->settingsPrefix) !== false;
-
 		//if the name is prefixed with the settings prefix
-		if ($isSettings)
+		if (strpos($name, $this->settingsPrefix) === 0)
 		{
-			$this->type = 'settings';
+			return $this->type = 'settings';
+		}
+		//otherwise if the name is prefixed with the page prefix
+		elseif (strpos($name, $this->pagePrefix) === 0)
+		{
+			return $this->type = 'page';
 		}
 		//otherwise it's a model
 		else
 		{
-			$this->type = 'model';
+			return $this->type = 'model';
 		}
 	}
 
@@ -215,9 +225,26 @@ class Factory {
 	/**
 	 * Gets the prefix for the currently-searched item
 	 */
+	public function getPagePrefix()
+	{
+		return $this->pagePrefix;
+	}
+
+	/**
+	 * Gets the prefix for the currently-searched item
+	 */
 	public function getPrefix()
 	{
-		return $this->type === 'settings' ? $this->settingsPrefix : '';
+		if ($this->type === 'settings')
+		{
+			return $this->settingsPrefix;
+		}
+		else if ($this->type === 'page')
+		{
+			return $this->pagePrefix;
+		}
+
+		return '';
 	}
 
 	/**
