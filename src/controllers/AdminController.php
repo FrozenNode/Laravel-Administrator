@@ -33,6 +33,7 @@ class AdminController extends Controller
 		if ( ! is_null($this->layout))
 		{
 			$this->layout = View::make($this->layout);
+			$this->layout->page = false;
 		}
 	}
 
@@ -41,7 +42,7 @@ class AdminController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($modelName)
 	{
 		//set the layout content and title
 		$this->layout->content = View::make("administrator::index");
@@ -457,7 +458,7 @@ class AdminController extends Controller
 	 */
 	public function page($page)
 	{
-		//mark this as a custom page so assets can be loaded differently
+		//set the page
 		$this->layout->page = $page;
 
 		//set the layout content and title
