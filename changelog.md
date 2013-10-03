@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.7.1
+- Bugfix: IoC resolution of the 'session.store' instance was being called as 'session'
+
 ### 4.7.0
 - Custom pages are now available with the 'page.{path}.{to}.{view}' menu syntax
 - New translations (ca)
