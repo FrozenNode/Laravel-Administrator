@@ -446,7 +446,7 @@ class AdminController extends Controller
 
 		//get the inputted rows and the model rows
 		$rows = (int) Input::get('rows', 20);
-		$dataTable->setRowsPerPage(App::make('session'), 0, $rows);
+		$dataTable->setRowsPerPage(App::make('session.store'), 0, $rows);
 
 		return Response::JSON(array('success' => true));
 	}
