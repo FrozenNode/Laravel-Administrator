@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.7.0
+- **Version:** 4.7.1
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,9 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Changelog
+
+### 4.7.1
+- Bugfix: IoC resolution of the 'session.store' instance was being called as 'session'
 
 ### 4.7.0
 - Custom pages are now available with the 'page.{path}.{to}.{view}' menu syntax

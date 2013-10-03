@@ -72,7 +72,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->app['admin_datatable'] = $this->app->share(function($app)
 		{
 			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin_column_factory'), $app->make('admin_field_factory'));
-			$dataTable->setRowsPerPage($app->make('session'), Config::get('administrator::administrator.global_rows_per_page'));
+			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator::administrator.global_rows_per_page'));
 
 			return $dataTable;
 		});
