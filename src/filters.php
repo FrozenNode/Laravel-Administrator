@@ -16,7 +16,7 @@ Route::filter('validate_admin', function ()
 	{
 		$loginUrl = URL::to(Config::get('administrator::administrator.login_path', 'user/login'));
 		$redirectKey = Config::get('administrator::administrator.login_redirect_key', 'redirect');
-		$redirectUri = URL::route('admin_dashboard');
+		$redirectUri = Request::url();
 
 		return Redirect::to($loginUrl)->with($redirectKey, $redirectUri);
 	}
