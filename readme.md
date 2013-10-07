@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.7.1
+- **Version:** 4.7.2
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,10 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Changelog
+
+### 4.7.2
+- Bugfix: New Laravel setRules method in validator was throwing Administrator's setRules typehinting off
+- Bugfix: Redirection was always pointing at the admin dashboard instead of the current page
 
 ### 4.7.1
 - Bugfix: IoC resolution of the 'session.store' instance was being called as 'session'
