@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.7.2
+- Bugfix: New Laravel setRules method in validator was throwing Administrator's setRules typehinting off
+- Bugfix: Redirection was always pointing at the admin dashboard instead of the current page
+
 ### 4.7.1
 - Bugfix: IoC resolution of the 'session.store' instance was being called as 'session'
 
