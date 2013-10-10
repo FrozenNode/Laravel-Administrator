@@ -62,7 +62,7 @@ class Validator extends \Illuminate\Validation\Validator {
 	 *
 	 * @param array		$rules
 	 */
-	public function setRules($rules)
+	public function setRules(array $rules)
 	{
 		$this->rules = $this->explodeRules($rules);
 	}
@@ -106,6 +106,7 @@ class Validator extends \Illuminate\Validation\Validator {
 	public function isJoined($query, $table)
 	{
 		$tableFound = false;
+		$query = is_a($query, 'Illuminate\Database\Query\Builder') ? $query : $query->getQuery();
 
 		if ($query->joins)
 		{

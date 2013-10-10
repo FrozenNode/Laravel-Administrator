@@ -28,16 +28,16 @@ return array(
 	'itemsperpage' => 'Artikel pro Seite',
 	'noresults' => 'Keine Resultate',
 	'backtosite' => 'Zurück zur Website',
-	'logout' => 'Abmeldung',
+	'logout' => 'Abmelden',
 
 	'previous' => 'Zurück',
 	'next' => 'Weiter',
 
-	'close' => 'Abschluss',
+	'close' => 'Schliessen',
 	'delete' => 'Löschen',
-	'save' => 'Sparen',
-	'create' => 'Schaffen',
-	'cancel' => 'Stornieren',
+	'save' => 'Speichern',
+	'create' => 'Erstellen',
+	'cancel' => 'Abbrechen',
 
 	'active' => 'Einen Moment...',
 	'success' => 'Erfolg!',
@@ -50,6 +50,6 @@ return array(
 	'valid_menu' => "Sie müssen einen gültigen 'menu' option in der administrator.php config bieten",
 	'valid_config_path' => "Sie müssen einen gültigen 'model_config_path' option in der administrator.php config bieten. Das Verzeichnis muss ebenfalls vorhanden und lesbar sein.",
 	'not_eloquent' => " ist kein Eloquent model",
-	'storage_path_permissions' => "You must make your storage path writable in order to make a settings page",
+	'storage_path_permissions' => "Sie müssen ihren Speicher Pfad schreibbar machen, um eine Einstellungs-Seite zu erstellen",
 	'valid_home_page' => "You must provide a valid menu item in the home_page option of your config",
 );

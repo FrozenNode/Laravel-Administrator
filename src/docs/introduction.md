@@ -19,7 +19,7 @@ For each Eloquent model you can define which fields an administrative user can e
 <a name="authentication"></a>
 ##Authentication
 
-Unlike many other admin interface systems, Administrator doesn't come with authentication built in. Instead of providing an extra auth layer on top of what you already have, an admin system pipes into your existing authentication. By using "permission" anonymous functions, you can use your auth system to determine if the current user should have access to something.
+Unlike many other admin interface systems, Administrator doesn't come with authentication built in. Instead of providing an extra auth layer on top of what you already have, Administrator pipes into your existing authentication. By using "permission" anonymous functions, you can use your auth system to determine if the current user should have access to something.
 
 
 <a name="eloquent"></a>

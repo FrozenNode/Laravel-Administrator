@@ -1,5 +1,17 @@
 ## Changelog
 
+### 4.7.2
+- Bugfix: New Laravel setRules method in validator was throwing Administrator's setRules typehinting off
+- Bugfix: Redirection was always pointing at the admin dashboard instead of the current page
+
+### 4.7.1
+- Bugfix: IoC resolution of the 'session.store' instance was being called as 'session'
+
+### 4.7.0
+- Custom pages are now available with the 'page.{path}.{to}.{view}' menu syntax
+- New translations (ca)
+- Bugfix: Autocomplete relationship fields weren't respecting prefixed table names
+
 ### 4.6.1
 - Bugfix: Call to App::make('itemconfig') in the header would cause an error on dashboard pages
 - Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection

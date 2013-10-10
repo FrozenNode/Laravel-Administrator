@@ -28,7 +28,7 @@ return array(
 	'itemsperpage' => '条目每页',
 	'noresults' => '没有结果',
 	'backtosite' => '返回主站',
-	'logout' => '退出'
+	'logout' => '退出',
 
 	'previous' => '上一页',
 	'next' => '下一页',

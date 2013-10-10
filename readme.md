@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.6.1
+- **Version:** 4.7.2
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,18 +53,14 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.6.1
-- Bugfix: Call to App::make('itemconfig') in the header would cause an error on dashboard pages
-- Bugfix: Fonts are now loaded locally which should no longer cause hanging issues when you have no internet connection
-- Bugfix: <=IE9 was having issues with the dropdown menu
+### 4.7.2
+- Bugfix: New Laravel setRules method in validator was throwing Administrator's setRules typehinting off
+- Bugfix: Redirection was always pointing at the admin dashboard instead of the current page
 
-### 4.6.0
-- Support for smaller screens and mobile devices
-- Visible option for columns that accepts either a boolean or closure
-- Relationship constraints now work with hasMany and hasOne fields
-- There is now an `options_filter` option for relationship fields that lets you modify the query before getting the relationship options
-- Custom actions and saves now rebuild the supplied config file after performing the action
-- The `editable` property now accepts a closure and is passed the current page's data object
-- New translations (da, it)
-- Bugfix: Constraint fields no longer make multiple requests at a single time
-- Bugfix: The key field is no longer set on models. This would cause some bugs on some setups
+### 4.7.1
+- Bugfix: IoC resolution of the 'session.store' instance was being called as 'session'
+
+### 4.7.0
+- Custom pages are now available with the 'page.{path}.{to}.{view}' menu syntax
+- New translations (ca)
+- Bugfix: Autocomplete relationship fields weren't respecting prefixed table names

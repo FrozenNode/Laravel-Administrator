@@ -68,7 +68,7 @@ class HasOneOrManyTest extends \PHPUnit_Framework_TestCase {
 
 	public function testConstrainQuery()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('where')->once();
 		$this->field->shouldReceive('getOption')->once();
 		$this->field->constrainQuery($query, m::mock(array()), 'foo');
