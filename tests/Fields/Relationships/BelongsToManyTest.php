@@ -8,7 +8,7 @@ class BelongsToManyEloquentStub {
 	public $fieldNoSort = '3,4,5';
 	public function fieldSort() {
 		$relationship = m::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-		$relationship->shouldReceive('delete')->once()
+		$relationship->shouldReceive('detach')->once()
 						->shouldReceive('attach')->times(3);
 		return $relationship;
 	}
