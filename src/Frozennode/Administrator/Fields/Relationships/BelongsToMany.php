@@ -49,31 +49,25 @@ class BelongsToMany extends Relationship {
 	public function fillModel(&$model, $input)
 	{
 		$input = $input ? explode(',', $input) : array();
-		$editable = $this->getOption('editable');
 		$fieldName = $this->getOption('field_name');
+		$relationship = $model->{$fieldName}();
 
-		//touch attribute on the model only if the field editable
-		if ($editable)
+		//if this field is sortable, delete all the old records and insert the new ones one at a time
+		if ($sortField = $this->getOption('sort_field'))
 		{
-			$relationship = $model->{$fieldName}();
+			//first delete all the old records
+			$relationship->detach();
 
-			//if this field is sortable, delete all the old records and insert the new ones one at a time
-			if ($sortField = $this->getOption('sort_field'))
+			//then re-attach them in the correct order
+			foreach ($input as $i => $item)
 			{
-				//first delete all the old records
-				$relationship->detach();
-
-				//then re-attach them in the correct order
-				foreach ($input as $i => $item)
-				{
-					$relationship->attach($item, array($sortField => $i));
-				}
+				$relationship->attach($item, array($sortField => $i));
 			}
-			else
-			{
-				//elsewise the order doesn't matter, so use sync
-				$relationship->sync($input);
-			}
+		}
+		else
+		{
+			//elsewise the order doesn't matter, so use sync
+			$relationship->sync($input);
 		}
 
 		//unset the attribute on the model

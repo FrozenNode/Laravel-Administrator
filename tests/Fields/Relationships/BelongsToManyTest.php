@@ -84,18 +84,10 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 		$this->field->build();
 	}
 
-	public function testFillModelNonEditable()
-	{
-		$model = new BelongsToManyEloquentStub;
-		$this->field->shouldReceive('getOption')->times(3)->andReturn('false', 'fieldSort');
-		$this->field->fillModel($model, '3,4,5');
-		$this->assertTrue(!isset($model->rel));
-	}
-
 	public function testFillModelWithSortField()
 	{
 		$model = new BelongsToManyEloquentStub;
-		$this->field->shouldReceive('getOption')->times(3)->andReturn('true', 'fieldSort', 'sort');
+		$this->field->shouldReceive('getOption')->twice()->andReturn('fieldSort', 'sort');
 		$this->field->fillModel($model, '3,4,5');
 		$this->assertTrue(!isset($model->rel));
 	}
@@ -103,7 +95,7 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 	public function testFillModelWithoutSortField()
 	{
 		$model = new BelongsToManyEloquentStub;
-		$this->field->shouldReceive('getOption')->times(3)->andReturn('true', 'fieldNoSort', false);
+		$this->field->shouldReceive('getOption')->twice()->andReturn('fieldNoSort', false);
 		$this->field->fillModel($model, '3,4,5');
 		$this->assertTrue(!isset($model->rel));
 	}
