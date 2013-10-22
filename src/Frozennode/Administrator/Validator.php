@@ -62,7 +62,7 @@ class Validator extends \Illuminate\Validation\Validator {
 	 *
 	 * @param array		$rules
 	 */
-	public function setRules($rules)
+	public function setRules(array $rules)
 	{
 		$this->rules = $this->explodeRules($rules);
 	}
