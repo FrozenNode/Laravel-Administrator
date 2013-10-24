@@ -274,11 +274,11 @@ class AdminController extends Controller
 			}
 
 			$response = array('success' => true, 'data' => $model->toArray());
-
-                        if (is_a($result, '\Illuminate\Http\RedirectResponse'))
-                        {
-                            $response['redirect'] = $result->getTargetUrl();
-                        }
+			
+			if (is_a($result, '\Illuminate\Http\RedirectResponse'))
+			{
+				$response['redirect'] = $result->getTargetUrl();
+			}
                         
 			//if it's a download response, flash the response to the seession and return the download link
 			if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
