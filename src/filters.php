@@ -18,7 +18,7 @@ Route::filter('validate_admin', function ()
 		$redirectKey = Config::get('administrator::administrator.login_redirect_key', 'redirect');
 		$redirectUri = Request::url();
 
-		return Redirect::to($loginUrl)->with($redirectKey, $redirectUri);
+		return Redirect::guest($loginUrl)->with($redirectKey, $redirectUri);
 	}
 	//otherwise if this is a response, return that
 	else if (is_a($response, 'Illuminate\Http\JsonResponse') || is_a($response, 'Illuminate\Http\Response'))
