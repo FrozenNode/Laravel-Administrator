@@ -19,7 +19,6 @@ class CreateDirectorsTable extends Migration {
 			$table->decimal('salary', 10, 2);
 			$table->timestamps();
 		});
-
 	}
 
 	/**
