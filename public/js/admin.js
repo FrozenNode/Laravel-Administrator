@@ -586,7 +586,12 @@
 							{
 								self.globalStatusMessage(messages.success).globalStatusMessageType('success');
 							}
-
+							
+							// if this is a redirect, do so
+							if (response.redirect) {
+								window.location.href = response.redirect;
+							}
+                                                        
 							//if there was a file download initiated, redirect the user to the file download address
 							if (response.download)
 								self.downloadFile(response.download);
