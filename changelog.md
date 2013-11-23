@@ -1,6 +1,7 @@
 ## Changelog
 
 - It is now possible to return a redirect from custom actions
+- Bugfix: Updated to latest jQuery timepicker addon to fix some legacy jQuery UI bugs
 - Bugfix: The detach() method is now used to remove related items instead of delete()
 - Bugfix: The bool filter field wasn't properly grabbing results
 
