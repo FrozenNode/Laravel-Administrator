@@ -1,5 +1,9 @@
 ## Changelog
 
+- It is now possible to return a redirect from custom actions
+- Bugfix: The detach() method is now used to remove related items instead of delete()
+- Bugfix: The bool filter field wasn't properly grabbing results
+
 ### 4.7.2
 - Bugfix: New Laravel setRules method in validator was throwing Administrator's setRules typehinting off
 - Bugfix: Redirection was always pointing at the admin dashboard instead of the current page

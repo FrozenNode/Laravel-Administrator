@@ -212,18 +212,26 @@ class AdminController extends Controller
 
 			return Response::json(array('success' => false, 'error' => $messages['error']));
 		}
-		//if it's a download response, flash the response to the seession and return the download link
-		else if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
-		{
-			$file = $result->getFile()->getRealPath();
-			$headers = $result->headers->all();
-			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
-
-			return Response::json(array('success' => true, 'download' => URL::route('admin_file_download')));
-		}
 		else
 		{
-			return Response::json(array('success' => true));
+			$response = array('success' => true);
+
+			//if it's a download response, flash the response to the session and return the download link
+			if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+			{
+				$file = $result->getFile()->getRealPath();
+				$headers = $result->headers->all();
+				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+				$response['download'] = URL::route('admin_file_download');
+			}
+			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
+			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
+			{
+				$response['redirect'] = $result->getTargetUrl();
+			}
+
+			return Response::json($response);
 		}
 	}
 
@@ -274,13 +282,8 @@ class AdminController extends Controller
 			}
 
 			$response = array('success' => true, 'data' => $model->toArray());
-			
-			if (is_a($result, '\Illuminate\Http\RedirectResponse'))
-			{
-				$response['redirect'] = $result->getTargetUrl();
-			}
-                        
-			//if it's a download response, flash the response to the seession and return the download link
+
+			//if it's a download response, flash the response to the session and return the download link
 			if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
 			{
 				$file = $result->getFile()->getRealPath();
@@ -288,6 +291,11 @@ class AdminController extends Controller
 				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
 				$response['download'] = URL::route('admin_file_download');
+			}
+			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
+			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
+			{
+				$response['redirect'] = $result->getTargetUrl();
 			}
 
 			return Response::json($response);
@@ -544,25 +552,26 @@ class AdminController extends Controller
 		{
 			return Response::json(array('success' => false, 'error' => $action->messages['error']));
 		}
-		//if it's a download response, flash the response to the seession and return the download link
-		else if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
-		{
-			$file = $result->getFile()->getRealPath();
-			$headers = $result->headers->all();
-			Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
-
-			return Response::json(array(
-				'success' => true,
-				'download' => URL::route('admin_file_download'),
-				'actions' => $actionFactory->getActionsOptions(true)
-			));
-		}
 		else
 		{
-			return Response::json(array(
-				'success' => true,
-				'actions' => $actionFactory->getActionsOptions(true)
-			));
+			$response = array('success' => true, 'actions' => $actionFactory->getActionsOptions(true));
+
+			//if it's a download response, flash the response to the session and return the download link
+			if (is_a($result, 'Symfony\Component\HttpFoundation\BinaryFileResponse'))
+			{
+				$file = $result->getFile()->getRealPath();
+				$headers = $result->headers->all();
+				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+
+				$response['download'] = URL::route('admin_file_download');
+			}
+			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
+			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
+			{
+				$response['redirect'] = $result->getTargetUrl();
+			}
+
+			return Response::json($response);
 		}
 	}
 
