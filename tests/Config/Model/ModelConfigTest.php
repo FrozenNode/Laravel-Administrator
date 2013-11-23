@@ -174,11 +174,11 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	public function testGetModelRelatedItemsMultipleValuesWithoutSortField()
 	{
 		$query = m::mock('Illuminate\Database\Query\Builder');
-		$query->shouldReceive('orderBy')->once()->andReturn(m::mock(array('get' => 'foobar')));
+		$query->shouldReceive('get')->once()->andReturn('foobar');
 		$model = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
 		$model->shouldReceive('field')->once()->andReturn($query);
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->times(4)->andReturn('field', true, false, 'name_field');
+		$field->shouldReceive('getOption')->times(3)->andReturn('field', true, false);
 		$this->assertEquals($this->config->getModelRelatedItems($model, $field), 'foobar');
 	}
 

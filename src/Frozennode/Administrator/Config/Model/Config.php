@@ -126,6 +126,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		//get the model by id
 		$model = $model->find($id, $columns);
 		$model = $model ? $model : $originalModel;
+
 		//if the model exists, load up the existing related items
 		if ($model->exists)
 		{
@@ -257,7 +258,7 @@ class Config extends ConfigBase implements ConfigInterface {
 			}
 			else
 			{
-				return $model->{$name}()->orderBy($field->getOption('name_field'))->get();
+				return $model->{$name}()->get();
 			}
 		}
 		else
