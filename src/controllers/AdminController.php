@@ -34,6 +34,7 @@ class AdminController extends Controller
 		{
 			$this->layout = View::make($this->layout);
 			$this->layout->page = false;
+			$this->layout->dashboard = false;
 		}
 	}
 
@@ -312,6 +313,9 @@ class AdminController extends Controller
 		//if the dev has chosen to use a dashboard
 		if (Config::get('administrator::administrator.use_dashboard'))
 		{
+			//set the layout dashboard
+			$this->layout->dashboard = true;
+
 			//set the layout content
 			$this->layout->content = View::make(Config::get('administrator::administrator.dashboard_view'));
 		}
