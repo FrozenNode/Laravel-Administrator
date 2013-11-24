@@ -182,6 +182,14 @@ class Validator extends \Illuminate\Validation\Validator {
 	}
 
 	/**
+	 * Validates that an item is either a string or callable
+	 */
+	public function validateStringOrCallable($attribute, $value, $parameters)
+	{
+		return is_string($value) || is_callable($value);
+	}
+
+	/**
 	 * Validates that an item is an Eloquent model
 	 */
 	public function validateEloquent($attribute, $value, $parameters)
