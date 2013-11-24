@@ -550,7 +550,9 @@ class AdminController extends Controller
 		//if it's falsy, return the standard error message
 		else if (!$result)
 		{
-			return Response::json(array('success' => false, 'error' => $action->messages['error']));
+			$messages = $action->getOption('messages');
+
+			return Response::json(array('success' => false, 'error' => $messages['error']));
 		}
 		else
 		{

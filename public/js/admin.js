@@ -453,7 +453,7 @@
 				adminData.edit_fields = data.administrator_edit_fields;
 				self.editFields(window.admin.prepareEditFields());
 
-				//update the action permissions
+				//update the actions and the action permissions
 				self.actions(data.administrator_actions);
 				self.actionPermissions = data.administrator_action_permissions;
 

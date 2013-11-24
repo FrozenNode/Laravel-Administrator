@@ -1,5 +1,6 @@
 ## Changelog
 
+- Anonymous functions can now be passed for custom action title, confirmation, and messages options
 - It is now possible to return a redirect from custom actions
 - Bugfix: Updated to latest jQuery timepicker addon to fix some legacy jQuery UI bugs
 - Bugfix: The detach() method is now used to remove related items instead of delete()

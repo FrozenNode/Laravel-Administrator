@@ -56,7 +56,8 @@ class Action {
 	 * @var array
 	 */
 	protected $rules = array(
-		'title' => 'string',
+		'title' => 'string_or_callable',
+		'confirmation' => 'string_or_callable',
 		'messages' => 'array|array_with_all_or_none:active,success,error',
 		'action' => 'required|callable',
 	);
@@ -100,24 +101,49 @@ class Action {
 	 */
 	public function build()
 	{
-		$model = $this->config->getDataModel();
 		$options = $this->suppliedOptions;
 
-		//check if a confirmation was supplied
-		$confirmation = $this->validator->arrayGet($options, 'confirmation');
+		//build the string or callable values for title and confirmation
+		$this->buildStringOrCallable($options, array('confirmation', 'title'));
 
-		//if it's a string, simply set it
-		if (is_string($confirmation))
-		{
-			$options['confirmation'] = $confirmation;
-		}
-		//if it's callable pass it the current model and run it
-		else if (is_callable($confirmation))
-		{
-			$options['confirmation'] = $confirmation($model);
-		}
+		//build the string or callable values for the messages
+		$messages = $this->validator->arrayGet($options, 'messages', array());
+		$this->buildStringOrCallable($messages, array('active', 'success', 'error'));
+		$options['messages'] = $messages;
 
+		//override the supplied options
 		$this->suppliedOptions = $options;
+	}
+
+	/**
+	 * Sets up the values of all the options that can be either strings or closures
+	 *
+	 * @param array		$options	//the passed-by-reference array on which to do the transformation
+	 * @param array		$keys		//the keys to check
+	 *
+	 * @return void
+	 */
+	public function buildStringOrCallable(array &$options, array $keys)
+	{
+		$model = $this->config->getDataModel();
+
+		//iterate over the keys
+		foreach ($keys as $key)
+		{
+			//check if the key's value was supplied
+			$suppliedValue = $this->validator->arrayGet($options, $key);
+
+			//if it's a string, simply set it
+			if (is_string($suppliedValue))
+			{
+				$options[$key] = $suppliedValue;
+			}
+			//if it's callable pass it the current model and run it
+			else if (is_callable($suppliedValue))
+			{
+				$options[$key] = $suppliedValue($model);
+			}
+		}
 	}
 
 	/**
@@ -136,10 +162,15 @@ class Action {
 	/**
 	 * Gets all user options
 	 *
+	 * @param bool	$override
+	 *
 	 * @return array
 	 */
-	public function getOptions()
+	public function getOptions($override = false)
 	{
+		//if override is true, unset the current options
+		$this->options = $override ? array() : $this->options;
+
 		//make sure the supplied options have been merged with the defaults
 		if (empty($this->options))
 		{
