@@ -205,7 +205,7 @@ class Factory {
 			//loop over the actions to build the list
 			foreach ($this->getActions($override) as $name => $action)
 			{
-				$this->actionsOptions[] = $action->getOptions();
+				$this->actionsOptions[] = $action->getOptions(true);
 			}
 		}
 

@@ -78,7 +78,7 @@ View::composer(array('administrator::layouts.default'), function($view)
 	);
 
 	//add the non-custom-page css assets
-	if (!$view->page)
+	if (!$view->page && !$view->dashboard)
 	{
 		$view->css += array(
 			'jquery-ui' => asset('packages/frozennode/administrator/css/ui/jquery-ui-1.9.1.custom.min.css'),
@@ -95,7 +95,7 @@ View::composer(array('administrator::layouts.default'), function($view)
 	);
 
 	//add the non-custom-page js assets
-	if (!$view->page)
+	if (!$view->page && !$view->dashboard)
 	{
 		$view->js += array(
 			'select2' => asset('packages/frozennode/administrator/js/jquery/select2/select2.js'),

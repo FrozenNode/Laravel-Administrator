@@ -96,6 +96,18 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->validator->validateCallable(null, null, null));
 	}
 
+
+	public function testValidateStringOrCallableSucceeds()
+	{
+		$this->assertTrue($this->validator->validateStringOrCallable(null, function() {}, null));
+		$this->assertTrue($this->validator->validateStringOrCallable(null, 'foo', null));
+	}
+
+	public function testValidateStringOrCallableFails()
+	{
+		$this->assertFalse($this->validator->validateStringOrCallable(null, null, null));
+	}
+
 	public function testValidateEloquentSucceeds()
 	{
 		$this->assertTrue($this->validator->validateEloquent(null, 'Frozennode\Administrator\Tests\EloquentStub', null));

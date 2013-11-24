@@ -57,7 +57,7 @@ class Bool extends Field {
 		//if it isn't null, we have to check the 'true'/'false' string
 		if ($this->userOptions['value'] !== '')
 		{
-			$this->userOptions['value'] = $this->userOptions['value'] === 'false' || !$this->userOptions['value'] ?  : 1;
+			$this->userOptions['value'] = $this->userOptions['value'] === 'false' || !$this->userOptions['value'] ? 0 : 1;
 		}
 	}
 

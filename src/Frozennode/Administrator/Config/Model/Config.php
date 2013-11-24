@@ -114,18 +114,10 @@ class Config extends ConfigBase implements ConfigInterface {
 		//if we're getting an existing model, we'll want to first get the edit fields without the relationships loaded
 		$originalModel = $model = $this->getDataModel();
 
-		//make sure the edit fields are included
-		foreach ($fields as $name => $field)
-		{
-			if (!$field->getOption('relationship') && !$field->getOption('setter') && !array_key_exists($name, $columns))
-			{
-				$columns[$name] = $model->getTable().'.'.$name;
-			}
-		}
-
 		//get the model by id
-		$model = $model->find($id, $columns);
+		$model = $model->find($id);
 		$model = $model ? $model : $originalModel;
+
 		//if the model exists, load up the existing related items
 		if ($model->exists)
 		{
@@ -257,7 +249,7 @@ class Config extends ConfigBase implements ConfigInterface {
 			}
 			else
 			{
-				return $model->{$name}()->orderBy($field->getOption('name_field'))->get();
+				return $model->{$name}()->get();
 			}
 		}
 		else

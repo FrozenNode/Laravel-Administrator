@@ -1,5 +1,16 @@
 ## Changelog
 
+### 4.8.0
+- Anonymous functions can now be passed for custom action title, confirmation, and messages options
+- It is now possible to return a redirect from custom actions
+- Selecting an item now scrolls the browser to the top of the page
+- It is now possible to return accessor values into the edit form
+- Default values can now be set for edit fields
+- Bugfix: Custom dashboards no longer include unnecessary js files
+- Bugfix: Updated to latest jQuery timepicker addon to fix some legacy jQuery UI bugs
+- Bugfix: The detach() method is now used to remove related items instead of delete()
+- Bugfix: The bool filter field wasn't properly grabbing results
+
 ### 4.7.2
 - Bugfix: New Laravel setRules method in validator was throwing Administrator's setRules typehinting off
 - Bugfix: Redirection was always pointing at the admin dashboard instead of the current page

@@ -3,6 +3,8 @@
 - [Introduction](#introduction)
 - [Model Config](#model-config)
 - [Settings Config](#settings-config)
+- [Confirmations](#confirmations)
+- [Dynamic Messages](#dynamic-messages)
 
 <a name="introduction"></a>
 ## Introduction
@@ -72,3 +74,49 @@ In a [settings configuration file](/docs/settings-configuration#custom-actions),
 	{
 		//
 	}
+
+<a name="confirmations"></a>
+## Confirmations
+
+If you want a confirmation dialog to appear before the action is performed, you can pass in a `confirmation` option for the action:
+
+	'clear_cache' => array(
+		'title' => 'Clear Cache',
+		'confirmation' => 'Are you sure you want to clear the cache?',
+		'action' => function(&$data)
+		{
+			//clear the cache
+		}
+	),
+
+If the admin user confirms, the action will proceed. If they do not, the action will not.
+
+<a name="dynamic-messages"></a>
+## Dynamic Messages
+
+It's possible to pass in anonymous functions to any of the custom action text fields (`title`, `confirmation`, and any of the `messages` keys). These anonymous functions will be passed the relevant Eloquent model or settings config object. For example:
+
+	'ban_user' => array(
+		'title' => function($model)
+		{
+			return "Are you sure you want to " . ($model->banned ? 'unban ' : 'ban ') . $model->name . '?';
+		},
+		'messages' => array(
+			'active' => function($model)
+			{
+				return ($model->banned ? 'Unbanning ' : 'Banning ') . $model->name . '...';
+			},
+			'success' => function($model)
+			{
+				return $model->name . ($model->banned ? ' unbanned!' : ' banned!');
+			},
+			'error' => function($model)
+			{
+				return "There was an error while " . ($model->banned ? 'unbanning ' : 'banning ') . $model->name;
+			},
+		),
+		'action' => function(&$data)
+		{
+			//ban the user
+		}
+	),

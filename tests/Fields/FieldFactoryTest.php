@@ -6,6 +6,7 @@ use Mockery as m;
 class EloquentStub {
 	public $books;
 	public $other = 'other_value';
+	public $default_value = 'something';
 	public function __construct() {
 		$this->books = m::mock('Illuminate\Database\Eloquent\Collection');
 		$this->books->shouldReceive('toArray')->zeroOrMoreTimes()->andReturn('books_value');
@@ -314,10 +315,16 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetDataModel()
 	{
-		$fields = array('id' => array('type' => 'key'), 'books' => array('type' => 'relationship'), 'other' => array('type' => 'text'));
+		$fields = array(
+			'id' => array('type' => 'key'),
+			'books' => array('type' => 'relationship'),
+			'other' => array('type' => 'text'),
+			'default_value' => array('type' => 'text', 'value' => 'foo'),
+		);
+		$formatted = array('id' => 0, 'books' => 'books_value', 'other' => null, 'default_value' => 'foo');
 		$this->config->shouldReceive('getDataModel')->once()->andReturn(new EloquentStub);
 		$this->factory->shouldReceive('getEditFieldsArrays')->once()->andReturn($fields);
-		$this->assertEquals($this->factory->getDataModel(), array('id' => 0, 'books' => 'books_value', 'other' => 'other_value'));
+		$this->assertEquals($this->factory->getDataModel(), $formatted);
 	}
 
 	public function testGetFiltersReturnsIndexedArray()

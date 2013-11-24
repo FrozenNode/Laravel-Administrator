@@ -67,9 +67,35 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 
 	public function testBuild()
 	{
-		$this->config->shouldReceive('getDataModel')->once();
-		$this->validator->shouldReceive('arrayGet')->once();
+		$this->action->shouldReceive('buildStringOrCallable')->twice();
+		$this->validator->shouldReceive('arrayGet')->once()->andReturn(array());
 		$this->action->build();
+	}
+
+	public function testBuildStringOrCallableEmpty()
+	{
+		$this->config->shouldReceive('getDataModel')->once();
+		$this->validator->shouldReceive('arrayGet')->never();
+		$options = array();
+		$this->action->buildStringOrCallable($options, array());
+	}
+
+	public function testBuildStringOrCallable()
+	{
+		$options = array(
+			'foo' => 'bar',
+			'func' => function ($model)
+			{
+				return 'not bar';
+			}
+		);
+
+		$this->config->shouldReceive('getDataModel')->once();
+		$this->validator->shouldReceive('arrayGet')->twice()->andReturn($options['foo'], $options['func']);
+		$this->action->buildStringOrCallable($options, array('foo', 'func'));
+
+		$this->assertEquals($options['foo'], 'bar');
+		$this->assertEquals($options['func'], 'not bar');
 	}
 
 	public function testPerform()

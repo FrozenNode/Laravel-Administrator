@@ -6,6 +6,7 @@
 - [Editable Option](#editable-option)
 - [Setter Option](#setter-option)
 - [Visible Option](#visible-option)
+- [Value Option](#value-option)
 - [Filters](#filters)
 - [Settings Page](#settings-page)
 
@@ -123,6 +124,17 @@ The `visible` option lets you determine if a field should be present for a parti
 		{
 			return !$model->exists; //will only show up before an item is saved for the first time
 		},
+	),
+
+<a name="value-option"></a>
+## Value Option
+
+The `value` option lets you define a default value for a field. In a filter set this will be the default value that loads with the page. In the edit fields it will be the default value used for new items.
+
+	'stuff' => array(
+		'title' => 'Stuff',
+		'type' => 'text',
+		'value' => 'foo'
 	),
 
 <a name="filters"></a>
