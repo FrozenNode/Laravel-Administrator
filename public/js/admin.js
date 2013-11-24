@@ -379,6 +379,9 @@
 				//update all the info to the new item state
 				ko.mapping.updateData(self, self.model, self.model);
 
+				//scroll to the top of the page
+				$('html, body').animate({scrollTop: 0}, 'fast')
+
 				//if this is a new item (id is falsy), just overwrite the viewModel with the original data model
 				if (!id)
 				{
