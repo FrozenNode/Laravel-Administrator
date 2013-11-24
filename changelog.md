@@ -4,6 +4,7 @@
 - It is now possible to return a redirect from custom actions
 - Selecting an item now scrolls the browser to the top of the page
 - It is now possible to return accessor values into the edit form
+- Default values can now be set for edit fields
 - Bugfix: Custom dashboards no longer include unnecessary js files
 - Bugfix: Updated to latest jQuery timepicker addon to fix some legacy jQuery UI bugs
 - Bugfix: The detach() method is now used to remove related items instead of delete()

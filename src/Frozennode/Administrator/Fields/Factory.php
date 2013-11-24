@@ -470,7 +470,7 @@ class Factory {
 				}
 				else
 				{
-					$dataModel[$name] = null;
+					$dataModel[$name] = isset($options['value']) ? $options['value'] : null;
 				}
 			}
 		}
