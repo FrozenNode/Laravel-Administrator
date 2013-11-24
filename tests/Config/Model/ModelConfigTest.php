@@ -56,7 +56,6 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	{
 		$model = new EloquentStub;
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->times(4);
 		$fields = array('field1' => $field, 'field2' => $field);
 		$columns = array('foo' => 'bar', 'field1' => 'bar');
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model)

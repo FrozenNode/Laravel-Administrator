@@ -317,7 +317,7 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 		$fields = array('id' => array('type' => 'key'), 'books' => array('type' => 'relationship'), 'other' => array('type' => 'text'));
 		$this->config->shouldReceive('getDataModel')->once()->andReturn(new EloquentStub);
 		$this->factory->shouldReceive('getEditFieldsArrays')->once()->andReturn($fields);
-		$this->assertEquals($this->factory->getDataModel(), array('id' => 0, 'books' => 'books_value', 'other' => 'other_value'));
+		$this->assertEquals($this->factory->getDataModel(), array('id' => 0, 'books' => 'books_value', 'other' => null));
 	}
 
 	public function testGetFiltersReturnsIndexedArray()

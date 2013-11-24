@@ -470,7 +470,7 @@ class Factory {
 				}
 				else
 				{
-					$dataModel[$name] = $model->$name;
+					$dataModel[$name] = null;
 				}
 			}
 		}
