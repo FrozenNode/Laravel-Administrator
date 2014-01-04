@@ -30,6 +30,30 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set the locale
 		$this->setLocale();
 
+		//define a constant that the rest of the package can use to conditionally use pieces of Laravel 4.1.x vs. 4.0.x
+		$this->app['administrator.4.1'] = version_compare(\Illuminate\Foundation\Application::VERSION, '4.1') > -1;
+
+		//set up an alias for the base laravel controller to accommodate >=4.1 and <4.1
+		if ($this->app['administrator.4.1'])
+			class_alias('Illuminate\Routing\Controller', 'AdministratorBaseController');
+		else
+			class_alias('Illuminate\Routing\Controllers\Controller', 'AdministratorBaseController');
+
+		//include our filters, view composers, and routes
+		include __DIR__.'/../../filters.php';
+		include __DIR__.'/../../viewComposers.php';
+		include __DIR__.'/../../routes.php';
+
+		$this->app['events']->fire('administrator.ready');
+	}
+
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
 		//the admin validator
 		$this->app['admin_validator'] = $this->app->share(function($app)
 		{
@@ -91,23 +115,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 		{
 			return new Menu($app->make('config'), $app->make('admin_config_factory'));
 		});
-
-		//include our filters, view composers, and routes
-		include __DIR__.'/../../filters.php';
-		include __DIR__.'/../../viewComposers.php';
-		include __DIR__.'/../../routes.php';
-
-		$this->app['events']->fire('administrator.ready');
-	}
-
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-
 	}
 
 	/**
@@ -117,7 +124,8 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('admin_validator', 'admin_config_factory', 'admin_field_factory', 'admin_datatable', 'admin_column_factory',
+			'admin_action_factory', 'admin_menu');
 	}
 
 	/**
