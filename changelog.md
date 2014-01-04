@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.9.0
+- Laravel 4.1 support
+- New translations (ja, pt)
+- Bugfix: There was a PSR-0 filename/classname disagreement in on of the relatively unused classes (Fields\Relationships\HasOne)
+
 ### 4.8.0
 - Anonymous functions can now be passed for custom action title, confirmation, and messages options
 - It is now possible to return a redirect from custom actions

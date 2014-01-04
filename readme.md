@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.8.0
+- **Version:** 4.9.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,13 +53,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.8.0
-- Anonymous functions can now be passed for custom action title, confirmation, and messages options
-- It is now possible to return a redirect from custom actions
-- Selecting an item now scrolls the browser to the top of the page
-- It is now possible to return accessor values into the edit form
-- Default values can now be set for edit fields
-- Bugfix: Custom dashboards no longer include unnecessary js files
-- Bugfix: Updated to latest jQuery timepicker addon to fix some legacy jQuery UI bugs
-- Bugfix: The detach() method is now used to remove related items instead of delete()
-- Bugfix: The bool filter field wasn't properly grabbing results
+### 4.9.0
+- Laravel 4.1 support
+- New translations (ja, pt)
+- Bugfix: There was a PSR-0 filename/classname disagreement in on of the relatively unused classes (Fields\Relationships\HasOne)
