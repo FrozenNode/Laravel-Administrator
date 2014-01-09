@@ -11,14 +11,14 @@ return array(
 	|
 	*/
 
-	'delete_active_item' => 'Czy na pewno chcesz usunąć ten obiekt? Czynności tej nie można odwrócić.',
-	'saving'             => 'Trwa zapisywanie...',
+	'delete_active_item' => 'Czy na pewno chcesz usunąć ten obiekt? Czynności tej nie można cofnąć.',
+	'saving'             => 'Trwa zapisywanie ...',
 	'saved'              => 'Obiekt zapisany.',
-	'deleting'           => 'Usuwanie...',
+	'deleting'           => 'Usuwanie ...',
 	'deleted'            => 'Obiekt usunięty.',
 	'character_left'     => ' znak pozostał',
 	'characters_left'    => ' znaki pozostały',
-	'no_results' => 'No results matched',
-	'select_options' => 'Select Some Options',
+	'no_results' => 'Brak pasujących wyników',
+	'select_options' => 'Wybierz jakieś opcje',
 
 );
