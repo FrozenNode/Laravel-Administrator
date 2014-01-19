@@ -78,8 +78,7 @@ class Column {
 		'column_name' => 'required|string',
 		'title' => 'string',
 		'relationship' => 'string',
-		'select' => 'required_with:relationship|string',
-		'output' => 'string',
+		'select' => 'required_with:relationship|string'
 	);
 
 	/**
@@ -241,13 +240,19 @@ class Column {
 	/**
 	 * Takes a column output string and renders the column with it (replacing '(:value)' with the column's field value)
 	 *
-	 * @param string	$output
+	 * @param string	$value
 	 *
 	 * @return string
 	 */
 	public function renderOutput($value)
 	{
-		return str_replace('(:value)', $value, $this->getOption('output'));
+		$output = $this->getOption('output');
+		
+		if (is_callable($output)) {
+			return $output($value);
+		}
+		
+		return str_replace('(:value)', $value, $output);
 	}
 
 	/**
