@@ -1,5 +1,6 @@
 ## Changelog
 
+- New translations (se, si)
 ### 4.9.0
 - Laravel 4.1 support
 - New translations (ja, pt)
