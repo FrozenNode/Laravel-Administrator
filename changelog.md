@@ -1,6 +1,8 @@
 ## Changelog
 
 - New translations (se, si)
+- Bugfix: The administrator base controller was being instantiated multiple times during unit tests in laravel 4.1.
+
 ### 4.9.0
 - Laravel 4.1 support
 - New translations (ja, pt)
