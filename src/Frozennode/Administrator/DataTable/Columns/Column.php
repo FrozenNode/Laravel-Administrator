@@ -79,7 +79,7 @@ class Column {
 		'title' => 'string',
 		'relationship' => 'string',
 		'select' => 'required_with:relationship|string',
-		'output' => 'string',
+		//'output' => 'string',
 	);
 
 	/**
