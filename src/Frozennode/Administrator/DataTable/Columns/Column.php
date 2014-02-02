@@ -117,6 +117,8 @@ class Column {
 		$this->validator = $validator;
 		$this->db = $db;
 		$this->suppliedOptions = $options;
+        	if (isset($options['rules']))
+            		$this->rules = $options['rules'];		
 	}
 
 	/**
@@ -247,7 +249,12 @@ class Column {
 	 */
 	public function renderOutput($value)
 	{
-		return str_replace('(:value)', $value, $this->getOption('output'));
+	        $vOutput = $this->getOption('output');
+	        if (($vOutput instanceof \Closure))
+	        {
+	        	$vOutput = $vOutput($value);
+	        }
+	        return str_replace('(:value)', $value, $vOutput);
 	}
 
 	/**
