@@ -1,5 +1,6 @@
 ## Changelog
 
+- Closures can now be passed into the output option for columns
 - New translations (se, si)
 - Bugfix: The administrator base controller was being instantiated multiple times during unit tests in laravel 4.1.
 
