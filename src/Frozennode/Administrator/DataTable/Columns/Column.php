@@ -79,7 +79,7 @@ class Column {
 		'title' => 'string',
 		'relationship' => 'string',
 		'select' => 'required_with:relationship|string',
-		//'output' => 'string',
+		'output' => 'string',
 	);
 
 	/**
@@ -117,6 +117,8 @@ class Column {
 		$this->validator = $validator;
 		$this->db = $db;
 		$this->suppliedOptions = $options;
+        	if (isset($options['rules']))
+            		$this->rules = $options['rules'];		
 	}
 
 	/**
