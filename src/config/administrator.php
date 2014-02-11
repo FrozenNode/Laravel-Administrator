@@ -101,7 +101,7 @@ return array(
 	'logout_path' => false,
 
 	/**
-	 * This is the key of the return path that is sent with the redirection to your login_action. Input::get('redirect') will hold the return URL.
+	 * This is the key of the return path that is sent with the redirection to your login_action. Session::get('redirect') will hold the return URL.
 	 *
 	 * @type string
 	 */
