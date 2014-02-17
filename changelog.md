@@ -1,5 +1,6 @@
 ## Changelog
 
+- It's now possible to customize the "back to site" link at the top right of admin pages
 - Closures can now be passed into the output option for columns
 - New translations (se, si, uk)
 - Bugfix: When navigating away from an item edit route and then hitting the back button, the browser would cache the dynamic json response. Proper headers have now been set to avoid this.

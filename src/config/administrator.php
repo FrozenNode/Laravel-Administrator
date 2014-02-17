@@ -87,6 +87,13 @@ return array(
 	'home_page' => '',
 
 	/**
+	 * The route to which the user will be taken when they click the "back to site" button
+	 *
+	 * @type string
+	 */
+	'back_to_site_path' => '/',
+
+	/**
 	 * The login path is the path where Administrator will send the user if they fail a permission check
 	 *
 	 * @type string
