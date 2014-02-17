@@ -29,6 +29,7 @@ Below is a list of all the available options:
 - [Use Dashboard](#use-dashboard)
 - [Dashboard View](#dashboard-view)
 - [Home Page](#home-page)
+- [Back To Site Path](#back-to-site-path)
 - [Login Path](#login-path)
 - [Logout Path](#logout-path)
 - [Redirect Key](#redirect-key)
@@ -129,6 +130,22 @@ If you want to have a submenu, instead of passing in a string, pass in an array 
 
 > For a detailed description of all the settings configuration options, see the **[settings configuration docs](/docs/settings-configuration)**
 
+<a name="permission"></a>
+### Permission
+
+	/**
+	 * The permission option is the highest-level authentication check that lets you define a closure that should return true if the current user
+	 * is allowed to view the admin section. Any "falsey" response will send the user back to the 'login_path' defined below.
+	 *
+	 * @type closure
+	 */
+	'permission'=> function()
+	{
+		return Auth::check();
+	},
+
+The permission option lets you define a closure that determines whether or not the current user can access all of Administrator. You can also define per-model permissions in each model's config. A user will only be given access if this resolves to a truthy value. If this fails, the user will be redirected to the `login_path`.
+
 <a name="use-dashboard"></a>
 ### Use Dashboard
 
@@ -172,21 +189,17 @@ If the `use_dashboard` option is set to true, Administrator will attempt to load
 
 If the `use_dashboard` option is set to false, Administrator will redirect the user to the above page when they visit the Administrator base URL. This must match an item in the `menu` option.
 
-<a name="permission"></a>
-### Permission
+<a name="back-to-site-path"></a>
+### Back To Site Path
 
 	/**
-	 * The permission option is the highest-level authentication check that lets you define a closure that should return true if the current user
-	 * is allowed to view the admin section. Any "falsey" response will send the user back to the 'login_path' defined below.
+	 * The route to which the user will be taken when they click the "back to site" button
 	 *
-	 * @type closure
+	 * @type string
 	 */
-	'permission'=> function()
-	{
-		return Auth::check();
-	},
+	'back_to_site_path' => '/',
 
-The permission option lets you define a closure that determines whether or not the current user can access all of Administrator. You can also define per-model permissions in each model's config. A user will only be given access if this resolves to a truthy value. If this fails, the user will be redirected to the `login_path`.
+Provide any value that would work with Laravel's `URL::to()` method.
 
 <a name="login-path"></a>
 ### Login Path

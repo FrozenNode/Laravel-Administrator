@@ -75,10 +75,13 @@ class AdminController extends Controller
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
 
-			return $actionPermissions['view'] ? $model->toJson() : Response::json(array(
+			$response = $actionPermissions['view'] ? Response::json($model) : Response::json(array(
 				'success' => false,
 				'errors' => "You do not have permission to view this item",
 			));
+
+			//set the Vary : Accept header to avoid the browser caching the json response
+			return $response->header('Vary', 'Accept');
 		}
 		else
 		{

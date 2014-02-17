@@ -87,6 +87,13 @@ return array(
 	'home_page' => '',
 
 	/**
+	 * The route to which the user will be taken when they click the "back to site" button
+	 *
+	 * @type string
+	 */
+	'back_to_site_path' => '/',
+
+	/**
 	 * The login path is the path where Administrator will send the user if they fail a permission check
 	 *
 	 * @type string
@@ -101,7 +108,7 @@ return array(
 	'logout_path' => false,
 
 	/**
-	 * This is the key of the return path that is sent with the redirection to your login_action. Input::get('redirect') will hold the return URL.
+	 * This is the key of the return path that is sent with the redirection to your login_action. Session::get('redirect') will hold the return URL.
 	 *
 	 * @type string
 	 */
