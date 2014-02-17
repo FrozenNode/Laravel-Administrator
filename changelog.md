@@ -2,6 +2,7 @@
 
 - Closures can now be passed into the output option for columns
 - New translations (se, si, uk)
+- Bugfix: When navigating away from an item edit route and then hitting the back button, the browser would cache the dynamic json response. Proper headers have now been set to avoid this.
 - Bugfix: When missing a rules option in a settings config file, an error would be thrown despite there being no explicit requirement for one
 - Bugfix: The administrator base controller was being instantiated multiple times during unit tests in laravel 4.1.
 
