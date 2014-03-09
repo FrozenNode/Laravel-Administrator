@@ -36,8 +36,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		Route::get('{model}/{id}', array(
 			'as' => 'admin_get_item',
 			'uses' => 'Frozennode\Administrator\AdminController@item'
-		))
-		->where('id', '[0-9]+');
+		));
 
 		//New Item
 		Route::get('{model}/new', array(
@@ -76,15 +75,13 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			Route::post('{model}/{id?}/save', array(
 				'as' => 'admin_save_item',
 				'uses' => 'Frozennode\Administrator\AdminController@save'
-			))
-			->where('id', '[0-9]+');
+			));
 
 			//Delete Item
 			Route::post('{model}/{id}/delete', array(
 				'as' => 'admin_delete_item',
 				'uses' => 'Frozennode\Administrator\AdminController@delete'
-			))
-			->where('id', '[0-9]+');
+			));
 
 			//Get results
 			Route::post('{model}/results', array(
@@ -96,15 +93,13 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			Route::post('{model}/custom_action', array(
 				'as' => 'admin_custom_model_action',
 				'uses' => 'Frozennode\Administrator\AdminController@customModelAction'
-			))
-			->where('id', '[0-9]+');
+			));
 
 			//Custom Item Action
 			Route::post('{model}/{id}/custom_action', array(
 				'as' => 'admin_custom_model_item_action',
 				'uses' => 'Frozennode\Administrator\AdminController@customModelItemAction'
-			))
-			->where('id', '[0-9]+');
+			));
 		});
 	});
 
