@@ -3,7 +3,7 @@
 Administrator is an administrative interface builder for [Laravel](http://laravel.com). With Administrator you can visually manage your Eloquent models and their relations, and also create stand-alone settings pages for storing site data and performing site tasks.
 
 - **Author:** Jan Hartigan
-- **Website:** [http://frozennode.com](http://frozennode.com)
+- **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
 - **Version:** 4.10.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
