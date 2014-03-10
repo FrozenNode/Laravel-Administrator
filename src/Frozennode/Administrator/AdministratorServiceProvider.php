@@ -7,6 +7,8 @@ use Frozennode\Administrator\Actions\Factory as ActionFactory;
 use Frozennode\Administrator\DataTable\DataTable;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
+
+use Frozennode\Administrator\Validation\Validator as Validator;
 use Illuminate\Support\Facades\Validator as LValidator;
 
 class AdministratorServiceProvider extends ServiceProvider {
@@ -60,7 +62,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->app['admin_validator'] = $this->app->share(function($app)
 		{
 			//get the original validator class so we can set it back after creating our own
-			$originalValidator = LValidator::make(array(), array());
+			$originalValidator = LValidator::make([], []);
 			$originalValidatorClass = get_class($originalValidator);
 
 			//temporarily override the core resolver
@@ -72,7 +74,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 			});
 
 			//grab our validator instance
-			$validator = LValidator::make(array(), array());
+			$validator = LValidator::make([], []);
 
 			//set the validator resolver back to the original validator
 			LValidator::resolver(function($translator, $data, $rules, $messages) use ($originalValidatorClass)
@@ -92,7 +94,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 
 		$this->app['admin_field_factory'] = $this->app->share(function($app)
 		{
-			return new FieldFactory($app->make('admin_validator'), $app->make('itemconfig'), $app->make('db'));
+			return new FieldFactory($app->make(' '), $app->make('itemconfig'), $app->make('db'));
 		});
 
 		$this->app['admin_datatable'] = $this->app->share(function($app)
@@ -120,14 +122,51 @@ class AdministratorServiceProvider extends ServiceProvider {
 	}
 
 	/**
+	 * Registers the IoC resolving callbacks
+	 */
+	protected function registerResolvingCallbacks()
+	{
+		//iterate over the provides array and register the callback for each
+		foreach ($this->provides() as $abstract)
+		{
+			$this->app->resolving($abstract, function($object)
+			{
+				$this->registerTraits($abstract);
+			});
+		}
+	}
+
+	/**
+	 * Injects dependencies into any traits on the supplied object
+	 *
+	 * @param mixed		$object
+	 *
+	 * @return void
+	 */
+	protected function registerTraits($object)
+	{
+		//iterate over the class's traits
+		foreach (class_uses($object) as $trait)
+		{
+			switch ($trait)
+			{
+				case 'Frozennode\Administrator\Traits\OptionableTrait':
+					$object->setOptionsValidator($this->app->make('admin_validator')); break;
+			}
+		}
+	}
+
+	/**
 	 * Get the services provided by the provider.
 	 *
 	 * @return array
 	 */
 	public function provides()
 	{
-		return array('admin_validator', 'admin_config_factory', 'admin_field_factory', 'admin_datatable', 'admin_column_factory',
-			'admin_action_factory', 'admin_menu');
+		return [
+			'admin.validator', 'admin.config.factory', 'admin.field.factory',  'admin.datatable',
+			'admin.column.factory', 'admin.action.factory', 'admin.menu'
+		];
 	}
 
 	/**
