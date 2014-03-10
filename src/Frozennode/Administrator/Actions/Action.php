@@ -58,12 +58,12 @@ class Action {
 	/**
 	 * Builds the necessary fields on the object
 	 *
-	 * @return void
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function buildOptions()
+	public function buildOptions($options)
 	{
-		$options = $this->suppliedOptions;
-
 		//build the string or callable values for title and confirmation
 		$this->buildStringOrCallable($options, array('confirmation', 'title'));
 
@@ -73,7 +73,7 @@ class Action {
 		$options['messages'] = $messages;
 
 		//override the supplied options
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**
@@ -117,6 +117,7 @@ class Action {
 	public function perform(&$data)
 	{
 		$action = $this->getOption('action');
+
 		return $action($data);
 	}
 

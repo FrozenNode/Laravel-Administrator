@@ -6,11 +6,11 @@ use Mockery as m;
 class ActionTest extends \PHPUnit_Framework_TestCase {
 
 	/**
-	 * The Validator mock
+	 * The options array
 	 *
-	 * @var Mockery
+	 * @var array
 	 */
-	protected $validator;
+	protected $options;
 
 	/**
 	 * The Config mock
@@ -31,10 +31,9 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function setUp()
 	{
-		$this->validator = m::mock('Frozennode\Administrator\Validator');
 		$this->config = m::mock('Frozennode\Administrator\Config\Model\Config');
-		$options = array('action_name' => 'test', 'has_permission' => true);
-		$this->action = m::mock('Frozennode\Administrator\Actions\Action', array($this->validator, $this->config, $options))
+		$this->options = array('action_name' => 'test', 'has_permission' => true);
+		$this->action = m::mock('Frozennode\Administrator\Actions\Action', array($this->config, $this->options))
 						->makePartial();
 	}
 
@@ -46,36 +45,17 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 		m::close();
 	}
 
-	public function testValidates()
-	{
-		$this->validator->shouldReceive('override')->once()
-						->shouldReceive('fails')->once()->andReturn(false);
-		$this->action->validateOptions();
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testValidateFails()
-	{
-		$this->validator->shouldReceive('override')->once()
-						->shouldReceive('fails')->once()->andReturn(true)
-						->shouldReceive('messages')->once()->andReturn(m::mock(array('all' => array())));
-		$this->config->shouldReceive('getOption')->once()->andReturn('');
-		$this->action->validateOptions();
-	}
-
-	public function testBuild()
+	public function testBuildOptions()
 	{
 		$this->action->shouldReceive('buildStringOrCallable')->twice();
-		$this->validator->shouldReceive('arrayGet')->once()->andReturn(array());
-		$this->action->build();
+		$options = $this->action->buildOptions($this->options);
+		$this->assertTrue(is_array($options));
+		$this->assertTrue($options['messages'] === []);
 	}
 
 	public function testBuildStringOrCallableEmpty()
 	{
 		$this->config->shouldReceive('getDataModel')->once();
-		$this->validator->shouldReceive('arrayGet')->never();
 		$options = array();
 		$this->action->buildStringOrCallable($options, array());
 	}
@@ -91,7 +71,6 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->config->shouldReceive('getDataModel')->once();
-		$this->validator->shouldReceive('arrayGet')->twice()->andReturn($options['foo'], $options['func']);
 		$this->action->buildStringOrCallable($options, array('foo', 'func'));
 
 		$this->assertEquals($options['foo'], 'bar');
@@ -103,39 +82,6 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 		$this->action->shouldReceive('getOption')->once()->andReturn(function() {return 'foo';});
 		$data = null;
 		$this->assertEquals($this->action->perform($data), 'foo');
-	}
-
-	public function testGetOptions()
-	{
-		$defaults = array(
-			'title' => 'Custom Action',
-			'has_permission' => true,
-			'confirmation' => false,
-			'messages' => array(
-				'active' => 'Just a moment...',
-				'success' => 'Success!',
-				'error' => 'There was an error performing this action',
-			),
-		);
-		$defaults['action_name'] = 'test';
-		$this->action->shouldReceive('validateOptions')->once()
-					->shouldReceive('build')->once();
-		$this->assertEquals($this->action->getOptions(), $defaults);
-	}
-
-	public function testGetOptionSucceeds()
-	{
-		$this->action->shouldReceive('getOptions')->once()->andReturn(array('foo' => 'bar'));
-		$this->assertEquals($this->action->getOption('foo'), 'bar');
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testGetOptionFails()
-	{
-		$this->action->shouldReceive('getOptions')->once()->andReturn(array('action_name' => 'bar'));
-		$this->action->getOption('foo');
 	}
 
 }
