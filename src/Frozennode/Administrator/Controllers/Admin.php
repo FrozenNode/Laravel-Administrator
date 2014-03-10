@@ -1,4 +1,4 @@
-<?php namespace Frozennode\Administrator;
+<?php namespace Frozennode\Administrator\Controllers;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -18,8 +18,7 @@ use Frozennode\Administrator\Fields\Field;
 /**
  * Handles all requests related to managing the data models
  */
-class AdminController extends Controller
-{
+class Admin extends Controller {
 
 	protected $layout = "administrator::layouts.default";
 
