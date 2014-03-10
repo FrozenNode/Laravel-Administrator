@@ -1,5 +1,5 @@
 <?php
-namespace Frozennode\Administrator;
+namespace Frozennode\Administrator\Validation;
 
 class Validator extends \Illuminate\Validation\Validator {
 
@@ -65,62 +65,6 @@ class Validator extends \Illuminate\Validation\Validator {
 	public function setRules(array $rules)
 	{
 		$this->rules = $this->explodeRules($rules);
-	}
-
-	/**
-	 * Mimic of the Laravel array_get helper
-	 *
-	 * @param  array   $array
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 *
-	 * @return mixed
-	 */
-	public function arrayGet($array, $key, $default = null)
-	{
-		if (is_null($key)) return $array;
-
-		if (isset($array[$key])) return $array[$key];
-
-		foreach (explode('.', $key) as $segment)
-		{
-			if ( ! is_array($array) or ! array_key_exists($segment, $array))
-			{
-				return value($default);
-			}
-
-			$array = $array[$segment];
-		}
-
-		return $array;
-	}
-
-	/**
-	 * Checks if a table is already joined to a query object
-	 *
-	 * @param Query		$query
-	 * @param string	$table
-	 *
-	 * @return bool
-	 */
-	public function isJoined($query, $table)
-	{
-		$tableFound = false;
-		$query = is_a($query, 'Illuminate\Database\Query\Builder') ? $query : $query->getQuery();
-
-		if ($query->joins)
-		{
-			//iterate over the joins to see if the table is there
-			foreach ($query->joins as $join)
-			{
-				if ($join->table === $table)
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
