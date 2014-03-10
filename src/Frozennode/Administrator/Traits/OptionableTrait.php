@@ -62,7 +62,7 @@ trait OptionableTrait {
 	public function validateOptions()
 	{
 		//override the config
-		$this->validator->override($this->options, $this->rules);
+		$this->validator->override($this->options, $this->getRules());
 
 		//if the validator failed, throw an exception
 		if ($this->validator->fails())
@@ -90,7 +90,7 @@ trait OptionableTrait {
 				$this->options = $this->buildOptions($this->options);
 
 			//set the options array to the now-formatted original options merged into the default options
-			$this->formattedOptions = array_merge($this->defaultOptions, $this->options);
+			$this->formattedOptions = array_merge($this->getDefaultOptions(), $this->options);
 		}
 
 		return $this->formattedOptions;
@@ -113,6 +113,26 @@ trait OptionableTrait {
 		}
 
 		return $options[$key];
+	}
+
+	/**
+	 * Gets all rules
+	 *
+	 * @return array
+	 */
+	public function getRules()
+	{
+		return property_exists($this, 'rules') ? $this->rules : [];
+	}
+
+	/**
+	 * Gets all default values
+	 *
+	 * @return array
+	 */
+	public function getDefaultOptions()
+	{
+		return property_exists($this, 'defaultOptions') ? $this->defaultOptions : [];
 	}
 
 }
