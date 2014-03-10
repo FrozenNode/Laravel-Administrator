@@ -103,7 +103,7 @@ class BelongsToMany extends Relationship {
 		$model = $this->config->getDataModel();
 
 		//if the table hasn't been joined yet, join it
-		if (!$this->validator->isJoined($query, $table))
+		if (!$this->isJoined($query, $table))
 		{
 			$query->join($table, $model->getTable().'.'.$model->getKeyName(), '=', $column);
 		}
@@ -133,7 +133,7 @@ class BelongsToMany extends Relationship {
 	public function constrainQuery(EloquentBuilder &$query, $relatedModel, $constraint)
 	{
 		//if the column hasn't been joined yet, join it
-		if (!$this->validator->isJoined($query, $this->getOption('table')))
+		if (!$this->isJoined($query, $this->getOption('table')))
 		{
 			$query->join($this->getOption('table'), $relatedModel->getTable().'.'.$relatedModel->getKeyName(), '=', $this->getOption('column2'));
 		}

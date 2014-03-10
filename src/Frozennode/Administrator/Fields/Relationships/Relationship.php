@@ -197,4 +197,32 @@ abstract class Relationship extends Field {
 
 		return array_merge($defaults, $this->relationshipDefaults);
 	}
+
+	/**
+	 * Checks if a table is already joined to a query object
+	 *
+	 * @param Query		$query
+	 * @param string	$table
+	 *
+	 * @return bool
+	 */
+	public function isJoined($query, $table)
+	{
+		$tableFound = false;
+		$query = is_a($query, 'Illuminate\Database\Query\Builder') ? $query : $query->getQuery();
+
+		if ($query->joins)
+		{
+			//iterate over the joins to see if the table is there
+			foreach ($query->joins as $join)
+			{
+				if ($join->table === $table)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }
