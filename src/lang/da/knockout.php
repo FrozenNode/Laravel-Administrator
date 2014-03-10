@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -21,4 +21,4 @@ return array(
 	'no_results' => 'Ingen resultater fundet',
 	'select_options' => 'Vælg nogle muligheder',
 
-);
+];

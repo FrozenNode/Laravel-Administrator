@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " no és un model Eloquent",
 	'storage_path_permissions' => "Ha de permetre escriure a la ruta d'emmagatzematge (storage path) per tal de fer una pàgina de configuració",
 	'valid_home_page' => "Ha de proporcionar un element de menú vàlid en l'opció home_page de la seva configuració",
-);
+];

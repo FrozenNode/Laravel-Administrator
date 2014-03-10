@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' znakov vam je še na voljo',
 	'no_results' => 'Ni rezultatov ujemanja',
 	'select_options' => 'Izbira',
-
-);
+];

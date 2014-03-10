@@ -37,35 +37,35 @@ class Factory {
 	 *
 	 * @var array
 	 */
-	protected $columns = array();
+	protected $columns = [];
 
 	/**
 	 * The column options arrays
 	 *
 	 * @var array
 	 */
-	protected $columnOptions = array();
+	protected $columnOptions = [];
 
 	/**
 	 * The included column (used for pulling a certain range of selects from the DB)
 	 *
 	 * @var array
 	 */
-	protected $includedColumns = array();
+	protected $includedColumns = [];
 
 	/**
 	 * The relationship columns
 	 *
 	 * @var array
 	 */
-	protected $relatedColumns = array();
+	protected $relatedColumns = [];
 
 	/**
 	 * The computed columns (either an accessor or a select was supplied)
 	 *
 	 * @var array
 	 */
-	protected $computedColumns = array();
+	protected $computedColumns = [];
 
 	/**
 	 * The class name of a BelongsTo relationship
@@ -184,7 +184,7 @@ class Factory {
 		if (is_string($options))
 		{
 			$name = $options;
-			$options = array();
+			$options = [];
 		}
 
 		//if the name is not a string or the options is not an array at this point, throw an error because we can't do anything with it

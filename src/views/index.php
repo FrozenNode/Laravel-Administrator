@@ -9,8 +9,8 @@
 	var site_url = "<?php echo Url::to('/') ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
-		file_url = "<?php echo URL::route('admin_display_file', array($config->getOption('name'))) ?>",
-		rows_per_page_url = "<?php echo URL::route('admin_rows_per_page', array($config->getOption('name'))) ?>",
+		file_url = "<?php echo URL::route('admin_display_file', [$config->getOption('name')]) ?>",
+		rows_per_page_url = "<?php echo URL::route('admin_rows_per_page', [$config->getOption('name')]) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo Session::token() ?>",
 		language = "<?php echo Config::get('app.locale') ?>",
@@ -74,7 +74,7 @@
 </script>
 
 <script id="itemFormTemplate" type="text/html">
-	<?php echo View::make("administrator::templates.edit", array('config' => $config))?>
+	<?php echo View::make("administrator::templates.edit", ['config' => $config])?>
 </script>
 
 <script id="filtersTemplate" type="text/html">

@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' các ký tự trái',
 	'no_results' => 'Không tìm thấy kết qủa phù hợp',
 	'select_options' => 'Chọn vài lựa chọn',
-
-);
+];

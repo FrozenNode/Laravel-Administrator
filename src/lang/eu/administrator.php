@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " ez da Eloquent modelo bat",
 	'storage_path_permissions' => "You must make your storage path writable in order to make a settings page",
 	'valid_home_page' => "You must provide a valid menu item in the home_page option of your config",
-);
+];

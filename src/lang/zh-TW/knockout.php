@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' 剩余字符串',
 	'no_results' => '沒有結果匹配',
 	'select_options' => '選擇一些選項',
-
-);
+];

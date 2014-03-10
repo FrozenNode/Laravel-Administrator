@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' karaktere faltan',
 	'no_results' => 'Emaitzik ez',
 	'select_options' => 'Hautatu Aukera Batzuk',
-
-);
+];

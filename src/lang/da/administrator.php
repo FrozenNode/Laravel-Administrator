@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -53,4 +53,4 @@ return array(
 	'not_eloquent' => " er ikke en Eloquent model",
 	'storage_path_permissions' => "Du skal gøre din 'storage'-sti læsbar for at kunne lave en indstillingsside",
 	'valid_home_page' => "Du skal angive et gyldigt menu-element i din 'home_page'-indstilling i din indstillingsfil",
-);
+];

@@ -41,7 +41,7 @@ class Menu {
 	 */
 	public function getMenu($subMenu = null)
 	{
-		$menu = array();
+		$menu = [];
 
 		if (!$subMenu)
 		{

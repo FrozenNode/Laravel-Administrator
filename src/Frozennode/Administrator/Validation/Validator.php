@@ -3,7 +3,7 @@ namespace Frozennode\Administrator\Validation;
 
 class Validator extends \Illuminate\Validation\Validator {
 
-	protected $overrideCustomMessages = array(
+	protected $overrideCustomMessages = [
 		'string' => "The :attribute option must be a string",
 		'directory' => "The :attribute option must be a valid directory",
 		'array' => "The :attribute option must be an array",
@@ -11,7 +11,7 @@ class Validator extends \Illuminate\Validation\Validator {
 		'not_empty' => "The :attribute option must not be empty",
 		'callable' => "The :attribute option must be a function",
 		'eloquent' => "The :attribute option must be the string name of a valid Eloquent model",
-	);
+	];
 
 	/**
 	 * The URL instance

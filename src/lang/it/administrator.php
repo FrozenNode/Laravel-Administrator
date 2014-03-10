@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " non è un modello che estende la classe Eloquent",
 	'storage_path_permissions' => "Devi assicurarti che il percorso di memorizzazione sia scrivibile in modo da poter creare una pagina delle impostazioni",
 	'valid_home_page' => "È necessario fornire una voce di menu valida nel campo 'home_page' della tua configurazione",
-);
+];

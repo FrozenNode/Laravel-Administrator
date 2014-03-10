@@ -24,23 +24,23 @@ class Config extends ConfigBase implements ConfigInterface {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
-		'filters' => array(),
+	protected $defaults = [
+		'filters' => [],
 		'query_filter' => null,
 		'permission' => true,
-		'action_permissions' => array(
+		'action_permissions' => [
 			'create' => true,
 			'delete' => true,
 			'update' => true,
 			'view' => true,
-		),
-		'actions' => array(),
-		'global_actions' => array(),
-		'sort' => array(),
+		],
+		'actions' => [],
+		'global_actions' => [],
+		'sort' => [],
 		'form_width' => 285,
 		'link' => null,
 		'rules' => false,
-	);
+	];
 
 	/**
 	 * An instance of the Eloquent model object for this model
@@ -54,7 +54,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'title' => 'required|string',
 		'single' => 'required|string',
 		'model' => 'required|string|eloquent',
@@ -70,7 +70,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'form_width' => 'integer',
 		'link' => 'callable',
 		'rules' => 'array',
-	);
+	];
 
 	/**
 	 * Fetches the data model for a config
@@ -175,11 +175,11 @@ class Config extends ConfigBase implements ConfigInterface {
 		if ($relatedItems)
 		{
 			//the array that holds all the ids of the currently-related items
-			$relationsArray = array();
+			$relationsArray = [];
 
 			//the id-indexed array that holds all of the select option data for a relation.
 			//this holds the currently-related items and all of the available options
-			$autocompleteArray = array();
+			$autocompleteArray = [];
 
 			//iterate over the items
 			foreach ($relatedItems as $item)
@@ -199,7 +199,7 @@ class Config extends ConfigBase implements ConfigInterface {
 				//if this is an autocomplete field, we'll need to provide an array of arrays with 'id' and 'text' indexes
 				if ($autocomplete)
 				{
-					$autocompleteArray[$item->{$keyName}] = array('id' => $item->{$keyName}, 'text' => $item->{$nameField});
+					$autocompleteArray[$item->{$keyName}] = ['id' => $item->{$keyName}, 'text' => $item->{$nameField}];
 				}
 			}
 
@@ -213,7 +213,7 @@ class Config extends ConfigBase implements ConfigInterface {
 			$model->setAttribute($name.'_options', $options);
 
 			//unset the relationships so we only get back what we need
-			$model->relationships = array();
+			$model->relationships = [];
 
 			//set the autocomplete array
 			if ($autocomplete)
@@ -224,7 +224,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		//if there are no values, then just set an empty array
 		else
 		{
-			$model->{$name} = array();
+			$model->{$name} = [];
 		}
 	}
 
@@ -433,7 +433,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		}
 		else
 		{
-			return array();
+			return [];
 		}
 	}
 

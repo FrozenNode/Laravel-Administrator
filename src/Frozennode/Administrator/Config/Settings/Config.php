@@ -18,13 +18,13 @@ class Config extends ConfigBase implements ConfigInterface {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $defaults = [
 		'permission' => true,
 		'before_save' => null,
-		'actions' => array(),
-		'rules' => array(),
+		'actions' => [],
+		'rules' => [],
 		'storage_path' => null,
-	);
+	];
 
 	/**
 	 * An array with the settings data
@@ -38,7 +38,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'title' => 'required|string',
 		'edit_fields' => 'required|array|not_empty',
 		'permission' => 'callable',
@@ -46,7 +46,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'actions' => 'array',
 		'rules' => 'array',
 		'storage_path' => 'directory',
-	);
+	];
 
 	/**
 	 * Fetches the data model for a config
@@ -90,7 +90,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	public function fetchData(array $fields)
 	{
 		//set up the blank data
-		$data = array();
+		$data = [];
 
 		foreach ($fields as $name => $field)
 		{
@@ -149,7 +149,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 */
 	public function save(\Illuminate\Http\Request $input, array $fields)
 	{
-		$data = array();
+		$data = [];
 
 		//iterate over the edit fields to only fetch the important items
 		foreach ($fields as $name => $field)

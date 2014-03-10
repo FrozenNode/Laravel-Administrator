@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent'      => " nie jest Eloquent model",
 	'storage_path_permissions' => "Aby utworzyć stronę typu 'settings' katalog 'storage_path' musi istnieć i mieć prawo do zapisu",
 	'valid_home_page' => "Musisz podać poprawny element 'menu' dla opcji 'home_page' w pliku konfiguracyjnym administrator.php",
-);
+];

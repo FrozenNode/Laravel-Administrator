@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " không phải model Eloquent",
 	'storage_path_permissions' => "Bạn phải cung cấp đường dẫn lưu trữ có quyền ghi để tạo cài đặt cho các trang",
 	'valid_home_page' => "Bạn phải cung cấp đúng các phần tử menu trong lựa chọn cho home_page trong tệp cài đặt",
-);
+];

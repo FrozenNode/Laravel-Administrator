@@ -20,28 +20,28 @@ class Action {
 	 *
 	 * @var array
 	 */
-	protected $defaultOptions = array(
+	protected $defaultOptions = [
 		'title' => 'Custom Action',
 		'has_permission' => true,
 		'confirmation' => false,
-		'messages' => array(
+		'messages' => [
 			'active' => 'Just a moment...',
 			'success' => 'Success!',
 			'error' => 'There was an error performing this action',
-		),
-	);
+		],
+	];
 
 	/**
 	 * The base rules that all fields need to pass
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'title' => 'string_or_callable',
 		'confirmation' => 'string_or_callable',
 		'messages' => 'array|array_with_all_or_none:active,success,error',
 		'action' => 'required|callable',
-	);
+	];
 
 	/**
 	 * Create a new action Factory instance
@@ -65,11 +65,11 @@ class Action {
 	public function buildOptions($options)
 	{
 		//build the string or callable values for title and confirmation
-		$this->buildStringOrCallable($options, array('confirmation', 'title'));
+		$this->buildStringOrCallable($options, ['confirmation', 'title']);
 
 		//build the string or callable values for the messages
 		$messages = array_get($options, 'messages', []);
-		$this->buildStringOrCallable($messages, array('active', 'success', 'error'));
+		$this->buildStringOrCallable($messages, ['active', 'success', 'error']);
 		$options['messages'] = $messages;
 
 		//override the supplied options

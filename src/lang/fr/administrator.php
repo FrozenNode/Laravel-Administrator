@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " n'est pas un modèle Eloquent",
 	'storage_path_permissions' => "Le répertoire Storage doit être autorisé en écriture pour créer une page settings",
 	'valid_home_page' => "You must provide a valid menu item in the home_page option of your config",
-);
+];

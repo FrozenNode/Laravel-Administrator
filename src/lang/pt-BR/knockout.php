@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' caracteres faltando',
 	'no_results' => 'Nenhum resultado encontrado',
 	'select_options' => 'Selecione alguma opção',
-
-);
+];

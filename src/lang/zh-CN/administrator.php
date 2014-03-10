@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " 不是 Eloquent model",
 	'storage_path_permissions' => "为了使用设置页面，你必须用于 storage 路径写入的权限",
 	'valid_home_page' => "在 administrator.php 的配置中你必须提供一个有效的 'home_page' 参数",
-);
+];

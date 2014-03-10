@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " är inte en Eloquent-modell",
 	'storage_path_permissions' => "Du måste göra din 'storage path' skrivbar för att skapa en inställningssida (settings page)",
 	'valid_home_page' => "Du måste ange en giltig 'menu item' i 'home_page'-inställningen i din konfiguration",
-);
+];

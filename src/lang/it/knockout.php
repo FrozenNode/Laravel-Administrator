@@ -1,8 +1,8 @@
-<?php 
+<?php
 
-return array(
+return [
 
-  /*
+	/*
 	|--------------------------------------------------------------------------
 	| Administrator Language Lines for knockout
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' caratteri rimasti',
 	'no_results' => 'Nessun risultato',
 	'select_options' => 'Effattua una selezione',
-
-);
+];

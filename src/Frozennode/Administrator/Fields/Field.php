@@ -33,7 +33,7 @@ abstract class Field {
 	 *
 	 * @var array
 	 */
-	protected $baseDefaultOptions = array(
+	protected $baseDefaultOptions = [
 		'relationship' => false,
 		'external' => false,
 		'editable' => true,
@@ -43,31 +43,31 @@ abstract class Field {
 		'min_value' => '',
 		'max_value' => '',
 		'min_max' => false,
-	);
+	];
 
 	/**
 	 * The specific defaults for subclasses to override
 	 *
 	 * @var array
 	 */
-	protected $defaultOptions = array();
+	protected $defaultOptions = [];
 
 	/**
 	 * The base rules that all fields need to pass
 	 *
 	 * @var array
 	 */
-	protected $baseRules = array(
+	protected $baseRules = [
 		'type' => 'required|string',
 		'field_name' => 'required|string',
-	);
+	];
 
 	/**
 	 * The specific rules for subclasses to override
 	 *
 	 * @var array
 	 */
-	protected $rules = array();
+	protected $rules = [];
 
 	/**
 	 * Create a new Field instance

@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' tecken kvar',
 	'no_results' => 'Inga resultat matchade',
 	'select_options' => 'Gör några val',
-
-);
+];

@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/**
 	 * Package URI
@@ -41,17 +41,17 @@ return array(
 	 *
 	 * @type array
 	 *
-	 * 	array(
-	 *		'E-Commerce' => array('collections', 'products', 'product_images', 'orders'),
+	 * 	[
+	 *		'E-Commerce' => ['collections', 'products', 'product_images', 'orders'],
 	 *		'homepage_sliders',
 	 *		'users',
 	 *		'roles',
 	 *		'colors',
-	 *		'Settings' => array('settings.site', 'settings.ecommerce', 'settings.social'),
-	 * 		'Analytics' => array('E-Commerce' => 'page.ecommerce.analytics'),
+	 *		'Settings' => ['settings.site', 'settings.ecommerce', 'settings.social'],
+	 * 		'Analytics' => ['E-Commerce' => 'page.ecommerce.analytics'],
 	 *	)
 	 */
-	'menu' => array(),
+	'menu' => [],
 
 	/**
 	 * The permission option is the highest-level authentication check that lets you define a closure that should return true if the current user
@@ -127,6 +127,6 @@ return array(
 	 *
 	 * @type array
 	 */
-	'locales' => array(),
+	'locales' => [],
 
-);
+];

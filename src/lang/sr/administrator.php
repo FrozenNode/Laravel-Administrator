@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
   /*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => " nije Eloquent model",
 	'storage_path_permissions' => "Vaša 'storage' putanja mora imati atribut 'writable' ukoliko želite da kreirate 'settings' stranicu",
 	'valid_home_page' => "Morate uneti važeću 'menu item' stavku u opciji 'home_page' u konfiguracionom fajlu",
-);
+];

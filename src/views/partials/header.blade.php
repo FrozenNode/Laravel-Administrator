@@ -29,7 +29,7 @@
 							@foreach (Config::get('administrator::administrator.locales') as $lang)
 								@if (Config::get('app.locale') != $lang)
 									<li>
-										<a href="{{URL::route('admin_switch_locale', array($lang))}}">{{$lang}}</a>
+										<a href="{{URL::route('admin_switch_locale', [$lang])}}">{{$lang}}</a>
 									</li>
 								@endif
 							@endforeach

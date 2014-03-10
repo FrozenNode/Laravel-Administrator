@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' letters over',
 	'no_results' => 'No results matched',
 	'select_options' => 'Select Some Options',
-
-);
+];

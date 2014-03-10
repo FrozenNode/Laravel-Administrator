@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -20,5 +20,4 @@ return array(
 	'characters_left' => ' karakter maradt',
 	'no_results' => 'Nincs egyező találat',
 	'select_options' => 'Válasszon az opciókból',
-
-);
+];

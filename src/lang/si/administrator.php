@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,4 +52,4 @@ return array(
 	'not_eloquent' => "ni Eloquent model",
 	'storage_path_permissions' => "Za stran z nastavitvami je potrebno nastaviti pot do imenika ki ima pravice za pisanje",
 	'valid_home_page' => "Podati morate veljavno opcijo 'home_page' v nastavitveni datoteki administrator.php",
-);
+];
