@@ -70,7 +70,7 @@ View::composer(['administrator::partials.header'], function($view)
 View::composer(['administrator::layouts.default'], function($view)
 {
 	//set up the basic asset arrays
-	$view->css = []);
+	$view->css = [];
 	$view->js = [
 		'jquery' => asset('packages/frozennode/administrator/js/jquery/jquery-1.8.2.min.js'),
 		'jquery-ui' => asset('packages/frozennode/administrator/js/jquery/jquery-ui-1.10.3.custom.min.js'),
