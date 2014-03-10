@@ -8,9 +8,9 @@ class BelongsToMany extends Relationship {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array(
+	protected $relationshipDefaultOptions = [
 		'belongs_to_many' => true
-	);
+	];
 
 	/**
 	 * Adds selects to a query
@@ -62,6 +62,6 @@ class BelongsToMany extends Relationship {
 		$model = $this->config->getDataModel();
 		$fk = $model->{$this->getOption('relationship')}()->getRelated()->getKeyName();
 
-		return array($fk => $model->getTable() . '.' . $fk);
+		return [$fk => $model->getTable() . '.' . $fk];
 	}
 }

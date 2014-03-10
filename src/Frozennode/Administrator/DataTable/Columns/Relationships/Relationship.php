@@ -14,24 +14,31 @@ class Relationship extends Column {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $baseRelationshipDefaultOptions = [
 		'is_related' => true,
 		'external' => true
-	);
+	];
 
 	/**
 	 * The relationship-type-specific defaults for the relationship subclasses to override
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array();
+	protected $relationshipDefaultOptions = [];
+
+	/**
+	 * The relationship-type-specific rules
+	 *
+	 * @var array
+	 */
+	protected $relationshipRules = [];
 
 	/**
 	 * Builds the necessary fields on the object
 	 *
 	 * @return void
 	 */
-	public function build()
+	public function buildOptions()
 	{
 		$model = $this->config->getDataModel();
 		$options = $this->suppliedOptions;
@@ -55,21 +62,33 @@ class Relationship extends Column {
 	 *
 	 * @return array
 	 */
-	public function getDefaults()
+	public function getDefaultOptions()
 	{
-		$defaults = parent::getDefaults();
+		$defaults = parent::getDefaultOptions();
 
-		return array_merge($defaults, $this->relationshipDefaults);
+		return array_merge($defaults, $this->baseRelationshipDefaultOptions, $this->relationshipDefaultOptions);
 	}
 
 	/**
-	 * Gets all default values
+	 * Gets all rules
+	 *
+	 * @return array
+	 */
+	public function getRules()
+	{
+		$rules = parent::getRules();
+
+		return array_merge($rules, $this->relationshipRules);
+	}
+
+	/**
+	 * Gets the included columns
 	 *
 	 * @return array
 	 */
 	public function getIncludedColumn()
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -156,7 +175,7 @@ class Relationship extends Column {
 	 * @return string 	//The interpolated query
 	 */
 	public function interpolateQuery($query, array $params) {
-		$keys = array();
+		$keys = [];
 		$values = $params;
 
 		//build a regular expression for each parameter

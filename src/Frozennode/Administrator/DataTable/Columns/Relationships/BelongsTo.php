@@ -8,9 +8,9 @@ class BelongsTo extends Relationship {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array(
+	protected $relationshipDefaultOptions = [
 		'external' => false
-	);
+	];
 
 	/**
 	 * The class name of a BelongsTo relationship
@@ -24,7 +24,7 @@ class BelongsTo extends Relationship {
 	 *
 	 * @return void
 	 */
-	public function build()
+	public function buildOptions()
 	{
 		$options = $this->suppliedOptions;
 		$this->tablePrefix = $this->db->getTablePrefix();
@@ -49,14 +49,14 @@ class BelongsTo extends Relationship {
 	/**
 	 * Converts the relationship key
 	 *
-	 * @param string		$name 	//the relationship name
+	 * @param string	$name 	//the relationship name
 	 *
-	 * @return false|array('models' => array(), 'pieces' => array())
+	 * @return mixed	false | ['models' => [], 'pieces' => []]
 	 */
 	public function getNestedRelationships($name)
 	{
 		$pieces = explode('.', $name);
-		$models = array();
+		$models = [];
 		$num_pieces = sizeof($pieces);
 
 		//iterate over the relationships to see if they're all valid
@@ -79,7 +79,7 @@ class BelongsTo extends Relationship {
 			$models[] = $models[$i]->{$rel}()->getRelated();
 		}
 
-		return array('models' => $models, 'pieces' => $pieces);
+		return ['models' => $models, 'pieces' => $pieces];
 	}
 
 	/**
@@ -141,6 +141,6 @@ class BelongsTo extends Relationship {
 		$nested = $this->getOption('nested');
 		$fk = $nested['models'][0]->{$nested['pieces'][0]}()->getForeignKey();
 
-		return array($fk => $model->getTable() . '.' . $fk);
+		return [$fk => $model->getTable() . '.' . $fk];
 	}
 }
