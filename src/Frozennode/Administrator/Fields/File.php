@@ -38,7 +38,7 @@ class File extends Field {
 	 */
 	public function buildOptions($options)
 	{
-		$options = parent::build($options);
+		$options = parent::buildOptions($options);
 
 		//set the upload url depending on the type of config this is
 		$route = $this->config->getType() === 'settings' ? 'admin_settings_file_upload' : 'admin_file_upload';

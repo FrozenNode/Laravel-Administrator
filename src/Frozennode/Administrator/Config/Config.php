@@ -13,22 +13,22 @@ abstract class Config {
 	 */
 	public function __construct(array $options)
 	{
-		$this->suppliedOptions = $options;
+		$this->options = $options;
 	}
 
 	/**
 	 * Builds the necessary fields on the object
 	 *
-	 * @return void
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function buildOptions()
+	public function buildOptions($options)
 	{
-		$options = $this->suppliedOptions;
-
 		//check the permission
 		$options['permission'] = isset($options['permission']) ? $options['permission']() : true;
 
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**

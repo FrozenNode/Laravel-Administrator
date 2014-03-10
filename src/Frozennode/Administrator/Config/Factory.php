@@ -1,18 +1,13 @@
 <?php
 namespace Frozennode\Administrator\Config;
 
-use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Traits\OptionableTrait;
 use Frozennode\Administrator\Config\Settings\Config as SettingsConfig;
 use Frozennode\Administrator\Config\Model\Config as ModelConfig;
 
 class Factory {
 
-	/**
-	 * The validator instance
-	 *
-	 * @var \Frozennode\Administrator\Validator
-	 */
-	protected $validator;
+	use OptionableTrait;
 
 	/**
 	 * The config instance
@@ -20,13 +15,6 @@ class Factory {
 	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
-
-	/**
-	 * The main options array
-	 *
-	 * @var array
-	 */
-	protected $options;
 
 	/**
 	 * The config name
@@ -61,7 +49,7 @@ class Factory {
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'uri' => 'required|string',
 		'title' => 'required|string',
 		'model_config_path' => 'required|string|directory',
@@ -73,26 +61,17 @@ class Factory {
 		'home_page' => 'string',
 		'login_path' => 'required|string',
 		'login_redirect_key' => 'required|string',
-	);
+	];
 
 	/**
 	 * Create a new config Factory instance
 	 *
-	 * @param \Frozennode\Administrator\Validator 	$validator
-	 * @param array 								$options
+	 * @param array		$options
 	 */
-	public function __construct(Validator $validator, array $options)
+	public function __construct(array $options)
 	{
 		//set the config, and then validate it
 		$this->options = $options;
-		$this->validator = $validator;
-		$validator->override($this->options, $this->rules);
-
-		//if the validator failed, throw an exception
-		if ($validator->fails())
-		{
-			throw new \InvalidArgumentException('There are problems with your administrator.php config: ' . implode('. ', $validator->messages()->all()));
-		}
 	}
 
 	/**
@@ -283,11 +262,11 @@ class Factory {
 	{
 		if ($this->type === 'settings')
 		{
-			return new SettingsConfig($this->validator, $options);
+			return new SettingsConfig($options);
 		}
 		else
 		{
-			return new ModelConfig($this->validator, $options);
+			return new ModelConfig($options);
 		}
 	}
 
