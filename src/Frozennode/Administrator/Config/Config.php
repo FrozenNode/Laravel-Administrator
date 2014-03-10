@@ -1,74 +1,19 @@
-<?php
-namespace Frozennode\Administrator\Config;
+<?php namespace Frozennode\Administrator\Config;
 
-use Frozennode\Administrator\Config\ConfigInterface;
-use Frozennode\Administrator\Validator;
+use Frozennode\Administrator\Traits\OptionableTrait;
 
 abstract class Config {
 
-	/**
-	 * The validator instance
-	 *
-	 * @var \Frozennode\Administrator\Validator
-	 */
-	protected $validator;
+	use OptionableTrait;
 
 	/**
-	 * The user supplied options array
+	 * Create a new Config instance
 	 *
-	 * @var array
+	 * @param array 	$options
 	 */
-	protected $suppliedOptions = array();
-
-	/**
-	 * The original configuration options that were supplied
-	 *
-	 * @var array
-	 */
-	protected $options;
-
-	/**
-	 * The defaults property
-	 *
-	 * @var array
-	 */
-	protected $defaults = array();
-
-	/**
-	 * The rules property
-	 *
-	 * @var array
-	 */
-	protected $rules = array();
-
-	/**
-	 * Create a new model Config instance
-	 *
-	 * @param \Frozennode\Administrator\Validator 	$validator
-	 * @param array 								$options
-	 */
-	public function __construct(Validator $validator, array $options)
+	public function __construct(array $options)
 	{
-		$this->validator = $validator;
 		$this->suppliedOptions = $options;
-	}
-
-	/**
-	 * Validates the supplied options
-	 *
-	 * @return void
-	 */
-	public function validateOptions()
-	{
-		//override the config
-		$this->validator->override($this->suppliedOptions, $this->rules);
-
-		//if the validator failed, throw an exception
-		if ($this->validator->fails())
-		{
-			throw new \InvalidArgumentException('There are problems with your ' . $this->suppliedOptions['name'] . ' config: ' .
-						implode('. ', $this->validator->messages()->all()));
-		}
 	}
 
 	/**
@@ -76,7 +21,7 @@ abstract class Config {
 	 *
 	 * @return void
 	 */
-	public function build()
+	public function buildOptions()
 	{
 		$options = $this->suppliedOptions;
 
@@ -94,60 +39,6 @@ abstract class Config {
 	public function getType()
 	{
 		return $this->type;
-	}
-
-	/**
-	 * Gets all user options
-	 *
-	 * @return array
-	 */
-	public function getOptions()
-	{
-		//make sure the supplied options have been merged with the defaults
-		if (empty($this->options))
-		{
-			//validate the options and build them
-			$this->validateOptions();
-			$this->build();
-			$this->options = array_merge($this->defaults, $this->suppliedOptions);
-		}
-
-		return $this->options;
-	}
-
-	/**
-	 * Gets a config option
-	 *
-	 * @param string 	$key
-	 *
-	 * @return mixed
-	 */
-	public function getOption($key)
-	{
-		$options = $this->getOptions();
-
-		if (!array_key_exists($key, $options))
-		{
-			throw new \InvalidArgumentException("An invalid option was searched for in the '" . $options['name'] . "' config");
-		}
-
-		return $options[$key];
-	}
-
-	/**
-	 * Sets the user options
-	 *
-	 * @param array		$options
-	 *
-	 * @return array
-	 */
-	public function setOptions(array $options)
-	{
-		//unset the current options
-		$this->options = array();
-
-		//override the supplied options
-		$this->suppliedOptions = $options;
 	}
 
 	/**
