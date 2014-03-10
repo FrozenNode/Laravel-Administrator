@@ -12,7 +12,7 @@ abstract class Field {
 	{
 		getDefaultOptions as traitGetDefaultOptions;
 		getRules as traitGetRules;
-	};
+	}
 
 	/**
 	 * The config interface instance
