@@ -57,9 +57,9 @@ class Admin extends Controller {
 	public function item($modelName, $itemId = 0)
 	{
 		$config = App::make('itemconfig');
-		$fieldFactory = App::make('admin_field_factory');
-		$actionFactory = App::make('admin_action_factory');
-		$columnFactory = App::make('admin_column_factory');
+		$fieldFactory = App::make('admin.field.factory');
+		$actionFactory = App::make('admin.action.factory');
+		$columnFactory = App::make('admin.column.factory');
 		$actionPermissions = $actionFactory->getActionPermissions();
 		$fields = $fieldFactory->getEditFields();
 
@@ -104,8 +104,8 @@ class Admin extends Controller {
 	public function save($modelName, $id = false)
 	{
 		$config = App::make('itemconfig');
-		$fieldFactory = App::make('admin_field_factory');
-		$actionFactory = App::make('admin_action_factory');
+		$fieldFactory = App::make('admin.field.factory');
+		$actionFactory = App::make('admin.action.factory');
 		$save = $config->save(App::make('request'), $fieldFactory->getEditFields(), $actionFactory->getActionPermissions(), $id);
 
 		if (is_string($save))
@@ -118,10 +118,10 @@ class Admin extends Controller {
 		else
 		{
 			//override the config options so that we can get the latest
-			App::make('admin_config_factory')->updateConfigOptions();
+			App::make('admin.config.factory')->updateConfigOptions();
 
 			//grab the latest model data
-			$columnFactory = App::make('admin_column_factory');
+			$columnFactory = App::make('admin.column.factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
 
@@ -148,7 +148,7 @@ class Admin extends Controller {
 	public function delete($modelName, $id)
 	{
 		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
+		$actionFactory = App::make('admin.action.factory');
 		$baseModel = $config->getDataModel();
 		$model = $baseModel::find($id);
 		$errorResponse = [
@@ -187,9 +187,9 @@ class Admin extends Controller {
 	public function customModelAction($modelName)
 	{
 		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
-		$actionName = Input::get('action_name', false);
-		$dataTable = App::make('admin_datatable');
+		$actionFactory = App::make('admin.action.factory');
+		$actionName = Input::get('action.name', false);
+		$dataTable = App::make('admin.grid');
 
 		//get the sort options and filters
 		$page = Input::get('page', 1);
@@ -249,7 +249,7 @@ class Admin extends Controller {
 	public function customModelItemAction($modelName, $id = null)
 	{
 		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
+		$actionFactory = App::make('admin.action.factory');
 		$model = $config->getDataModel();
 		$model = $model::find($id);
 		$actionName = Input::get('action_name', false);
@@ -259,7 +259,7 @@ class Admin extends Controller {
 		$result = $action->perform($model);
 
 		//override the config options so that we can get the latest
-		App::make('admin_config_factory')->updateConfigOptions();
+		App::make('admin.config.factory')->updateConfigOptions();
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
@@ -274,8 +274,8 @@ class Admin extends Controller {
 		}
 		else
 		{
-			$fieldFactory = App::make('admin_field_factory');
-			$columnFactory = App::make('admin_column_factory');
+			$fieldFactory = App::make('admin.field.factory');
+			$columnFactory = App::make('admin.column.factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
 
@@ -324,7 +324,7 @@ class Admin extends Controller {
 		//else we should redirect to the menu item
 		else
 		{
-			$configFactory = App::make('admin_config_factory');
+			$configFactory = App::make('admin.config.factory');
 			$home = Config::get('administrator::administrator.home_page');
 
 			//first try to find it if it's a model config item
@@ -354,7 +354,7 @@ class Admin extends Controller {
 	 */
 	public function results($modelName)
 	{
-		$dataTable = App::make('admin_datatable');
+		$dataTable = App::make('admin.grid');
 
 		//get the sort options and filters
 		$page = Input::get('page', 1);
@@ -374,7 +374,7 @@ class Admin extends Controller {
 	 */
 	public function updateOptions($modelName)
 	{
-		$fieldFactory = App::make('admin_field_factory');
+		$fieldFactory = App::make('admin.field.factory');
 		$response = [];
 
 		//iterate over the supplied constrained fields
@@ -424,7 +424,7 @@ class Admin extends Controller {
 	 */
 	public function fileUpload($modelName, $fieldName)
 	{
-		$fieldFactory = App::make('admin_field_factory');
+		$fieldFactory = App::make('admin.field.factory');
 
 		//get the model and the field object
 		$field = $fieldFactory->findField($fieldName);
@@ -461,7 +461,7 @@ class Admin extends Controller {
 	 */
 	public function rowsPerPage($modelName)
 	{
-		$dataTable = App::make('admin_datatable');
+		$dataTable = App::make('admin.grid');
 
 		//get the inputted rows and the model rows
 		$rows = (int) Input::get('rows', 20);
@@ -505,7 +505,7 @@ class Admin extends Controller {
 	public function settingsSave()
 	{
 		$config = App::make('itemconfig');
-		$save = $config->save(App::make('request'), App::make('admin_field_factory')->getEditFields());
+		$save = $config->save(App::make('request'), App::make('admin.field.factory')->getEditFields());
 
 		if (is_string($save))
 		{
@@ -517,12 +517,12 @@ class Admin extends Controller {
 		else
 		{
 			//override the config options so that we can get the latest
-			App::make('admin_config_factory')->updateConfigOptions();
+			App::make('admin.config.factory')->updateConfigOptions();
 
 			return Response::json([
 				'success' => true,
 				'data' => $config->getDataModel(),
-				'actions' => App::make('admin_action_factory')->getActionsOptions(),
+				'actions' => App::make('admin.action.factory')->getActionsOptions(),
 			]);
 		}
 	}
@@ -537,7 +537,7 @@ class Admin extends Controller {
 	public function settingsCustomAction($settingsName)
 	{
 		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
+		$actionFactory = App::make('admin.action.factory');
 		$actionName = Input::get('action_name', false);
 
 		//get the action and perform the custom action
@@ -546,7 +546,7 @@ class Admin extends Controller {
 		$result = $action->perform($data);
 
 		//override the config options so that we can get the latest
-		App::make('admin_config_factory')->updateConfigOptions();
+		App::make('admin.config.factory')->updateConfigOptions();
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))

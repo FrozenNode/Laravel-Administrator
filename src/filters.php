@@ -5,7 +5,7 @@
 //validate_admin filter
 Route::filter('validate_admin', function ()
 {
-	$configFactory = App::make('admin_config_factory');
+	$configFactory = App::make('admin.config.factory');
 
 	//get the admin check closure that should be supplied in the config
 	$permission = Config::get('administrator::administrator.permission');
@@ -39,7 +39,7 @@ Route::filter('validate_model', function($route, $request)
 
 	App::singleton('itemconfig', function($app) use ($modelName)
 	{
-		$configFactory = App::make('admin_config_factory');
+		$configFactory = App::make('admin.config.factory');
 		return $configFactory->make($modelName, true);
 	});
 });
@@ -51,7 +51,7 @@ Route::filter('validate_settings', function($route, $request)
 
 	App::singleton('itemconfig', function($app) use ($settingsName)
 	{
-		$configFactory = App::make('admin_config_factory');
+		$configFactory = App::make('admin.config.factory');
 		return $configFactory->make($configFactory->getSettingsPrefix() . $settingsName, true);
 	});
 });
@@ -78,7 +78,7 @@ Route::filter('post_validate', function($route, $request)
 	//get the settings data if it's a settings page
 	if ($config->getType() === 'settings')
 	{
-		$config->fetchData(App::make('admin_field_factory')->getEditFields());
+		$config->fetchData(App::make('admin.field.factory')->getEditFields());
 	}
 
 	//otherwise if this is a response, return that

@@ -10,10 +10,10 @@ View::composer('administrator::index', function($view)
 {
 	//get a model instance that we'll use for constructing stuff
 	$config = App::make('itemconfig');
-	$fieldFactory = App::make('admin_field_factory');
-	$columnFactory = App::make('admin_column_factory');
-	$actionFactory = App::make('admin_action_factory');
-	$dataTable = App::make('admin_datatable');
+	$fieldFactory = App::make('admin.field.factory');
+	$columnFactory = App::make('admin.column.factory');
+	$actionFactory = App::make('admin.action.factory');
+	$dataTable = App::make('admin.grid');
 	$model = $config->getDataModel();
 	$baseUrl = URL::route('admin_dashboard');
 	$route = parse_url($baseUrl);
@@ -42,8 +42,8 @@ View::composer('administrator::index', function($view)
 View::composer('administrator::settings', function($view)
 {
 	$config = App::make('itemconfig');
-	$fieldFactory = App::make('admin_field_factory');
-	$actionFactory = App::make('admin_action_factory');
+	$fieldFactory = App::make('admin.field.factory');
+	$actionFactory = App::make('admin.action.factory');
 	$baseUrl = URL::route('admin_dashboard');
 	$route = parse_url($baseUrl);
 
@@ -60,9 +60,9 @@ View::composer('administrator::settings', function($view)
 //header view
 View::composer(['administrator::partials.header'], function($view)
 {
-	$view->menu = App::make('admin_menu')->getMenu();
-	$view->settingsPrefix = App::make('admin_config_factory')->getSettingsPrefix();
-	$view->pagePrefix = App::make('admin_config_factory')->getPagePrefix();
+	$view->menu = App::make('admin.menu')->getMenu();
+	$view->settingsPrefix = App::make('admin.config.factory')->getSettingsPrefix();
+	$view->pagePrefix = App::make('admin.config.factory')->getPagePrefix();
 	$view->configType = App::bound('itemconfig') ? App::make('itemconfig')->getType() : false;
 });
 

@@ -59,7 +59,27 @@ class AdministratorServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		//the admin validator
-		$this->app['admin_validator'] = $this->app->share(function($app)
+		$this->registerValidator();
+
+		//the factories
+		$this->registerFactories();
+
+		//the menu
+		$this->registerMenu();
+
+		//the data grid
+		$this->registerGrid();
+
+		//the resolving callbacks
+		$this->registerResolvingCallbacks();
+	}
+
+	/**
+	 * Registers the Administrator validator
+	 */
+	protected function registerValidator()
+	{
+		$this->app['admin.validator'] = $this->app->share(function($app)
 		{
 			//get the original validator class so we can set it back after creating our own
 			$originalValidator = LValidator::make([], []);
@@ -85,39 +105,57 @@ class AdministratorServiceProvider extends ServiceProvider {
 			//return our validator instance
 			return $validator;
 		});
+	}
 
+	/**
+	 * Registers the various factories
+	 */
+	protected function registerFactories()
+	{
 		//set up the shared instances
-		$this->app['admin_config_factory'] = $this->app->share(function($app)
+		$this->app['admin.config.factory'] = $this->app->share(function($app)
 		{
-			return new ConfigFactory($app->make('admin_validator'), Config::get('administrator::administrator'));
+			return new ConfigFactory(Config::get('administrator::administrator'));
 		});
 
-		$this->app['admin_field_factory'] = $this->app->share(function($app)
+		$this->app['admin.field.factory'] = $this->app->share(function($app)
 		{
-			return new FieldFactory($app->make(' '), $app->make('itemconfig'), $app->make('db'));
+			return new FieldFactory($app->make('admin.validator'), $app->make('itemconfig'), $app->make('db'));
 		});
 
-		$this->app['admin_datatable'] = $this->app->share(function($app)
+		$this->app['admin.column.factory'] = $this->app->share(function($app)
 		{
-			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin_column_factory'), $app->make('admin_field_factory'));
-			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator::administrator.global_rows_per_page'));
+			return new ColumnFactory($app->make('admin.validator'), $app->make('itemconfig'), $app->make('db'));
+		});
+
+		$this->app['admin.action.factory'] = $this->app->share(function($app)
+		{
+			return new ActionFactory($app->make('admin.validator'), $app->make('itemconfig'), $app->make('db'));
+		});
+	}
+
+	/**
+	 * Registers the Menu
+	 */
+	protected function registerMenu()
+	{
+		$this->app['admin.menu'] = $this->app->share(function($app)
+		{
+			return new Menu($app->make('config'), $app->make('admin.config.factory'));
+		});
+	}
+
+	/**
+	 * Registers the data grid
+	 */
+	protected function registerGrid()
+	{
+		$this->app['admin.grid'] = $this->app->share(function($app)
+		{
+			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin.column.factory'), $app->make('admin.field.factory'));
+			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator::administrator.global.rows.per.page'));
 
 			return $dataTable;
-		});
-
-		$this->app['admin_column_factory'] = $this->app->share(function($app)
-		{
-			return new ColumnFactory($app->make('admin_validator'), $app->make('itemconfig'), $app->make('db'));
-		});
-
-		$this->app['admin_action_factory'] = $this->app->share(function($app)
-		{
-			return new ActionFactory($app->make('admin_validator'), $app->make('itemconfig'), $app->make('db'));
-		});
-
-		$this->app['admin_menu'] = $this->app->share(function($app)
-		{
-			return new Menu($app->make('config'), $app->make('admin_config_factory'));
 		});
 	}
 
@@ -131,7 +169,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		{
 			$this->app->resolving($abstract, function($object)
 			{
-				$this->registerTraits($abstract);
+				$this->registerTraits($object);
 			});
 		}
 	}
@@ -151,7 +189,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 			switch ($trait)
 			{
 				case 'Frozennode\Administrator\Traits\OptionableTrait':
-					$object->setOptionsValidator($this->app->make('admin_validator')); break;
+					$object->setOptionsValidator($this->app->make('admin.validator')); break;
 			}
 		}
 	}
@@ -164,7 +202,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	public function provides()
 	{
 		return [
-			'admin.validator', 'admin.config.factory', 'admin.field.factory',  'admin.datatable',
+			'admin.validator', 'admin.config.factory', 'admin.field.factory',  'admin.grid',
 			'admin.column.factory', 'admin.action.factory', 'admin.menu'
 		];
 	}
