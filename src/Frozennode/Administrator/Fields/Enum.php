@@ -10,32 +10,34 @@ class Enum extends Field {
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'options' => 'required|array|not_empty',
-	);
+	];
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
-
-		$options = $this->suppliedOptions;
+		$options = parent::buildOptions($options);
 
 		$dataOptions = $options['options'];
-		$options['options'] = array();
+		$options['options'] = [];
 
 		//iterate over the options to create the options assoc array
 		foreach ($dataOptions as $val => $text)
 		{
-			$options['options'][] = array(
+			$options['options'][] = [
 				'id' => is_numeric($val) ? $text : $val,
 				'text' => $text,
-			);
+			];
 		}
 
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**

@@ -1,19 +1,18 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
+use Frozennode\Administrator\Traits\OptionableTrait;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 abstract class Field {
 
-	/**
-	 * The validator instance
-	 *
-	 * @var \Frozennode\Administrator\Validator
-	 */
-	protected $validator;
+	use OptionableTrait
+	{
+		getDefaultOptions as traitGetDefaultOptions;
+		getRules as traitGetRules;
+	};
 
 	/**
 	 * The config interface instance
@@ -30,25 +29,11 @@ abstract class Field {
 	protected $db;
 
 	/**
-	 * The originally supplied options
-	 *
-	 * @var array
-	 */
-	protected $suppliedOptions;
-
-	/**
-	 * The options supplied merged into the defaults
-	 *
-	 * @var array
-	 */
-	protected $userOptions;
-
-	/**
 	 * The default configuration options
 	 *
 	 * @var array
 	 */
-	protected $baseDefaults = array(
+	protected $baseDefaultOptions = array(
 		'relationship' => false,
 		'external' => false,
 		'editable' => true,
@@ -65,7 +50,7 @@ abstract class Field {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array();
+	protected $defaultOptions = array();
 
 	/**
 	 * The base rules that all fields need to pass
@@ -87,33 +72,31 @@ abstract class Field {
 	/**
 	 * Create a new Field instance
 	 *
-	 * @param \Frozennode\Administrator\Validator 				$validator
 	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
 	 * @param \Illuminate\Database\DatabaseManager				$db
 	 * @param array												$options
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db, array $options)
+	public function __construct(ConfigInterface $config, DB $db, array $options)
 	{
-		$this->validator = $validator;
 		$this->config = $config;
 		$this->db = $db;
-		$this->suppliedOptions = $options;
+		$this->options = $options;
 	}
 
 	/**
 	 * Builds a few basic options
 	 *
-	 * @return void
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		$options = $this->suppliedOptions;
-
 		//set the title if it doesn't exist
-		$options['title'] = $this->validator->arrayGet($options, 'title', $options['field_name']);
+		$options['title'] = array_get($options, 'title', $options['field_name']);
 
 		//run the visible property closure if supplied
-		$visible = $this->validator->arrayGet($options, 'visible');
+		$visible = array_get($options, 'visible');
 
 		if (is_callable($visible))
 		{
@@ -121,32 +104,14 @@ abstract class Field {
 		}
 
 		//run the editable property's closure if supplied
-		$editable = $this->validator->arrayGet($options, 'editable');
+		$editable = array_get($options, 'editable');
 
 		if (isset($editable) && is_callable($editable))
 		{
 			$options['editable'] = $editable($this->config->getDataModel());
 		}
 
-		$this->suppliedOptions = $options;
-	}
-
-	/**
-	 * Validates the supplied options
-	 *
-	 * @return void
-	 */
-	public function validateOptions()
-	{
-		//override the config
-		$this->validator->override($this->suppliedOptions, $this->getRules());
-
-		//if the validator failed, throw an exception
-		if ($this->validator->fails())
-		{
-			throw new \InvalidArgumentException("There are problems with your '" . $this->suppliedOptions['field_name'] . "' field in the " .
-									$this->config->getOption('name') . " config: " .	implode('. ', $this->validator->messages()->all()));
-		}
+		return $options;
 	}
 
 	/**
@@ -181,9 +146,9 @@ abstract class Field {
 	 */
 	public function setFilter($filter)
 	{
-		$this->userOptions['value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'value', $this->getOption('value')));
-		$this->userOptions['min_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'min_value', $this->getOption('min_value')));
-		$this->userOptions['max_value'] = $this->getFilterValue($this->validator->arrayGet($filter, 'max_value', $this->getOption('max_value')));
+		$this->userOptions['value'] = $this->getFilterValue(array_get($filter, 'value', $this->getOption('value')));
+		$this->userOptions['min_value'] = $this->getFilterValue(array_get($filter, 'min_value', $this->getOption('min_value')));
+		$this->userOptions['max_value'] = $this->getFilterValue(array_get($filter, 'max_value', $this->getOption('max_value')));
 	}
 
 	/**
@@ -233,43 +198,6 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets all user options
-	 *
-	 * @return array
-	 */
-	public function getOptions()
-	{
-		if (empty($this->userOptions))
-		{
-			//validate the options and then merge them into the defaults
-			$this->build();
-			$this->validateOptions();
-			$this->userOptions = array_merge($this->getDefaults(), $this->suppliedOptions);
-		}
-
-		return $this->userOptions;
-	}
-
-	/**
-	 * Gets a field's option
-	 *
-	 * @param string 	$key
-	 *
-	 * @return mixed
-	 */
-	public function getOption($key)
-	{
-		$options = $this->getOptions();
-
-		if (!array_key_exists($key, $options))
-		{
-			throw new \InvalidArgumentException("An invalid option '$key' was searched for in the '" . $this->userOptions['field_name'] . "' field");
-		}
-
-		return $options[$key];
-	}
-
-	/**
 	 * Gets all rules
 	 *
 	 * @return array
@@ -284,9 +212,9 @@ abstract class Field {
 	 *
 	 * @return array
 	 */
-	public function getDefaults()
+	public function getDefaultOptions()
 	{
-		return array_merge($this->baseDefaults, $this->defaults);
+		return array_merge($this->baseDefaultOptions, $this->defaultOptions);
 	}
 
 }

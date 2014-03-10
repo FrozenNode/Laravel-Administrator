@@ -10,9 +10,9 @@ class Key extends Field {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $defaultOptions = [
 		'editable' => false,
-	);
+	];
 
 	/**
 	 * Fill a model with input data

@@ -15,19 +15,23 @@ class Bool extends Field {
 	/**
 	 * Builds a few basic options
 	 *
-	 * @return void
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
+		$options = parent::buildOptions($options);
 
-		$value = $this->validator->arrayGet($this->suppliedOptions, 'value', true);
+		$value = array_get($options, 'value', true);
 
 		//we need to set the value to 'false' when it is falsey so it plays nicely with select2
 		if (!$value && $value !== '')
 		{
-			$this->suppliedOptions['value'] = 'false';
+			$options['value'] = 'false';
 		}
+
+		return $options;
 	}
 
 	/**
@@ -52,7 +56,7 @@ class Bool extends Field {
 	{
 		parent::setFilter($filter);
 
-		$this->userOptions['value'] = $this->validator->arrayGet($filter, 'value', '');
+		$this->userOptions['value'] = array_get($filter, 'value', '');
 
 		//if it isn't null, we have to check the 'true'/'false' string
 		if ($this->userOptions['value'] !== '')

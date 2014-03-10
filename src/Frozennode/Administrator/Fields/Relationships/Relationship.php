@@ -6,11 +6,11 @@ use Frozennode\Administrator\Fields\Field;
 abstract class Relationship extends Field {
 
 	/**
-	 * The specific defaults for subclasses to override
+	 * The default options for this field
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $defaultOptions = [
 		'relationship' => true,
 		'external' => true,
 		'name_field' => 'name',
@@ -20,12 +20,12 @@ abstract class Relationship extends Field {
 		'column' => '',
 		'foreign_key' => false,
 		'multiple_values' => false,
-		'options' => array(),
+		'options' => [],
 		'self_relationship' => false,
 		'autocomplete' => false,
 		'num_options' => 10,
-		'search_fields' => array(),
-		'constraints' => array(),
+		'search_fields' => [],
+		'constraints' => [],
 		'load_relationships' => false,
 	);
 
@@ -34,14 +34,14 @@ abstract class Relationship extends Field {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array();
+	protected $relationshipDefaultOptions = [];
 
 	/**
-	 * The specific rules for subclasses to override
+	 * The rules for this field
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'name_field' => 'string',
 		'sort_field' => 'string',
 		'options_sort_field' => 'string',
@@ -50,29 +50,32 @@ abstract class Relationship extends Field {
 		'search_fields' => 'array',
 		'options_filter' => 'callable',
 		'constraints' => 'array',
-	);
+	];
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
+		$options = parent::buildOptions($options);
 
-		$options = $this->suppliedOptions;
 		$model = $this->config->getDataModel();
 		$relationship = $model->{$options['field_name']}();
 
 		//set the search fields to the name field if none exist
-		$searchFields = $this->validator->arrayGet($options, 'search_fields');
-		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
-		$options['search_fields'] = empty($searchFields) ? array($nameField) : $searchFields;
+		$searchFields = array_get($options, 'search_fields');
+		$nameField = array_get($options, 'name_field', $this->defaultOptions['name_field']);
+		$options['search_fields'] = empty($searchFields) ? [$nameField] : $searchFields;
 
 		//determine if this is a self-relationship
 		$options['self_relationship'] = $relationship->getRelated()->getTable() === $model->getTable();
 
 		//make sure the options filter is set up
-		$options['options_filter'] = $this->validator->arrayGet($options, 'options_filter', function() {});
+		$options['options_filter'] = array_get($options, 'options_filter', function() {});
 
 		//set up and check the constraints
 		$this->setUpConstraints($options);
@@ -80,7 +83,7 @@ abstract class Relationship extends Field {
 		//load up the relationship options
 		$this->loadRelationshipOptions($options);
 
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**
@@ -92,13 +95,13 @@ abstract class Relationship extends Field {
 	 */
 	public function setUpConstraints(&$options)
 	{
-		$constraints = $this->validator->arrayGet($options, 'constraints');
+		$constraints = array_get($options, 'constraints');
 		$model = $this->config->getDataModel();
 
 		//set up and check the constraints
 		if (sizeof($constraints))
 		{
-			$validConstraints = array();
+			$validConstraints = [];
 
 			//iterate over the constraints and only include the valid ones
 			foreach ($constraints as $field => $rel)
@@ -124,17 +127,17 @@ abstract class Relationship extends Field {
 	public function loadRelationshipOptions(&$options)
 	{
 		//if we want all of the possible items on the other model, load them up, otherwise leave the options empty
-		$items = array();
+		$items = [];
 		$model = $this->config->getDataModel();
 		$relationship = $model->{$options['field_name']}();
 		$relatedModel = $relationship->getRelated();
 
-		if ($this->validator->arrayGet($options, 'load_relationships'))
+		if (array_get($options, 'load_relationships'))
 		{
 			//if a sort field was supplied, order the results by it
-			if ($optionsSortField = $this->validator->arrayGet($options, 'options_sort_field'))
+			if ($optionsSortField = array_get($options, 'options_sort_field'))
 			{
-				$optionsSortDirection = $this->validator->arrayGet($options, 'options_sort_direction', $this->defaults['options_sort_direction']);
+				$optionsSortDirection = array_get($options, 'options_sort_direction', $this->defaultOptions['options_sort_direction']);
 
 				$query = $relatedModel->orderBy($this->db->raw($optionsSortField), $optionsSortDirection);
 			}
@@ -156,8 +159,8 @@ abstract class Relationship extends Field {
 			$items = $relationshipItems;
 		}
 
-		//map the options to the options property where array('id': [key], 'text': [nameField])
-		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
+		//map the options to the options property where ['id': [key], 'text': [nameField]]
+		$nameField = array_get($options, 'name_field', $this->defaultOptions['name_field']);
 		$keyField = $relatedModel->getKeyName();
 		$options['options'] = $this->mapRelationshipOptions($items, $nameField, $keyField);
 	}
@@ -173,14 +176,14 @@ abstract class Relationship extends Field {
 	 */
 	public function mapRelationshipOptions($items, $nameField, $keyField)
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($items as $option)
 		{
-			$result[] = array(
+			$result[] = [
 				'id' => $option->{$keyField},
 				'text' => strval($option->{$nameField})
-			);
+			];
 		}
 
 		return $result;
@@ -191,11 +194,9 @@ abstract class Relationship extends Field {
 	 *
 	 * @return array
 	 */
-	public function getDefaults()
+	public function getDefaultOptions()
 	{
-		$defaults = parent::getDefaults();
-
-		return array_merge($defaults, $this->relationshipDefaults);
+		return array_merge(parent::getDefaultOptions(), $this->relationshipDefaultOptions);
 	}
 
 	/**

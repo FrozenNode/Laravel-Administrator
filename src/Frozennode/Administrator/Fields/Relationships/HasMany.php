@@ -8,8 +8,8 @@ class HasMany extends HasOneOrMany {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array(
+	protected $relationshipDefaults = [
 		'multiple_values' => true,
 		'editable' => false,
-	);
+	];
 }

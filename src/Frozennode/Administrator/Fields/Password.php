@@ -4,23 +4,21 @@ namespace Frozennode\Administrator\Fields;
 class Password extends Text {
 
 	/**
-	 * The specific defaults for the image class
+	 * The specific default options for the password class
 	 *
 	 * @var array
 	 */
-	protected $passwordDefaults = array(
+	protected $passwordDefaultOptions = [
 		'setter' => true,
-	);
+	];
 
 	/**
 	 * Gets all default values
 	 *
 	 * @return array
 	 */
-	public function getDefaults()
+	public function getDefaultOptions()
 	{
-		$defaults = parent::getDefaults();
-
-		return array_merge($defaults, $this->passwordDefaults);
+		return array_merge(parent::getDefaultOptions(), $this->passwordDefaultOptions);
 	}
 }

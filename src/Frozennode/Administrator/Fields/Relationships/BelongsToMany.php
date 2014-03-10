@@ -11,20 +11,22 @@ class BelongsToMany extends Relationship {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array(
+	protected $relationshipDefaults = [
 		'column2' => '',
 		'multiple_values' => true,
 		'sort_field' => false,
-	);
+	];
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
-
-		$options = $this->suppliedOptions;
+		$options = parent::buildOptions($options);
 
 		$model = $this->config->getDataModel();
 		$relationship = $model->{$options['field_name']}();
@@ -35,7 +37,7 @@ class BelongsToMany extends Relationship {
 		$options['column2'] = $relationship->getOtherKey();
 		$options['foreign_key'] = $relatedModel->getKeyName();
 
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**
@@ -48,7 +50,7 @@ class BelongsToMany extends Relationship {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$input = $input ? explode(',', $input) : array();
+		$input = $input ? explode(',', $input) : [];
 		$fieldName = $this->getOption('field_name');
 		$relationship = $model->{$fieldName}();
 
@@ -61,7 +63,7 @@ class BelongsToMany extends Relationship {
 			//then re-attach them in the correct order
 			foreach ($input as $i => $item)
 			{
-				$relationship->attach($item, array($sortField => $i));
+				$relationship->attach($item, [$sortField => $i]);
 			}
 		}
 		else

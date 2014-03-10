@@ -11,18 +11,20 @@ class HasOneOrMany extends Relationship {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array(
+	protected $relationshipDefaults = [
 		'editable' => false,
-	);
+	];
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
-
-		$options = $this->suppliedOptions;
+		$options = parent::buildOptions($options);
 
 		$model = $this->config->getDataModel();
 		$relationship = $model->{$options['field_name']}();
@@ -31,7 +33,7 @@ class HasOneOrMany extends Relationship {
 		$options['table'] = $related_model->getTable();
 		$options['column'] = $relationship->getPlainForeignKey();
 
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**

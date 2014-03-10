@@ -1,7 +1,6 @@
 <?php
 namespace Frozennode\Administrator\Fields;
 
-use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -14,7 +13,7 @@ class Factory {
 	 *
 	 * @var array
 	 */
-	protected $fieldTypes = array(
+	protected $fieldTypes = [
 		'key' => 'Frozennode\\Administrator\\Fields\\Key',
 		'text' => 'Frozennode\\Administrator\\Fields\\Text',
 		'textarea' => 'Frozennode\\Administrator\\Fields\\Text',
@@ -36,8 +35,7 @@ class Factory {
 		'belongs_to_many' => 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsToMany',
 		'has_one' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasOne',
 		'has_many' => 'Frozennode\\Administrator\\Fields\\Relationships\\HasMany',
-
-	);
+	];
 
 	/**
 	 * The base string for the relationship classes
@@ -47,14 +45,7 @@ class Factory {
 	/**
 	 * The base string for the relationship classes
 	 */
-	protected $settingsFieldExclusions = array('key', 'belongs_to', 'belongs_to_many', 'has_one', 'has_many');
-
-	/**
-	 * The validator instance
-	 *
-	 * @var \Frozennode\Administrator\Validator
-	 */
-	protected $validator;
+	protected $settingsFieldExclusions = ['key', 'belongs_to', 'belongs_to_many', 'has_one', 'has_many'];
 
 	/**
 	 * The config interface instance
@@ -75,14 +66,14 @@ class Factory {
 	 *
 	 * @var array
 	 */
-	protected $filters = array();
+	protected $filters = [];
 
 	/**
 	 * The compiled filters arrays
 	 *
 	 * @var array
 	 */
-	protected $filtersArrays = array();
+	protected $filtersArrays = [];
 
 	/**
 	 * The compiled edit fields array
@@ -108,13 +99,11 @@ class Factory {
 	/**
 	 * Create a new model Config instance
 	 *
-	 * @param \Frozennode\Administrator\Validator 				$validator
 	 * @param \Frozennode\Administrator\Config\ConfigInterface	$config
 	 * @param \Illuminate\Database\DatabaseManager 				$db
 	 */
-	public function __construct(Validator $validator, ConfigInterface $config, DB $db)
+	public function __construct(ConfigInterface $config, DB $db)
 	{
-		$this->validator = $validator;
 		$this->config = $config;
 		$this->db = $db;
 	}
@@ -147,7 +136,8 @@ class Factory {
 	public function getFieldObject($options)
 	{
 		$class = $this->getFieldTypeClass($options['type']);
-		return new $class($this->validator, $this->config, $this->db, $options);
+
+		return new $class($this->config, $this->db, $options);
 	}
 
 	/**
@@ -204,7 +194,7 @@ class Factory {
 		if (is_string($options))
 		{
 			$name = $options;
-			$options = array();
+			$options = [];
 		}
 
 		//if the name is not a string or the options is not an array at this point, throw an error because we can't do anything with it
@@ -255,13 +245,13 @@ class Factory {
 	public function setRelationshipType(array &$options, $loadRelationships)
 	{
 		//if this is a relationship
-		if ($this->validator->arrayGet($options, 'type') === 'relationship')
+		if (array_get($options, 'type') === 'relationship')
 		{
 			//get the right key based on the relationship in the model
 			$options['type'] = $this->getRelationshipKey($options['field_name']);
 
 			//if we should load the relationships, set the option
-			$options['load_relationships'] = $loadRelationships && !$this->validator->arrayGet($options, 'autocomplete', false);
+			$options['load_relationships'] = $loadRelationships && !array_get($options, 'autocomplete', false);
 		}
 	}
 
@@ -385,7 +375,7 @@ class Factory {
 	{
 		if (!sizeof($this->editFields) || $override)
 		{
-			$this->editFields = array();
+			$this->editFields = [];
 
 			//iterate over each supplied edit field
 			foreach ($this->config->getOption('edit_fields') as $name => $options)
@@ -407,7 +397,7 @@ class Factory {
 	 */
 	public function getEditFieldsArrays($override = false)
 	{
-		$return = array();
+		$return = [];
 
 		foreach ($this->getEditFields(true, $override) as $fieldObject)
 		{
@@ -439,7 +429,7 @@ class Factory {
 		if ($this->config->getType() === 'model' && !isset($fields[$keyName]))
 		{
 
-			$keyField = $this->make($keyName, array('visible' => false));
+			$keyField = $this->make($keyName, ['visible' => false]);
 			$fields[$keyName] = $keyField->getOptions();
 		}
 	}
@@ -451,7 +441,7 @@ class Factory {
 	 */
 	public function getDataModel()
 	{
-		$dataModel = array();
+		$dataModel = [];
 		$model = $this->config->getDataModel();
 
 		foreach ($this->getEditFieldsArrays() as $name => $options)
@@ -581,14 +571,14 @@ class Factory {
 		//if we can't find the field, return an empty array
 		if (!$fieldObject)
 		{
-			return array();
+			return [];
 		}
 
 		//make sure we're grouping by the model's id
 		$query = $relatedModel->newQuery();
 
 		//set up the selects
-		$query->select(array($this->db->raw($this->db->getTablePrefix() . $relatedTable.'.*')));
+		$query->select([$this->db->raw($this->db->getTablePrefix() . $relatedTable.'.*')]);
 
 		//format the selected items into an array
 		$selectedItems = $this->formatSelectedItems($selectedItems);
@@ -604,7 +594,7 @@ class Factory {
 			}
 			else
 			{
-				return array();
+				return [];
 			}
 		}
 
@@ -668,7 +658,7 @@ class Factory {
 		}
 		else
 		{
-			return array();
+			return [];
 		}
 	}
 
@@ -726,7 +716,7 @@ class Factory {
 
 					//set the data model for the config
 					$this->config->setDataModel($otherModel);
-					$otherField = $this->make($relationshipName, array('type' => 'relationship'), false);
+					$otherField = $this->make($relationshipName, ['type' => 'relationship'], false);
 
 					//constrain the query
 					$otherField->constrainQuery($query, $relatedModel, $constraints[$key]);
@@ -748,14 +738,14 @@ class Factory {
 	 */
 	public function formatSelectOptions(Field $field, EloquentCollection $results)
 	{
-		$return = array();
+		$return = [];
 
 		foreach ($results as $m)
 		{
-			$return[] = array(
+			$return[] = [
 				'id' => $m->getKey(),
 				'text' => strval($m->{$field->getOption('name_field')}),
-			);
+			];
 		}
 
 		return $return;

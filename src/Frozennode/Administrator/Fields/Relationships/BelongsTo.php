@@ -10,18 +10,20 @@ class BelongsTo extends Relationship {
 	 *
 	 * @var array
 	 */
-	protected $relationshipDefaults = array(
+	protected $relationshipDefaultOptions = [
 		'external' => false
-	);
+	];
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
-
-		$options = $this->suppliedOptions;
+		$options = parent::buildOptions($options);
 
 		$model = $this->config->getDataModel();
 		$relationship = $model->{$options['field_name']}();
@@ -31,7 +33,7 @@ class BelongsTo extends Relationship {
 		$options['column'] = $relatedModel->getKeyName();
 		$options['foreign_key'] = $relationship->getForeignKey();
 
-		$this->suppliedOptions = $options;
+		return $options;
 	}
 
 	/**

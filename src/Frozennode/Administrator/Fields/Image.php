@@ -6,22 +6,22 @@ use Frozennode\Administrator\Includes\Multup;
 class Image extends File {
 
 	/**
-	 * The specific defaults for the image class
+	 * The specific default options for the image class
 	 *
 	 * @var array
 	 */
-	protected $imageDefaults = array(
-		'sizes' => array(),
-	);
+	protected $imageDefaultOptions = [
+		'sizes' => [],
+	];
 
 	/**
 	 * The specific rules for the image class
 	 *
 	 * @var array
 	 */
-	protected $imageRules = array(
+	protected $imageRules = [
 		'sizes' => 'array',
-	);
+	];
 
 	/**
 	 * This static function is used to perform the actual upload and resizing using the Multup class
@@ -47,9 +47,7 @@ class Image extends File {
 	 */
 	public function getRules()
 	{
-		$rules = parent::getRules();
-
-		return array_merge($rules, $this->imageRules);
+		return array_merge(parent::getRules(), $this->imageRules);
 	}
 
 	/**
@@ -57,10 +55,8 @@ class Image extends File {
 	 *
 	 * @return array
 	 */
-	public function getDefaults()
+	public function getDefaultOptions()
 	{
-		$defaults = parent::getDefaults();
-
-		return array_merge($defaults, $this->imageDefaults);
+		return array_merge(parent::getDefaultOptions(), $this->imageDefaultOptions);
 	}
 }

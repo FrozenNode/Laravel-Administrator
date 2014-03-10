@@ -6,25 +6,25 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 class Time extends Field {
 
 	/**
-	 * The specific defaults for subclasses to override
+	 * The default options for this field
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $defaultOptions = [
 		'min_max' => true,
 		'date_format' => 'yy-mm-dd',
 		'time_format' => 'HH:mm',
-	);
+	];
 
 	/**
-	 * The specific rules for subclasses to override
+	 * The rules for this field
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'date_format' => 'string',
 		'time_format' => 'string',
-	);
+	];
 
 	/**
 	 * Filters a query object

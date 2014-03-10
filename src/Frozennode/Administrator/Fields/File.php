@@ -10,38 +10,43 @@ class File extends Field {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $defaultOptions = [
 		'naming' => 'random',
 		'length' => 32,
 		'mimes' => false,
 		'size_limit' => 2,
-	);
+	];
 
 	/**
 	 * The specific rules for subclasses to override
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
+	protected $rules = [
 		'location' => 'required|string|directory',
 		'naming' => 'in:keep,random',
 		'length' => 'integer|min:0',
 		'mimes' => 'string',
-	);
+	];
 
 	/**
 	 * Builds a few basic options
+	 *
+	 * @param array		$options
+	 *
+	 * @return array
 	 */
-	public function build()
+	public function buildOptions($options)
 	{
-		parent::build();
+		$options = parent::build($options);
 
 		//set the upload url depending on the type of config this is
-		$url = $this->validator->getUrlInstance();
 		$route = $this->config->getType() === 'settings' ? 'admin_settings_file_upload' : 'admin_file_upload';
 
 		//set the upload url to the proper route
-		$this->suppliedOptions['upload_url'] = $url->route($route, array($this->config->getOption('name'), $this->suppliedOptions['field_name']));
+		$options['upload_url'] = route($route, [$this->config->getOption('name'), $options['field_name']]);
+
+		return $options;
 	}
 
 	/**
