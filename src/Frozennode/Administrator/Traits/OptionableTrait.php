@@ -7,7 +7,7 @@ trait OptionableTrait {
 	/**
 	 * The Validator instance
 	 *
-	 * @var \Frozennode\Administrator\Validator
+	 * @var \Frozennode\Administrator\Validation\Validator
 	 */
 	protected $optionsValidator;
 
