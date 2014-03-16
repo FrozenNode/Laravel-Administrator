@@ -72,6 +72,9 @@ class AdministratorServiceProvider extends ServiceProvider {
 
 		//the resolving callbacks
 		$this->registerResolvingCallbacks();
+
+		//load the FieldServiceProvider
+		$this->app->register('Frozennode\Administrator\Fields\FieldServiceProvider');
 	}
 
 	/**
