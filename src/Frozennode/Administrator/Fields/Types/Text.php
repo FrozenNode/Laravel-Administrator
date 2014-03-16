@@ -1,30 +1,31 @@
-<?php
-namespace Frozennode\Administrator\Fields;
+<?php namespace Frozennode\Administrator\Fields\Types;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class Key extends Field {
+class Text extends Field {
 
 	/**
-	 * The specific defaults for subclasses to override
+	 * The default options for this field
 	 *
 	 * @var array
 	 */
 	protected $defaultOptions = [
-		'editable' => false,
+		'limit' => 0,
+		'height' => 100,
 	];
 
 	/**
-	 * Fill a model with input data
+	 * The rules for this field
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model	$model
-	 *
-	 * @return array
+	 * @var array
 	 */
-	public function fillModel(&$model, $input) {}
+	protected $rules = [
+		'limit' => 'integer|min:0',
+		'height' => 'integer|min:0',
+	];
 
 	/**
-	 * Filters a query object
+	 * Filters a query object given
 	 *
 	 * @param \Illuminate\Database\Query\Builder	$query
 	 * @param array									$selects
@@ -42,6 +43,6 @@ class Key extends Field {
 			return;
 		}
 
-		$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), '=', $this->getOption('value'));
+		$query->where($this->config->getDataModel()->getTable().'.'.$this->getOption('field_name'), 'LIKE', '%' . $this->getOption('value') . '%');
 	}
 }

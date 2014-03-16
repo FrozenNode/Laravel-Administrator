@@ -1,5 +1,4 @@
-<?php
-namespace Frozennode\Administrator\Fields;
+<?php namespace Frozennode\Administrator\Fields\Types;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 

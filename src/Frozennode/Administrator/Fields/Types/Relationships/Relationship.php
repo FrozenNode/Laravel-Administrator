@@ -1,5 +1,4 @@
-<?php
-namespace Frozennode\Administrator\Fields\Relationships;
+<?php namespace Frozennode\Administrator\Fields\Types\Relationships;
 
 use Frozennode\Administrator\Fields\Field;
 

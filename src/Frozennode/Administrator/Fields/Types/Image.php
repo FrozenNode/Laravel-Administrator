@@ -1,5 +1,4 @@
-<?php
-namespace Frozennode\Administrator\Fields;
+<?php namespace Frozennode\Administrator\Fields\Types;
 
 use Frozennode\Administrator\Includes\Multup;
 
