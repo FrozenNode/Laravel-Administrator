@@ -7,13 +7,6 @@ use Frozennode\Administrator\Config\Config;
 class ConfigTest extends \PHPUnit_Framework_TestCase {
 
 	/**
-	 * The Validator mock
-	 *
-	 * @var Mockery
-	 */
-	protected $validator;
-
-	/**
 	 * The Config mock
 	 *
 	 * @var Mockery
@@ -32,8 +25,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function setUp()
 	{
-		$this->validator = m::mock('Frozennode\Administrator\Validator');
-		$this->config = m::mock('Frozennode\Administrator\Config\Config', array($this->validator, array('name' => 'model_name')))->makePartial();
+		$this->options = ['name' => 'model_name'];
+		$this->config = m::mock('Frozennode\Administrator\Config\Config', [$this->options])->makePartial();
 	}
 
 	/**
@@ -44,63 +37,32 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 		m::close();
 	}
 
-	public function testValidates()
+	public function testBuildOptionsWithoutPermissionOption()
 	{
-		$this->validator->shouldReceive('override')->once()
-						->shouldReceive('fails')->once()->andReturn(false);
-		$this->config->validateOptions();
+		$options = $this->config->buildOptions($this->options);
+		$this->assertTrue($options['permission']);
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testValidateFails()
+	public function testBuildOptionsWithPermissionOption()
 	{
-		$this->validator->shouldReceive('override')->once()
-						->shouldReceive('fails')->once()->andReturn(true)
-						->shouldReceive('messages')->once()->andReturn(m::mock(array('all' => array())));
-		$this->config->validateOptions();
-	}
+		$this->options['permission'] = function() {return 'foo';};
 
-	public function testBuild()
-	{
-		$this->config->build();
-	}
-
-	public function testGetOptions()
-	{
-		$this->config->shouldReceive('validateOptions')->once()
-					->shouldReceive('build')->once();
-		$this->assertEquals($this->config->getOptions(), array('name' => 'model_name'));
-	}
-
-	public function testGetOptionWorks()
-	{
-		$this->config->shouldReceive('getOptions')->once()->andReturn(array('name' => 'model_name'));
-		$this->assertEquals($this->config->getOption('name'), 'model_name');
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testGetOptionThrowsException()
-	{
-		$this->config->shouldReceive('getOptions')->once()->andReturn(array('name' => 'model_name'));
-		$this->config->getOption('foo');
+		$options = $this->config->buildOptions($this->options);
+		$this->assertEquals($options['permission'], 'foo');
 	}
 
 	public function testValidateDataValidates()
 	{
 		$this->validator->shouldReceive('override')->once()
 						->shouldReceive('fails')->once();
-		$this->assertEquals($this->config->validateData(array(), array(1)), true);
+		$this->assertEquals($this->config->validateData([], [1]), true);
 	}
 
 	public function testValidateDataReturnsStringError()
 	{
 		$this->validator->shouldReceive('override')->once()
 						->shouldReceive('fails')->once()->andReturn(true)
-						->shouldReceive('messages')->once()->andReturn(m::mock(array('all' => array())));;
-		$this->assertEquals($this->config->validateData(array(), array(1)), '');
+						->shouldReceive('messages')->once()->andReturn(m::mock(['all' => []]));;
+		$this->assertEquals($this->config->validateData([], [1]), '');
 	}
 }
