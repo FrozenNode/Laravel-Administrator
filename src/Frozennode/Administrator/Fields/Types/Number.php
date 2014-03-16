@@ -1,5 +1,7 @@
 <?php namespace Frozennode\Administrator\Fields\Types;
 
+use Frozennode\Administrator\Fields\Field;
+
 class Number extends Field {
 
 	/**

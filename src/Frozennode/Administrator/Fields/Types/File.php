@@ -1,5 +1,6 @@
 <?php namespace Frozennode\Administrator\Fields\Types;
 
+use Frozennode\Administrator\Fields\Field;
 use Frozennode\Administrator\Includes\Multup;
 
 class File extends Field {

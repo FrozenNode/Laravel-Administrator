@@ -1,5 +1,6 @@
 <?php namespace Frozennode\Administrator\Fields\Types;
 
+use Frozennode\Administrator\Fields\Field;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Time extends Field {
