@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class HasOneOrMany extends Relationship {
+abstract class HasOneOrMany extends Relationship {
 
 	/**
 	 * The relationship-type-specific defaults for the relationship subclasses to override

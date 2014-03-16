@@ -26,6 +26,16 @@ class Text extends Field {
 	];
 
 	/**
+	 * Abstract method that should return a field's string representation in the config files
+	 *
+	 * @return string
+	 */
+	public function getConfigName()
+	{
+		return 'text';
+	}
+
+	/**
 	 * Filters a query object given
 	 *
 	 * @param \Illuminate\Database\Query\Builder	$query

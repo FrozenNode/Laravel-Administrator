@@ -1,6 +1,6 @@
 <?php namespace Frozennode\Administrator\Fields\Types;
 
-class Color extends Text {
+class Markdown extends Text {
 
 	/**
 	 * Abstract method that should return a field's string representation in the config files
@@ -9,7 +9,6 @@ class Color extends Text {
 	 */
 	public function getConfigName()
 	{
-		return 'color';
+		return 'markdown';
 	}
-
 }

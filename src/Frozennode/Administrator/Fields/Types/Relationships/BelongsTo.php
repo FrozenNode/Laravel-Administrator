@@ -14,6 +14,16 @@ class BelongsTo extends Relationship {
 	];
 
 	/**
+	 * Abstract method that should return a field's string representation in the config files
+	 *
+	 * @return string
+	 */
+	public function getConfigName()
+	{
+		return 'belongs_to';
+	}
+
+	/**
 	 * Builds a few basic options
 	 *
 	 * @param array		$options

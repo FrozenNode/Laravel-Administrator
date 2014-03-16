@@ -30,6 +30,16 @@ class File extends Field {
 	];
 
 	/**
+	 * Abstract method that should return a field's string representation in the config files
+	 *
+	 * @return string
+	 */
+	public function getConfigName()
+	{
+		return 'file';
+	}
+
+	/**
 	 * Builds a few basic options
 	 *
 	 * @param array		$options

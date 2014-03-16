@@ -23,6 +23,16 @@ class Image extends File {
 	];
 
 	/**
+	 * Abstract method that should return a field's string representation in the config files
+	 *
+	 * @return string
+	 */
+	public function getConfigName()
+	{
+		return 'image';
+	}
+
+	/**
 	 * This static function is used to perform the actual upload and resizing using the Multup class
 	 *
 	 * @return array

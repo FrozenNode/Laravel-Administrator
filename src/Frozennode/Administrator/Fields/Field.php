@@ -84,6 +84,13 @@ abstract class Field {
 	}
 
 	/**
+	 * Abstract method that should return a field's string representation in the config files
+	 *
+	 * @return string
+	 */
+	abstract public function getConfigName();
+
+	/**
 	 * Builds a few basic options
 	 *
 	 * @param array		$options
