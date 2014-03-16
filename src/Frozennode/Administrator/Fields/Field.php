@@ -3,7 +3,6 @@ namespace Frozennode\Administrator\Fields;
 
 use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\Traits\OptionableTrait;
-use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 abstract class Field {
@@ -20,13 +19,6 @@ abstract class Field {
 	 * @var \Frozennode\Administrator\Config\ConfigInterface
 	 */
 	protected $config;
-
-	/**
-	 * The config instance
-	 *
-	 * @var \Illuminate\Database\DatabaseManager
-	 */
-	protected $db;
 
 	/**
 	 * The default configuration options
@@ -76,10 +68,9 @@ abstract class Field {
 	 * @param \Illuminate\Database\DatabaseManager				$db
 	 * @param array												$options
 	 */
-	public function __construct(ConfigInterface $config, DB $db, array $options)
+	public function __construct(ConfigInterface $config, array $options)
 	{
 		$this->config = $config;
-		$this->db = $db;
 		$this->options = $options;
 	}
 

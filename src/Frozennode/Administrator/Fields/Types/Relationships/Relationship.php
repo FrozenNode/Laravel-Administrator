@@ -1,8 +1,16 @@
 <?php namespace Frozennode\Administrator\Fields\Types\Relationships;
 
 use Frozennode\Administrator\Fields\Field;
+use Illuminate\Database\DatabaseManager as DB;
 
 abstract class Relationship extends Field {
+
+	/**
+	 * The db instance
+	 *
+	 * @var \Illuminate\Database\DatabaseManager
+	 */
+	protected $db;
 
 	/**
 	 * The default options for this field
@@ -50,6 +58,16 @@ abstract class Relationship extends Field {
 		'options_filter' => 'callable',
 		'constraints' => 'array',
 	];
+
+	/**
+	 * Sets the db instance
+	 *
+	 * @param \Illuminate\Database\DatabaseManager	$db
+	 */
+	public function setDatabase(DB $db)
+	{
+		$this->db = $db;
+	}
 
 	/**
 	 * Builds a few basic options
