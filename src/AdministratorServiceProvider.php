@@ -3,7 +3,7 @@
 use Frozennode\Administrator\Config\Factory as ConfigFactory;
 use Frozennode\Administrator\Field\Factory as FieldFactory;
 use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
-use Frozennode\Administrator\Actions\Factory as ActionFactory;
+use Frozennode\Administrator\Action\Factory as ActionFactory;
 use Frozennode\Administrator\DataTable\DataTable;
 use Frozennode\Administrator\Routing\Filter;
 use Frozennode\Administrator\View\Composer;

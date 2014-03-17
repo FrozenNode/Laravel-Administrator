@@ -5,7 +5,7 @@ use Frozennode\Administrator\Config\Config as ConfigBase;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\Field\Factory as FieldFactory;
 use Frozennode\Administrator\Field\Field as Field;
-use Frozennode\Administrator\Actions\Factory as ActionFactory;
+use Frozennode\Administrator\Action\Factory as ActionFactory;
 
 /**
  * The Model Config class helps retrieve a model's configuration and provides a reliable pointer for these items
@@ -263,7 +263,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model		$model
 	 * @param \Frozennode\Administrator\Field\Factory	$fieldFactory
-	 * @param \Frozennode\Administrator\Actions\Factory	$actionFactory
+	 * @param \Frozennode\Administrator\Action\Factory	$actionFactory
 	 *
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */

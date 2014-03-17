@@ -1,5 +1,5 @@
 <?php
-namespace Frozennode\Administrator\Actions;
+namespace Frozennode\Administrator\Action;
 
 use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
@@ -85,7 +85,7 @@ class Factory {
 	 * @param string		$name		//the key name for this action
 	 * @param array			$options
 	 *
-	 * @return \Frozennode\Administrator\Actions\Action
+	 * @return \Frozennode\Administrator\Action\Action
 	 */
 	public function make($name, array $options)
 	{
@@ -133,7 +133,7 @@ class Factory {
 	 *
 	 * @param array		$options
 	 *
-	 * @return \Frozennode\Administrator\Actions\Action
+	 * @return \Frozennode\Administrator\Action\Action
 	 */
 	public function getActionObject(array $options)
 	{

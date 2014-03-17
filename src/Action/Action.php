@@ -1,5 +1,5 @@
 <?php
-namespace Frozennode\Administrator\Actions;
+namespace Frozennode\Administrator\Action;
 
 use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\Traits\OptionableTrait;
