@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.11.0
+- Model ids no longer have to be numeric
+- New translations (vi)
+
 ### 4.10.0
 - It's now possible to customize the "back to site" link at the top right of admin pages
 - Closures can now be passed into the output option for columns
