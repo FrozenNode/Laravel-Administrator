@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.10.0
+- **Version:** 4.11.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,10 +53,6 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.10.0
-- It's now possible to customize the "back to site" link at the top right of admin pages
-- Closures can now be passed into the output option for columns
-- New translations (se, si, uk)
-- Bugfix: When navigating away from an item edit route and then hitting the back button, the browser would cache the dynamic json response. Proper headers have now been set to avoid this.
-- Bugfix: When missing a rules option in a settings config file, an error would be thrown despite there being no explicit requirement for one
-- Bugfix: The administrator base controller was being instantiated multiple times during unit tests in laravel 4.1
+### 4.11.0
+- Model ids no longer have to be numeric
+- New translations (vi)
