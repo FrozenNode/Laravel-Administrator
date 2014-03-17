@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.11.0
+- **Version:** 4.11.1
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,9 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Changelog
+
+### 4.11.1
+- Bugfix: There was a routing issue with the new non-numeric model ids
 
 ### 4.11.0
 - Model ids no longer have to be numeric
