@@ -46,6 +46,9 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		//the admin manager
+		$this->registerManager();
+
 		//the admin validator
 		$this->registerValidator();
 
@@ -69,6 +72,17 @@ class AdministratorServiceProvider extends ServiceProvider {
 
 		//load the FieldServiceProvider
 		$this->app->register('Frozennode\Administrator\Fields\FieldServiceProvider');
+	}
+
+	/**
+	 * Registers the Manager
+	 */
+	protected function registerManager()
+	{
+		$this->app['admin.manager'] = $this->app->share(function($app)
+		{
+			return new Manager;
+		});
 	}
 
 	/**
@@ -103,7 +117,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Registers the admin filter
+	 * Registers the admin filters
 	 */
 	protected function registerRouteFilters()
 	{
@@ -244,8 +258,8 @@ class AdministratorServiceProvider extends ServiceProvider {
 	public function provides()
 	{
 		return [
-			'admin.validator', 'admin.routing.filter', 'admin.view.composer', 'admin.config.factory',  'admin.field.factory',
-			'admin.grid', 'admin.column.factory', 'admin.action.factory', 'admin.menu'
+			'admin.manager', 'admin.validator', 'admin.routing.filter', 'admin.view.composer', 'admin.config.factory',
+			'admin.field.factory', 'admin.grid', 'admin.column.factory', 'admin.action.factory', 'admin.menu'
 		];
 	}
 
