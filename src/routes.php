@@ -23,6 +23,49 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		'uses' => 'Frozennode\Administrator\AdminController@page'
 	));
 
+	Route::group(array('before' => 'validate_settings|post_validate'), function()
+	{
+		//Settings Pages
+		Route::get('settings/{settings}', array(
+			'as' => 'admin_settings',
+			'uses' => 'Frozennode\Administrator\AdminController@settings'
+		));
+
+		//Settings file upload
+		Route::post('settings/{settings}/{field}/file_upload', array(
+			'as' => 'admin_settings_file_upload',
+			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
+		));
+
+		//Display a settings file
+		Route::get('settings/{settings}/file', array(
+			'as' => 'admin_settings_display_file',
+			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
+		));
+
+		//CSRF routes
+		Route::group(array('before' => 'csrf'), function()
+		{
+			//Save Item
+			Route::post('settings/{settings}/save', array(
+				'as' => 'admin_settings_save',
+				'uses' => 'Frozennode\Administrator\AdminController@settingsSave'
+			));
+
+			//Custom Action
+			Route::post('settings/{settings}/custom_action', array(
+				'as' => 'admin_settings_custom_action',
+				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
+			));
+		});
+	});
+
+	//Switch locales
+	Route::get('switch_locale/{locale}', array(
+		'as' => 'admin_switch_locale',
+		'uses' => 'Frozennode\Administrator\AdminController@switchLocale'
+	));
+
 	//The route group for all other requests needs to validate admin, model, and add assets
 	Route::group(array('before' => 'validate_model|post_validate'), function()
 	{
@@ -102,48 +145,4 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			));
 		});
 	});
-
-
-	Route::group(array('before' => 'validate_settings|post_validate'), function()
-	{
-		//Settings Pages
-		Route::get('settings/{settings}', array(
-			'as' => 'admin_settings',
-			'uses' => 'Frozennode\Administrator\AdminController@settings'
-		));
-
-		//Settings file upload
-		Route::post('settings/{settings}/{field}/file_upload', array(
-			'as' => 'admin_settings_file_upload',
-			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
-		));
-
-		//Display a settings file
-		Route::get('settings/{settings}/file', array(
-			'as' => 'admin_settings_display_file',
-			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
-		));
-
-		//CSRF routes
-		Route::group(array('before' => 'csrf'), function()
-		{
-			//Save Item
-			Route::post('settings/{settings}/save', array(
-				'as' => 'admin_settings_save',
-				'uses' => 'Frozennode\Administrator\AdminController@settingsSave'
-			));
-
-			//Custom Action
-			Route::post('settings/{settings}/custom_action', array(
-				'as' => 'admin_settings_custom_action',
-				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
-			));
-		});
-	});
-
-	//Switch locales
-	Route::get('switch_locale/{locale}', array(
-		'as' => 'admin_switch_locale',
-		'uses' => 'Frozennode\Administrator\AdminController@switchLocale'
-	));
 });
