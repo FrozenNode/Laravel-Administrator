@@ -1,4 +1,4 @@
-<?php namespace Frozennode\Administrator\Fields\Types\Relationships;
+<?php namespace Frozennode\Administrator\Field\Types\Relationships;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 

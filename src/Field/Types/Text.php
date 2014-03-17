@@ -1,6 +1,6 @@
-<?php namespace Frozennode\Administrator\Fields\Types;
+<?php namespace Frozennode\Administrator\Field\Types;
 
-use Frozennode\Administrator\Fields\Field;
+use Frozennode\Administrator\Field\Field;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Text extends Field {

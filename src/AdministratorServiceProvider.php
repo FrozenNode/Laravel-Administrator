@@ -1,7 +1,7 @@
 <?php namespace Frozennode\Administrator;
 
 use Frozennode\Administrator\Config\Factory as ConfigFactory;
-use Frozennode\Administrator\Fields\Factory as FieldFactory;
+use Frozennode\Administrator\Field\Factory as FieldFactory;
 use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
 use Frozennode\Administrator\Actions\Factory as ActionFactory;
 use Frozennode\Administrator\DataTable\DataTable;
@@ -71,7 +71,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->registerResolvingCallbacks();
 
 		//load the FieldServiceProvider
-		$this->app->register('Frozennode\Administrator\Fields\FieldServiceProvider');
+		$this->app->register('Frozennode\Administrator\Field\FieldServiceProvider');
 	}
 
 	/**

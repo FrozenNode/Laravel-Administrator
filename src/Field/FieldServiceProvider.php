@@ -1,4 +1,4 @@
-<?php namespace Frozennode\Administrator\Fields;
+<?php namespace Frozennode\Administrator\Field;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -74,7 +74,7 @@ class FieldServiceProvider extends ServiceProvider {
 		//bind each of the fields
 		foreach ($this->simpleFields as $name => $class)
 		{
-			$class = '\Frozennode\Administrator\Fields\Types\\' . $class;
+			$class = '\Frozennode\Administrator\Field\Types\\' . $class;
 
 			$this->app['admin.fields.types.' . $name] = $this->app->bind(function($app, $options) use ($class)
 			{
@@ -101,7 +101,7 @@ class FieldServiceProvider extends ServiceProvider {
 		//bind each of the fields
 		foreach ($this->relationshipFields as $name => $class)
 		{
-			$class = '\Frozennode\Administrator\Fields\Types\Relationships\\' . $class;
+			$class = '\Frozennode\Administrator\Field\Types\Relationships\\' . $class;
 
 			$this->app['admin.fields.types.relationships.' . $name] = $this->app->bind(function($app, $options) use ($class)
 			{

@@ -1,6 +1,6 @@
-<?php namespace Frozennode\Administrator\Fields\Types;
+<?php namespace Frozennode\Administrator\Field\Types\Relationships;
 
-class Color extends Text {
+class HasOne extends HasOneOrMany {
 
 	/**
 	 * Abstract method that should return a field's string representation in the config files
@@ -9,7 +9,7 @@ class Color extends Text {
 	 */
 	public function getConfigName()
 	{
-		return 'color';
+		return 'has_one';
 	}
 
 }

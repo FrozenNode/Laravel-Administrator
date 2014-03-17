@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\File as SFile;
 use Illuminate\Support\Facades\Validator as LValidator;
-use Frozennode\Administrator\Fields\Field;
+use Frozennode\Administrator\Field\Field;
 
 /**
  * Handles all requests related to managing the data models

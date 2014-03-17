@@ -3,8 +3,8 @@ namespace Frozennode\Administrator\Config\Model;
 
 use Frozennode\Administrator\Config\Config as ConfigBase;
 use Frozennode\Administrator\Config\ConfigInterface;
-use Frozennode\Administrator\Fields\Factory as FieldFactory;
-use Frozennode\Administrator\Fields\Field as Field;
+use Frozennode\Administrator\Field\Factory as FieldFactory;
+use Frozennode\Administrator\Field\Field as Field;
 use Frozennode\Administrator\Actions\Factory as ActionFactory;
 
 /**
@@ -157,7 +157,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * Fills a model with the necessary relationship values for a field
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model		$model
-	 * @param \Frozennode\Administrator\Fields\Field	$field
+	 * @param \Frozennode\Administrator\Field\Field	$field
 	 *
 	 * @return void
 	 */
@@ -232,7 +232,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * Fills a model with the necessary relationship values
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model		$model
-	 * @param \Frozennode\Administrator\Fields\Field		$field
+	 * @param \Frozennode\Administrator\Field\Field		$field
 	 *
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
@@ -262,7 +262,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * Updates a model with the latest permissions, links, and fields
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model		$model
-	 * @param \Frozennode\Administrator\Fields\Factory	$fieldFactory
+	 * @param \Frozennode\Administrator\Field\Factory	$fieldFactory
 	 * @param \Frozennode\Administrator\Actions\Factory	$actionFactory
 	 *
 	 * @return \Illuminate\Database\Eloquent\Model

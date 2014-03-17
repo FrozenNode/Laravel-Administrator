@@ -1,21 +1,21 @@
 <?php namespace Frozennode\Administrator;
 
-use Frozennode\Administrator\Fields\Factory as FieldFactory;
-use Frozennode\Administrator\Fields\Field;
+use Frozennode\Administrator\Field\Factory as FieldFactory;
+use Frozennode\Administrator\Field\Field;
 
 class Manager {
 
 	/**
 	 * The field factory instance
 	 *
-	 * @var \Frozennode\Administrator\Fields\Factory
+	 * @var \Frozennode\Administrator\Field\Factory
 	 */
 	protected $fieldFactory;
 
 	/**
 	 * Creates a new Manager instance
 	 *
-	 * @param \Frozennode\Administrator\Fields\Factory	$fieldFactory
+	 * @param \Frozennode\Administrator\Field\Factory	$fieldFactory
 	 */
 
 	/**

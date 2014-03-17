@@ -1,4 +1,4 @@
-<?php namespace Frozennode\Administrator\Fields\Types;
+<?php namespace Frozennode\Administrator\Field\Types;
 
 class Textarea extends Text {
 

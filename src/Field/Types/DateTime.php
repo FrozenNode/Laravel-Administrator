@@ -1,6 +1,6 @@
-<?php namespace Frozennode\Administrator\Fields\Types;
+<?php namespace Frozennode\Administrator\Field\Types;
 
-class Markdown extends Text {
+class DateTime extends Time {
 
 	/**
 	 * Abstract method that should return a field's string representation in the config files
@@ -9,6 +9,6 @@ class Markdown extends Text {
 	 */
 	public function getConfigName()
 	{
-		return 'markdown';
+		return 'datetime';
 	}
 }

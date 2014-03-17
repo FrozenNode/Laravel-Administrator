@@ -3,7 +3,7 @@ namespace Frozennode\Administrator\DataTable;
 
 use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
-use Frozennode\Administrator\Fields\Factory as FieldFactory;
+use Frozennode\Administrator\Field\Factory as FieldFactory;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\DatabaseManager as DB;
 
@@ -26,7 +26,7 @@ class DataTable {
 	/**
 	 * The validator instance
 	 *
-	 * @var \Frozennode\Administrator\Fields\Factory
+	 * @var \Frozennode\Administrator\Field\Factory
 	 */
 	protected $fieldFactory;
 
@@ -56,7 +56,7 @@ class DataTable {
 	 *
 	 * @param \Frozennode\Administrator\Config\ConfigInterface		$config
 	 * @param \Frozennode\Administrator\DataTable\Columns\Factory	$columnFactory
-	 * @param \Frozennode\Administrator\Fields\Factory				$fieldFactory
+	 * @param \Frozennode\Administrator\Field\Factory				$fieldFactory
 	 */
 	public function __construct(ConfigInterface $config, ColumnFactory $columnFactory, FieldFactory $fieldFactory)
 	{

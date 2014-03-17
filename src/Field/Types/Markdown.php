@@ -1,6 +1,6 @@
-<?php namespace Frozennode\Administrator\Fields\Types\Relationships;
+<?php namespace Frozennode\Administrator\Field\Types;
 
-class HasOne extends HasOneOrMany {
+class Markdown extends Text {
 
 	/**
 	 * Abstract method that should return a field's string representation in the config files
@@ -9,7 +9,6 @@ class HasOne extends HasOneOrMany {
 	 */
 	public function getConfigName()
 	{
-		return 'has_one';
+		return 'markdown';
 	}
-
 }

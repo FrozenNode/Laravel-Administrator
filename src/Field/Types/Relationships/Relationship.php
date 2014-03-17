@@ -1,6 +1,6 @@
-<?php namespace Frozennode\Administrator\Fields\Types\Relationships;
+<?php namespace Frozennode\Administrator\Field\Types\Relationships;
 
-use Frozennode\Administrator\Fields\Field;
+use Frozennode\Administrator\Field\Field;
 use Illuminate\Database\DatabaseManager as DB;
 
 abstract class Relationship extends Field {

@@ -1,6 +1,6 @@
-<?php namespace Frozennode\Administrator\Fields\Types;
+<?php namespace Frozennode\Administrator\Field\Types;
 
-class Date extends Time {
+class Wysiwyg extends Text {
 
 	/**
 	 * Abstract method that should return a field's string representation in the config files
@@ -9,6 +9,6 @@ class Date extends Time {
 	 */
 	public function getConfigName()
 	{
-		return 'date';
+		return 'wysiwyg';
 	}
 }

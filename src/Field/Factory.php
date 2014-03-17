@@ -1,5 +1,5 @@
 <?php
-namespace Frozennode\Administrator\Fields;
+namespace Frozennode\Administrator\Field;
 
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
@@ -131,7 +131,7 @@ class Factory {
 	 * @param array 	$options
 	 * @param boolean 	$loadRelationships
 	 *
-	 * @return Frozennode\Administrator\Fields\Field
+	 * @return Frozennode\Administrator\Field\Field
 	 */
 	public function getFieldObject($options)
 	{
@@ -328,7 +328,7 @@ class Factory {
 	 *
 	 * @param string	 	$field
 	 *
-	 * @return \Frozennode\Administrator\Fields\Field
+	 * @return \Frozennode\Administrator\Field\Field
 	 */
 	public function findField($field)
 	{
@@ -348,7 +348,7 @@ class Factory {
 	 *
 	 * @param string	 	$field
 	 *
-	 * @return \Frozennode\Administrator\Fields\Field
+	 * @return \Frozennode\Administrator\Field\Field
 	 */
 	public function findFilter($field)
 	{
@@ -618,7 +618,7 @@ class Factory {
 	 * @param mixed										$term
 	 * @param \Illuminate\Database\Query\Builder		$query
 	 * @param array										$selectedItems
-	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
+	 * @param \Frozennode\Administrator\Field\Field	$fieldObject
 	 * @param string									$relatedKeyTable
 	 */
 	public function filterBySearchTerm($term, EloquentBuilder &$query, Field $fieldObject, array $selectedItems, $relatedKeyTable)
@@ -667,7 +667,7 @@ class Factory {
 	 *
 	 * @param \Illuminate\Database\Query\Builder		$query
 	 * @param array										$selectedItems
-	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
+	 * @param \Frozennode\Administrator\Field\Field	$fieldObject
 	 * @param string									$relatedKeyTable
 	 *
 	 * @return array
@@ -693,7 +693,7 @@ class Factory {
 	 *
 	 * @param mixed										$constraints
 	 * @param \Illuminate\Database\Query\Builder		$query
-	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
+	 * @param \Frozennode\Administrator\Field\Field	$fieldObject
 	 *
 	 * @return array
 	 */
@@ -731,7 +731,7 @@ class Factory {
 	/**
 	 * Takes an eloquent result array and turns it into an options array that can be used in the UI
 	 *
-	 * @param \Frozennode\Administrator\Fields\Field	$field
+	 * @param \Frozennode\Administrator\Field\Field	$field
 	 * @param \Illuminate\Database\Eloquent\Collection	$results
 	 *
 	 * @return array
