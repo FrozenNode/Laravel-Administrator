@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.11.0
 - Model ids no longer have to be numeric
 - New translations (vi)
 
