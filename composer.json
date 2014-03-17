@@ -15,7 +15,7 @@
 	},
 	"require": {
 		"php": ">=5.4.0",
-		"laravel/framework": "<4.2"
+		"laravel/framework": "4.1.*"
 	},
 	"require-dev": {
 		"mockery/mockery": "0.9.0"
