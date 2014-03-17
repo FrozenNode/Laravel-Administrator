@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.11.1
+- Bugfix: There was a routing issue with the new non-numeric model ids
+
 ### 4.11.0
 - Model ids no longer have to be numeric
 - New translations (vi)
