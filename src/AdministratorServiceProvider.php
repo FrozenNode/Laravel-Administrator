@@ -95,9 +95,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 			//temporarily override the core resolver
 			LValidator::resolver(function($translator, $data, $rules, $messages) use ($app)
 			{
-				$validator = new Validator($translator, $data, $rules, $messages);
-				$validator->setUrlInstance($app->make('url'));
-				return $validator;
+				return new Validator($translator, $data, $rules, $messages);
 			});
 
 			//grab our validator instance
