@@ -7,6 +7,7 @@ use Frozennode\Administrator\Actions\Factory as ActionFactory;
 use Frozennode\Administrator\DataTable\DataTable;
 use Frozennode\Administrator\Routing\Filter;
 use Frozennode\Administrator\View\Composer;
+use Frozennode\Administrator\Menu\Menu;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 

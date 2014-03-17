@@ -1,5 +1,5 @@
 <?php
-namespace Frozennode\Administrator;
+namespace Frozennode\Administrator\Menu;
 
 use Illuminate\Config\Repository AS Config;
 use Frozennode\Administrator\Config\Factory AS ConfigFactory;
