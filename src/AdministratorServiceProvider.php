@@ -27,7 +27,8 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('frozennode/administrator');
+		$path = realpath(dirname(__FILE__) . '/../');
+		$this->package('frozennode/administrator', null, $path);
 
 		//set the locale
 		$this->setLocale();
