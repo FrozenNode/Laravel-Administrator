@@ -5,6 +5,8 @@ use Frozennode\Administrator\Fields\Factory as FieldFactory;
 use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
 use Frozennode\Administrator\Actions\Factory as ActionFactory;
 use Frozennode\Administrator\DataTable\DataTable;
+use Frozennode\Administrator\Routing\Filter;
+use Frozennode\Administrator\View\Composer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 
@@ -44,11 +46,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 				class_alias('Illuminate\Routing\Controllers\Controller', 'AdministratorBaseController');
 		}
 
-		//include our filters, view composers, and routes
-		include __DIR__.'/../../filters.php';
-		include __DIR__.'/../../viewComposers.php';
-		include __DIR__.'/../../routes.php';
-
 		$this->app['events']->fire('administrator.ready');
 	}
 
@@ -61,6 +58,12 @@ class AdministratorServiceProvider extends ServiceProvider {
 	{
 		//the admin validator
 		$this->registerValidator();
+
+		//registers the route filters
+		$this->registerRouteFilters();
+
+		//registers the route filters
+		$this->registerViewComposers();
 
 		//the factories
 		$this->registerFactories();
@@ -109,6 +112,53 @@ class AdministratorServiceProvider extends ServiceProvider {
 			//return our validator instance
 			return $validator;
 		});
+	}
+
+	/**
+	 * Registers the admin filter
+	 */
+	protected function registerRouteFilters()
+	{
+		$this->app['admin.routing.filter'] = $this->app->share(function($app)
+		{
+			return new Filter($app);
+		});
+
+		//base admin filter
+		$this->app['router']->filter('admin.base', 'admin.routing.filter@filterAdmin');
+
+		//eloquent page filter
+		$this->app['router']->filter('admin.page.eloquent', 'admin.routing.filter@filterEloquentPage');
+
+		//settings page filter
+		$this->app['router']->filter('admin.page.settings', 'admin.routing.filter@filterSettingsPage');
+
+		//the base admin filter
+		$this->app['router']->filter('validate_admin', 'admin.routing.filter@filterAdmin');
+	}
+
+	/**
+	 * Registers the view composers
+	 */
+	protected function registerViewComposers()
+	{
+		$this->app['admin.view.composer'] = $this->app->share(function($app)
+		{
+			return new Composer($app);
+		});
+
+		//index
+		$this->app['view']->composer('administrator::index', 'admin.view.composer@composeIndex');
+
+		//index
+		$this->app['view']->composer('administrator::settings', 'admin.view.composer@composeSettingsPage');
+
+		//index
+		$this->app['view']->composer('administrator::partials.header', 'admin.view.composer@composeHeader');
+
+		//index
+		$this->app['view']->composer('administrator::layouts.default', 'admin.view.composer@composeLayout');
+
 	}
 
 	/**
@@ -206,8 +256,8 @@ class AdministratorServiceProvider extends ServiceProvider {
 	public function provides()
 	{
 		return [
-			'admin.validator', 'admin.config.factory', 'admin.field.factory',  'admin.grid',
-			'admin.column.factory', 'admin.action.factory', 'admin.menu'
+			'admin.validator', 'admin.routing.filter', 'admin.view.composer', 'admin.config.factory',  'admin.field.factory',
+			'admin.grid', 'admin.column.factory', 'admin.action.factory', 'admin.menu'
 		];
 	}
 
