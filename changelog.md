@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.11.2
+- Bugfix: Strange legacy issue that was never caught with passing a no-op to array_get
+
 ### 4.11.1
 - Bugfix: There was a routing issue with the new non-numeric model ids
 

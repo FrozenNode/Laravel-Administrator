@@ -92,7 +92,7 @@ abstract class Relationship extends Field {
 		$options['self_relationship'] = $relationship->getRelated()->getTable() === $model->getTable();
 
 		//make sure the options filter is set up
-		$options['options_filter'] = array_get($options, 'options_filter', function() {});
+		$options['options_filter'] = array_get($options, 'options_filter') ?: function() {};
 
 		//set up and check the constraints
 		$this->setUpConstraints($options);
