@@ -23,10 +23,7 @@
 	"autoload": {
 		"psr-4": {
 			"Frozennode\\Administrator\\": "src/"
-		},
-		"files": [
-			"src/Routing/routes.php"
-		]
+		}
 	},
 	"scripts": {
 		"post-install-cmd": [

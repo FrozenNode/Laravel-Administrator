@@ -32,6 +32,9 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$path = realpath(dirname(__FILE__) . '/../');
 		$this->package('frozennode/administrator', null, $path);
 
+		//include the routes
+		include __DIR__.'/Routing/routes.php';
+
 		//set the locale
 		$this->setLocale();
 	}
