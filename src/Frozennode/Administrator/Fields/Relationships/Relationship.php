@@ -73,7 +73,10 @@ abstract class Relationship extends Field {
 
 		//make sure the options filter is set up
 		$options['options_filter'] = $this->validator->arrayGet($options, 'options_filter') ?: function() {};
-
+		
+		if($options['options_filter'] === null){
+			$options['options_filter'] = function(){};
+		}
 		//set up and check the constraints
 		$this->setUpConstraints($options);
 
