@@ -145,7 +145,8 @@ abstract class Relationship extends Field {
 			}
 
 			//run the options filter
-			$options['options_filter']($query);
+			if (!empty($options['options_filter']))
+				$options['options_filter']($query);
 
 			//get the items
 			$items = $query->get();
