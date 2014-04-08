@@ -7,7 +7,7 @@ return array(
 	| Administrator Language Lines for knockout
 	|--------------------------------------------------------------------------
 	|
-	| en - English
+	| ar - Arabic
 	|
 	*/
 
