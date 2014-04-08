@@ -16,7 +16,7 @@ return array(
 	'filters' => 'مرشحات',
 	'loading' => 'تحميل...',
 	'createnew' => 'إنشاء جديد',
-	'new' => 'New',
+	'new' => 'إضافة',
 	'viewitem' => 'عرض :single',
 	'id' => 'ID',
 	'uploadimage' => 'رفع صورة',
