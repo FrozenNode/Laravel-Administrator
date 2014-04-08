@@ -3,7 +3,7 @@
 /**
  * Routes
  */
-Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 'before' => 'validate_admin'), function()
+Route::group(array('domain' => Config::get('administrator::administrator.domain'), 'prefix' => Config::get('administrator::administrator.uri'), 'before' => 'validate_admin'), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(
