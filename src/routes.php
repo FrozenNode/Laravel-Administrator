@@ -3,7 +3,7 @@
 /**
  * Routes
  */
-Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 'before' => 'validate_admin'), function()
+Route::group(array('domain' => Config::get('administrator::administrator.domain'), 'prefix' => Config::get('administrator::administrator.uri'), 'before' => 'validate_admin'), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(
@@ -94,7 +94,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		));
 
 		//Display an image or file field's image or file
-		Route::get('{model}/file', array(
+		Route::get('{model}/a/file', array(
 			'as' => 'admin_display_file',
 			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 		));

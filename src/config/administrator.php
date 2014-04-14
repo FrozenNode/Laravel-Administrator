@@ -10,6 +10,14 @@ return array(
 	'uri' => 'admin',
 
 	/**
+	 *  Domain for routing. 
+	 * 
+	 *  @type string
+	 */
+	'domain' => '',
+
+
+	/**
 	 * Page title
 	 *
 	 * @type string
