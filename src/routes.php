@@ -94,7 +94,7 @@ Route::group(array('domain' => Config::get('administrator::administrator.domain'
 		));
 
 		//Display an image or file field's image or file
-		Route::get('{model}/file', array(
+		Route::get('{model}/a/file', array(
 			'as' => 'admin_display_file',
 			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 		));
