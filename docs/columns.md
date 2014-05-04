@@ -140,9 +140,19 @@ Any SQL grouping function will work in the `select` statement. Much more is poss
 <a name="custom-outputs"></a>
 ## Custom Outputs
 
-If you want your column to show more than just text, you can use the `output` option. At any place in the `output` string, you can put `(:value)`. This will be replaced by the row's value for this column.
+If you want your column to show more than just text, you can use the `output` option. This can either be a string or an anonymous function.
 
-For instance, if you are using a [color](/docs/field-type-color) field and you want to clearly show the admin user what color a row is, you can do this:
+If you provide an anonymous function, the only argument is the relevant column's value from the database. For instance, if you are using a [color](/docs/field-type-color) field and you want to clearly show the admin user what color a row is, you can do this:
+
+	'hex' => array(
+		'title' => 'Color',
+		'output' => function($value)
+		{
+			return '<div style="background-color: ' . $value . '; width: 200px; height: 20px; border-radius: 2px;"></div>';
+		},
+	),
+
+Alternatively, you can also pass a string to the `output` option and Administrator will replace the string `(:value)` with the row's value for this column.
 
 	'hex' => array(
 		'title' => 'Color',

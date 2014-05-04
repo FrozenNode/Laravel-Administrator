@@ -3,8 +3,8 @@
 Administrator is an administrative interface builder for [Laravel](http://laravel.com). With Administrator you can visually manage your Eloquent models and their relations, and also create stand-alone settings pages for storing site data and performing site tasks.
 
 - **Author:** Jan Hartigan
-- **Website:** [http://frozennode.com](http://frozennode.com)
-- **Version:** 4.9.0
+- **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
+- **Version:** 4.11.2
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,7 +53,12 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.9.0
-- Laravel 4.1 support
-- New translations (ja, pt)
-- Bugfix: There was a PSR-0 filename/classname disagreement in on of the relatively unused classes (Fields\Relationships\HasOne)
+### 4.11.2
+- Bugfix: Strange legacy issue that was never caught with passing a no-op to array_get
+
+### 4.11.1
+- Bugfix: There was a routing issue with the new non-numeric model ids
+
+### 4.11.0
+- Model ids no longer have to be numeric
+- New translations (vi)

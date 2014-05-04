@@ -22,7 +22,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'permission' => true,
 		'before_save' => null,
 		'actions' => array(),
-		'rules' => false,
+		'rules' => array(),
 		'storage_path' => null,
 	);
 

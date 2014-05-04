@@ -286,7 +286,7 @@ class DataTable {
 			{
 				$outputRow[$field] = array(
 					'raw' => $attributeValue,
-					'rendered' => $columns[$field]->renderOutput($attributeValue),
+					'rendered' => $columns[$field]->renderOutput($attributeValue, $item),
 				);
 			}
 			//otherwise it's likely the primary key column which wasn't included (though it's needed for identification purposes)
@@ -318,7 +318,7 @@ class DataTable {
 		{
 			$outputRow[$name] = array(
 				'raw' => $item->{$name},
-				'rendered' => $columns[$name]->renderOutput($item->{$name}),
+				'rendered' => $columns[$name]->renderOutput($item->{$name}, $item),
 			);
 		}
 	}

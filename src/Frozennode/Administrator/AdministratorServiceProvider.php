@@ -34,10 +34,12 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->app['administrator.4.1'] = version_compare(\Illuminate\Foundation\Application::VERSION, '4.1') > -1;
 
 		//set up an alias for the base laravel controller to accommodate >=4.1 and <4.1
-		if ($this->app['administrator.4.1'])
-			class_alias('Illuminate\Routing\Controller', 'AdministratorBaseController');
-		else
-			class_alias('Illuminate\Routing\Controllers\Controller', 'AdministratorBaseController');
+		if (!class_exists('AdministratorBaseController')){ // Verify alias is not already created
+			if ($this->app['administrator.4.1'])
+				class_alias('Illuminate\Routing\Controller', 'AdministratorBaseController');
+			else
+				class_alias('Illuminate\Routing\Controllers\Controller', 'AdministratorBaseController');
+		}
 
 		//include our filters, view composers, and routes
 		include __DIR__.'/../../filters.php';
