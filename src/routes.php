@@ -75,12 +75,6 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			'uses' => 'Frozennode\Administrator\AdminController@index'
 		));
 
-		//Get Item
-		Route::get('{model}/{id}', array(
-			'as' => 'admin_get_item',
-			'uses' => 'Frozennode\Administrator\AdminController@item'
-		));
-
 		//New Item
 		Route::get('{model}/new', array(
 			'as' => 'admin_new_item',
@@ -97,6 +91,12 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		Route::get('{model}/file', array(
 			'as' => 'admin_display_file',
 			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
+		));
+
+		//Get Item
+		Route::get('{model}/{id}', array(
+			'as' => 'admin_get_item',
+			'uses' => 'Frozennode\Administrator\AdminController@item'
 		));
 
 		//File Uploads
