@@ -75,12 +75,6 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			'uses' => 'Frozennode\Administrator\AdminController@index'
 		));
 
-		//Get Item
-		Route::get('{model}/{id}', array(
-			'as' => 'admin_get_item',
-			'uses' => 'Frozennode\Administrator\AdminController@item'
-		));
-
 		//New Item
 		Route::get('{model}/new', array(
 			'as' => 'admin_new_item',
@@ -109,6 +103,12 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		Route::post('{model}/rows_per_page', array(
 			'as' => 'admin_rows_per_page',
 			'uses' => 'Frozennode\Administrator\AdminController@rowsPerPage'
+		));
+
+		//Get Item
+		Route::get('{model}/{id}', array(
+			'as' => 'admin_get_item',
+			'uses' => 'Frozennode\Administrator\AdminController@item'
 		));
 
 		//CSRF protection in forms
