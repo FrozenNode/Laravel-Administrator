@@ -1173,6 +1173,10 @@ body label {
 #admin_page #content div.table_container div.page_container div.per_page input[type=hidden] {
   width: 70px;
 }
+#admin_page #content div.table_container div.table_scrollable {
+  width:100%;
+  overflow-x:auto;
+}
 #admin_page #content div.table_container table.results {
   width: 100%;
   margin-bottom: 10px;
