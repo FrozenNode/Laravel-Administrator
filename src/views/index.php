@@ -17,7 +17,7 @@
 		adminData = {
 			primary_key: "<?php echo $primaryKey ?>",
 			<?php if ($itemId !== null) {?>
-				id: <?php echo $itemId ?>,
+				id: "<?php echo $itemId ?>",
 			<?php } ?>
 			rows: <?php echo json_encode($rows) ?>,
 			rows_per_page: <?php echo $dataTable->getRowsPerPage() ?>,
