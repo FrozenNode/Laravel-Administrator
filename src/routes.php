@@ -31,12 +31,6 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			'uses' => 'Frozennode\Administrator\AdminController@settings'
 		));
 
-		//Settings file upload
-		Route::post('settings/{settings}/{field}/file_upload', array(
-			'as' => 'admin_settings_file_upload',
-			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
-		));
-
 		//Display a settings file
 		Route::get('settings/{settings}/file', array(
 			'as' => 'admin_settings_display_file',
@@ -58,6 +52,12 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
 			));
 		});
+        
+		//Settings file upload
+		Route::post('settings/{settings}/{field}/file_upload', array(
+			'as' => 'admin_settings_file_upload',
+			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
+		));
 	});
 
 	//Switch locales
@@ -73,12 +73,6 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		Route::get('{model}', array(
 			'as' => 'admin_index',
 			'uses' => 'Frozennode\Administrator\AdminController@index'
-		));
-
-		//Get Item
-		Route::get('{model}/{id}', array(
-			'as' => 'admin_get_item',
-			'uses' => 'Frozennode\Administrator\AdminController@item'
 		));
 
 		//New Item
@@ -99,16 +93,34 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 		));
 
-		//File Uploads
-		Route::post('{model}/{field}/file_upload', array(
-			'as' => 'admin_file_upload',
-			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
-		));
-
 		//Updating Rows Per Page
 		Route::post('{model}/rows_per_page', array(
 			'as' => 'admin_rows_per_page',
 			'uses' => 'Frozennode\Administrator\AdminController@rowsPerPage'
+		));
+
+		//Get results
+		Route::post('{model}/results', array(
+			'as' => 'admin_get_results',
+			'uses' => 'Frozennode\Administrator\AdminController@results'
+		));
+
+		//Custom Model Action
+		Route::post('{model}/custom_action', array(
+			'as' => 'admin_custom_model_action',
+			'uses' => 'Frozennode\Administrator\AdminController@customModelAction'
+		));
+
+		//Get Item
+		Route::get('{model}/{id}', array(
+			'as' => 'admin_get_item',
+			'uses' => 'Frozennode\Administrator\AdminController@item'
+		));
+
+		//File Uploads
+		Route::post('{model}/{field}/file_upload', array(
+			'as' => 'admin_file_upload',
+			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
 		));
 
 		//CSRF protection in forms
@@ -124,18 +136,6 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			Route::post('{model}/{id}/delete', array(
 				'as' => 'admin_delete_item',
 				'uses' => 'Frozennode\Administrator\AdminController@delete'
-			));
-
-			//Get results
-			Route::post('{model}/results', array(
-				'as' => 'admin_get_results',
-				'uses' => 'Frozennode\Administrator\AdminController@results'
-			));
-
-			//Custom Model Action
-			Route::post('{model}/custom_action', array(
-				'as' => 'admin_custom_model_action',
-				'uses' => 'Frozennode\Administrator\AdminController@customModelAction'
 			));
 
 			//Custom Item Action
