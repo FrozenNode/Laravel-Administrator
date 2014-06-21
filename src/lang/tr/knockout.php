@@ -18,7 +18,7 @@ return array(
 	'deleted' => 'Silindi.',
 	'character_left' => ' karakter kaldı',
 	'characters_left' => ' karakter kaldı',
-	'no_results' => 'No results matched',
-	'select_options' => 'Select Some Options',
+	'no_results' => 'Sonuç bulunamadı.',
+	'select_options' => 'Bazı seçenekleri seçiniz.',
 
 );
