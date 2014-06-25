@@ -115,6 +115,7 @@ View::composer(array('administrator::layouts.default'), function($view)
 				'plupload-l18n' => asset('packages/frozennode/administrator/js/plupload/js/i18n/'.$locale.'.js'),
 				'timepicker-l18n' => asset('packages/frozennode/administrator/js/jquery/localization/jquery-ui-timepicker-'.$locale.'.js'),
 				'datepicker-l18n' => asset('packages/frozennode/administrator/js/jquery/i18n/jquery.ui.datepicker-'.$locale.'.js'),
+				'select2-l18n' => asset('packages/frozennode/administrator/js/jquery/select2/select2_locale_'.$locale.'.js'),
 			);
 		}
 
