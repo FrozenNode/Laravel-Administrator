@@ -7,7 +7,7 @@ return array(
 	| Administrator Language Lines
 	|--------------------------------------------------------------------------
 	|
-	| en - English
+	| bg - Български
 	|
 	*/
 
