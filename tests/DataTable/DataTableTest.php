@@ -89,6 +89,7 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 		$dbQuery = m::mock('Illuminate\Database\Query\Builder');
 		$dbQuery->shouldReceive('select')->twice()
 				->shouldReceive('getConnection')->once()->andReturn($connection);
+        $countQuery->shouldReceive('mergeBindings')->once();
 		$query = m::mock('Illuminate\Database\Eloquent\Builder');
 		$query->shouldReceive('getQuery')->twice()->andReturn($dbQuery)
 				->shouldReceive('toSql')->once()->andReturn('sql string')
