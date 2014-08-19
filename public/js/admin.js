@@ -289,6 +289,7 @@
 					complete: function()
 					{
 						self.freezeForm(false);
+						window.admin.resizePage();
 					},
 					success: function(response)
 					{
@@ -328,6 +329,10 @@
 					data: {_token: csrf},
 					dataType: 'json',
 					type: 'POST',
+					complete: function()
+					{
+						window.admin.resizePage();
+					},
 					success: function(response)
 					{
 						if (response.success)
