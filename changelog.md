@@ -1,5 +1,21 @@
 ## Changelog
 
+### 4.12.0
+- Added CKEditor to composer to keep updated
+- Added Scrollable Data Table ranther than dropping the columns
+- Added the use of checkboxes for boolean filters
+- Added the ability to create select2 translation files
+- Added Arabic Translation files
+- Added Bulgarian Translation files
+- Added Finnish Translation files
+- Added Turkish Translation files
+- Added Danish timepicker translation file
+- Bugfix: Fixed the routing order for File routes
+- BugFix: Fixed the German Translation file
+- Bugfix: Freeze actions while image uploading is in progress added to keep people from clicking off the page while image is uploading
+- Bugfix: Call resizePage() after getting ajax response to fix with the page sizing and not being able to see the full datatable
+- Bugfix: Replace isSoftDeleting with issset(...->runSoftDelete) for Laravel 4.2 support
+
 ### 4.11.2
 - Bugfix: Strange legacy issue that was never caught with passing a no-op to array_get
 
