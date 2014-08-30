@@ -79,7 +79,7 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase {
 		$eloquentQuery = m::mock('Illuminate\Database\Eloquent\Builder');
 		$eloquentQuery->shouldReceive('getQuery')->once()->andReturn($query);
 		$relatedModel = m::mock('Illuminate\Database\Eloquent\Model');
-		$relatedModel->shouldReceive('isSoftDeleting')->once();
+		$relatedModel->shouldReceive('hasGetMutator')->once();
 		$relationship = m::mock('Illuminate\Database\Eloquent\Relations\Relation');
 		$relationship->shouldReceive('getQuery')->once()->andReturn($eloquentQuery)
 						->shouldReceive('getRelated')->once()->andReturn($relatedModel);
