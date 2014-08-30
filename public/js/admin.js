@@ -66,12 +66,6 @@
 			 * object
 			 */
 			listOptions: {},
-
-			/**
-			 * The options for booleans
-			 * array
-			 */
-			boolOptions: [{id: 'true', text: 'true'}, {id: 'false', text: 'false'}]
 		},
 
 		/*
