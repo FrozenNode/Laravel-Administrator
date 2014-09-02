@@ -30,7 +30,7 @@
 		<!-- /ko -->
 
 		<!-- ko if: type === 'bool' -->
-			<input type="checkbox" value="1" data-bind="checked: value, attr: {id: field_id}" />
+			<input type="hidden" data-bind="value: value, attr: {id: field_id}, select2: {data: {results: $root.boolOptions}}" />
 		<!-- /ko -->
 
 		<!-- ko if: type === 'enum' -->
