@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.12.1
+- Bugfix: Revert Merge #601 and adds back in select2 for filter booleans due to 3 needed options True, False, Both
+- Bugfix: Fix Js for non numeric ids
+
 ### 4.12.0
 - Added CKEditor to composer to keep updated
 - Added Scrollable Data Table ranther than dropping the columns
