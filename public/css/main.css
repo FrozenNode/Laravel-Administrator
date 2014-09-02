@@ -576,31 +576,31 @@ li {
 a {
   text-decoration: none;
 }
-body {
+#wrapper {
   font-family: 'Oxygen', sans-serif;
   font-size: 13px;
   line-height: 18px;
   color: #333333;
 }
-body h2 {
+#wrapper h2 {
   font-size: 24px;
   line-height: 36px;
 }
-body textarea,
-body input[type="text"],
-body input[type="password"],
-body input[type="datetime"],
-body input[type="datetime-local"],
-body input[type="date"],
-body input[type="month"],
-body input[type="time"],
-body input[type="week"],
-body input[type="number"],
-body input[type="email"],
-body input[type="url"],
-body input[type="search"],
-body input[type="tel"],
-body input[type="color"] {
+#wrapper textarea,
+#wrapper input[type="text"],
+#wrapper input[type="password"],
+#wrapper input[type="datetime"],
+#wrapper input[type="datetime-local"],
+#wrapper input[type="date"],
+#wrapper input[type="month"],
+#wrapper input[type="time"],
+#wrapper input[type="week"],
+#wrapper input[type="number"],
+#wrapper input[type="email"],
+#wrapper input[type="url"],
+#wrapper input[type="search"],
+#wrapper input[type="tel"],
+#wrapper input[type="color"] {
   display: inline-block;
   vertical-align: middle;
   height: 18px;
@@ -623,28 +623,28 @@ body input[type="color"] {
   transition: all 0.2s ease 0s;
   width: 210px;
 }
-body textarea:focus,
-body input[type="text"]:focus,
-body input[type="password"]:focus,
-body input[type="datetime"]:focus,
-body input[type="datetime-local"]:focus,
-body input[type="date"]:focus,
-body input[type="month"]:focus,
-body input[type="time"]:focus,
-body input[type="week"]:focus,
-body input[type="number"]:focus,
-body input[type="email"]:focus,
-body input[type="url"]:focus,
-body input[type="search"]:focus,
-body input[type="tel"]:focus,
-body input[type="color"]:focus {
+#wrapper textarea:focus,
+#wrapper input[type="text"]:focus,
+#wrapper input[type="password"]:focus,
+#wrapper input[type="datetime"]:focus,
+#wrapper input[type="datetime-local"]:focus,
+#wrapper input[type="date"]:focus,
+#wrapper input[type="month"]:focus,
+#wrapper input[type="time"]:focus,
+#wrapper input[type="week"]:focus,
+#wrapper input[type="number"]:focus,
+#wrapper input[type="email"]:focus,
+#wrapper input[type="url"]:focus,
+#wrapper input[type="search"]:focus,
+#wrapper input[type="tel"]:focus,
+#wrapper input[type="color"]:focus {
   border-color: rgba(82,168,236,0.8);
   -moz-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
   -webkit-box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
   box-shadow: inset 0 1px 2px 1px #eee, 0 0 8px rgba(82,168,236,0.6);
   outline: 0;
 }
-body label {
+#wrapper label {
   display: block;
   margin-bottom: 5px;
 }
