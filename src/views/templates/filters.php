@@ -4,6 +4,10 @@
 	<!-- ko foreach: $root.filters -->
 		<div data-bind="attr: {class: type + ' ' + (min_max ? 'min_max' : '')}">
 			<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
+			
+			<!-- ko if: $data.description -->
+				<p class="description" data-bind="text: description"></p>
+			<!-- /ko -->
 
 		<!-- ko if: type === 'key' -->
 			<input type="text" data-bind="value: value, valueUpdate: 'afterkeydown', attr: {id: field_id}" />
