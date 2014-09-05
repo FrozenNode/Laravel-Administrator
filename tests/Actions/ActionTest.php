@@ -98,6 +98,24 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($options['func'], 'not bar');
 	}
 
+	public function testBuildBoolOrCallable()
+	{
+		$options = array(
+			'foo' => 1,
+			'func' => function($model)
+			{
+				return false;
+			}
+		);
+
+		$this->config->shouldReceive('getDataModel')->once();
+		$this->validator->shouldReceive('arrayGet')->twice()->andReturn($options['foo'], $options['func']);
+		$this->action->buildBoolOrCallable($options, array('foo', 'func'));
+
+		$this->assertTrue($options['foo']);
+		$this->assertFalse($options['func']);
+	}
+
 	public function testPerform()
 	{
 		$this->action->shouldReceive('getOption')->once()->andReturn(function() {return 'foo';});
@@ -116,6 +134,7 @@ class ActionTest extends \PHPUnit_Framework_TestCase {
 				'success' => 'Success!',
 				'error' => 'There was an error performing this action',
 			),
+			'visible' => true,
 		);
 		$defaults['action_name'] = 'test';
 		$this->action->shouldReceive('validateOptions')->once()

@@ -190,6 +190,26 @@ class Validator extends \Illuminate\Validation\Validator {
 	}
 
 	/**
+	 * Validates that an item is either a bool or callable.
+	 */
+	public function validateBoolOrCallable($attribute, $value, $parameters)
+	{
+		return $this->isBool($value) || is_callable($value);
+	}
+
+	/**
+	 * Checkes if a value is a boolean or an int that is either one or zero.
+	 * 
+	 * @param bool|int 		$value
+	 * 
+	 * @return true|false
+	 */
+	protected function isBool($value)
+	{
+		return (is_bool($value) || (is_int($value) && $value === 1 || $value === 0)) ? true : false;
+	}
+
+	/**
 	 * Validates that an item is an Eloquent model
 	 */
 	public function validateEloquent($attribute, $value, $parameters)
