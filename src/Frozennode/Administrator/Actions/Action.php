@@ -108,6 +108,9 @@ class Action {
 		//build the string or callable values for title and confirmation
 		$this->buildStringOrCallable($options, array('confirmation', 'title'));
 
+		//build the bool or callable values for visible
+		$this->buildBoolOrCallable($options, array('visible'));
+
 		//build the string or callable values for the messages
 		$messages = $this->validator->arrayGet($options, 'messages', array());
 		$this->buildStringOrCallable($messages, array('active', 'success', 'error'));
