@@ -72,7 +72,7 @@ class Time extends Field {
 	{
                 $time = false;
             
-		if( !is_null($input) || is_string($input) ) {
+		if( !empty($input) && $input !== '0000-00-00') {
                     $time = new \DateTime($input);
                 } 
                 

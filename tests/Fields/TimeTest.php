@@ -114,6 +114,24 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 		$this->field->fillModel($model, null);
 		$this->assertTrue(!isset($model->field));
 	}
+        
+        public function testFillModelWithEmptyString()
+        {
+               $model = new \stdClass();
+		$this->field->shouldReceive('getOption')->never()
+					->shouldReceive('getDateString')->never();
+		$this->field->fillModel($model, '');
+		$this->assertTrue(!isset($model->field));
+        }
+        
+        public function testFillModelWithZeros()
+        {
+               $model = new \stdClass();
+		$this->field->shouldReceive('getOption')->never()
+					->shouldReceive('getDateString')->never();
+		$this->field->fillModel($model, '0000-00-00');
+		$this->assertTrue(!isset($model->field));
+        }        
 
 	public function testGetDateStringParsesDate()
 	{
