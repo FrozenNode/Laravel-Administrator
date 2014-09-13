@@ -114,24 +114,23 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 		$this->field->fillModel($model, null);
 		$this->assertTrue(!isset($model->field));
 	}
-        
-        public function testFillModelWithEmptyString()
-        {
-               $model = new \stdClass();
+
+	public function testFillModelWithEmptyString()
+	{
+		$model = new \stdClass();
 		$this->field->shouldReceive('getOption')->never()
 					->shouldReceive('getDateString')->never();
 		$this->field->fillModel($model, '');
-		$this->assertTrue(!isset($model->field));
-        }
-        
-        public function testFillModelWithZeros()
-        {
-               $model = new \stdClass();
+		$this->assertTrue(!isset($model->field));	}
+
+	public function testFillModelWithZeros()
+	{
+		$model = new \stdClass();
 		$this->field->shouldReceive('getOption')->never()
 					->shouldReceive('getDateString')->never();
 		$this->field->fillModel($model, '0000-00-00');
 		$this->assertTrue(!isset($model->field));
-        }        
+	}
 
 	public function testGetDateStringParsesDate()
 	{
@@ -150,11 +149,11 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 		$this->field->shouldReceive('getOption')->twice()->andReturn('time');
 		$this->assertEquals($this->field->getDateString(new \DateTime('4:45pm')), '16:45:00');
 	}
-        
-        public function testGetDateStringParsesVeryOldDate()
-        {
+
+	public function testGetDateStringParsesVeryOldDate()
+	{
 		$this->field->shouldReceive('getOption')->once()->andReturn('date');
 		$this->assertEquals($this->field->getDateString(new \DateTime('6/20/1700')), '1700-06-20');
-        }
+	}
 
 }

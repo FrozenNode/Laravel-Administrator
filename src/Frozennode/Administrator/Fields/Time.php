@@ -70,12 +70,12 @@ class Time extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-                $time = false;
-            
+		$time = false;
+
 		if( !empty($input) && $input !== '0000-00-00') {
-                    $time = new \DateTime($input);
-                } 
-                
+			$time = new \DateTime($input);
+		}
+
 		//first we validate that it's a date/time
 		if ($time !== false)
 		{
