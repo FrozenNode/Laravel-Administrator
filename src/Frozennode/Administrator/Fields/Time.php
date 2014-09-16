@@ -2,6 +2,7 @@
 namespace Frozennode\Administrator\Fields;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use \DateTime as DateTime;
 
 class Time extends Field {
 
@@ -41,7 +42,7 @@ class Time extends Field {
 		//try to read the time for the min and max values, and if they check out, set the where
 		if ($minValue = $this->getOption('min_value'))
 		{
-			$time = new \DateTime($minValue);
+			$time = new DateTime($minValue);
 
 			if ($time !== false)
 			{
@@ -51,7 +52,7 @@ class Time extends Field {
 
 		if ($maxValue = $this->getOption('max_value'))
 		{
-			$time = new \DateTime($maxValue);
+			$time = new DateTime($maxValue);
 
 			if ($time !== false)
 			{
@@ -73,7 +74,7 @@ class Time extends Field {
 		$time = false;
 
 		if( !empty($input) && $input !== '0000-00-00') {
-			$time = new \DateTime($input);
+			$time = new DateTime($input);
 		}
 
 		//first we validate that it's a date/time
@@ -91,7 +92,7 @@ class Time extends Field {
 	 *
 	 * @return string
 	 */
-	public function getDateString(\DateTime $time)
+	public function getDateString(DateTime $time)
 	{
 		if ($this->getOption('type') === 'date')
 		{
