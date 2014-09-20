@@ -2,7 +2,7 @@
 	<h2 data-bind="text: $root.settingsTitle"></h2>
 
 	<!-- ko foreach: editFields -->
-		<!-- ko if: $data && editable && visible -->
+		<!-- ko if: $data && visible -->
 			<div data-bind="attr: {class: type}">
 				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
 
