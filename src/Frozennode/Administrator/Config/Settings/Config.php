@@ -155,18 +155,17 @@ class Config extends ConfigBase implements ConfigInterface {
 		//iterate over the edit fields to only fetch the important items
 		foreach ($fields as $name => $field)
 		{
-			$data[$name] = $input->get($name);
-
-			//make sure the bool field is set correctly
-			if ($field->getOption('type') === 'bool')
+			if ($field->getOption('editable'))
 			{
-				$data[$name] = $data[$name] === 'true' || $data[$name] === '1' ? 1 : 0;
+				$data[$name] = $input->get($name);
+
+				//make sure the bool field is set correctly
+				if ($field->getOption('type') === 'bool')
+				{
+					$data[$name] = $data[$name] === 'true' || $data[$name] === '1' ? 1 : 0;
+				}
 			}
-
-			//unset uneditable fields
-			if (!$field->getOption('editable'))
-			{
-				unset($data[$name]);
+			else {
 				unset($rules[$name]);
 			}
 		}
