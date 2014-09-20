@@ -161,6 +161,12 @@ class Config extends ConfigBase implements ConfigInterface {
 			{
 				$data[$name] = $data[$name] === 'true' || $data[$name] === '1' ? 1 : 0;
 			}
+
+			//unset uneditable fields
+			if (!$field->getOption('editable'))
+			{
+				unset($data[$name]);
+			}
 		}
 
 		//validate the model
