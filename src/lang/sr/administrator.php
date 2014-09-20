@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Učitavanje slike',
 	'imageuploading' => 'Image Uploading',
 	'uploadfile' => 'Upload File',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Nijedno',
 	'all' => 'Sve',
 	'itemsperpage' => 'stavki po strani',

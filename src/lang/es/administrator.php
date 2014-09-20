@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Subiendo Imagen',
 	'uploadfile' => 'Subir Archivo',
 	'fileuploading' => 'Subiendo Archivo',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Ninguna',
 	'all' => 'Todos',
 	'itemsperpage' => 'ítems por página',

@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => '图片上传中',
 	'uploadfile' => '上传文件',
 	'fileuploading' => '文件上传中',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => '没有',
 	'all' => '全部',
 	'itemsperpage' => '条目每页',

@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Bild wird hochladen',
 	'uploadfile' => 'Datei hochladen',
 	'fileuploading' => 'Datei wird hochladen',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Keiner',
 	'all' => 'Alles',
 	'itemsperpage' => 'Artikel pro Seite',

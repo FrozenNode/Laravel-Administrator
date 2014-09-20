@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Chargement image',
 	'uploadfile' => 'Charge fichier',
 	'fileuploading' => 'Chargement fichier',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Aucun',
 	'all' => 'Tous',
 	'itemsperpage' => 'éléments par page',
