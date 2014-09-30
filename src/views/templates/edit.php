@@ -12,7 +12,7 @@
 	<!-- /ko -->
 
 	<!-- ko foreach: editFields -->
-		<!-- ko if: $data && $root[$root.primaryKey]() && visible -->
+		<!-- ko if: $data && ( $root[$root.primaryKey]() || editable ) && visible -->
 			<div data-bind="attr: {class: type}">
 				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
 
