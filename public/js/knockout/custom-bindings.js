@@ -650,7 +650,7 @@
 	 * The enumText binding converts a value and an options array to a "Label (value)" readable format
 	 */
 	ko.bindingHandlers.enumText = {
-		init: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
 		{
 			var options = valueAccessor(),
 				value = options.value,

@@ -78,7 +78,7 @@
 													select2: {data: {results: options}}" />
 				<!-- /ko -->
 				<!-- ko ifnot: editable -->
-					<pre class="uneditable" data-bind="enumText: { value: $root[field_name](), enumOptions: options }"></pre>
+					<div class="uneditable" data-bind="enumText: { value: $root[field_name](), enumOptions: options }"></div>
 				<!-- /ko -->
 			<!-- /ko -->
 
