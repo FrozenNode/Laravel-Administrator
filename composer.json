@@ -1,5 +1,5 @@
 {
-    "name": "frozennode/administrator",
+    "name": "ricksuggs/administrator",
     "description": "A database interface package for Laravel",
     "homepage": "http://administrator.frozennode.com",
     "keywords": ["administrator", "admin", "database", "laravel-administrator", "laravel", "cms"],
@@ -11,7 +11,7 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/FrozenNode/Laravel-Administrator/issues"
+        "issues": "https://github.com/ricksuggs/Laravel-Administrator/issues"
     },
     "require": {
         "php": ">=5.3.0",
