@@ -194,7 +194,7 @@ class DataTable {
 
 		//then perform the count query
 		$results = $countQuery->getConnection()->select($sql, $countQuery->getBindings());
-		$numRows = $results[0]->aggregate;
+		$numRows = is_array($results[0]) ? $results[0]['aggregate'] : $results[0]->aggregate;
 		$page = (int) $page;
 		$last = (int) ceil($numRows / $this->rowsPerPage);
 
