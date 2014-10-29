@@ -23,6 +23,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'before_save' => null,
 		'actions' => array(),
 		'rules' => array(),
+		'messages' => array(),
 		'storage_path' => null,
 	);
 
@@ -45,6 +46,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'before_save' => 'callable',
 		'actions' => 'array',
 		'rules' => 'array',
+		'messages' => 'array',
 		'storage_path' => 'directory',
 	);
 
@@ -164,7 +166,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		}
 
 		//validate the model
-		$validation = $this->validateData($data, $this->getOption('rules'));
+		$validation = $this->validateData($data, $this->getOption('rules'), $this->getOption('messages'));
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;

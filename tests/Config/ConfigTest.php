@@ -33,7 +33,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 	public function setUp()
 	{
 		$this->validator = m::mock('Frozennode\Administrator\Validator');
-		$this->config = m::mock('Frozennode\Administrator\Config\Config', array($this->validator, array('name' => 'model_name')))->makePartial();
+		$this->config = m::mock('Frozennode\Administrator\Config\Config', array($this->validator, $this->validator, array('name' => 'model_name')))->makePartial();
 	}
 
 	/**
@@ -91,16 +91,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 
 	public function testValidateDataValidates()
 	{
-		$this->validator->shouldReceive('override')->once()
+		$this->validator->shouldReceive('setData')->once()
+						->shouldReceive('setRules')->once()
+						->shouldReceive('setCustomMessages')->once()
 						->shouldReceive('fails')->once();
-		$this->assertEquals($this->config->validateData(array(), array(1)), true);
+		$this->assertEquals($this->config->validateData(array(), array(1), array()), true);
 	}
 
 	public function testValidateDataReturnsStringError()
 	{
-		$this->validator->shouldReceive('override')->once()
+		$this->validator->shouldReceive('setData')->once()
+						->shouldReceive('setRules')->once()
+						->shouldReceive('setCustomMessages')->once()
 						->shouldReceive('fails')->once()->andReturn(true)
 						->shouldReceive('messages')->once()->andReturn(m::mock(array('all' => array())));;
-		$this->assertEquals($this->config->validateData(array(), array(1)), '');
+		$this->assertEquals($this->config->validateData(array(), array(1), array()), '');
 	}
 }
