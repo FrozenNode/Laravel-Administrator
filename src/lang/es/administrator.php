@@ -15,7 +15,7 @@ return array(
 	'edit' => 'Editar',
 	'filters' => 'Filtros',
 	'loading' => 'Cargando...',
-	'createnew' => 'Crear Nuevo',
+	'createnew' => 'Detalles',
 	'new' => 'Nuevo',
 	'viewitem' => 'Ver :single',
 	'id' => 'ID',

@@ -1,5 +1,12 @@
 ## Changelog
 
+### 4.14.0
+- New translations (hr, nb)
+- Bugfix: The Spanish translation had an issue with noun genders
+- Bugfix: Visible option wasn't previously working with filters
+- Bugfix: The front-end form should now resize to its correct height at all times
+- Bugfix: If relationships defined an alternate primary key on the foreign table, Administrator would always just grab the model's primary key name
+
 ### 4.13.0
 - Field descriptions can now be provided in addition to the labels
 - Bugfix: There were some styling issues due to applying styles at the body level
