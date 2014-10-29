@@ -1,12 +1,22 @@
 ## Changelog
 
+### 4.13.0
+- Field descriptions can now be provided in addition to the labels
+- Bugfix: There were some styling issues due to applying styles at the body level
+- Bugfix: Dates in time fields before 1902 were previously not possible
+- Bugfix: MS opacity declaration was making it impossible to build the LESS
+- Bugfix: Hungarian and Serbian languages had some errors
+- Bugfix: It should now be possible to use custom validation rules and messages
+- Bugfix: Model validation would previously only check the dirty attributes of existing models. It now checks everything.
+- Bugfix: When setting the database.fetch config as PDO::FETCH_ASSOC, administrator would incorrectly try to access the count query results as an object
+
 ### 4.12.1
 - Bugfix: Revert Merge #601 and adds back in select2 for filter booleans due to 3 needed options True, False, Both
 - Bugfix: Fix Js for non numeric ids
 
 ### 4.12.0
 - Added CKEditor to composer to keep updated
-- Added Scrollable Data Table ranther than dropping the columns
+- Added Scrollable Data Table rather than dropping the columns
 - Added the use of checkboxes for boolean filters
 - Added the ability to create select2 translation files
 - Added Arabic Translation files

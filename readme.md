@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.12.0
+- **Version:** 4.13.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,32 +53,12 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Changelog
 
-### 4.12.1
-- Bugfix: Revert Merge #601 and adds back in select2 for filter booleans due to 3 needed options True, False, Both
-- Bugfix: Fix Js for non numeric ids
-
-### 4.12.0
-- Added CKEditor to composer to keep updated
-- Added Scrollable Data Table ranther than dropping the columns
-- Added the use of checkboxes for boolean filters
-- Added the ability to create select2 translation files
-- Added Arabic Translation files
-- Added Bulgarian Translation files
-- Added Finnish Translation files
-- Added Turkish Translation files
-- Added Danish timepicker translation file
-- Bugfix: Fixed the routing order for File routes
-- BugFix: Fixed the German Translation file
-- Bugfix: Freeze actions while image uploading is in progress added to keep people from clicking off the page while image is uploading
-- Bugfix: Call resizePage() after getting ajax response to fix with the page sizing and not being able to see the full datatable
-- Bugfix: Replace isSoftDeleting with issset(...->runSoftDelete) for Laravel 4.2 support
-
-### 4.11.2
-- Bugfix: Strange legacy issue that was never caught with passing a no-op to array_get
-
-### 4.11.1
-- Bugfix: There was a routing issue with the new non-numeric model ids
-
-### 4.11.0
-- Model ids no longer have to be numeric
-- New translations (vi)
+### 4.13.0
+- Field descriptions can now be provided in addition to the labels
+- Bugfix: There were some styling issues due to applying styles at the body level
+- Bugfix: Dates in time fields before 1902 were previously not possible
+- Bugfix: MS opacity declaration was making it impossible to build the LESS
+- Bugfix: Hungarian and Serbian languages had some errors
+- Bugfix: It should now be possible to use custom validation rules and messages
+- Bugfix: Model validation would previously only check the dirty attributes of existing models. It now checks everything.
+- Bugfix: When setting the database.fetch config as PDO::FETCH_ASSOC, administrator would incorrectly try to access the count query results as an object

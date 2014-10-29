@@ -40,6 +40,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'form_width' => 285,
 		'link' => null,
 		'rules' => false,
+		'messages' => false,
 	);
 
 	/**
@@ -70,6 +71,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'form_width' => 'integer',
 		'link' => 'callable',
 		'rules' => 'array',
+		'messages' => 'array',
 	);
 
 	/**
@@ -324,11 +326,8 @@ class Config extends ConfigBase implements ConfigInterface {
 		//fill the model with our input
 		$this->fillModel($model, $input, $fields);
 
-		//prepares the $data and $rules arrays
-		extract($this->prepareDataAndRules($model));
-
 		//validate the model
-		$validation = $this->validateData($data, $rules);
+		$validation = $this->validateData($model->getAttributes(), $this->getModelValidationRules(), $this->getModelValidationMessages());
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;
@@ -343,36 +342,6 @@ class Config extends ConfigBase implements ConfigInterface {
 		$this->setDataModel($model);
 
 		return true;
-	}
-
-	/**
-	 * Sets the proper data attributes and rules arrays depending on whether or not the model exists
-	 *
-	 * @param \Illuminate\Database\Eloquent\Model	$model
-	 *
-	 * @return array	//'data' and 'rules' indexes both arrays
-	 */
-	public function prepareDataAndRules($model)
-	{
-		//fetch the rules if any exist
-		$rules = $this->getModelValidationRules();
-
-		//if the model exists, this is an update
-		if ($model->exists)
-		{
-			//only include dirty fields
-			$data = $model->getDirty();
-
-			//and validate the fields that are being updated
-			$rules = array_intersect_key($rules, $data);
-		}
-		else
-		{
-			//otherwise validate everything
-			$data = $model->getAttributes();
-		}
-
-		return compact('data', 'rules');
 	}
 
 	/**
@@ -426,15 +395,28 @@ class Config extends ConfigBase implements ConfigInterface {
 		{
 			return $optionsRules;
 		}
-		//otherwise look for the
-		else if ($rules = $this->getModelStaticValidationRules())
+
+		//otherwise look for the rules as a static property on the model
+		return $rules = $this->getModelStaticValidationRules() ?: array();
+	}
+
+	/**
+	 * Gets the validation messages for this model
+	 *
+	 * @return array
+	 */
+	public function getModelValidationMessages()
+	{
+		$optionsMessages = $this->getOption('messages');
+
+		//if the 'rules' option was provided for this model, it takes precedent
+		if (is_array($optionsMessages))
 		{
-			return $rules;
+			return $optionsMessages;
 		}
-		else
-		{
-			return array();
-		}
+
+		//otherwise look for the messages as a static property on the model
+		return $rules = $this->getModelStaticValidationMessages() ?: array();
 	}
 
 	/**
@@ -447,6 +429,18 @@ class Config extends ConfigBase implements ConfigInterface {
 		$model = $this->getDataModel();
 
 		return isset($model::$rules) && is_array($model::$rules) ? $model::$rules : false;
+	}
+
+	/**
+	 * Gets the static messages propery for a model if one exists
+	 *
+	 * @return mixed
+	 */
+	public function getModelStaticValidationMessages()
+	{
+		$model = $this->getDataModel();
+
+		return isset($model::$messages) && is_array($model::$messages) ? $model::$messages : false;
 	}
 
 	/**
