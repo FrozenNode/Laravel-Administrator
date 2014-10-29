@@ -115,22 +115,45 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(!isset($model->field));
 	}
 
+	public function testFillModelWithEmptyString()
+	{
+		$model = new \stdClass();
+		$this->field->shouldReceive('getOption')->never()
+					->shouldReceive('getDateString')->never();
+		$this->field->fillModel($model, '');
+		$this->assertTrue(!isset($model->field));	}
+
+	public function testFillModelWithZeros()
+	{
+		$model = new \stdClass();
+		$this->field->shouldReceive('getOption')->never()
+					->shouldReceive('getDateString')->never();
+		$this->field->fillModel($model, '0000-00-00');
+		$this->assertTrue(!isset($model->field));
+	}
+
 	public function testGetDateStringParsesDate()
 	{
 		$this->field->shouldReceive('getOption')->once()->andReturn('date');
-		$this->assertEquals($this->field->getDateString(strtotime('3/3/2013')), '2013-03-03');
+		$this->assertEquals($this->field->getDateString(new \DateTime('3/3/2013')), '2013-03-03');
 	}
 
 	public function testGetDateStringParsesDateTime()
 	{
 		$this->field->shouldReceive('getOption')->twice()->andReturn('datetime');
-		$this->assertEquals($this->field->getDateString(strtotime('3/3/2013 4:45pm')), '2013-03-03 16:45:00');
+		$this->assertEquals($this->field->getDateString(new \DateTime('3/3/2013 4:45pm')), '2013-03-03 16:45:00');
 	}
 
 	public function testGetDateStringParsesTime()
 	{
 		$this->field->shouldReceive('getOption')->twice()->andReturn('time');
-		$this->assertEquals($this->field->getDateString(strtotime('4:45pm')), '16:45:00');
+		$this->assertEquals($this->field->getDateString(new \DateTime('4:45pm')), '16:45:00');
+	}
+
+	public function testGetDateStringParsesVeryOldDate()
+	{
+		$this->field->shouldReceive('getOption')->once()->andReturn('date');
+		$this->assertEquals($this->field->getDateString(new \DateTime('6/20/1700')), '1700-06-20');
 	}
 
 }
