@@ -1,5 +1,6 @@
 ## Changelog
 
+- Bugfix: MS opacity declaration was making it impossible to build the LESS
 - Bugfix: Hungarian and Serbian languages had some errors
 - Bugfix: It should now be possible to use custom validation rules and messages
 - Bugfix: Model validation would previously only check the dirty attributes of existing models. It now checks everything.
