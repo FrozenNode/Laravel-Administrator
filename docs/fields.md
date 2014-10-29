@@ -7,6 +7,7 @@
 - [Setter Option](#setter-option)
 - [Visible Option](#visible-option)
 - [Value Option](#value-option)
+- [Description Option](#description-option)
 - [Filters](#filters)
 - [Settings Page](#settings-page)
 
@@ -141,11 +142,11 @@ The `value` option lets you define a default value for a field. In a filter set 
 <a name="description-option"></a>
 ## Description Option
 
-The `description` option lets you provide additional information about a field. If the title is not self-explanatory or advices on filling the field are needed, you can pass those information here.
+The `description` option lets you provide additional information about a field if you need more than just the field's label to explain to your users how to interact with a field.
 
-	'stuff' => array(
-		'title' => 'E-mail subject',
-		'description' => 'The E-mail subject should not be longer than 100 letters'
+	'fantasy_name' => array(
+		'title' => 'Fantasy Name',
+		'description' => 'Be sure to think of something creative and original!'
 	),
 
 <a name="filters"></a>
