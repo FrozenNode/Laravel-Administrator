@@ -12,7 +12,7 @@
 
 ### 4.12.0
 - Added CKEditor to composer to keep updated
-- Added Scrollable Data Table ranther than dropping the columns
+- Added Scrollable Data Table rather than dropping the columns
 - Added the use of checkboxes for boolean filters
 - Added the ability to create select2 translation files
 - Added Arabic Translation files
