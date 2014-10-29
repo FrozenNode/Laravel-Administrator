@@ -7,6 +7,7 @@
 - [Setter Option](#setter-option)
 - [Visible Option](#visible-option)
 - [Value Option](#value-option)
+- [Description Option](#description-option)
 - [Filters](#filters)
 - [Settings Page](#settings-page)
 
@@ -43,7 +44,8 @@ As you're [setting up your model config](/docs/model-configuration) or your [set
 			'name_field' => 'name',
 		),
 		'uri' => array(
-			'title' => 'URI (leave blank for auto)',
+			'title' => 'URI',
+			'description' => 'Uniform Resource Identifier (leave blank for auto)'
 		),
 		'image' => array(
 			'title' => 'Image (1423 x 441)',
@@ -137,6 +139,16 @@ The `value` option lets you define a default value for a field. In a filter set 
 		'value' => 'foo'
 	),
 
+<a name="description-option"></a>
+## Description Option
+
+The `description` option lets you provide additional information about a field if you need more than just the field's label to explain to your users how to interact with a field.
+
+	'fantasy_name' => array(
+		'title' => 'Fantasy Name',
+		'description' => 'Be sure to think of something creative and original!'
+	),
+
 <a name="filters"></a>
 ## Filters
 
@@ -159,6 +171,7 @@ The `filters` option in your [model config](/docs/model-configuration) lets you 
 		'price' => array(
 			'type' => 'number',
 			'title' => 'Price',
+			'description' => 'The price excluding taxes',
 			'symbol' => '$',
 			'decimals' => 2,
 		),
@@ -187,6 +200,7 @@ You can set a default value for your filters by providing a `value` option to th
 		'price' => array(
 			'type' => 'number',
 			'title' => 'Price',
+			'description' => 'The price excluding taxes',
 			'symbol' => '$',
 			'decimals' => 2,
 			'min_value' => 19.00,

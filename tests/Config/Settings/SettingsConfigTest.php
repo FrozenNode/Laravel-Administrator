@@ -25,7 +25,7 @@ class SettingsConfigTest extends \PHPUnit_Framework_TestCase {
 	public function setUp()
 	{
 		$this->validator = m::mock('Frozennode\Administrator\Validator');
-		$this->config = m::mock('Frozennode\Administrator\Config\Settings\Config', array($this->validator, array()))->makePartial();
+		$this->config = m::mock('Frozennode\Administrator\Config\Settings\Config', array($this->validator, $this->validator, array()))->makePartial();
 	}
 
 	/**
@@ -78,7 +78,7 @@ class SettingsConfigTest extends \PHPUnit_Framework_TestCase {
 		$input = m::mock('Illuminate\Http\Request');
 		$input->shouldReceive('get')->twice();
 		$this->config->shouldReceive('validateData')->once()
-					->shouldReceive('getOption')->once()->andReturn(array())
+					->shouldReceive('getOption')->twice()->andReturn(array(), array())
 					->shouldReceive('runBeforeSave')->once()
 					->shouldReceive('putToJson')->once()
 					->shouldReceive('setDataModel')->once();
@@ -93,7 +93,7 @@ class SettingsConfigTest extends \PHPUnit_Framework_TestCase {
 		$input = m::mock('Illuminate\Http\Request');
 		$input->shouldReceive('get')->twice();
 		$this->config->shouldReceive('validateData')->once()->andReturn('some error')
-					->shouldReceive('getOption')->once()->andReturn(array())
+					->shouldReceive('getOption')->twice()->andReturn(array(), array())
 					->shouldReceive('runBeforeSave')->never()
 					->shouldReceive('putToJson')->never()
 					->shouldReceive('setDataModel')->never();
@@ -108,7 +108,7 @@ class SettingsConfigTest extends \PHPUnit_Framework_TestCase {
 		$input = m::mock('Illuminate\Http\Request');
 		$input->shouldReceive('get')->twice();
 		$this->config->shouldReceive('validateData')->once()
-					->shouldReceive('getOption')->once()->andReturn(array())
+					->shouldReceive('getOption')->twice()->andReturn(array(), array())
 					->shouldReceive('runBeforeSave')->once()->andReturn('some error')
 					->shouldReceive('putToJson')->never()
 					->shouldReceive('setDataModel')->never();

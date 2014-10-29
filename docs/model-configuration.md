@@ -35,6 +35,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Custom Actions](#custom-actions)
 - [Global Custom Actions](#global-custom-actions)
 - [Validation Rules](#validation-rules)
+- [Validation Messages](#validation-messages)
 - [Sort](#sort)
 - [Form Width](#form-width)
 - [Link](#link)
@@ -307,6 +308,25 @@ Global custom actions are buttons that can be pressed at any time on a model's p
 	),
 
 The validation rules for your models can be set using the `rules` option. Administrator uses [Laravel's validation](http://laravel.com/docs/validation) to validate your models. If the form is invalid, it will notify the admin user without saving the form.
+
+> For a detailed description of validation, see the **[validation docs](/docs/validation)**
+
+<a name="validation-messages"></a>
+### Validation Messages
+
+	/**
+	 * The validation messages for the form, based on the Laravel validation class
+	 *
+	 * @type array
+	 */
+	'messages' => array(
+		'name.required' => 'The name field is required',
+		'age.min' => 'The minimum age is 18 years old',
+	),
+
+The validation messages for your models can be set using the `messages` option. Administrator uses [Laravel's validation](http://laravel.com/docs/validation#custom-error-messages) and the messages should follow the same format as Laravel's custom error messages.
+
+> For a detailed description of validation, see the **[validation docs](/docs/validation)**
 
 <a name="sort"></a>
 ## Sort

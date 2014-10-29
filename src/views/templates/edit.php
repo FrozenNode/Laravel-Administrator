@@ -16,6 +16,10 @@
 			<div data-bind="attr: {class: type}">
 				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
 
+			<!-- ko if: $data.description && type !== 'bool' && type !== 'key' -->
+				<p class="description" data-bind="text: description"></p>
+			<!-- /ko -->
+
 			<!-- ko if: type === 'key' -->
 				<span data-bind="text: $root[$root.primaryKey]"></span>
 			<!-- /ko -->
@@ -215,6 +219,10 @@
 			<!-- ko if: type === 'color' -->
 				<input type="text" data-type="color" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name]" />
 				<div class="color_preview" data-bind="style: {backgroundColor: $root[field_name]}, visible: $root[field_name]"></div>
+			<!-- /ko -->
+
+			<!-- ko if: $data.description && (type === 'bool' || type === 'key') -->
+				<p class="description_below" data-bind="text: description"></p>
 			<!-- /ko -->
 			</div>
 		<!-- /ko -->

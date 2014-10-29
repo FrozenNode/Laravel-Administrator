@@ -2,6 +2,7 @@
 namespace Frozennode\Administrator\Config;
 
 use Frozennode\Administrator\Validator;
+use Illuminate\Validation\Validator as CustomValidator;
 use Frozennode\Administrator\Config\Settings\Config as SettingsConfig;
 use Frozennode\Administrator\Config\Model\Config as ModelConfig;
 
@@ -13,6 +14,13 @@ class Factory {
 	 * @var \Frozennode\Administrator\Validator
 	 */
 	protected $validator;
+
+	/**
+	 * The site's normal validator instance
+	 *
+	 * @var \Illuminate\Validation\Validator
+	 */
+	protected $customValidator;
 
 	/**
 	 * The config instance
@@ -79,13 +87,15 @@ class Factory {
 	 * Create a new config Factory instance
 	 *
 	 * @param \Frozennode\Administrator\Validator 	$validator
+	 * @param \Illuminate\Validation\Validator	 	$custom_validator
 	 * @param array 								$options
 	 */
-	public function __construct(Validator $validator, array $options)
+	public function __construct(Validator $validator, CustomValidator $custom_validator, array $options)
 	{
 		//set the config, and then validate it
 		$this->options = $options;
 		$this->validator = $validator;
+		$this->customValidator = $custom_validator;
 		$validator->override($this->options, $this->rules);
 
 		//if the validator failed, throw an exception
@@ -261,6 +271,7 @@ class Factory {
 	public function getPath()
 	{
 		$path = $this->type === 'settings' ? $this->options['settings_config_path'] : $this->options['model_config_path'];
+
 		return rtrim($path, '/') . '/';
 	}
 
@@ -283,11 +294,11 @@ class Factory {
 	{
 		if ($this->type === 'settings')
 		{
-			return new SettingsConfig($this->validator, $options);
+			return new SettingsConfig($this->validator, $this->customValidator, $options);
 		}
 		else
 		{
-			return new ModelConfig($this->validator, $options);
+			return new ModelConfig($this->validator, $this->customValidator, $options);
 		}
 	}
 

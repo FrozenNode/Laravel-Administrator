@@ -6,6 +6,7 @@
 - [Bugs, Questions, and Feature Requests](#issues)
 - [Pull Requests](#pull-requests)
 - [Style Guide](#style-guide)
+- [CSS Build](#css-build)
 
 <a name="introduction"></a>
 ## Introduction
@@ -36,3 +37,21 @@ We love it when people submit pull requests. They don't always get merged into t
 ## Style Guide
 
 Please see the [style guide](/docs/style-guide) page for more information about the style guide.
+
+<a name="css-build"></a>
+## CSS Build
+
+Administrator currently uses [LESS](http://lesscss.org/) to build its CSS. In particular, it uses the [lessphp](https://github.com/leafo/lessphp) library. If put this in your composer.json:
+
+	"leafo/lessphp": "dev-master"
+
+And then if you're building administrator from the workbench, you would run:
+
+	$less = new lessc();
+	$adminPath = base_path() . '/workbench/frozennode/administrator/public';
+
+	//compile the less
+	$compiled = $less->compileFile($adminPath . '/css/main.less');
+	File::put($adminPath . '/css/main.css', $compiled);
+
+In the future, Administrator will move to [SASS](http://sass-lang.com/) and use [Grunt](http://gruntjs.com/) to automatically build both CSS and JS files.
