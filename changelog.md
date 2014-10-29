@@ -1,5 +1,7 @@
 ## Changelog
 
+- Bugfix: When setting the database.fetch config as PDO::FETCH_ASSOC, administrator would incorrectly try to access the count query results as an object
+
 ### 4.12.1
 - Bugfix: Revert Merge #601 and adds back in select2 for filter booleans due to 3 needed options True, False, Both
 - Bugfix: Fix Js for non numeric ids
