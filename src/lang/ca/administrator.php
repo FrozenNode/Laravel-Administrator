@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Pujant Imatge',
 	'uploadfile' => 'Pujar Arxiu',
 	'fileuploading' => 'Pujant Arxiu',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Cap',
 	'all' => 'Tots',
 	'itemsperpage' => 'elements per pàgina',

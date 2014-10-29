@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Bild laddas upp',
 	'uploadfile' => 'Ladda upp fil',
 	'fileuploading' => 'Fil laddas upp',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Ingen',
 	'all' => 'Alla',
 	'itemsperpage' => 'objekt per sida',
