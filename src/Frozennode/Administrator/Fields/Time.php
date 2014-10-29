@@ -2,7 +2,7 @@
 namespace Frozennode\Administrator\Fields;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use \DateTime as DateTime;
+use DateTime as DateTime;
 
 class Time extends Field {
 

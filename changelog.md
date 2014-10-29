@@ -1,6 +1,7 @@
 ## Changelog
 
 - Field descriptions can now be provided in addition to the labels
+- Bugfix: Dates in time fields before 1902 were previously not possible
 - Bugfix: MS opacity declaration was making it impossible to build the LESS
 - Bugfix: Hungarian and Serbian languages had some errors
 - Bugfix: It should now be possible to use custom validation rules and messages
