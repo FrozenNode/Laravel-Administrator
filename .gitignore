@@ -1,4 +1,5 @@
 /vendor
+/vendor_alt
 composer.phar
 composer.lock
 .DS_Store
