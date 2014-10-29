@@ -1,5 +1,6 @@
 ## Changelog
 
+- Bugfix: The front-end form should now resize to its correct height at all times
 - Bugfix: If relationships defined an alternate primary key on the foreign table, Administrator would always just grab the model's primary key name
 
 ### 4.13.0
