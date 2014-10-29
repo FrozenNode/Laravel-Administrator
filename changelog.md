@@ -1,6 +1,6 @@
 ## Changelog
 
-- New translations (hr)
+- New translations (hr, nb)
 - Bugfix: The Spanish translation had an issue with noun genders
 - Bugfix: Visible option wasn't previously working with filters
 - Bugfix: The front-end form should now resize to its correct height at all times
