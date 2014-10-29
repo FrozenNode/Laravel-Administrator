@@ -1,5 +1,6 @@
 ## Changelog
 
+- Bugfix: Hungarian and Serbian languages had some errors
 - Bugfix: It should now be possible to use custom validation rules and messages
 - Bugfix: Model validation would previously only check the dirty attributes of existing models. It now checks everything.
 - Bugfix: When setting the database.fetch config as PDO::FETCH_ASSOC, administrator would incorrectly try to access the count query results as an object
