@@ -193,6 +193,14 @@
   filter: alpha(opacity=30);
   opacity: 0.3;
 }
+.editForm > div p.description {
+  width: 90%;
+  margin: 0 0 7px 2px;
+}
+.editForm > div p.description_below {
+  width: 90%;
+  margin: 2px 0 0 2px;
+}
 .editForm > div select,
 .editForm > div textarea,
 .editForm > div input {
@@ -354,6 +362,14 @@
   zoom: 1;
   filter: alpha(opacity=30);
   opacity: 0.3;
+}
+#settings_page form.settings_form > div p.description {
+  width: 90%;
+  margin: 0 0 7px 2px;
+}
+#settings_page form.settings_form > div p.description_below {
+  width: 90%;
+  margin: 2px 0 0 2px;
 }
 #settings_page form.settings_form > div select,
 #settings_page form.settings_form > div textarea,
@@ -1001,6 +1017,14 @@ a {
   filter: alpha(opacity=30);
   opacity: 0.3;
 }
+#admin_page div#sidebar div.filters > div p.description {
+  width: 90%;
+  margin: 0 0 7px 2px;
+}
+#admin_page div#sidebar div.filters > div p.description_below {
+  width: 90%;
+  margin: 2px 0 0 2px;
+}
 #admin_page div#sidebar div.filters > div.min_max input[type=text] {
   width: 87px;
 }
@@ -1174,8 +1198,8 @@ a {
   width: 70px;
 }
 #admin_page #content div.table_container div.table_scrollable {
-  width:100%;
-  overflow-x:auto;
+  width: 100%;
+  overflow-x: auto;
 }
 #admin_page #content div.table_container table.results {
   width: 100%;
@@ -1343,6 +1367,14 @@ a {
   zoom: 1;
   filter: alpha(opacity=30);
   opacity: 0.3;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div p.description {
+  width: 90%;
+  margin: 0 0 7px 2px;
+}
+#admin_page #content div.item_edit_container div.item_edit form.edit_form > div p.description_below {
+  width: 90%;
+  margin: 2px 0 0 2px;
 }
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div select,
 #admin_page #content div.item_edit_container div.item_edit form.edit_form > div textarea,
