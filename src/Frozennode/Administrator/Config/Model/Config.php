@@ -6,6 +6,7 @@ use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\Fields\Factory as FieldFactory;
 use Frozennode\Administrator\Fields\Field as Field;
 use Frozennode\Administrator\Actions\Factory as ActionFactory;
+use Illuminate\Support\Facades\Validator as LValidator;
 
 /**
  * The Model Config class helps retrieve a model's configuration and provides a reliable pointer for these items
@@ -344,6 +345,30 @@ class Config extends ConfigBase implements ConfigInterface {
 
 		return true;
 	}
+
+    /**
+     * Validates the supplied data against the model's rules
+     *
+     * @param array		$data
+     * @param array		$rules
+     *
+     * @param mixed
+     */
+    public function validateData(array $data, array $rules)
+    {
+        if ($rules)
+        {
+            $validator = LValidator::make($data, $rules);
+
+            //if the validator fails, kick back the errors
+            if ($this->validator->fails())
+            {
+                return implode('. ', $this->validator->messages()->all());
+            }
+        }
+
+        return true;
+    }
 
 	/**
 	 * Sets the proper data attributes and rules arrays depending on whether or not the model exists
