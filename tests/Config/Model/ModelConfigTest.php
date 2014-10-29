@@ -284,17 +284,6 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->config->save($input, $fields, $actionPermissions), 'some error');
 	}
 
-	public function testPrepareDataAndRulesExistingModel()
-	{
-		$model = m::mock('stdClass')->makePartial();
-		$model->exists = true;
-		$model->shouldReceive('getDirty')->once()->andReturn(array('key' => 'something', 'secondkey' => 'somethingelse'));
-		$this->config->shouldReceive('getModelValidationRules')->once()->andReturn(array('key' => 'somerule', 'other' => 'somerule'));
-		extract($this->config->prepareDataAndRules($model));
-		$this->assertEquals($rules, array('key' => 'somerule'));
-		$this->assertEquals($data, array('key' => 'something', 'secondkey' => 'somethingelse'));
-	}
-
 	public function testPrepareDataAndRulesNewModel()
 	{
 		$model = m::mock('stdClass')->makePartial();

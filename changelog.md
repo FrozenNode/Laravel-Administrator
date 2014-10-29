@@ -1,5 +1,6 @@
 ## Changelog
 
+- Bugfix: Model validation would previously only check the dirty attributes of existing models. It now checks everything.
 - Bugfix: When setting the database.fetch config as PDO::FETCH_ASSOC, administrator would incorrectly try to access the count query results as an object
 
 ### 4.12.1

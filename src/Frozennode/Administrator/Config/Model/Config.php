@@ -357,20 +357,8 @@ class Config extends ConfigBase implements ConfigInterface {
 		//fetch the rules if any exist
 		$rules = $this->getModelValidationRules();
 
-		//if the model exists, this is an update
-		if ($model->exists)
-		{
-			//only include dirty fields
-			$data = $model->getDirty();
-
-			//and validate the fields that are being updated
-			$rules = array_intersect_key($rules, $data);
-		}
-		else
-		{
-			//otherwise validate everything
-			$data = $model->getAttributes();
-		}
+		//pull the attributes out of the model
+		$data = $model->getAttributes();
 
 		return compact('data', 'rules');
 	}
