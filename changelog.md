@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.14.0
 - New translations (hr, nb)
 - Bugfix: The Spanish translation had an issue with noun genders
 - Bugfix: Visible option wasn't previously working with filters
