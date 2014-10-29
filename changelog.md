@@ -1,5 +1,7 @@
 ## Changelog
 
+- Bugfix: If relationships defined an alternate primary key on the foreign table, Administrator would always just grab the model's primary key name
+
 ### 4.13.0
 - Field descriptions can now be provided in addition to the labels
 - Bugfix: There were some styling issues due to applying styles at the body level
