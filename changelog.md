@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.14.1
 - Bugfix: when validating all rules against all attributes for existing models, "exists" and "unique" rules would cause problems
 
 ### 4.14.0
