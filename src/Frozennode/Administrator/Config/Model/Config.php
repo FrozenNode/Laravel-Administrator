@@ -327,7 +327,11 @@ class Config extends ConfigBase implements ConfigInterface {
 		$this->fillModel($model, $input, $fields);
 
 		//validate the model
-		$validation = $this->validateData($model->getAttributes(), $this->getModelValidationRules(), $this->getModelValidationMessages());
+		$data = $model->exists ? $model->getDirty() : $model->getAttributes();
+		$rules = $this->getModelValidationRules();
+		$rules = $model->exists ? array_intersect_key($rules, $data) : $rules;
+		$messages = $this->getModelValidationMessages();
+		$validation = $this->validateData($data, $rules, $messages);
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;

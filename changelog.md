@@ -1,5 +1,7 @@
 ## Changelog
 
+- Bugfix: when validating all rules against all attributes for existing models, "exists" and "unique" rules would cause problems
+
 ### 4.14.0
 - New translations (hr, nb)
 - Bugfix: The Spanish translation had an issue with noun genders
