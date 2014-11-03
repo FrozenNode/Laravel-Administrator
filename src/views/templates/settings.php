@@ -7,8 +7,8 @@
 				<label data-bind="attr: {for: field_id}, text: title + ':'"></label>
 
 			<!-- ko if: type === 'text' -->
-				<div class="characters_left" data-bind="charactersLeft: {value: $root[field_name], limit: limit}"></div>
 				<!-- ko if: editable -->
+					<div class="characters_left" data-bind="charactersLeft: {value: $root[field_name], limit: limit}"></div>
 					<input type="text" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
 																			valueUpdate: 'afterkeydown', characterLimit: limit" />
 				<!-- /ko -->
