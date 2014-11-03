@@ -78,8 +78,13 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
-				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
-												select2: {data: {results: options}}" />
+				<!-- ko if: editable -->
+					<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
+													select2: {data: {results: options}}" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="enumText: { value: $root[field_name](), enumOptions: options }"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->
