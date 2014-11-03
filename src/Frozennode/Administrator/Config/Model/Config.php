@@ -359,14 +359,14 @@ class Config extends ConfigBase implements ConfigInterface {
 	 */
 	public function fillModel(&$model, \Illuminate\Http\Request $input, array $fields)
 	{
-		//run through the edit fields to see if we need to unset relationships
+		//run through the edit fields to see if we need to unset relationships or uneditable fields
 		foreach ($fields as $name => $field)
 		{
-			if (!$field->getOption('external'))
+			if (!$field->getOption('external') && $field->getOption('editable'))
 			{
 				$field->fillModel($model, $input->get($name, NULL));
 			}
-			//if this is an "external" field (i.e. it's not a column on this model's table), unset it
+			//if this is an "external" field (i.e. it's not a column on this model's table) or uneditable, unset it
 			else
 			{
 				$model->__unset($name);
