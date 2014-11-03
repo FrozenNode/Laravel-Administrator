@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => '画像をアップロード中',
 	'uploadfile' => 'ファイルをアップロード',
 	'fileuploading' => 'ファイルをアップロード中',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'なし',
 	'all' => 'すべて',
 	'itemsperpage' => 'アイテム/ページ',

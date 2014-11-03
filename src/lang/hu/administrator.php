@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Képfeltöltés',
 	'uploadfile' => 'Fájl feltöltése',
 	'fileuploading' => 'Fájlfeltöltés',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Nincs',
 	'all' => 'Mind',
 	'itemsperpage' => 'sor oldalanként',

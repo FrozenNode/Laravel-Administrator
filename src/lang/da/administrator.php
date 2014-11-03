@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Billedet uploades',
 	'uploadfile' => 'Upload fil',
 	'fileuploading' => 'Fil uploades',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Ingen',
 	'all' => 'Alle',
 	'itemsperpage' => 'rækker pr. side',
