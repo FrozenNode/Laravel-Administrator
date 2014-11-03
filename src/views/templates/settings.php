@@ -73,7 +73,7 @@
 					<input type="checkbox" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, bool: field_name, checked: $root[field_name]" />
 				<!-- /ko -->
 				<!-- ko ifnot: editable -->
-					<span data-bind="text: $root[field_name]() ? 'yes' : 'no'"></span>
+					<span data-bind="text: parseInt($root[field_name]()) ? 'yes' : 'no'"></span>
 				<!-- /ko -->
 			<!-- /ko -->
 
