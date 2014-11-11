@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.14.2
+- Bugfix: Query clauses in the newQuery method for models was throwing errors if bindings were involved
+
 ### 4.14.1
 - Bugfix: when validating all rules against all attributes for existing models, "exists" and "unique" rules would cause problems
 
