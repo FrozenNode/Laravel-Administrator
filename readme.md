@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.14.1
+- **Version:** 4.14.2
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,9 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Recent Changelog
+
+### 4.14.2
+- Bugfix: Query clauses in the newQuery method for models was throwing errors if bindings were involved
 
 ### 4.14.1
 - Bugfix: when validating all rules against all attributes for existing models, "exists" and "unique" rules would cause problems
