@@ -64,6 +64,7 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 			'query' => $query,
 			'countQuery' => $countQuery,
 			'querySql' => 'foo',
+			'queryBindings' => array(),
 			'sort' => array('field' => 'foo', 'direction' => 'asc'),
 			'selects' => array(),
 		);
@@ -93,6 +94,7 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 		$query->shouldReceive('getQuery')->twice()->andReturn($dbQuery)
 				->shouldReceive('toSql')->once()->andReturn('sql string')
 				->shouldReceive('orderBy')->once()
+				->shouldReceive('getBindings')->once()->andReturn(array())
 				->shouldReceive('distinct')->once();
 		$model = m::mock('Illuminate\Database\Eloquent\Model');
 		$model->shouldReceive('getTable')->once()->andReturn('table')
@@ -107,6 +109,7 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 		$output = array(
 			'query' => $query,
 			'querySql' => 'sql string',
+			'queryBindings' => array(),
 			'countQuery' => $countQuery,
 			'sort' => array('field' => 'table.id', 'direction' => 'asc'),
 			'selects' => array('table.*'),
@@ -119,13 +122,12 @@ class DataTableTest extends \PHPUnit_Framework_TestCase {
 		$result = new \stdClass;
 		$result->aggregate = 100;
 		$countQuery = m::mock('Illuminate\Database\Query\Builder');
-		$countQuery->shouldReceive('getConnection')->once()->andReturn(m::mock(array('select' => array($result))))
-					->shouldReceive('getBindings')->once();
+		$countQuery->shouldReceive('getConnection')->once()->andReturn(m::mock(array('select' => array($result))));
 		$model = m::mock('Illuminate\Database\Eloquent\Model');
 		$model->shouldReceive('getKeyName')->once()->andReturn('id');
 		$this->config->shouldReceive('getDataModel')->once()->andReturn($model);
 		$output = array('page' => 1, 'last' => 5, 'total' => 100);
-		$this->assertEquals($this->dataTable->performCountQuery($countQuery, 'foo', 1), $output);
+		$this->assertEquals($this->dataTable->performCountQuery($countQuery, 'foo', array(), 1), $output);
 	}
 
 	public function testSetFilters()
