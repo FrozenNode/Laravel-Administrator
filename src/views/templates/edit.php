@@ -72,9 +72,14 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'password' -->
-				<div class="characters_left" data-bind="charactersLeft: {value: $root[field_name], limit: limit}"></div>
-				<input type="password" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
+				<!-- ko if: editable -->
+					<div class="characters_left" data-bind="charactersLeft: {value: $root[field_name], limit: limit}"></div>
+					<input type="password" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
 																		valueUpdate: 'afterkeydown', characterLimit: limit" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="text: '********'"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'belongs_to' -->
@@ -229,7 +234,12 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'color' -->
-				<input type="text" data-type="color" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name]" />
+				<!-- ko if: editable -->
+					<input type="text" data-type="color" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name]" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="text: $root[field_name]()"></div>
+				<!-- /ko -->
 				<div class="color_preview" data-bind="style: {backgroundColor: $root[field_name]}, visible: $root[field_name]"></div>
 			<!-- /ko -->
 
