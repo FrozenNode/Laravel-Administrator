@@ -547,7 +547,11 @@
 				editor = editors[options.id];
 			else
 			{
-				$element.ckeditor({ language : language });
+				$element.ckeditor({ 
+					language : language,
+					readOnly : !adminData.edit_fields[context.field_name].editable
+				});
+				
 				editor = $element.ckeditorGet();
 				editors[options.id] = editor;
 			}
