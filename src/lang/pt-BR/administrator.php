@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Enviando imagem',
 	'uploadfile' => 'Enviar arquivo',
 	'fileuploading' => 'Enviando arquivo',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Nenhum',
 	'all' => 'Todos',
 	'itemsperpage' => 'itens por página',

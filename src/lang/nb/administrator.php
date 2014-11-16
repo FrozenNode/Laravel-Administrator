@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Bilde lastes opp',
 	'uploadfile' => 'Last opp fil',
 	'fileuploading' => 'Fil lastes opp',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Ingen',
 	'all' => 'Alle',
 	'itemsperpage' => 'rekker pr. side',

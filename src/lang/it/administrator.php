@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Caricamento Immagine',
 	'uploadfile' => 'Carica File',
 	'fileuploading' => 'Caricamento File',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Nessuno',
 	'all' => 'Tutti',
 	'itemsperpage' => 'Elementi per pagina',

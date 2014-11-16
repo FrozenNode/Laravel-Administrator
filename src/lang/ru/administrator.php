@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Загрузка изображения',
 	'uploadfile' => 'Загрузить файл',
 	'fileuploading' => 'Загрузка файла',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Пусто',
 	'all' => 'Все',
 	'itemsperpage' => 'элементов на страницу',

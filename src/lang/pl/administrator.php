@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Ładuję zdjęcie',
 	'uploadfile' => 'Dodaj plik',
 	'fileuploading' => 'Ładuję plik',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none'           => 'Żaden',
 	'all'            => 'Wszystkie',
 	'itemsperpage'   => 'pozycji na stronie',
