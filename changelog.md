@@ -1,5 +1,6 @@
 ## Changelog
 
+- New uneditable states for color and password fields for when the editable option resolves to false
 - Bugfix: "Characters left" text was sitting unnecessarily outside the "editable" conditional
 - Bugfix: Some missing image-related translations
 - Bugfix: Editable option wasn't working for some fields
