@@ -1,5 +1,8 @@
 ## Changelog
 
+- Bugfix: Some missing image-related translations
+- Bugfix: Editable option wasn't working for some fields
+
 ### 4.14.2
 - Bugfix: Query clauses in the newQuery method for models was throwing errors if bindings were involved
 
