@@ -642,6 +642,26 @@
 		}
 	 };
 
+	/**
+	 * The enumText binding converts a value and an options array to a "Label (value)" readable format
+	 */
+	ko.bindingHandlers.enumText = {
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel)
+		{
+			var options = valueAccessor(),
+				value = options.value,
+				enumOptions = options.enumOptions;
+
+			for (var i = 0; i < enumOptions.length; i++) {
+				if(enumOptions[i].id == value) {
+					$(element).html( enumOptions[i].text + " (" + value + ")" );
+					return;
+				}
+			}
+
+			$(element).html(value);
+		}
+	};
 
 	/**
 	 * File uploader using plupload
