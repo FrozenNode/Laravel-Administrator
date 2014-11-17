@@ -458,7 +458,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 */
 	protected function getRelationshipInputs(\Illuminate\Http\Request $request, array $fields)
 	{
-		$inputs = [];
+		$inputs = array();
 
 		//run through the edit fields to find the relationships
 		foreach ($fields as $name => $field)
@@ -485,7 +485,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		$value = trim($value);
 
 		if ($field->getOption('multiple_values'))
-			$value = $value ? explode(',', $value) : [];
+			$value = $value ? explode(',', $value) : array();
 
 		return $value;
 	}
