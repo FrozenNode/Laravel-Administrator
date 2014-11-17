@@ -313,10 +313,10 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$model->field_password = '';
 		$model->shouldReceive('__unset')->times(4);
 		$fields = array(
-			'field_external' => $field_external, 
-			'field_uneditable' => $field_uneditable, 
-			'field_setter' => $field_setter, 
-			'field_password' => $field_password, 
+			'field_external' => $field_external,
+			'field_uneditable' => $field_uneditable,
+			'field_setter' => $field_setter,
+			'field_password' => $field_password,
 			'field' => $field
 		);
 		$this->config->fillModel($model, $input, $fields);
