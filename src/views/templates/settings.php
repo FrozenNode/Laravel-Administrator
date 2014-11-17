@@ -30,13 +30,8 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'wysiwyg' -->
-				<!-- ko if: editable -->
-					<textarea class="wysiwyg" data-bind="attr: {disabled: $root.freezeForm, id: field_id},
-								wysiwyg: {value: $root[field_name], id: field_id}"></textarea>
-				<!-- /ko -->
-				<!-- ko ifnot: editable -->
-					<div class="uneditable" data-bind="html: $root[field_name]"></div>
-				<!-- /ko -->
+				<textarea class="wysiwyg" data-bind="attr: {disabled: $root.freezeForm, id: field_id},
+							wysiwyg: {value: $root[field_name], id: field_id}"></textarea>
 			<!-- /ko -->
 
 			<!-- ko if: type === 'markdown' -->
@@ -73,13 +68,18 @@
 					<input type="checkbox" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, bool: field_name, checked: $root[field_name]" />
 				<!-- /ko -->
 				<!-- ko ifnot: editable -->
-					<span data-bind="text: $root[field_name]() ? 'yes' : 'no'"></span>
+					<span data-bind="text: parseInt($root[field_name]()) ? 'yes' : 'no'"></span>
 				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'enum' -->
-				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
-												select2: {data: {results: options}}" />
+				<!-- ko if: editable -->
+					<input type="hidden" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
+													select2: {data: {results: options}}" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="enumText: { value: $root[field_name](), enumOptions: options }"></div>
+				<!-- /ko -->
 			<!-- /ko -->
 
 			<!-- ko if: type === 'date' -->
@@ -167,7 +167,12 @@
 			<!-- /ko -->
 
 			<!-- ko if: type === 'color' -->
-				<input type="text" data-type="color" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name]" />
+				<!-- ko if: editable -->
+					<input type="text" data-type="color" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name]" />
+				<!-- /ko -->
+				<!-- ko ifnot: editable -->
+					<div class="uneditable" data-bind="text: $root[field_name]()"></div>
+				<!-- /ko -->
 				<div class="color_preview" data-bind="style: {backgroundColor: $root[field_name]}, visible: $root[field_name]"></div>
 			<!-- /ko -->
 			</div>
