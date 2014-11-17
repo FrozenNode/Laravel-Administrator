@@ -1,6 +1,7 @@
 ## Changelog
 
 - New uneditable states for color, password, enum, and wysiwyg fields for when the editable option resolves to false
+- New translations (sk)
 - Bugfix: Setting a string image length would fail uploads
 - Bugfix: Basic validation for relationship fields wasn't working
 - Bugfix: "Characters left" text was sitting unnecessarily outside the "editable" conditional
