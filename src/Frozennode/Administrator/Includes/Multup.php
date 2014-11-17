@@ -104,11 +104,8 @@ class Multup {
 	*/
 	public function set_length($len)
 	{
-		if(!is_int($len)){
-			return false;
-		} else{
-			$this->random_length = $len;
-		}
+		$this->random_length = $len;
+
 		return $this;
 	}
 

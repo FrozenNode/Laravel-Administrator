@@ -293,23 +293,32 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$input = m::mock('Illuminate\Http\Request');
 		$input->shouldReceive('get')->times(3);
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->times(3)->andReturn(false, 'text', false)
+		$field->shouldReceive('getOption')->times(4)->andReturn(false, true, 'text', false)
 				->shouldReceive('fillModel')->once();
 		$field_external = m::mock('Frozennode\Administrator\Fields\Field');
 		$field_external->shouldReceive('getOption')->times(3)->andReturn(true, 'belongs_to_many', false);
+		$field_uneditable = m::mock('Frozennode\Administrator\Fields\Field');
+		$field_uneditable->shouldReceive('getOption')->times(4)->andReturn(false, false, 'text', false);
 		$field_setter = m::mock('Frozennode\Administrator\Fields\Field');
-		$field_setter->shouldReceive('getOption')->times(3)->andReturn(false, 'text', true)
+		$field_setter->shouldReceive('getOption')->times(4)->andReturn(false, true, 'text', true)
 					->shouldReceive('fillModel')->once();
 		$field_password = m::mock('Frozennode\Administrator\Fields\Field');
-		$field_password->shouldReceive('getOption')->times(3)->andReturn(false, 'password', false)
+		$field_password->shouldReceive('getOption')->times(4)->andReturn(false, true, 'password', false)
 					->shouldReceive('fillModel')->once();
 		$model = m::mock('stdClass')->makePartial();
 		$model->field = 'field_value';
 		$model->field_external = 'field_external_value';
+		$model->field_uneditable = 'field_uneditable_value';
 		$model->field_setter = 'field_setter_value';
 		$model->field_password = '';
-		$model->shouldReceive('__unset')->times(3);
-		$fields = array('field_external' => $field_external, 'field_setter' => $field_setter, 'field_password' => $field_password, 'field' => $field);
+		$model->shouldReceive('__unset')->times(4);
+		$fields = array(
+			'field_external' => $field_external,
+			'field_uneditable' => $field_uneditable,
+			'field_setter' => $field_setter,
+			'field_password' => $field_password,
+			'field' => $field
+		);
 		$this->config->fillModel($model, $input, $fields);
 	}
 

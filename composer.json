@@ -19,7 +19,7 @@
         "ckeditor/ckeditor": "4.*"
     },
     "require-dev": {
-        "mockery/mockery": "0.8.0"
+        "mockery/mockery": "~0.9"
     },
     "autoload": {
         "classmap": [

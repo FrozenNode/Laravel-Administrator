@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Nalaganje Slike',
 	'uploadfile' => 'Naloži Datoteko',
 	'fileuploading' => 'Nalaganje Datoteke',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Nič',
 	'all' => 'Vse',
 	'itemsperpage' => 'Število elementov na stran',

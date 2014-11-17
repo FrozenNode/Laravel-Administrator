@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'جاري رفع الصورة',
 	'uploadfile' => 'رفع ملف',
 	'fileuploading' => 'جاري رفع الملف',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'لا شيء',
 	'all' => 'الكل',
 	'itemsperpage' => 'عناصر في الصفحة',

@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'Изображението се качва',
 	'uploadfile' => 'Качване на файл',
 	'fileuploading' => 'Файла се качва',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Никакви',
 	'all' => 'Всички',
 	'itemsperpage' => 'реда на страница',

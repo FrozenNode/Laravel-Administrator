@@ -23,6 +23,8 @@ return array(
 	'imageuploading' => 'fotoğrafyükleniyor',
 	'uploadfile' => 'Upload File',
 	'fileuploading' => 'File Uploading',
+	'no_image_uploaded' => 'No image uploaded',
+	'no_file_uploaded' => 'No file uploaded',
 	'none' => 'Hiçbiri',
 	'all' => 'Tümü',
 	'itemsperpage' => 'Sayfa Başına Kalem',
