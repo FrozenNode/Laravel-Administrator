@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.15.0
 - New uneditable states for color, password, enum, and wysiwyg fields for when the editable option resolves to false
 - New translations (sk)
 - Bugfix: Editable fields are now also verified on the back end

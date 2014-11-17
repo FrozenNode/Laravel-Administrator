@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.14.2
+- **Version:** 4.15.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -53,6 +53,16 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Recent Changelog
 
+### 4.15.0
+- New uneditable states for color, password, enum, and wysiwyg fields for when the editable option resolves to false
+- New translations (sk)
+- Bugfix: Editable fields are now also verified on the back end
+- Bugfix: Setting a string image length would fail uploads
+- Bugfix: Basic validation for relationship fields wasn't working
+- Bugfix: "Characters left" text was sitting unnecessarily outside the "editable" conditional
+- Bugfix: Some missing image-related translations
+- Bugfix: Editable option wasn't working for some fields
+
 ### 4.14.2
 - Bugfix: Query clauses in the newQuery method for models was throwing errors if bindings were involved
 
@@ -65,13 +75,3 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - Bugfix: Visible option wasn't previously working with filters
 - Bugfix: The front-end form should now resize to its correct height at all times
 - Bugfix: If relationships defined an alternate primary key on the foreign table, Administrator would always just grab the model's primary key name
-
-### 4.13.0
-- Field descriptions can now be provided in addition to the labels
-- Bugfix: There were some styling issues due to applying styles at the body level
-- Bugfix: Dates in time fields before 1902 were previously not possible
-- Bugfix: MS opacity declaration was making it impossible to build the LESS
-- Bugfix: Hungarian and Serbian languages had some errors
-- Bugfix: It should now be possible to use custom validation rules and messages
-- Bugfix: Model validation would previously only check the dirty attributes of existing models. It now checks everything.
-- Bugfix: When setting the database.fetch config as PDO::FETCH_ASSOC, administrator would incorrectly try to access the count query results as an object
