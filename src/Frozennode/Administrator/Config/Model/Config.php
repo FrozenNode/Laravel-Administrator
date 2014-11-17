@@ -328,10 +328,11 @@ class Config extends ConfigBase implements ConfigInterface {
 
 		//validate the model
 		$data = $model->exists ? $model->getDirty() : $model->getAttributes();
+		$validation_data = array_merge($data, $this->getRelationshipInputs($input, $fields));
 		$rules = $this->getModelValidationRules();
-		$rules = $model->exists ? array_intersect_key($rules, $data) : $rules;
+		$rules = $model->exists ? array_intersect_key($rules, $validation_data) : $rules;
 		$messages = $this->getModelValidationMessages();
-		$validation = $this->validateData($data, $rules, $messages);
+		$validation = $this->validateData($validation_data, $rules, $messages);
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;
@@ -445,6 +446,48 @@ class Config extends ConfigBase implements ConfigInterface {
 		$model = $this->getDataModel();
 
 		return isset($model::$messages) && is_array($model::$messages) ? $model::$messages : false;
+	}
+
+	/**
+	 * Gets the relationship inputs
+	 *
+	 * @param \Illuminate\Http\Request				$request
+	 * @param array									$fields
+	 *
+	 * @return array
+	 */
+	protected function getRelationshipInputs(\Illuminate\Http\Request $request, array $fields)
+	{
+		$inputs = [];
+
+		//run through the edit fields to find the relationships
+		foreach ($fields as $name => $field)
+		{
+			if ($field->getOption('external'))
+			{
+				$inputs[$name] = $this->formatRelationshipInput($request->get($name, NULL), $field);
+			}
+		}
+
+		return $inputs;
+	}
+
+	/**
+	 * Gets the formatted value of a relationship input
+	 *
+	 * @param string									$value
+	 * @param \Frozennode\Administrator\Fields\Field	$field
+	 *
+	 * @return mixed	array | string
+	 */
+	protected function formatRelationshipInput($value, Field $field)
+	{
+		$value = trim($value);
+
+		if ($field->getOption('multiple_values'))
+			$value = $value ? explode(',', $value) : [];
+
+		return $value;
 	}
 
 	/**
