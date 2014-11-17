@@ -152,21 +152,29 @@ class Config extends ConfigBase implements ConfigInterface {
 	public function save(\Illuminate\Http\Request $input, array $fields)
 	{
 		$data = array();
+		$rules = $this->getOption('rules');
 
 		//iterate over the edit fields to only fetch the important items
 		foreach ($fields as $name => $field)
 		{
-			$data[$name] = $input->get($name);
-
-			//make sure the bool field is set correctly
-			if ($field->getOption('type') === 'bool')
+			if ($field->getOption('editable'))
 			{
-				$data[$name] = $data[$name] === 'true' || $data[$name] === '1' ? 1 : 0;
+				$data[$name] = $input->get($name);
+
+				//make sure the bool field is set correctly
+				if ($field->getOption('type') === 'bool')
+				{
+					$data[$name] = $data[$name] === 'true' || $data[$name] === '1' ? 1 : 0;
+				}
+			}
+			else {
+				//unset uneditable fields rules
+				unset($rules[$name]);
 			}
 		}
 
 		//validate the model
-		$validation = $this->validateData($data, $this->getOption('rules'), $this->getOption('messages'));
+		$validation = $this->validateData($data, $rules, $this->getOption('messages'));
 
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;

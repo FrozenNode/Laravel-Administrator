@@ -76,45 +76,51 @@ class SettingsConfigTest extends \PHPUnit_Framework_TestCase {
 	public function testSaveValidates()
 	{
 		$input = m::mock('Illuminate\Http\Request');
-		$input->shouldReceive('get')->twice();
+		$input->shouldReceive('get')->once();
 		$this->config->shouldReceive('validateData')->once()
 					->shouldReceive('getOption')->twice()->andReturn(array(), array())
 					->shouldReceive('runBeforeSave')->once()
 					->shouldReceive('putToJson')->once()
 					->shouldReceive('setDataModel')->once();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->twice();
-		$fields = array('field1' => $field, 'field2' => $field);
+		$field->shouldReceive('getOption')->twice()->andReturn(true, "text");
+		$field_uneditable = m::mock('Frozennode\Administrator\Fields\Field');
+		$field_uneditable->shouldReceive('getOption')->once()->andReturn(false);
+		$fields = array('field1' => $field, 'field2' => $field_uneditable);
 		$this->assertTrue($this->config->save($input, $fields));
 	}
 
 	public function testSaveValidateFails()
 	{
 		$input = m::mock('Illuminate\Http\Request');
-		$input->shouldReceive('get')->twice();
+		$input->shouldReceive('get')->once();
 		$this->config->shouldReceive('validateData')->once()->andReturn('some error')
 					->shouldReceive('getOption')->twice()->andReturn(array(), array())
 					->shouldReceive('runBeforeSave')->never()
 					->shouldReceive('putToJson')->never()
 					->shouldReceive('setDataModel')->never();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->twice();
-		$fields = array('field1' => $field, 'field2' => $field);
+		$field->shouldReceive('getOption')->twice()->andReturn(true, "text");
+		$field_uneditable = m::mock('Frozennode\Administrator\Fields\Field');
+		$field_uneditable->shouldReceive('getOption')->once()->andReturn(false);
+		$fields = array('field1' => $field, 'field2' => $field_uneditable);
 		$this->assertEquals($this->config->save($input, $fields), 'some error');
 	}
 
 	public function testSaveBeforeSaveFails()
 	{
 		$input = m::mock('Illuminate\Http\Request');
-		$input->shouldReceive('get')->twice();
+		$input->shouldReceive('get')->once();
 		$this->config->shouldReceive('validateData')->once()
 					->shouldReceive('getOption')->twice()->andReturn(array(), array())
 					->shouldReceive('runBeforeSave')->once()->andReturn('some error')
 					->shouldReceive('putToJson')->never()
 					->shouldReceive('setDataModel')->never();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->twice();
-		$fields = array('field1' => $field, 'field2' => $field);
+		$field->shouldReceive('getOption')->twice()->andReturn(true, "text");
+		$field_uneditable = m::mock('Frozennode\Administrator\Fields\Field');
+		$field_uneditable->shouldReceive('getOption')->once()->andReturn(false);
+		$fields = array('field1' => $field, 'field2' => $field_uneditable);
 		$this->assertEquals($this->config->save($input, $fields), 'some error');
 	}
 
