@@ -104,7 +104,7 @@ abstract class Relationship extends Field {
 			foreach ($constraints as $field => $rel)
 			{
 				//check if the supplied values are strings and that their methods exist on their respective models
-				if (is_string($field) && is_string($rel) && method_exists($model, $field))
+				if (is_string($field) && is_string($rel) && (method_exists($model, $field) || is_callable($model, $field)))
 				{
 					$validConstraints[$field] = $rel;
 				}

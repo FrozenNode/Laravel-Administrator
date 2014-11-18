@@ -150,7 +150,7 @@ class Factory {
 		//if the relationship is set
 		if ($method = $this->validator->arrayGet($options, 'relationship'))
 		{
-			if (method_exists($model, $method))
+			if (method_exists($model, $method) || (is_callable(array($model, $method)) && !strstr($method, '.')))
 			{
 				$relationship = $model->{$method}();
 
