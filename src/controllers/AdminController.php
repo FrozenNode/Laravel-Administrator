@@ -129,6 +129,13 @@ class AdminController extends Controller
 			if ($model->exists)
 			{
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
+				if ($model->fails())
+                                {
+                                    return Response::json(array(
+                                        'success' => false,
+                                        'errors' => $model->errors(),
+                                    ));
+                                }
 			}
 
 			return Response::json(array(
