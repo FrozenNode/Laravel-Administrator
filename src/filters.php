@@ -87,3 +87,8 @@ Route::filter('post_validate', function($route, $request)
 		return $p;
 	}
 });
+
+function admin_url($path = null, $parameters = array(), $secure = null)
+{
+	return url( '/admin/' . $path, $parameters, $secure);
+}

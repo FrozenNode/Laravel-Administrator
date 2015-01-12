@@ -9,11 +9,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as LValidator;
 
-function admin_url($path = null, $parameters = array(), $secure = null)
-{
-	return url( '/admin/' . $path, $parameters, $secure);
-}
-
 class AdministratorServiceProvider extends ServiceProvider {
 
 	/**
