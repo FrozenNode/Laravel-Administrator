@@ -34,7 +34,7 @@ View::composer('administrator::index', function($view)
 	$view->formWidth = $config->getOption('form_width');
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = url('packages/frozennode/administrator/');
-	$view->route = $route['path'].'/';
+	$view->route = isset($route['path']) ? $route['path'].'/' : '/';
 	$view->itemId = isset($view->itemId) ? $view->itemId : null;
 });
 
@@ -54,7 +54,7 @@ View::composer('administrator::settings', function($view)
 	$view->actions = $actionFactory->getActionsOptions();
 	$view->baseUrl = $baseUrl;
 	$view->assetUrl = url('packages/frozennode/administrator/');
-	$view->route = $route['path'].'/';
+	$view->route = isset($route['path']) ? $route['path'].'/' : '/';
 });
 
 //header view
