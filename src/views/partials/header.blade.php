@@ -1,6 +1,6 @@
 <header>
 	<h1>
-		<a href="{{ url('/') }}">{{Config::get('administrator::administrator.title')}}</a>
+		<a href="{{ admin_url('/') }}">{{Config::get('administrator::administrator.title')}}</a>
 	</h1>
 
 	<a href="#" id="menu_button"><div></div></a>
@@ -29,7 +29,7 @@
 							@foreach (Config::get('administrator::administrator.locales') as $lang)
 								@if (Config::get('app.locale') != $lang)
 									<li>
-										<a href="{{ url('switch_locale/' . $lang) }}">{{$lang}}</a>
+										<a href="{{ admin_url('switch_locale/' . $lang) }}">{{$lang}}</a>
 									</li>
 								@endif
 							@endforeach

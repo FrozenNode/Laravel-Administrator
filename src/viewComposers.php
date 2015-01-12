@@ -15,7 +15,7 @@ View::composer('administrator::index', function($view)
 	$actionFactory = App::make('admin_action_factory');
 	$dataTable = App::make('admin_datatable');
 	$model = $config->getDataModel();
-	$baseUrl = url('/');
+	$baseUrl = admin_url('/');
 	$route = parse_url($baseUrl);
 
 	//add the view fields
@@ -44,7 +44,7 @@ View::composer('administrator::settings', function($view)
 	$config = App::make('itemconfig');
 	$fieldFactory = App::make('admin_field_factory');
 	$actionFactory = App::make('admin_action_factory');
-	$baseUrl = url('/');
+	$baseUrl = admin_url('/');
 	$route = parse_url($baseUrl);
 
 	//add the view fields

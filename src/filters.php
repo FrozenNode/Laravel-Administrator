@@ -72,7 +72,7 @@ Route::filter('post_validate', function($route, $request)
 	//if the user is simply not allowed permission to this model, redirect them to the dashboard
 	if (!$p)
 	{
-		return Redirect::to(url('/'));
+		return Redirect::to(admin_url('/'));
 	}
 
 	//get the settings data if it's a settings page
