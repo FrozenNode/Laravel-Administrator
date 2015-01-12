@@ -14,7 +14,7 @@ Route::filter('validate_admin', function ()
 	//if this is a simple false value, send the user to the login redirect
 	if (!$response)
 	{
-		$loginUrl = URL::to(Config::get('administrator::administrator.login_path', 'user/login'));
+		$loginUrl = url(Config::get('administrator::administrator.login_path', 'user/login'));
 		$redirectKey = Config::get('administrator::administrator.login_redirect_key', 'redirect');
 		$redirectUri = Request::url();
 
@@ -72,7 +72,7 @@ Route::filter('post_validate', function($route, $request)
 	//if the user is simply not allowed permission to this model, redirect them to the dashboard
 	if (!$p)
 	{
-		return Redirect::to(URL::route('admin_dashboard'));
+		return Redirect::to(url('/'));
 	}
 
 	//get the settings data if it's a settings page
