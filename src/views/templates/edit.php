@@ -195,7 +195,7 @@
 				<!-- /ko -->
 				<!-- ko if: $root[field_name]() && !$root.loadingItem() -->
 					<div class="image_container">
-						<img data-bind="attr: {src: file_url + '?path=' + location + $root[field_name]()}" onload="window.admin.resizePage()" />
+						<img data-bind="attr: {src: $root[field_name]().substring(0, 4) == 'http' ? $root[field_name]() : file_url + '?path=' + location + $root[field_name]()}" onload="window.admin.resizePage()" />
 						<!-- ko if: editable -->
 							<input type="button" class="remove_button" data-bind="click: function() {$root[field_name](null)}" value="x" />
 						<!-- /ko -->

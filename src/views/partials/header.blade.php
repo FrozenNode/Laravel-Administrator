@@ -1,6 +1,6 @@
 <header>
 	<h1>
-		<a href="{{URL::route('admin_dashboard')}}">{{Config::get('administrator::administrator.title')}}</a>
+		<a href="{{ admin_url('/') }}">{{Config::get('administrator::administrator.title')}}</a>
 	</h1>
 
 	<a href="#" id="menu_button"><div></div></a>
@@ -29,7 +29,7 @@
 							@foreach (Config::get('administrator::administrator.locales') as $lang)
 								@if (Config::get('app.locale') != $lang)
 									<li>
-										<a href="{{URL::route('admin_switch_locale', array($lang))}}">{{$lang}}</a>
+										<a href="{{ admin_url('switch_locale/' . $lang) }}">{{$lang}}</a>
 									</li>
 								@endif
 							@endforeach
@@ -38,9 +38,9 @@
 				</li>
 			</ul>
 		@endif
-		<a href="{{URL::to(Config::get('administrator::administrator.back_to_site_path', '/'))}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
+		<a href="{{url(Config::get('administrator::administrator.back_to_site_path', '/'))}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
 		@if(Config::get('administrator::administrator.logout_path'))
-			<a href="{{URL::to(Config::get('administrator::administrator.logout_path'))}}" id="logout">{{trans('administrator::administrator.logout')}}</a>
+			<a href="{{url(Config::get('administrator::administrator.logout_path'))}}" id="logout">{{trans('administrator::administrator.logout')}}</a>
 		@endif
 	</div>
 </header>
