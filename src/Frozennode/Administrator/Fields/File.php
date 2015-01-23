@@ -15,6 +15,7 @@ class File extends Field {
 		'length' => 32,
 		'mimes' => false,
 		'size_limit' => 2,
+		'display_raw_value' => false,
 	);
 
 	/**

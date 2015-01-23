@@ -16,6 +16,7 @@ The `file` field type should be a text-like type in your database. The file's na
 		'naming' => 'random',
 		'length' => 20,
 		'size_limit' => 2,
+		'display_raw_value' => false,
 		'mimes' => 'pdf,psd,doc',
 	)
 
@@ -28,5 +29,7 @@ The optional `naming` option lets you define whether to `keep` the file's name o
 The optional `length` option lets you define size of file name in case `random` is supplied in the `naming` option.
 
 The optional `size_limit` option lets you set an integer size limit counted in megabytes. This only affects the JavaScript file uploading dialog, it doesn't limit your PHP upload sizes (which you can do in your php.ini).
+
+The optional `display_raw_value` option lets you put the raw value of the saved file source string into the displayed file link. This is useful if you're using accessors, mutators, and [`setter fields`](/docs/fields#setter-option) to skip storing the file on your local server and instead upload it to a remote public file server.
 
 The optional `mimes` option by default allows all file types. This uses Laravel's [mimes validation](http://laravel.com/docs/validation#rule-mimes), which in turn uses the PHP Fileinfo extension to read the contents of the file and determine the actual MIME type.

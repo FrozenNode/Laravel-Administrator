@@ -1,5 +1,7 @@
 ## Changelog
 
+- It's now possible to use the raw value of a file/image field to help with storing files on remote servers.
+
 ### 4.15.0
 - New uneditable states for color, password, enum, and wysiwyg fields for when the editable option resolves to false
 - New translations (sk)

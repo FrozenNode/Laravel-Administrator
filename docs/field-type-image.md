@@ -16,6 +16,7 @@ The `image` field type should be a text-like type in your database. The image's 
 		'naming' => 'random',
 		'length' => 20,
 		'size_limit' => 2,
+		'display_raw_value' => false,
 		'sizes' => array(
 			array(65, 57, 'crop', public_path() . '/uploads/products/thumbs/small/', 100),
 			array(220, 138, 'landscape', public_path() . '/uploads/products/thumbs/medium/', 100),
@@ -32,5 +33,7 @@ The optional `naming` option lets you define whether to `keep` the file's name o
 The optional `length` option lets you define size of file name in case `random` is supplied as `naming` option method.
 
 The optional `size_limit` option lets you set an integer size limit counted in megabytes. This only affects the JavaScript file uploading dialog, it doesn't limit your PHP upload sizes.
+
+The optional `display_raw_value` option lets you put the raw value of the saved image source string into the image input. This is useful if you're using accessors, mutators, and [`setter fields`](/docs/fields#setter-option) to skip storing the image on your local server and instead upload it to a remote public image server.
 
 The optional `sizes` option lets you define as many resizes as you want. The format for these is: `array([width], [height], [method], [save path], [quality])`. The different methods are `exact`, `portrait`, `landscape`, `fit`, `auto`, and `crop`.
