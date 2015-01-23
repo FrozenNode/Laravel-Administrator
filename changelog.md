@@ -1,5 +1,7 @@
 ## Changelog
 
+- Bugfix: Previous update broke temporary upload paths
+
 ### 4.16.0
 - It's now possible to use the raw value of a file/image field to help with storing files on remote servers.
 

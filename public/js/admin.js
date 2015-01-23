@@ -171,6 +171,11 @@
 			 */
 			originalEditFields: [],
 
+			/* The original data when fetched from the server initially
+			 * object
+			 */
+			originalData: {},
+
 			/* The model edit fields
 			 * array
 			 */
@@ -391,6 +396,7 @@
 
 				//update all the info to the new item state
 				ko.mapping.updateData(self, self.model, self.model);
+				self.originalData = {};
 
 				//scroll to the top of the page
 				$('html, body').animate({scrollTop: 0}, 'fast')
@@ -472,6 +478,9 @@
 				//update the actions and the action permissions
 				self.actions(data.administrator_actions);
 				self.actionPermissions = data.administrator_action_permissions;
+
+				//set the original values
+				self.originalData = data;
 
 				//set the new options for relationships
 				$.each(adminData.edit_fields, function(ind, el)
@@ -839,6 +848,18 @@
 				});
 
 				return filters;
+			},
+
+			/**
+			 * Determines if the provided field is dirty
+			 *
+			 * @param string
+			 *
+			 * @return bool
+			 */
+			fieldIsDirty: function(field)
+			{
+				return this.originalData[field] != this[field]();
 			},
 
 			/**
