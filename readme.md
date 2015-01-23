@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.16.0
+- **Version:** 4.16.1
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,9 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Recent Changelog
+
+### 4.16.1
+- Bugfix: Previous update broke temporary upload paths
 
 ### 4.16.0
 - It's now possible to use the raw value of a file/image field to help with storing files on remote servers.

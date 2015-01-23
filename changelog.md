@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.16.1
 - Bugfix: Previous update broke temporary upload paths
 
 ### 4.16.0
