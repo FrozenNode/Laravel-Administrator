@@ -46,16 +46,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 		$this->validator->override(array(), array());
 	}
 
-	public function testValidateStringSucceeds()
-	{
-		$this->assertTrue($this->validator->validateString(null, 'string', null));
-	}
-
-	public function testValidateStringFails()
-	{
-		$this->assertFalse($this->validator->validateString(null, null, null));
-	}
-
 	public function testValidateDirectorySucceeds()
 	{
 		$this->assertTrue($this->validator->validateDirectory(null, __DIR__, null));
