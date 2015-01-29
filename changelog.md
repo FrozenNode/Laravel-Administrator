@@ -1,5 +1,7 @@
 ## Changelog
 
+- Bugfix: New Illuminate validateString method did the same thing as the Administrator method of the same name
+
 ### 4.16.1
 - Bugfix: Previous update broke temporary upload paths
 
