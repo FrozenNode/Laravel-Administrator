@@ -1,5 +1,7 @@
 ## Changelog
 
+- Bugfix: Adding validateString back into Admin validator to avoid issues with old versions of Laravel
+
 ### 4.16.2
 - Bugfix: New Illuminate validateString method did the same thing as the Administrator method of the same name
 
