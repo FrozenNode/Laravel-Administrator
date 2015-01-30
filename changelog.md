@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.16.3
 - Bugfix: Adding validateString back into Admin validator to avoid issues with old versions of Laravel
 
 ### 4.16.2
