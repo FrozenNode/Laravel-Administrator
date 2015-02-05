@@ -21,7 +21,7 @@ return array(
 	 *
 	 * @type string
 	 */
-	'model_config_path' => app('path') . '/config/administrator',
+	'model_config_path' => app('path') . '/config/administrator/models',
 
 	/**
 	 * The path to your settings config directory
@@ -29,6 +29,22 @@ return array(
 	 * @type string
 	 */
 	'settings_config_path' => app('path') . '/config/administrator/settings',
+
+	/**
+	 * A set of available layouts.
+	 * 'name' is the display name of the layout that will be displayed on the menu item.
+	 * 'layout' is the access name to the custom layout
+	 * 'content' is the access name to the custom layout content.
+	 *
+	 * @type array
+	 */
+	'layouts' => array(
+		array(
+			'name' => 'Default',
+			'layout' => 'administrator::layouts.default',
+			'content' => 'administrator::index'
+		),
+	),
 
 	/**
 	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config

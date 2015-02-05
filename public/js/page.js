@@ -5,7 +5,7 @@
 	//dom ready
 	$(function()
 	{
-		$menu = $('ul#menu, ul#lang_menu');
+		$menu = $('ul#menu, ul#lang_menu, ul#layout_menu');
 		$mobileMenu = $('#mobile_menu_wrapper');
 		$menuButton = $('a#menu_button');
 		$filterButton = $('a#filter_button');

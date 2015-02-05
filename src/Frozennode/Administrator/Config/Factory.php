@@ -2,6 +2,7 @@
 namespace Frozennode\Administrator\Config;
 
 use Frozennode\Administrator\Validator;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Validator as CustomValidator;
 use Frozennode\Administrator\Config\Settings\Config as SettingsConfig;
 use Frozennode\Administrator\Config\Model\Config as ModelConfig;
@@ -35,6 +36,13 @@ class Factory {
 	 * @var array
 	 */
 	protected $options;
+
+	/**
+	 * Array of layouts
+	 *
+	 * @var array
+	 */
+	protected $layouts;
 
 	/**
 	 * The config name
@@ -74,6 +82,7 @@ class Factory {
 		'title' => 'required|string',
 		'model_config_path' => 'required|string|directory',
 		'settings_config_path' => 'required|string|directory',
+		'layouts' => 'required|array|not_empty',
 		'menu' => 'required|array|not_empty',
 		'permission' => 'required|callable',
 		'use_dashboard' => 'required',
@@ -109,7 +118,7 @@ class Factory {
 	 * Makes a config instance given an input string
 	 *
 	 * @param string	$name
-	 * @param string	$primary	//if true, this is the primary itemconfig object and we want to store the instance
+	 * @param bool		$primary	if true, this is the primary itemconfig object and we want to store the instance
 	 *
 	 * @return mixed
 	 */
@@ -143,6 +152,66 @@ class Factory {
 
 		//override the config's options
 		$this->getConfig()->setOptions($options);
+	}
+
+	/**
+	 * Gets current layout
+	 *
+	 * @return array
+	 */
+	public function getCurrentLayout()
+	{
+		$layout = Session::get('current_layout');
+		if (! $layout)
+		{
+			$layout = $this->getLayouts()[0];
+			Session::put('current_layout', $layout);
+		}
+
+		return $layout;
+	}
+
+	/**
+	 * Sets current layout
+	 *
+	 * @return array
+	 */
+	public function setCurrentLayout($layout)
+	{
+		$layout = Session::put('current_layout', $layout);
+
+		return $layout;
+	}
+
+	/**
+	 * Gets all available layouts
+	 *
+	 * @return array
+	 */
+	public function getLayouts()
+	{
+		if ($this->layouts === null)
+		{
+			$this->buildLayouts();
+		}
+
+		return $this->layouts;
+	}
+
+	/**
+	 * Builds available layouts from config options given
+	 */
+	protected function buildLayouts()
+	{
+		foreach($this->options as $key => $value)
+		{
+			if ($key === 'layouts')
+			{
+				$this->layouts = $value;
+
+				break;
+			}
+		}
 	}
 
 	/**
@@ -185,7 +254,7 @@ class Factory {
 	 * Recursively searches the menu array for the desired settings config name
 	 *
 	 * @param string	$name
-	 * @param array		$menu
+	 * @param mixed		$menu
 	 *
 	 * @return false|array	//If found, an array of (unvalidated) config options will returned
 	 */

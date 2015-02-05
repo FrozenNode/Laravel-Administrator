@@ -1,6 +1,7 @@
 <?php
 namespace Frozennode\Administrator\Tests\Config;
 
+use Illuminate\Support\Facades\Session;
 use Mockery as m;
 use Frozennode\Administrator\Config\Factory;
 
@@ -70,7 +71,6 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function testMakeReturnsFalse()
 	{
-		$configMock = m::mock('Frozennode\Administrator\Config\Model\Config');
 		$factory = m::mock('Frozennode\Administrator\Config\Factory[parseType,searchMenu]', array($this->validator, $this->validator, array()));
 		$factory->shouldReceive('searchMenu')->once()->andReturn(false);
 		$this->assertEquals($factory->make('some_model'), false);
@@ -155,4 +155,21 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($factory->fetchConfigFile($name), false);
 	}
 
+	public function testGetCurrentLayout()
+	{
+		$expected = array('name'=>'Layout1');
+		Session::shouldReceive('get')->once()->andReturn($expected);
+		$factory = new Factory($this->validator, $this->validator, array());
+
+		$this->assertEquals($factory->getCurrentLayout(), $expected);
+	}
+
+	public function testGetLayouts()
+	{
+		$expected = array('name'=>'Layout1');
+		$config = array('layouts' => $expected);
+		$factory = new Factory($this->validator, $this->validator, $config);
+
+		$this->assertEquals($factory->getLayouts(), $expected);
+	}
 }

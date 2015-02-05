@@ -52,7 +52,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
 			));
 		});
-        
+
 		//Settings file upload
 		Route::post('settings/{settings}/{field}/file_upload', array(
 			'as' => 'admin_settings_file_upload',
@@ -64,6 +64,12 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	Route::get('switch_locale/{locale}', array(
 		'as' => 'admin_switch_locale',
 		'uses' => 'Frozennode\Administrator\AdminController@switchLocale'
+	));
+
+	//Switch layouts
+	Route::get('switch_layout/{layout}', array(
+		'as' => 'admin_switch_layout',
+		'uses' => 'Frozennode\Administrator\AdminController@switchLayout'
 	));
 
 	//The route group for all other requests needs to validate admin, model, and add assets

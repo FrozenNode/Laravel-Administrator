@@ -837,11 +837,13 @@ a {
   display: block;
 }
 #wrapper header ul#menu,
-#wrapper header ul#lang_menu {
-  display: inline-block;
+#wrapper header ul#lang_menu,
+#wrapper header ul#layout_menu {
+    display: inline-block;
 }
 #wrapper header ul#menu > li,
-#wrapper header ul#lang_menu > li {
+#wrapper header ul#lang_menu > li,
+#wrapper header ul#layout_menu > li {
   display: inline-block;
   position: relative;
   background: #5a6064;
@@ -857,11 +859,14 @@ a {
 #wrapper header ul#menu > li a,
 #wrapper header ul#menu > li span,
 #wrapper header ul#lang_menu > li a,
-#wrapper header ul#lang_menu > li span {
+#wrapper header ul#lang_menu > li span,
+#wrapper header ul#layout_menu > li a,
+#wrapper header ul#layout_menu > li span {
   padding: 9px 12px 8px;
 }
 #wrapper header ul#menu > li ul,
-#wrapper header ul#lang_menu > li ul {
+#wrapper header ul#lang_menu > li ul,
+#wrapper header ul#layout_menu > li ul {
   position: absolute;
   top: 35px;
   left: 0;
@@ -886,26 +891,31 @@ a {
   background-clip: padding-box;
 }
 #wrapper header ul#menu > li ul a,
-#wrapper header ul#lang_menu > li ul a {
+#wrapper header ul#lang_menu > li ul a
+#wrapper header ul#layout_menu > li ul a {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   border-bottom: 1px solid #666;
 }
 #wrapper header ul#menu > li ul a:hover,
-#wrapper header ul#lang_menu > li ul a:hover {
+#wrapper header ul#lang_menu > li ul a:hover,
+#wrapper header ul#layout_menu > li ul a:hover {
   color: #fff;
 }
 #wrapper header ul#menu > li ul li:last-child a,
-#wrapper header ul#lang_menu > li ul li:last-child a {
+#wrapper header ul#lang_menu > li ul li:last-child a,
+#wrapper header ul#layout_menu > li ul li:last-child a {
   border-bottom: none;
 }
 #wrapper header ul#menu > li ul li.menu,
-#wrapper header ul#lang_menu > li ul li.menu {
+#wrapper header ul#lang_menu > li ul li.menu,
+#wrapper header ul#layout_menu > li ul li.menu {
   position: relative;
 }
 #wrapper header ul#menu > li ul li.menu.current,
-#wrapper header ul#lang_menu > li ul li.menu.current {
+#wrapper header ul#lang_menu > li ul li.menu.current,
+#wrapper header ul#layout_menu > li ul li.menu.current {
   background: #333;
   background: -moz-linear-gradient(top,#333 0%,#444 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#444),color-stop(100%,#444));
@@ -916,7 +926,8 @@ a {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333',endColorstr='#444444',GradientType=0);
 }
 #wrapper header ul#menu > li ul li.menu ul,
-#wrapper header ul#lang_menu > li ul li.menu ul {
+#wrapper header ul#lang_menu > li ul li.menu ul,
+#wrapper header ul#layout_menu > li ul li.menu ul {
   top: 0;
   left: 100%;
   z-index: -1;
@@ -924,7 +935,9 @@ a {
 #wrapper header ul#menu > li.current,
 #wrapper header ul#menu > li:hover,
 #wrapper header ul#lang_menu > li.current,
-#wrapper header ul#lang_menu > li:hover {
+#wrapper header ul#lang_menu > li:hover,
+#wrapper header ul#layout_menu > li.current,
+#wrapper header ul#layout_menu > li:hover {
   background: #444;
   background: -moz-linear-gradient(top,#444 0%,#333 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#333),color-stop(100%,#333));
@@ -935,7 +948,8 @@ a {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#333333',GradientType=0);
 }
 #wrapper header ul#menu > li:first-child,
-#wrapper header ul#lang_menu > li:first-child {
+#wrapper header ul#lang_menu > li:first-child,
+#wrapper header ul#layout_menu > li:first-child {
   margin-left: 0;
 }
 #wrapper header div#right_nav {
@@ -944,7 +958,8 @@ a {
   top: 0;
   right: 0;
 }
-#wrapper header div#right_nav ul#lang_menu {
+#wrapper header div#right_nav ul#lang_menu,
+#wrapper header div#right_nav ul#layout_menu {
   display: inline-block;
   border-right: 1px solid #999999;
 }

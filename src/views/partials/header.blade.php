@@ -20,6 +20,24 @@
 		@endforeach
 	</ul>
 	<div id="right_nav">
+		@if (count(Config::get('administrator::administrator.layouts')) > 1)
+			<ul id="layout_menu">
+				<li class="menu">
+					<span>{{ Session::get('current_layout')['name'] }}</span>
+					<ul>
+						@foreach (Config::get('administrator::administrator.layouts') as $layout)
+							<li>
+								@if ($layout['name'] !== Session::get('current_layout')['name'])
+									<!-- layout path is converted to a unique numeric value from its name -->
+									<a href="{{URL::route('admin_switch_layout', array(md5($layout['name'])))}}">{{$layout['name']}}</a>
+								@endif
+							</li>
+						@endforeach
+					</ul>
+				</li>
+			</ul>
+		@endif
+
 		@if (count(Config::get('administrator::administrator.locales')) > 0)
 			<ul id="lang_menu">
 				<li class="menu">

@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\File as SFile;
-use Illuminate\Support\Facades\Validator as LValidator;
-use Frozennode\Administrator\Fields\Field;
 
 /**
  * Handles all requests related to managing the data models
@@ -30,12 +28,46 @@ class AdminController extends Controller
 	 */
 	protected function setupLayout()
 	{
-		if ( ! is_null($this->layout))
-		{
-			$this->layout = View::make($this->layout);
-			$this->layout->page = false;
-			$this->layout->dashboard = false;
+		$layout = Session::get('current_layout');
+
+		// If layout does not exist in session, use the first one as default
+		if (! $layout) {
+
+			$layouts = App::make('admin_config_factory')->getLayouts();
+
+			foreach ($layouts as $value) {
+				$layout = $value;
+				Session::put('current_layout', $layout);
+			}
 		}
+
+		$this->layout = View::make($layout['layout']);
+		$this->layout->page = false;
+		$this->layout->dashboard = false;
+	}
+
+	/**
+	 * Loads the layout & set it to $this->layout
+	 */
+	protected function loadLayoutFromSession()
+	{
+		$layout = Session::get('current_layout');
+
+		$this->layout = View::make($layout['layout']);
+		$this->layout->page = false;
+		$this->layout->dashboard = false;
+	}
+
+	/**
+	 * Gets the layout content
+	 *
+	 * @return string Content file name
+	 */
+	protected function getLayoutContentName()
+	{
+		$layout = Session::get('current_layout');
+
+		return $layout['content'];
 	}
 
 	/**
@@ -46,7 +78,7 @@ class AdminController extends Controller
 	public function index($modelName)
 	{
 		//set the layout content and title
-		$this->layout->content = View::make("administrator::index");
+		$this->layout->content = View::make($this->getLayoutContentName());
 	}
 
 	/**
@@ -85,7 +117,7 @@ class AdminController extends Controller
 		}
 		else
 		{
-			$view = View::make("administrator::index", array(
+			$view = View::make($this->getLayoutContentName(), array(
 				'itemId' => $itemId,
 			));
 
@@ -98,7 +130,7 @@ class AdminController extends Controller
 	 * POST save method that accepts data via JSON POST and either saves an old item (if id is valid) or creates a new one
 	 *
 	 * @param string		$modelName
-	 * @param int			$id
+	 * @param mixed			$id
 	 *
 	 * @return JSON
 	 */
@@ -589,7 +621,7 @@ class AdminController extends Controller
 	 *
 	 * @param string	$locale
 	 *
-	 * @return JSON
+	 * @return Response
 	 */
 	public function switchLocale($locale)
 	{
@@ -599,6 +631,33 @@ class AdminController extends Controller
 		}
 
 		return Redirect::back();
+	}
+
+	/**
+	 * POST method for switching page layout
+	 *
+	 * @param string	$layout_name
+	 *
+	 * @return Response
+	 */
+	public function switchLayout($layout_name)
+	{
+		$layouts = App::make('admin_config_factory')->getLayouts();
+
+		foreach($layouts as $layout)
+		{
+			if (md5($layout['name']) === $layout_name)
+			{
+				Session::put('current_layout', $layout);
+
+				$this->loadLayoutFromSession();
+
+				break;
+			}
+		}
+
+		// return Redirect::back();
+		return Redirect::to(Config::get('administrator::administrator.uri'));
 	}
 
 }
