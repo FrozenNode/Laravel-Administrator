@@ -1,16 +1,16 @@
 <?php namespace Frozennode\Administrator;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
+use App;
+use Config;
 use AdministratorBaseController as Controller;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
+use Redirect;
+use Response;
+use Request;
+use View;
+use Input;
+use File;
+use Session;
+use URL;
 use Symfony\Component\HttpFoundation\File\File as SFile;
 use Illuminate\Support\Facades\Validator as LValidator;
 use Frozennode\Administrator\Fields\Field;
@@ -23,16 +23,12 @@ class AdminController extends Controller
 
 	protected $layout = "administrator::layouts.default";
 
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return void
-	 */
-	protected function setupLayout()
+	public function __construct()
 	{
 		if ( ! is_null($this->layout))
 		{
 			$this->layout = View::make($this->layout);
+
 			$this->layout->page = false;
 			$this->layout->dashboard = false;
 		}
@@ -47,6 +43,8 @@ class AdminController extends Controller
 	{
 		//set the layout content and title
 		$this->layout->content = View::make("administrator::index");
+
+        return $this->layout;
 	}
 
 	/**
@@ -91,6 +89,8 @@ class AdminController extends Controller
 
 			//set the layout content and title
 			$this->layout->content = $view;
+
+            return $this->layout;
 		}
 	}
 
@@ -314,19 +314,21 @@ class AdminController extends Controller
 	public function dashboard()
 	{
 		//if the dev has chosen to use a dashboard
-		if (Config::get('administrator::administrator.use_dashboard'))
+		if (Config::get('administrator.use_dashboard'))
 		{
 			//set the layout dashboard
 			$this->layout->dashboard = true;
 
 			//set the layout content
-			$this->layout->content = View::make(Config::get('administrator::administrator.dashboard_view'));
+			$this->layout->content = View::make(Config::get('administrator.dashboard_view'));
+
+            return $this->layout;
 		}
 		//else we should redirect to the menu item
 		else
 		{
 			$configFactory = App::make('admin_config_factory');
-			$home = Config::get('administrator::administrator.home_page');
+			$home = Config::get('administrator.home_page');
 
 			//first try to find it if it's a model config item
 			$config = $configFactory->make($home);
@@ -483,6 +485,8 @@ class AdminController extends Controller
 
 		//set the layout content and title
 		$this->layout->content = View::make($page);
+
+        return $this->layout;
 	}
 
 	/**
@@ -496,6 +500,8 @@ class AdminController extends Controller
 	{
 		//set the layout content and title
 		$this->layout->content = View::make("administrator::settings");
+
+        return $this->layout;
 	}
 
 	/**
@@ -593,7 +599,7 @@ class AdminController extends Controller
 	 */
 	public function switchLocale($locale)
 	{
-		if (in_array($locale, Config::get('administrator::administrator.locales')))
+		if (in_array($locale, Config::get('administrator.locales')))
 		{
 			Session::put('administrator_locale', $locale);
 		}

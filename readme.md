@@ -12,7 +12,13 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 ## Composer
 
-To install Administrator as a Composer package to be used with Laravel 4, simply add this to your composer.json:
+To install Administrator as a Composer package to be used with Laravel 5, simply add this to your composer.json:
+
+```json
+"frozennode/administrator": "dev-l5"
+```
+
+For Laravel 4 you can still do this:
 
 ```json
 "frozennode/administrator": "dev-master"
@@ -25,6 +31,14 @@ To install Administrator as a Composer package to be used with Laravel 4, simply
     'Frozennode\Administrator\AdministratorServiceProvider',
 )
 ```
+
+### Laravel 5
+
+Then publish the config file with `php artisan vendor:publish`. This will add the file `app/config/administrator.php`. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
+
+Next to that all the assets, views and translation files will be published too.
+
+### Laravel 4
 
 Then publish the config file with `php artisan config:publish frozennode/administrator`. This will add the file `app/config/packages/frozennode/administrator/administrator.php`. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
 
