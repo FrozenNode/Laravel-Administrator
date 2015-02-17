@@ -244,12 +244,12 @@ class Column {
 	 *
 	 * @return string
 	 */
-	public function renderOutput($value)
+	public function renderOutput($value, $item)
 	{
 		$output = $this->getOption('output');
 		
 		if (is_callable($output)) {
-			return $output($value);
+			return $output($value, $item);
 		}
 		
 		return str_replace('(:value)', $value, $output);
