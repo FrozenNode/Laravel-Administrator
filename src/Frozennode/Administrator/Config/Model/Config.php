@@ -368,7 +368,7 @@ class Config extends ConfigBase implements ConfigInterface {
 				$field->fillModel($model, $input->get($name, NULL));
 			}
 			//if this is an "external" field (i.e. it's not a column on this model's table) or uneditable, unset it
-			else
+			else if ($name !== $model->getKeyName())
 			{
 				$model->__unset($name);
 			}
