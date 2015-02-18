@@ -437,23 +437,21 @@ class FieldFactoryTest extends \PHPUnit_Framework_TestCase {
 	public function testFilterBySearchTermSelectedItems()
 	{
 		$query = m::mock('Illuminate\Database\Eloquent\Builder');
-		$query->shouldReceive('where')->twice()
+		$query->shouldReceive('where')->once()
 				->shouldReceive('take')->once()
 				->shouldReceive('whereNotIn')->once();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->twice()->andReturn(array('first', 'second'), 0);
-		$this->db->shouldReceive('raw')->twice()->andReturn('');
+		$field->shouldReceive('getOption')->once()->andReturn(0);
 		$this->factory->filterBySearchTerm('foo', $query, $field, array(1), '');
 	}
 
 	public function testFilterBySearchTermNoSelectedItems()
 	{
 		$query = m::mock('Illuminate\Database\Eloquent\Builder');
-		$query->shouldReceive('where')->twice()
+		$query->shouldReceive('where')->once()
 				->shouldReceive('take')->once();
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
-		$field->shouldReceive('getOption')->twice()->andReturn(array('first', 'second'), 0);
-		$this->db->shouldReceive('raw')->twice()->andReturn('');
+		$field->shouldReceive('getOption')->once()->andReturn(0);
 		$this->factory->filterBySearchTerm('foo', $query, $field, array(), '');
 	}
 
