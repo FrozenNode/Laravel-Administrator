@@ -1,5 +1,6 @@
 ## Changelog
 
+### 4.16.5
 - Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or
 
 ### 4.16.4
