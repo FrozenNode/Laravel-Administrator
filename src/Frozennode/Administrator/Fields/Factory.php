@@ -627,19 +627,21 @@ class Factory {
 	 *
 	 * @param mixed										$term
 	 * @param \Illuminate\Database\Query\Builder		$query
-	 * @param array										$selectedItems
 	 * @param \Frozennode\Administrator\Fields\Field	$fieldObject
+	 * @param array										$selectedItems
 	 * @param string									$relatedKeyTable
 	 */
 	public function filterBySearchTerm($term, EloquentBuilder &$query, Field $fieldObject, array $selectedItems, $relatedKeyTable)
 	{
 		if ($term)
 		{
-			//set up the wheres
-			foreach ($fieldObject->getOption('search_fields') as $search)
+			$query->where(function($query) use ($term, $fieldObject)
 			{
-				$query->where($this->db->raw($search), 'LIKE', '%'.$term.'%');
-			}
+				foreach ($fieldObject->getOption('search_fields') as $search)
+				{
+					$query->orWhere($this->db->raw($search), 'LIKE', '%'.$term.'%');
+				}
+			});
 
 			//exclude the currently-selected items if there are any
 			if (count($selectedItems))
