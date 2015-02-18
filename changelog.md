@@ -1,7 +1,9 @@
 ## Changelog
 
-### 4.16.4
 - Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or
+
+### 4.16.4
+- Bugfix: Strange old bug when using only a setter field on a model
 
 ### 4.16.3
 - Bugfix: Adding validateString back into Admin validator to avoid issues with old versions of Laravel

@@ -312,6 +312,7 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$model->field_setter = 'field_setter_value';
 		$model->field_password = '';
 		$model->shouldReceive('__unset')->times(4);
+		$model->shouldReceive('getKeyName')->times(2);
 		$fields = array(
 			'field_external' => $field_external,
 			'field_uneditable' => $field_uneditable,
