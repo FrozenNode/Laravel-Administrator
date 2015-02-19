@@ -14,7 +14,7 @@ class ValidateModel {
 	 */
 	public function handle($request, Closure $next)
 	{
-        $modelName = app('administrator.4.1') ? $request->route()->parameter('model') : $request->route()->getParameter('model');
+        $modelName = $request->route()->parameter('model');
 
         App::singleton('itemconfig', function($app) use ($modelName)
         {

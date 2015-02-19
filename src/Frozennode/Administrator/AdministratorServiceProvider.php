@@ -42,11 +42,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set the locale
 		$this->setLocale();
 
-		//define a constant that the rest of the package can use to conditionally use pieces of Laravel 4.1.x vs. 4.0.x
-		$this->app['administrator.4.1'] = version_compare(\Illuminate\Foundation\Application::VERSION, '4.1') > -1;
-
-        class_alias('Illuminate\Routing\Controller', 'AdministratorBaseController');
-
 		//include our view composers, and routes
 		include __DIR__.'/../../viewComposers.php';
 		include __DIR__.'/../../routes.php';

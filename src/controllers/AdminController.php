@@ -1,16 +1,14 @@
 <?php namespace Frozennode\Administrator;
 
-use App;
-use Config;
-use AdministratorBaseController as Controller;
-use Redirect;
-use Response;
-use Request;
-use View;
-use Input;
-use File;
-use Session;
-use URL;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\File\File as SFile;
 use Illuminate\Support\Facades\Validator as LValidator;
 use Frozennode\Administrator\Fields\Field;

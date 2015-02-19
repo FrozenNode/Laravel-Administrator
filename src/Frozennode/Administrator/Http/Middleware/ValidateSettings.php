@@ -14,7 +14,7 @@ class ValidateSettings {
 	 */
 	public function handle($request, Closure $next)
 	{
-        $settingsName = App::make('administrator.4.1') ? $request->route()->parameter('settings') : $request->route()->getParameter('settings');
+        $settingsName = $request->route()->parameter('settings');
 
         App::singleton('itemconfig', function($app) use ($settingsName)
         {
