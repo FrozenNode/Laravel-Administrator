@@ -16,7 +16,8 @@
     "require": {
         "php": ">=5.4.0",
         "laravel/framework": "5.*",
-        "ckeditor/ckeditor": "4.*"
+        "ckeditor/ckeditor": "4.*",
+        "illuminate/html": "5.0.*"
     },
     "require-dev": {
         "mockery/mockery": "~0.9"

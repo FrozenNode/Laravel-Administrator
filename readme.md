@@ -38,6 +38,23 @@ Then publish the config file with `php artisan vendor:publish`. This will add th
 
 Next to that all the assets, views and translation files will be published too.
 
+Since the HTML & Form generators aren't part of the core in this version don't forget to also add the HTML ServiceProvider
+
+```php
+'providers' => array(
+    'Illuminate\Html\HtmlServiceProvider',
+)
+```
+
+and facades to `aliases` in your app config:
+
+```php
+'aliases' => array(
+    'Form' => 'Illuminate\Html\FormFacade',
+    'HTML' => 'Illuminate\Html\HtmlFacade',
+)
+```
+
 ### Laravel 4
 
 Then publish the config file with `php artisan config:publish frozennode/administrator`. This will add the file `app/config/packages/frozennode/administrator/administrator.php`. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.

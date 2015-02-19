@@ -3,7 +3,7 @@
 /**
  * Routes
  */
-Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' => 'validate_admin'), function()
+Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' => 'Frozennode\Administrator\Http\Middleware\ValidateAdmin'), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(
@@ -23,7 +23,7 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 		'uses' => 'Frozennode\Administrator\AdminController@page'
 	));
 
-	Route::group(array('middleware' => ['validate_settings', 'post_validate']), function()
+	Route::group(array('middleware' => ['Frozennode\Administrator\Http\Middleware\ValidateSettings', 'Frozennode\Administrator\Http\Middleware\PostValidate']), function()
 	{
 		//Settings Pages
 		Route::get('settings/{settings}', array(
@@ -38,7 +38,7 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 		));
 
 		//CSRF routes
-		Route::group(array('middleware' => 'csrf'), function()
+		Route::group(array('middleware' => 'App\Http\Middleware\VerifyCsrfToken'), function()
 		{
 			//Save Item
 			Route::post('settings/{settings}/save', array(
@@ -67,7 +67,7 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 	));
 
 	//The route group for all other requests needs to validate admin, model, and add assets
-	Route::group(array('middleware' => ['validate_model', 'post_validate']), function()
+	Route::group(array('middleware' => ['Frozennode\Administrator\Http\Middleware\ValidateModel', 'Frozennode\Administrator\Http\Middleware\PostValidate']), function()
 	{
 		//Model Index
 		Route::get('{model}', array(
@@ -124,7 +124,7 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 		));
 
 		//CSRF protection in forms
-		Route::group(array('middleware' => 'csrf'), function()
+		Route::group(array('middleware' => 'App\Http\Middleware\VerifyCsrfToken'), function()
 		{
 			//Save Item
 			Route::post('{model}/{id?}/save', array(
