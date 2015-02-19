@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>{{ Config::get('administrator::administrator.title') }}</title>
+	<title>{{ Config::get('administrator.title') }}</title>
 
 	@foreach ($css as $url)
 		<link href="{{$url}}" media="all" type="text/css" rel="stylesheet">
@@ -18,7 +18,7 @@
 	<div id="wrapper">
 		@include('administrator::partials.header')
 
-		{{ $content }}
+		{!! $content !!}
 
 		@include('administrator::partials.footer')
 	</div>
