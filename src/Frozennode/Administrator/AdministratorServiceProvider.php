@@ -25,24 +25,24 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('frozennode/administrator');
+        $this->loadViewsFrom(__DIR__.'../../views', 'administrator');
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/administrator.php', 'administrator'
+        );
+
+        $this->loadTranslationsFrom(__DIR__.'/../../lang', 'administrator');
+
+        $this->publishes([
+            __DIR__.'/../../views' => base_path('resources/views/vendor/administrator'),
+            __DIR__.'/../../config/administrator.php' => config_path('administrator.php'),
+            __DIR__.'/../../../public' => public_path('packages/frozennode/administrator'),
+        ]);
 
 		//set the locale
 		$this->setLocale();
 
-		//define a constant that the rest of the package can use to conditionally use pieces of Laravel 4.1.x vs. 4.0.x
-		$this->app['administrator.4.1'] = version_compare(\Illuminate\Foundation\Application::VERSION, '4.1') > -1;
-
-		//set up an alias for the base laravel controller to accommodate >=4.1 and <4.1
-		if (!class_exists('AdministratorBaseController')){ // Verify alias is not already created
-			if ($this->app['administrator.4.1'])
-				class_alias('Illuminate\Routing\Controller', 'AdministratorBaseController');
-			else
-				class_alias('Illuminate\Routing\Controllers\Controller', 'AdministratorBaseController');
-		}
-
-		//include our filters, view composers, and routes
-		include __DIR__.'/../../filters.php';
+		//include our view composers, and routes
 		include __DIR__.'/../../viewComposers.php';
 		include __DIR__.'/../../routes.php';
 
@@ -87,7 +87,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set up the shared instances
 		$this->app['admin_config_factory'] = $this->app->share(function($app)
 		{
-			return new ConfigFactory($app->make('admin_validator'), LValidator::make(array(), array()), Config::get('administrator::administrator'));
+			return new ConfigFactory($app->make('admin_validator'), LValidator::make(array(), array()), Config::get('administrator'));
 		});
 
 		$this->app['admin_field_factory'] = $this->app->share(function($app)
@@ -98,7 +98,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->app['admin_datatable'] = $this->app->share(function($app)
 		{
 			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin_column_factory'), $app->make('admin_field_factory'));
-			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator::administrator.global_rows_per_page'));
+			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator.global_rows_per_page'));
 
 			return $dataTable;
 		});
