@@ -1,13 +1,13 @@
 <?php namespace Frozennode\Administrator;
 
-use Frozennode\Administrator\Config\Factory as ConfigFactory;
-use Frozennode\Administrator\Fields\Factory as FieldFactory;
-use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
-use Frozennode\Administrator\Actions\Factory as ActionFactory;
-use Frozennode\Administrator\DataTable\DataTable;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
+use Frozennode\Administrator\DataTable\DataTable;
 use Illuminate\Support\Facades\Validator as LValidator;
+use Frozennode\Administrator\Fields\Factory as FieldFactory;
+use Frozennode\Administrator\Config\Factory as ConfigFactory;
+use Frozennode\Administrator\Actions\Factory as ActionFactory;
+use Frozennode\Administrator\DataTable\Columns\Factory as ColumnFactory;
 
 class AdministratorServiceProvider extends ServiceProvider {
 
