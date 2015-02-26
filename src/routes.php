@@ -37,21 +37,17 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 		));
 
-		//CSRF routes
-		Route::group(array('middleware' => 'App\Http\Middleware\VerifyCsrfToken'), function()
-		{
-			//Save Item
-			Route::post('settings/{settings}/save', array(
-				'as' => 'admin_settings_save',
-				'uses' => 'Frozennode\Administrator\AdminController@settingsSave'
-			));
+		//Save Item
+		Route::post('settings/{settings}/save', array(
+			'as' => 'admin_settings_save',
+			'uses' => 'Frozennode\Administrator\AdminController@settingsSave'
+		));
 
-			//Custom Action
-			Route::post('settings/{settings}/custom_action', array(
-				'as' => 'admin_settings_custom_action',
-				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
-			));
-		});
+		//Custom Action
+		Route::post('settings/{settings}/custom_action', array(
+			'as' => 'admin_settings_custom_action',
+			'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
+		));
 
 		//Settings file upload
 		Route::post('settings/{settings}/{field}/file_upload', array(
