@@ -1,6 +1,5 @@
 <?php namespace Frozennode\Administrator\Http\Middleware;
 
-use App;
 use Closure;
 
 class ValidateModel {
@@ -16,7 +15,7 @@ class ValidateModel {
 	{
 		$modelName = $request->route()->parameter('model');
 
-		App::singleton('itemconfig', function($app) use ($modelName)
+		app()->singleton('itemconfig', function($app) use ($modelName)
 		{
 			$configFactory = app('admin_config_factory');
 

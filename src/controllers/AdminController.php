@@ -1,31 +1,42 @@
 <?php namespace Frozennode\Administrator;
 
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\File;
+use Illuminate\Session\SessionManager as Session;
 use Symfony\Component\HttpFoundation\File\File as SFile;
-use Illuminate\Support\Facades\Validator as LValidator;
-use Frozennode\Administrator\Fields\Field;
 
 /**
  * Handles all requests related to managing the data models
  */
-class AdminController extends Controller
-{
+class AdminController extends Controller {
 
+	/**
+	 * @var \Illuminate\Http\Request
+	 */
+	protected $request;
+
+	/**
+	 * @var \Illuminate\Session\SessionManager
+	 */
+	protected $session;
+
+	/**
+	 * @var string
+	 */
 	protected $layout = "administrator::layouts.default";
 
-	public function __construct()
+	/**
+	 * @param \Illuminate\Http\Request              $request
+	 * @param \Illuminate\Session\SessionManager    $session
+	 */
+	public function __construct(Request $request, Session $session)
 	{
+		$this->request = $request;
+
 		if ( ! is_null($this->layout))
 		{
-			$this->layout = View::make($this->layout);
+			$this->layout = view($this->layout);
 
 			$this->layout->page = false;
 			$this->layout->dashboard = false;
@@ -40,7 +51,7 @@ class AdminController extends Controller
 	public function index($modelName)
 	{
 		//set the layout content and title
-		$this->layout->content = View::make("administrator::index");
+		$this->layout->content = view("administrator::index");
 
 		return $this->layout;
 	}
@@ -53,15 +64,15 @@ class AdminController extends Controller
 	 */
 	public function item($modelName, $itemId = 0)
 	{
-		$config = App::make('itemconfig');
-		$fieldFactory = App::make('admin_field_factory');
-		$actionFactory = App::make('admin_action_factory');
-		$columnFactory = App::make('admin_column_factory');
+		$config = app('itemconfig');
+		$fieldFactory = app('admin_field_factory');
+		$actionFactory = app('admin_action_factory');
+		$columnFactory = app('admin_column_factory');
 		$actionPermissions = $actionFactory->getActionPermissions();
 		$fields = $fieldFactory->getEditFields();
 
 		//if it's ajax, we just return the item information as json
-		if (Request::ajax())
+		if ($this->request->ajax())
 		{
 			//try to get the object
 			$model = $config->getModel($itemId, $fields, $columnFactory->getIncludedColumns($fields));
@@ -71,7 +82,7 @@ class AdminController extends Controller
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
 
-			$response = $actionPermissions['view'] ? Response::json($model) : Response::json(array(
+			$response = $actionPermissions['view'] ? response()->json($model) : response()->json(array(
 				'success' => false,
 				'errors' => "You do not have permission to view this item",
 			));
@@ -81,7 +92,7 @@ class AdminController extends Controller
 		}
 		else
 		{
-			$view = View::make("administrator::index", array(
+			$view = view("administrator::index", array(
 				'itemId' => $itemId,
 			));
 
@@ -102,14 +113,14 @@ class AdminController extends Controller
 	 */
 	public function save($modelName, $id = false)
 	{
-		$config = App::make('itemconfig');
-		$fieldFactory = App::make('admin_field_factory');
-		$actionFactory = App::make('admin_action_factory');
-		$save = $config->save(App::make('request'), $fieldFactory->getEditFields(), $actionFactory->getActionPermissions(), $id);
+		$config = app('itemconfig');
+		$fieldFactory = app('admin_field_factory');
+		$actionFactory = app('admin_action_factory');
+		$save = $config->save($this->request, $fieldFactory->getEditFields(), $actionFactory->getActionPermissions(), $id);
 
 		if (is_string($save))
 		{
-			return Response::json(array(
+			return response()->json(array(
 				'success' => false,
 				'errors' => $save,
 			));
@@ -117,10 +128,10 @@ class AdminController extends Controller
 		else
 		{
 			//override the config options so that we can get the latest
-			App::make('admin_config_factory')->updateConfigOptions();
+			app('admin_config_factory')->updateConfigOptions();
 
 			//grab the latest model data
-			$columnFactory = App::make('admin_column_factory');
+			$columnFactory = app('admin_column_factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
 
@@ -129,7 +140,7 @@ class AdminController extends Controller
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
 
-			return Response::json(array(
+			return response()->json(array(
 				'success' => true,
 				'data' => $model->toArray(),
 			));
@@ -146,8 +157,8 @@ class AdminController extends Controller
 	 */
 	public function delete($modelName, $id)
 	{
-		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
+		$config = app('itemconfig');
+		$actionFactory = app('admin_action_factory');
 		$baseModel = $config->getDataModel();
 		$model = $baseModel::find($id);
 		$errorResponse = array(
@@ -160,19 +171,19 @@ class AdminController extends Controller
 
 		if (!$model->exists || !$permissions['delete'])
 		{
-			return Response::json($errorResponse);
+			return response()->json($errorResponse);
 		}
 
 		//delete the model
 		if ($model->delete())
 		{
-			return Response::json(array(
+			return response()->json(array(
 				'success' => true,
 			));
 		}
 		else
 		{
-			return Response::json($errorResponse);
+			return response()->json($errorResponse);
 		}
 	}
 
@@ -185,18 +196,18 @@ class AdminController extends Controller
 	 */
 	public function customModelAction($modelName)
 	{
-		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
-		$actionName = Input::get('action_name', false);
-		$dataTable = App::make('admin_datatable');
+		$config = app('itemconfig');
+		$actionFactory = app('admin_action_factory');
+		$actionName = $this->request->input('action_name', false);
+		$dataTable = app('admin_datatable');
 
 		//get the sort options and filters
-		$page = Input::get('page', 1);
-		$sortOptions = Input::get('sortOptions', array());
-		$filters = Input::get('filters', array());
+		$page = $this->request->input('page', 1);
+		$sortOptions = $this->request->input('sortOptions', array());
+		$filters = $this->request->input('filters', array());
 
 		//get the prepared query options
-		$prepared = $dataTable->prepareQuery(App::make('db'), $page, $sortOptions, $filters);
+		$prepared = $dataTable->prepareQuery(app('db'), $page, $sortOptions, $filters);
 
 		//get the action and perform the custom action
 		$action = $actionFactory->getByName($actionName, true);
@@ -205,14 +216,14 @@ class AdminController extends Controller
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
-			return Response::json(array('success' => false, 'error' => $result));
+			return response()->json(array('success' => false, 'error' => $result));
 		}
 		//if it's falsy, return the standard error message
 		else if (!$result)
 		{
 			$messages = $action->getOption('messages');
 
-			return Response::json(array('success' => false, 'error' => $messages['error']));
+			return response()->json(array('success' => false, 'error' => $messages['error']));
 		}
 		else
 		{
@@ -223,9 +234,9 @@ class AdminController extends Controller
 			{
 				$file = $result->getFile()->getRealPath();
 				$headers = $result->headers->all();
-				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+				$this->session->put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-				$response['download'] = URL::route('admin_file_download');
+				$response['download'] = route('admin_file_download');
 			}
 			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
 			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
@@ -233,7 +244,7 @@ class AdminController extends Controller
 				$response['redirect'] = $result->getTargetUrl();
 			}
 
-			return Response::json($response);
+			return response()->json($response);
 		}
 	}
 
@@ -247,34 +258,34 @@ class AdminController extends Controller
 	 */
 	public function customModelItemAction($modelName, $id = null)
 	{
-		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
+		$config = app('itemconfig');
+		$actionFactory = app('admin_action_factory');
 		$model = $config->getDataModel();
 		$model = $model::find($id);
-		$actionName = Input::get('action_name', false);
+		$actionName = $this->request->input('action_name', false);
 
 		//get the action and perform the custom action
 		$action = $actionFactory->getByName($actionName);
 		$result = $action->perform($model);
 
 		//override the config options so that we can get the latest
-		App::make('admin_config_factory')->updateConfigOptions();
+		app('admin_config_factory')->updateConfigOptions();
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
-			return Response::json(array('success' => false, 'error' => $result));
+			return response()->json(array('success' => false, 'error' => $result));
 		}
 		//if it's falsy, return the standard error message
 		else if (!$result)
 		{
 			$messages = $action->getOption('messages');
-			return Response::json(array('success' => false, 'error' => $messages['error']));
+			return response()->json(array('success' => false, 'error' => $messages['error']));
 		}
 		else
 		{
-			$fieldFactory = App::make('admin_field_factory');
-			$columnFactory = App::make('admin_column_factory');
+			$fieldFactory = app('admin_field_factory');
+			$columnFactory = app('admin_column_factory');
 			$fields = $fieldFactory->getEditFields();
 			$model = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
 
@@ -290,9 +301,9 @@ class AdminController extends Controller
 			{
 				$file = $result->getFile()->getRealPath();
 				$headers = $result->headers->all();
-				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+				$this->session->put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-				$response['download'] = URL::route('admin_file_download');
+				$response['download'] = route('admin_file_download');
 			}
 			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
 			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
@@ -300,7 +311,7 @@ class AdminController extends Controller
 				$response['redirect'] = $result->getTargetUrl();
 			}
 
-			return Response::json($response);
+			return response()->json($response);
 		}
 	}
 
@@ -312,21 +323,21 @@ class AdminController extends Controller
 	public function dashboard()
 	{
 		//if the dev has chosen to use a dashboard
-		if (Config::get('administrator.use_dashboard'))
+		if (config('administrator.use_dashboard'))
 		{
 			//set the layout dashboard
 			$this->layout->dashboard = true;
 
 			//set the layout content
-			$this->layout->content = View::make(Config::get('administrator.dashboard_view'));
+			$this->layout->content = view(config('administrator.dashboard_view'));
 
 			return $this->layout;
 		}
 		//else we should redirect to the menu item
 		else
 		{
-			$configFactory = App::make('admin_config_factory');
-			$home = Config::get('administrator.home_page');
+			$configFactory = app('admin_config_factory');
+			$home = config('administrator.home_page');
 
 			//first try to find it if it's a model config item
 			$config = $configFactory->make($home);
@@ -337,11 +348,11 @@ class AdminController extends Controller
 			}
 			else if ($config->getType() === 'model')
 			{
-				return Redirect::route('admin_index', array($config->getOption('name')));
+				return redirect()->route('admin_index', array($config->getOption('name')));
 			}
 			else if ($config->getType() === 'settings')
 			{
-				return Redirect::route('admin_settings', array($config->getOption('name')));
+				return redirect()->route('admin_settings', array($config->getOption('name')));
 			}
 		}
 	}
@@ -355,15 +366,15 @@ class AdminController extends Controller
 	 */
 	public function results($modelName)
 	{
-		$dataTable = App::make('admin_datatable');
+		$dataTable = app('admin_datatable');
 
 		//get the sort options and filters
-		$page = Input::get('page', 1);
-		$sortOptions = Input::get('sortOptions', array());
-		$filters = Input::get('filters', array());
+		$page = $this->request->input('page', 1);
+		$sortOptions = $this->request->input('sortOptions', array());
+		$filters = $this->request->input('filters', array());
 
 		//return the rows
-		return Response::json($dataTable->getRows(App::make('db'), $filters, $page, $sortOptions));
+		return response()->json($dataTable->getRows(app('db'), $filters, $page, $sortOptions));
 	}
 
 	/**
@@ -375,11 +386,11 @@ class AdminController extends Controller
 	 */
 	public function updateOptions($modelName)
 	{
-		$fieldFactory = App::make('admin_field_factory');
+		$fieldFactory = app('admin_field_factory');
 		$response = array();
 
 		//iterate over the supplied constrained fields
-		foreach (Input::get('fields', array()) as $field)
+		foreach ($this->request->input('fields', array()) as $field)
 		{
 			//get the constraints, the search term, and the currently-selected items
 			$constraints = array_get($field, 'constraints', array());
@@ -391,7 +402,7 @@ class AdminController extends Controller
 			$response[$fieldName] = $fieldFactory->updateRelationshipOptions($fieldName, $type, $constraints, $selectedItems, $term);
 		}
 
-		return Response::json($response);
+		return response()->json($response);
 	}
 
 	/**
@@ -402,7 +413,7 @@ class AdminController extends Controller
 	public function displayFile()
 	{
 		//get the stored path of the original
-		$path = Input::get('path');
+		$path = $this->request->input('path');
 		$data = File::get($path);
 		$file = new SFile($path);
 
@@ -412,7 +423,7 @@ class AdminController extends Controller
 			'Content-Disposition' => 'attachment; filename="' . $file->getFilename() . '"'
 		);
 
-		return Response::make($data, 200, $headers);
+		return response()->make($data, 200, $headers);
 	}
 
 	/**
@@ -425,12 +436,12 @@ class AdminController extends Controller
 	 */
 	public function fileUpload($modelName, $fieldName)
 	{
-		$fieldFactory = App::make('admin_field_factory');
+		$fieldFactory = app('admin_field_factory');
 
 		//get the model and the field object
 		$field = $fieldFactory->findField($fieldName);
 
-		return Response::JSON($field->doUpload());
+		return response()->JSON($field->doUpload());
 	}
 
 	/**
@@ -440,16 +451,16 @@ class AdminController extends Controller
 	 */
 	public function fileDownload()
 	{
-		if ($response = Session::get('administrator_download_response'))
+		if ($response = $this->session->get('administrator_download_response'))
 		{
-			Session::forget('administrator_download_response');
+			$this->session->forget('administrator_download_response');
 			$filename = substr($response['headers']['content-disposition'][0], 22, -1);
 
-			return Response::download($response['file'], $filename, $response['headers']);
+			return response()->download($response['file'], $filename, $response['headers']);
 		}
 		else
 		{
-			return Redirect::back();
+			return redirect()->back();
 		}
 	}
 
@@ -462,13 +473,13 @@ class AdminController extends Controller
 	 */
 	public function rowsPerPage($modelName)
 	{
-		$dataTable = App::make('admin_datatable');
+		$dataTable = app('admin_datatable');
 
 		//get the inputted rows and the model rows
-		$rows = (int) Input::get('rows', 20);
-		$dataTable->setRowsPerPage(App::make('session.store'), 0, $rows);
+		$rows = (int) $this->request->input('rows', 20);
+		$dataTable->setRowsPerPage(app('session.store'), 0, $rows);
 
-		return Response::JSON(array('success' => true));
+		return response()->JSON(array('success' => true));
 	}
 
 	/**
@@ -482,7 +493,7 @@ class AdminController extends Controller
 		$this->layout->page = $page;
 
 		//set the layout content and title
-		$this->layout->content = View::make($page);
+		$this->layout->content = view($page);
 
 		return $this->layout;
 	}
@@ -497,7 +508,7 @@ class AdminController extends Controller
 	public function settings($settingsName)
 	{
 		//set the layout content and title
-		$this->layout->content = View::make("administrator::settings");
+		$this->layout->content = view("administrator::settings");
 
 		return $this->layout;
 	}
@@ -509,12 +520,12 @@ class AdminController extends Controller
 	 */
 	public function settingsSave()
 	{
-		$config = App::make('itemconfig');
-		$save = $config->save(App::make('request'), App::make('admin_field_factory')->getEditFields());
+		$config = app('itemconfig');
+		$save = $config->save($this->request, app('admin_field_factory')->getEditFields());
 
 		if (is_string($save))
 		{
-			return Response::json(array(
+			return response()->json(array(
 				'success' => false,
 				'errors' => $save,
 			));
@@ -522,12 +533,12 @@ class AdminController extends Controller
 		else
 		{
 			//override the config options so that we can get the latest
-			App::make('admin_config_factory')->updateConfigOptions();
+			app('admin_config_factory')->updateConfigOptions();
 
-			return Response::json(array(
+			return response()->json(array(
 				'success' => true,
 				'data' => $config->getDataModel(),
-				'actions' => App::make('admin_action_factory')->getActionsOptions(),
+				'actions' => app('admin_action_factory')->getActionsOptions(),
 			));
 		}
 	}
@@ -541,9 +552,9 @@ class AdminController extends Controller
 	 */
 	public function settingsCustomAction($settingsName)
 	{
-		$config = App::make('itemconfig');
-		$actionFactory = App::make('admin_action_factory');
-		$actionName = Input::get('action_name', false);
+		$config = app('itemconfig');
+		$actionFactory = app('admin_action_factory');
+		$actionName = $this->request->input('action_name', false);
 
 		//get the action and perform the custom action
 		$action = $actionFactory->getByName($actionName);
@@ -551,19 +562,19 @@ class AdminController extends Controller
 		$result = $action->perform($data);
 
 		//override the config options so that we can get the latest
-		App::make('admin_config_factory')->updateConfigOptions();
+		app('admin_config_factory')->updateConfigOptions();
 
 		//if the result is a string, return that as an error.
 		if (is_string($result))
 		{
-			return Response::json(array('success' => false, 'error' => $result));
+			return response()->json(array('success' => false, 'error' => $result));
 		}
 		//if it's falsy, return the standard error message
 		else if (!$result)
 		{
 			$messages = $action->getOption('messages');
 
-			return Response::json(array('success' => false, 'error' => $messages['error']));
+			return response()->json(array('success' => false, 'error' => $messages['error']));
 		}
 		else
 		{
@@ -574,9 +585,9 @@ class AdminController extends Controller
 			{
 				$file = $result->getFile()->getRealPath();
 				$headers = $result->headers->all();
-				Session::put('administrator_download_response', array('file' => $file, 'headers' => $headers));
+				$this->session->put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-				$response['download'] = URL::route('admin_file_download');
+				$response['download'] = route('admin_file_download');
 			}
 			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
 			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
@@ -584,7 +595,7 @@ class AdminController extends Controller
 				$response['redirect'] = $result->getTargetUrl();
 			}
 
-			return Response::json($response);
+			return response()->json($response);
 		}
 	}
 
@@ -597,12 +608,12 @@ class AdminController extends Controller
 	 */
 	public function switchLocale($locale)
 	{
-		if (in_array($locale, Config::get('administrator.locales')))
+		if (in_array($locale, config('administrator.locales')))
 		{
-			Session::put('administrator_locale', $locale);
+			$this->session->put('administrator_locale', $locale);
 		}
 
-		return Redirect::back();
+		return redirect()->back();
 	}
 
 }

@@ -1,6 +1,5 @@
 <?php namespace Frozennode\Administrator\Http\Middleware;
 
-use App;
 use Closure;
 
 class ValidateSettings {
@@ -16,9 +15,9 @@ class ValidateSettings {
 	{
 		$settingsName = $request->route()->parameter('settings');
 
-		App::singleton('itemconfig', function($app) use ($settingsName)
+		app()->singleton('itemconfig', function($app) use ($settingsName)
 		{
-			$configFactory = App::make('admin_config_factory');
+			$configFactory = app('admin_config_factory');
 			return $configFactory->make($configFactory->getSettingsPrefix() . $settingsName, true);
 		});
 

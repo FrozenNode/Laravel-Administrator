@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /**
  * Routes
  */
-Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' => 'Frozennode\Administrator\Http\Middleware\ValidateAdmin'), function()
+Route::group(array('prefix' => config('administrator.uri'), 'middleware' => 'Frozennode\Administrator\Http\Middleware\ValidateAdmin'), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(

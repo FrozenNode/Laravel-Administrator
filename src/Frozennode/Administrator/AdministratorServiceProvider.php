@@ -87,7 +87,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set up the shared instances
 		$this->app['admin_config_factory'] = $this->app->share(function($app)
 		{
-			return new ConfigFactory($app->make('admin_validator'), LValidator::make(array(), array()), Config::get('administrator'));
+			return new ConfigFactory($app->make('admin_validator'), LValidator::make(array(), array()), config('administrator'));
 		});
 
 		$this->app['admin_field_factory'] = $this->app->share(function($app)
@@ -98,7 +98,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->app['admin_datatable'] = $this->app->share(function($app)
 		{
 			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin_column_factory'), $app->make('admin_field_factory'));
-			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator.global_rows_per_page'));
+			$dataTable->setRowsPerPage($app->make('session.store'), config('administrator.global_rows_per_page'));
 
 			return $dataTable;
 		});

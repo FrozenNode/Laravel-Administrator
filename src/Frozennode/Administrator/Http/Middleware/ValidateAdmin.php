@@ -1,6 +1,5 @@
 <?php namespace Frozennode\Administrator\Http\Middleware;
 
-use App;
 use Closure;
 
 class ValidateAdmin {
@@ -14,7 +13,7 @@ class ValidateAdmin {
 	 */
 	public function handle($request, Closure $next)
 	{
-		$configFactory = App::make('admin_config_factory');
+		$configFactory = app('admin_config_factory');
 
 		//get the admin check closure that should be supplied in the config
 		$permission = config('administrator.permission');

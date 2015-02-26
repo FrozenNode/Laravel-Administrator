@@ -1,6 +1,5 @@
 <?php namespace Frozennode\Administrator\Http\Middleware;
 
-use App;
 use Closure;
 
 class PostValidate {
@@ -14,12 +13,12 @@ class PostValidate {
 	 */
 	public function handle($request, Closure $next)
 	{
-		$config = App::make('itemconfig');
+		$config = app('itemconfig');
 
 		//if the model doesn't exist at all, redirect to 404
 		if (!$config)
 		{
-			App::abort(404, 'Page not found');
+			abort(404, 'Page not found');
 		}
 
 		//check the permission
@@ -34,7 +33,7 @@ class PostValidate {
 		//get the settings data if it's a settings page
 		if ($config->getType() === 'settings')
 		{
-			$config->fetchData(App::make('admin_field_factory')->getEditFields());
+			$config->fetchData(app('admin_field_factory')->getEditFields());
 		}
 
 		//otherwise if this is a response, return that

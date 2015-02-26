@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="<?php echo Config::get('application.language') ?>">
+<html lang="<?php echo config('application.language') ?>">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>{{ Config::get('administrator.title') }}</title>
+	<title>{{ config('administrator.title') }}</title>
 
 	@foreach ($css as $url)
 		<link href="{{$url}}" media="all" type="text/css" rel="stylesheet">
