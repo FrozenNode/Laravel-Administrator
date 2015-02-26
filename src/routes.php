@@ -123,26 +123,22 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
 		));
 
-		//CSRF protection in forms
-		Route::group(array('middleware' => 'App\Http\Middleware\VerifyCsrfToken'), function()
-		{
-			//Save Item
-			Route::post('{model}/{id?}/save', array(
-				'as' => 'admin_save_item',
-				'uses' => 'Frozennode\Administrator\AdminController@save'
-			));
+		//Save Item
+		Route::post('{model}/{id?}/save', array(
+			'as' => 'admin_save_item',
+			'uses' => 'Frozennode\Administrator\AdminController@save'
+		));
 
-			//Delete Item
-			Route::post('{model}/{id}/delete', array(
-				'as' => 'admin_delete_item',
-				'uses' => 'Frozennode\Administrator\AdminController@delete'
-			));
+		//Delete Item
+		Route::post('{model}/{id}/delete', array(
+			'as' => 'admin_delete_item',
+			'uses' => 'Frozennode\Administrator\AdminController@delete'
+		));
 
-			//Custom Item Action
-			Route::post('{model}/{id}/custom_action', array(
-				'as' => 'admin_custom_model_item_action',
-				'uses' => 'Frozennode\Administrator\AdminController@customModelItemAction'
-			));
-		});
+		//Custom Item Action
+		Route::post('{model}/{id}/custom_action', array(
+			'as' => 'admin_custom_model_item_action',
+			'uses' => 'Frozennode\Administrator\AdminController@customModelItemAction'
+		));
 	});
 });
