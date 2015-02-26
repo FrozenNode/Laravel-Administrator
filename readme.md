@@ -22,7 +22,7 @@ To install Administrator as a Composer package to be used with Laravel 5, simply
 
 ```php
 'providers' => [
-    'Frozennode\Administrator\AdministratorServiceProvider',
+	'Frozennode\Administrator\AdministratorServiceProvider',
 ]
 ```
 
@@ -46,8 +46,8 @@ Since Administrator has switched over to Composer, you can no longer use `php ar
 
 ```php
 'administrator' => array(
-    'handles' => 'admin', //this determines what URI this bundle will use
-    'auto' => true,
+	'handles' => 'admin', //this determines what URI this bundle will use
+	'auto' => true,
 ),
 ```
 

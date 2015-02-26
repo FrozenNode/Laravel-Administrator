@@ -1,7 +1,7 @@
 <?php namespace Frozennode\Administrator\Http\Middleware;
 
-use Closure;
 use App;
+use Closure;
 
 class PostValidate {
 
@@ -14,32 +14,34 @@ class PostValidate {
 	 */
 	public function handle($request, Closure $next)
 	{
-        $config = App::make('itemconfig');
-        //if the model doesn't exist at all, redirect to 404
-        if (!$config)
-        {
-            App::abort(404, 'Page not found');
-        }
-        //check the permission
-        $p = $config->getOption('permission');
+		$config = App::make('itemconfig');
 
-        //if the user is simply not allowed permission to this model, redirect them to the dashboard
-        if (!$p)
-        {
-            return redirect()->route('admin_dashboard');
-        }
+		//if the model doesn't exist at all, redirect to 404
+		if (!$config)
+		{
+			App::abort(404, 'Page not found');
+		}
 
-        //get the settings data if it's a settings page
-        if ($config->getType() === 'settings')
-        {
-            $config->fetchData(App::make('admin_field_factory')->getEditFields());
-        }
+		//check the permission
+		$p = $config->getOption('permission');
 
-        //otherwise if this is a response, return that
-        if (is_a($p, 'Illuminate\Http\JsonResponse') || is_a($p, 'Illuminate\Http\Response') || is_a($p, 'Illuminate\\Http\\RedirectResponse'))
-        {
-            return $p;
-        }
+		//if the user is simply not allowed permission to this model, redirect them to the dashboard
+		if (!$p)
+		{
+			return redirect()->route('admin_dashboard');
+		}
+
+		//get the settings data if it's a settings page
+		if ($config->getType() === 'settings')
+		{
+			$config->fetchData(App::make('admin_field_factory')->getEditFields());
+		}
+
+		//otherwise if this is a response, return that
+		if (is_a($p, 'Illuminate\Http\JsonResponse') || is_a($p, 'Illuminate\Http\Response') || is_a($p, 'Illuminate\\Http\\RedirectResponse'))
+		{
+			return $p;
+		}
 
 		return $next($request);
 	}

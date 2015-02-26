@@ -52,7 +52,7 @@ Route::group(array('prefix' => Config::get('administrator.uri'), 'middleware' =>
 				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
 			));
 		});
-        
+
 		//Settings file upload
 		Route::post('settings/{settings}/{field}/file_upload', array(
 			'as' => 'admin_settings_file_upload',

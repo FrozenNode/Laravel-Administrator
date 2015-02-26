@@ -42,7 +42,7 @@ class AdminController extends Controller
 		//set the layout content and title
 		$this->layout->content = View::make("administrator::index");
 
-        return $this->layout;
+		return $this->layout;
 	}
 
 	/**
@@ -88,7 +88,7 @@ class AdminController extends Controller
 			//set the layout content and title
 			$this->layout->content = $view;
 
-            return $this->layout;
+			return $this->layout;
 		}
 	}
 
@@ -320,7 +320,7 @@ class AdminController extends Controller
 			//set the layout content
 			$this->layout->content = View::make(Config::get('administrator.dashboard_view'));
 
-            return $this->layout;
+			return $this->layout;
 		}
 		//else we should redirect to the menu item
 		else
@@ -484,7 +484,7 @@ class AdminController extends Controller
 		//set the layout content and title
 		$this->layout->content = View::make($page);
 
-        return $this->layout;
+		return $this->layout;
 	}
 
 	/**
@@ -499,7 +499,7 @@ class AdminController extends Controller
 		//set the layout content and title
 		$this->layout->content = View::make("administrator::settings");
 
-        return $this->layout;
+		return $this->layout;
 	}
 
 	/**

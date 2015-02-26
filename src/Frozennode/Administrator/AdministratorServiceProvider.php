@@ -25,19 +25,19 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-        $this->loadViewsFrom(__DIR__.'../../views', 'administrator');
+		$this->loadViewsFrom(__DIR__.'../../views', 'administrator');
 
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/administrator.php', 'administrator'
-        );
+		$this->mergeConfigFrom(
+			__DIR__.'/../../config/administrator.php', 'administrator'
+		);
 
-        $this->loadTranslationsFrom(__DIR__.'/../../lang', 'administrator');
+		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'administrator');
 
-        $this->publishes([
-            __DIR__.'/../../views' => base_path('resources/views/vendor/administrator'),
-            __DIR__.'/../../config/administrator.php' => config_path('administrator.php'),
-            __DIR__.'/../../../public' => public_path('packages/frozennode/administrator'),
-        ]);
+		$this->publishes([
+			__DIR__.'/../../views' => base_path('resources/views/vendor/administrator'),
+			__DIR__.'/../../config/administrator.php' => config_path('administrator.php'),
+			__DIR__.'/../../../public' => public_path('packages/frozennode/administrator'),
+		]);
 
 		//set the locale
 		$this->setLocale();
