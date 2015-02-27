@@ -583,15 +583,15 @@
 			}
 
 			//handle destroying an editor (based on what jQuery plugin does)
-	        ko.utils.domNodeDisposal.addDisposeCallback(element, function (test) {
-	            var editor = editors[options.id];
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function (test) {
+				var editor = editors[options.id];
 
-	            if (editor)
-	        	{
-		        	editor.destroy();
-		        	delete editors[options.id];
-	        	}
-	        });
+				if (editor)
+				{
+					editor.destroy();
+					delete editors[options.id];
+				}
+			});
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
@@ -630,7 +630,7 @@
 	 * The markdown binding is attached to the field next a markdown textarea
 	 */
 	 ko.bindingHandlers.markdown = {
-	 	update: function (element, valueAccessor, allBindingsAccessor, context)
+		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			//handle programmatic updates to the observable
 			var value = ko.utils.unwrapObservable(valueAccessor());
