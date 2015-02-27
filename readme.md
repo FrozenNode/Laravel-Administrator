@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.16.5
+- **Version:** 5.0.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -63,30 +63,6 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Recent Changelog
 
-### 4.16.5
-- Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or
-
-### 4.16.4
-- Bugfix: Strange old bug when using only a setter field on a model
-
-### 4.16.3
-- Bugfix: Adding validateString back into Admin validator to avoid issues with old versions of Laravel
-
-### 4.16.2
-- Bugfix: New Illuminate validateString method did the same thing as the Administrator method of the same name
-
-### 4.16.1
-- Bugfix: Previous update broke temporary upload paths
-
-### 4.16.0
-- It's now possible to use the raw value of a file/image field to help with storing files on remote servers.
-
-### 4.15.0
-- New uneditable states for color, password, enum, and wysiwyg fields for when the editable option resolves to false
-- New translations (sk)
-- Bugfix: Editable fields are now also verified on the back end
-- Bugfix: Setting a string image length would fail uploads
-- Bugfix: Basic validation for relationship fields wasn't working
-- Bugfix: "Characters left" text was sitting unnecessarily outside the "editable" conditional
-- Bugfix: Some missing image-related translations
-- Bugfix: Editable option wasn't working for some fields
+### 5.0.0
+- Upgraded to Laravel 5
+- New translations (az)

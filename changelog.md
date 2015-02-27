@@ -1,5 +1,6 @@
 ## Changelog
 
+### 5.0.0
 - Upgraded to Laravel 5
 - New translations (az)
 
