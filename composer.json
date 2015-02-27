@@ -1,40 +1,40 @@
 {
-    "name": "frozennode/administrator",
-    "description": "A database interface package for Laravel",
-    "homepage": "http://administrator.frozennode.com",
-    "keywords": ["administrator", "admin", "database", "laravel-administrator", "laravel", "cms"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Jan Hartigan",
-            "email": "jan@frozennode.com"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/FrozenNode/Laravel-Administrator/issues"
-    },
-    "require": {
-        "php": ">=5.3.0",
-        "laravel/framework": "4.*",
-        "ckeditor/ckeditor": "4.*"
-    },
-    "require-dev": {
-        "mockery/mockery": "~0.9"
-    },
-    "autoload": {
-        "classmap": [
-            "src/controllers"
-        ],
-        "psr-0": {
-            "Frozennode\\Administrator": "src/"
-        }
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "if [ -d \"public/js/ckeditor/\" ] \nthen \nrm -R public/js/ckeditor/ \nfi ",
-            "if [ -d \"vendor/ckeditor/ckeditor/\" ] \nthen \nmv vendor/ckeditor/ckeditor/ public/js/  \nfi",
-            "if [ -d \"vendor/ckeditor/\" ] \nthen \nrm -R vendor/ckeditor/ \nfi"
-        ]
-    },
-    "minimum-stability": "dev"
+	"name": "frozennode/administrator",
+	"description": "A database interface package for Laravel",
+	"homepage": "http://administrator.frozennode.com",
+	"keywords": ["administrator", "admin", "database", "laravel-administrator", "laravel", "cms"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jan Hartigan",
+			"email": "jan@frozennode.com"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/FrozenNode/Laravel-Administrator/issues"
+	},
+	"require": {
+		"php": ">=5.4.0",
+		"laravel/framework": "5.*",
+		"ckeditor/ckeditor": "4.*"
+	},
+	"require-dev": {
+		"mockery/mockery": "~0.9"
+	},
+	"autoload": {
+		"classmap": [
+			"src/controllers"
+		],
+		"psr-0": {
+			"Frozennode\\Administrator": "src/"
+		}
+	},
+	"scripts": {
+		"post-update-cmd": [
+			"if [ -d \"public/js/ckeditor/\" ] \nthen \nrm -R public/js/ckeditor/ \nfi ",
+			"if [ -d \"vendor/ckeditor/ckeditor/\" ] \nthen \nmv vendor/ckeditor/ckeditor/ public/js/  \nfi",
+			"if [ -d \"vendor/ckeditor/\" ] \nthen \nrm -R vendor/ckeditor/ \nfi"
+		]
+	},
+	"minimum-stability": "dev"
 }

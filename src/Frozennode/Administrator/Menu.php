@@ -45,7 +45,7 @@ class Menu {
 
 		if (!$subMenu)
 		{
-			$subMenu = $this->config->get('administrator::administrator.menu');
+			$subMenu = $this->config->get('administrator.menu');
 		}
 
 		//iterate over the menu to build the return array of valid menu items

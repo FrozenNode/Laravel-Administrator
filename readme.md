@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.16.5
+- **Version:** 5.0.0
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -12,21 +12,31 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 ## Composer
 
-To install Administrator as a Composer package to be used with Laravel 4, simply add this to your composer.json:
+To install Administrator as a Composer package to be used with Laravel 5, simply add this to your composer.json:
 
 ```json
-"frozennode/administrator": "dev-master"
+"frozennode/administrator": "5.*"
 ```
 
-..and run `composer update`.  Once it's installed, you can register the service provider in `app/config/app.php` in the `providers` array:
+..and run `composer update`.  Once it's installed, you can register the service provider in `config/app.php` in the `providers` array:
 
 ```php
-'providers' => array(
-    'Frozennode\Administrator\AdministratorServiceProvider',
-)
+'providers' => [
+	'Frozennode\Administrator\AdministratorServiceProvider',
+]
 ```
 
-Then publish the config file with `php artisan config:publish frozennode/administrator`. This will add the file `app/config/packages/frozennode/administrator/administrator.php`. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
+Then publish Administrator's assets with `php artisan vendor:publish`. This will add the file `config/administrator.php`. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator. This command will also publish all of the assets, views, and translation files.
+
+### Laravel 4
+
+If you want to use Administrator with Laravel 4, you need to resolve to Administrator 4:
+
+```json
+"frozennode/administrator": "4.*"
+```
+
+Then publish the config file with `php artisan config:publish frozennode/administrator`. This will add the file `app/config/packages/frozennode/administrator/administrator.php`.
 
 Then finally you need to publish the package's assets with the `php artisan asset:publish frozennode/administrator` command.
 
@@ -36,8 +46,8 @@ Since Administrator has switched over to Composer, you can no longer use `php ar
 
 ```php
 'administrator' => array(
-    'handles' => 'admin', //this determines what URI this bundle will use
-    'auto' => true,
+	'handles' => 'admin', //this determines what URI this bundle will use
+	'auto' => true,
 ),
 ```
 
@@ -53,30 +63,6 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Recent Changelog
 
-### 4.16.5
-- Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or
-
-### 4.16.4
-- Bugfix: Strange old bug when using only a setter field on a model
-
-### 4.16.3
-- Bugfix: Adding validateString back into Admin validator to avoid issues with old versions of Laravel
-
-### 4.16.2
-- Bugfix: New Illuminate validateString method did the same thing as the Administrator method of the same name
-
-### 4.16.1
-- Bugfix: Previous update broke temporary upload paths
-
-### 4.16.0
-- It's now possible to use the raw value of a file/image field to help with storing files on remote servers.
-
-### 4.15.0
-- New uneditable states for color, password, enum, and wysiwyg fields for when the editable option resolves to false
-- New translations (sk)
-- Bugfix: Editable fields are now also verified on the back end
-- Bugfix: Setting a string image length would fail uploads
-- Bugfix: Basic validation for relationship fields wasn't working
-- Bugfix: "Characters left" text was sitting unnecessarily outside the "editable" conditional
-- Bugfix: Some missing image-related translations
-- Bugfix: Editable option wasn't working for some fields
+### 5.0.0
+- Upgraded to Laravel 5
+- New translations (az)

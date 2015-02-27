@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /**
  * Routes
  */
-Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 'before' => 'validate_admin'), function()
+Route::group(array('prefix' => config('administrator.uri'), 'middleware' => 'Frozennode\Administrator\Http\Middleware\ValidateAdmin'), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(
@@ -23,7 +25,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 		'uses' => 'Frozennode\Administrator\AdminController@page'
 	));
 
-	Route::group(array('before' => 'validate_settings|post_validate'), function()
+	Route::group(array('middleware' => ['Frozennode\Administrator\Http\Middleware\ValidateSettings', 'Frozennode\Administrator\Http\Middleware\PostValidate']), function()
 	{
 		//Settings Pages
 		Route::get('settings/{settings}', array(
@@ -37,22 +39,18 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			'uses' => 'Frozennode\Administrator\AdminController@displayFile'
 		));
 
-		//CSRF routes
-		Route::group(array('before' => 'csrf'), function()
-		{
-			//Save Item
-			Route::post('settings/{settings}/save', array(
-				'as' => 'admin_settings_save',
-				'uses' => 'Frozennode\Administrator\AdminController@settingsSave'
-			));
+		//Save Item
+		Route::post('settings/{settings}/save', array(
+			'as' => 'admin_settings_save',
+			'uses' => 'Frozennode\Administrator\AdminController@settingsSave'
+		));
 
-			//Custom Action
-			Route::post('settings/{settings}/custom_action', array(
-				'as' => 'admin_settings_custom_action',
-				'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
-			));
-		});
-        
+		//Custom Action
+		Route::post('settings/{settings}/custom_action', array(
+			'as' => 'admin_settings_custom_action',
+			'uses' => 'Frozennode\Administrator\AdminController@settingsCustomAction'
+		));
+
 		//Settings file upload
 		Route::post('settings/{settings}/{field}/file_upload', array(
 			'as' => 'admin_settings_file_upload',
@@ -67,7 +65,7 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 	));
 
 	//The route group for all other requests needs to validate admin, model, and add assets
-	Route::group(array('before' => 'validate_model|post_validate'), function()
+	Route::group(array('middleware' => ['Frozennode\Administrator\Http\Middleware\ValidateModel', 'Frozennode\Administrator\Http\Middleware\PostValidate']), function()
 	{
 		//Model Index
 		Route::get('{model}', array(
@@ -123,26 +121,22 @@ Route::group(array('prefix' => Config::get('administrator::administrator.uri'), 
 			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
 		));
 
-		//CSRF protection in forms
-		Route::group(array('before' => 'csrf'), function()
-		{
-			//Save Item
-			Route::post('{model}/{id?}/save', array(
-				'as' => 'admin_save_item',
-				'uses' => 'Frozennode\Administrator\AdminController@save'
-			));
+		//Save Item
+		Route::post('{model}/{id?}/save', array(
+			'as' => 'admin_save_item',
+			'uses' => 'Frozennode\Administrator\AdminController@save'
+		));
 
-			//Delete Item
-			Route::post('{model}/{id}/delete', array(
-				'as' => 'admin_delete_item',
-				'uses' => 'Frozennode\Administrator\AdminController@delete'
-			));
+		//Delete Item
+		Route::post('{model}/{id}/delete', array(
+			'as' => 'admin_delete_item',
+			'uses' => 'Frozennode\Administrator\AdminController@delete'
+		));
 
-			//Custom Item Action
-			Route::post('{model}/{id}/custom_action', array(
-				'as' => 'admin_custom_model_item_action',
-				'uses' => 'Frozennode\Administrator\AdminController@customModelItemAction'
-			));
-		});
+		//Custom Item Action
+		Route::post('{model}/{id}/custom_action', array(
+			'as' => 'admin_custom_model_item_action',
+			'uses' => 'Frozennode\Administrator\AdminController@customModelItemAction'
+		));
 	});
 });

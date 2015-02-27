@@ -6,14 +6,14 @@
 </div>
 
 <script type="text/javascript">
-	var site_url = "<?php echo Url::to('/') ?>",
+	var site_url = "<?php echo url() ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
-		file_url = "<?php echo URL::route('admin_display_file', array($config->getOption('name'))) ?>",
-		rows_per_page_url = "<?php echo URL::route('admin_rows_per_page', array($config->getOption('name'))) ?>",
+		file_url = "<?php echo route('admin_display_file', array($config->getOption('name'))) ?>",
+		rows_per_page_url = "<?php echo route('admin_rows_per_page', array($config->getOption('name'))) ?>",
 		route = "<?php echo $route ?>",
-		csrf = "<?php echo Session::token() ?>",
-		language = "<?php echo Config::get('app.locale') ?>",
+		csrf = "<?php echo csrf_token() ?>",
+		language = "<?php echo config('app.locale') ?>",
 		adminData = {
 			primary_key: "<?php echo $primaryKey ?>",
 			<?php if ($itemId !== null) {?>
@@ -67,16 +67,16 @@
 
 </style>
 
-<?php echo Form::token() ?>
+<input type="hidden" name="_token" value="<?php echo csrf_token()?>" />
 
 <script id="adminTemplate" type="text/html">
-	<?php echo View::make("administrator::templates.admin")?>
+	<?php echo view("administrator::templates.admin")?>
 </script>
 
 <script id="itemFormTemplate" type="text/html">
-	<?php echo View::make("administrator::templates.edit", array('config' => $config))?>
+	<?php echo view("administrator::templates.edit", array('config' => $config))?>
 </script>
 
 <script id="filtersTemplate" type="text/html">
-	<?php echo View::make("administrator::templates.filters")?>
+	<?php echo view("administrator::templates.filters")?>
 </script>

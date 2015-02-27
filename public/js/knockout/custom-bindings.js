@@ -547,11 +547,11 @@
 				editor = editors[options.id];
 			else
 			{
-				$element.ckeditor({ 
+				$element.ckeditor({
 					language : language,
 					readOnly : !adminData.edit_fields[context.field_name].editable
 				});
-				
+
 				editor = $element.ckeditorGet();
 				editors[options.id] = editor;
 			}
@@ -583,15 +583,15 @@
 			}
 
 			//handle destroying an editor (based on what jQuery plugin does)
-	        ko.utils.domNodeDisposal.addDisposeCallback(element, function (test) {
-	            var editor = editors[options.id];
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function (test) {
+				var editor = editors[options.id];
 
-	            if (editor)
-	        	{
-		        	editor.destroy();
-		        	delete editors[options.id];
-	        	}
-	        });
+				if (editor)
+				{
+					editor.destroy();
+					delete editors[options.id];
+				}
+			});
 		},
 		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
@@ -630,7 +630,7 @@
 	 * The markdown binding is attached to the field next a markdown textarea
 	 */
 	 ko.bindingHandlers.markdown = {
-	 	update: function (element, valueAccessor, allBindingsAccessor, context)
+		update: function (element, valueAccessor, allBindingsAccessor, context)
 		{
 			//handle programmatic updates to the observable
 			var value = ko.utils.unwrapObservable(valueAccessor());
@@ -688,7 +688,8 @@
 				url: options.upload_url,
 				flash_swf_url: asset_url + 'js/plupload/js/plupload.flash.swf',
 				silverlight_xap_url: asset_url + 'js/plupload/js/plupload.silverlight.xap',
-				filters: filters
+				filters: filters,
+				multipart_params: {"_token" : window.csrf}
 			});
 
 			viewModel[cacheName].init();
