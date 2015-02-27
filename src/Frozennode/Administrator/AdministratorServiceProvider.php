@@ -42,10 +42,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set the locale
 		$this->setLocale();
 
-		//include our view composers, and routes
-		include __DIR__.'/../../viewComposers.php';
-		include __DIR__.'/../../routes.php';
-
 		$this->app['events']->fire('administrator.ready');
 	}
 
@@ -56,6 +52,10 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		//include our view composers, and routes to avoid issues with catch-all routes defined by users
+		include __DIR__.'/../../viewComposers.php';
+		include __DIR__.'/../../routes.php';
+
 		//the admin validator
 		$this->app['admin_validator'] = $this->app->share(function($app)
 		{
