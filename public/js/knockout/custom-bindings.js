@@ -547,11 +547,11 @@
 				editor = editors[options.id];
 			else
 			{
-				$element.ckeditor({ 
+				$element.ckeditor({
 					language : language,
 					readOnly : !adminData.edit_fields[context.field_name].editable
 				});
-				
+
 				editor = $element.ckeditorGet();
 				editors[options.id] = editor;
 			}
@@ -688,7 +688,8 @@
 				url: options.upload_url,
 				flash_swf_url: asset_url + 'js/plupload/js/plupload.flash.swf',
 				silverlight_xap_url: asset_url + 'js/plupload/js/plupload.silverlight.xap',
-				filters: filters
+				filters: filters,
+				multipart_params: {"_token" : window.csrf}
 			});
 
 			viewModel[cacheName].init();
