@@ -25,7 +25,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->loadViewsFrom(__DIR__.'../../views', 'administrator');
+		$this->loadViewsFrom(__DIR__.'/../../views', 'administrator');
 
 		$this->mergeConfigFrom(
 			__DIR__.'/../../config/administrator.php', 'administrator'
