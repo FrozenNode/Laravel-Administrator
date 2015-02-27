@@ -68,11 +68,11 @@ It is best to publish the assets whenever Administrator updates. Instead of doin
 		],
 		"post-install-cmd": [
 			"php artisan optimize",
-			"php artisan asset:publish frozennode/administrator"
+			"php artisan vendor:publish --tag=public --force"
 		],
 		"post-update-cmd": [
 			"php artisan optimize",
-			"php artisan asset:publish frozennode/administrator"
+			"php artisan vendor:publish --tag=public --force"
 		]
 	},
 

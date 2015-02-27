@@ -34,10 +34,12 @@ class AdministratorServiceProvider extends ServiceProvider {
 		$this->loadTranslationsFrom(__DIR__.'/../../lang', 'administrator');
 
 		$this->publishes([
-			__DIR__.'/../../views' => base_path('resources/views/vendor/administrator'),
 			__DIR__.'/../../config/administrator.php' => config_path('administrator.php'),
-			__DIR__.'/../../../public' => public_path('packages/frozennode/administrator'),
 		]);
+
+		$this->publishes([
+			__DIR__.'/../../../public' => public_path('packages/frozennode/administrator'),
+		], 'public');
 
 		//set the locale
 		$this->setLocale();
