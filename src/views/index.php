@@ -12,7 +12,7 @@
 		file_url = "<?php echo route('admin_display_file', array($config->getOption('name'))) ?>",
 		rows_per_page_url = "<?php echo route('admin_rows_per_page', array($config->getOption('name'))) ?>",
 		route = "<?php echo $route ?>",
-		csrf = "<?php echo app('session')->getToken() ?>",
+		csrf = "<?php echo csrf_token() ?>",
 		language = "<?php echo config('app.locale') ?>",
 		adminData = {
 			primary_key: "<?php echo $primaryKey ?>",
@@ -67,7 +67,7 @@
 
 </style>
 
-<input type="hidden" name="_token" value="<?php echo app('session')->getToken()?>" />
+<input type="hidden" name="_token" value="<?php echo csrf_token()?>" />
 
 <script id="adminTemplate" type="text/html">
 	<?php echo view("administrator::templates.admin")?>
