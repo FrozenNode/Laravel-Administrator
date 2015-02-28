@@ -115,6 +115,26 @@
 				<!-- /ko -->
 			<!-- /ko -->
 
+			<!-- ko if: type === 'has_many' -->
+				<!-- ko if: loadingOptions -->
+					<div class="loader"></div>
+				<!-- /ko -->
+
+				<!-- ko if: autocomplete -->
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || constraintLoading() || !editable,
+														id: field_id},
+									select2Remote: {field: field_name, type: 'edit', multiple: true, constraints: constraints, sort: sort_field},
+									value: $root[field_name]" />
+				<!-- /ko -->
+
+				<!-- ko ifnot: autocomplete -->
+				<input type="hidden" data-bind="attr: {disabled: $root.freezeForm() || loadingOptions() || constraintLoading() || !editable,
+														id: field_id},
+													select2: {data:{results: $root.listOptions[field_name]}, multiple: true, sort: sort_field},
+													value: $root[field_name]" />
+				<!-- /ko -->
+			<!-- /ko -->
+
 			<!-- ko if: type === 'number' -->
 				<!-- ko if: editable -->
 					<span class="symbol" data-bind="text: symbol"></span>
