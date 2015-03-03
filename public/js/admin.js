@@ -1026,6 +1026,17 @@
 		prepareFilters: function()
 		{
 			var filters = [];
+			
+			/**
+			 * Try to get the value of a parameter from the URL
+			 * Exmaple : ?foo=bar
+			 *
+			 * @return string
+			 */
+			var getURLParameter = function(name)
+			{
+				return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+			};
 
 			$.each(adminData.filters, function(ind, filter)
 			{
@@ -1047,6 +1058,8 @@
 				}
 
 				filter.field_id = 'filter_field_' + filter.field_name;
+				
+				filter.value(getURLParameter(filter.field_name));
 
 				filters.push(filter);
 			});
