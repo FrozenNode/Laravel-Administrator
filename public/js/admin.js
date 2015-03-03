@@ -1029,7 +1029,7 @@
 			
 			/**
 			 * Try to get the value of a parameter from the URL
-			 * Exmaple : ?foo=bar
+			 * Example : ?foo=bar
 			 *
 			 * @return string
 			 */
