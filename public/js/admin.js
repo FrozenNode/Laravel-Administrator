@@ -5,6 +5,13 @@
 		return this.init();
 	};
 
+	//setting up csrf token
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': window.csrf
+		}
+	});
+
 	admin.prototype = {
 
 		//properties

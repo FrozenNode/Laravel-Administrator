@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.0.1
+- Bugfix: Fixing csrf token mismatches for some requests
+
 ### 5.0.0
 - Upgraded to Laravel 5
 - New translations (az)
