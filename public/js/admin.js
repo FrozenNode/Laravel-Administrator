@@ -1134,6 +1134,17 @@
 			{
 				if (el.relationship)
 					self.viewModel.listOptions[ind] = el.options;
+
+				// add any loaded option to the autocomplete array
+				if (el.autocomplete)
+				{
+					if(! (el.field_name + '_autocomplete' in self.viewModel) )
+						self.viewModel[el.field_name + '_autocomplete'] = [];
+					$.each(el.options, function(x, option)
+					{
+						self.viewModel[el.field_name + '_autocomplete'][option.id] = option;	
+					});
+				}
 			});
 		},
 
