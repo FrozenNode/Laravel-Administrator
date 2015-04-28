@@ -33,6 +33,7 @@ class AdminController extends Controller {
 	public function __construct(Request $request, Session $session)
 	{
 		$this->request = $request;
+		$this->session = $session;
 
 		if ( ! is_null($this->layout))
 		{
@@ -610,7 +611,7 @@ class AdminController extends Controller {
 	{
 		if (in_array($locale, config('administrator.locales')))
 		{
-			$this->session->put('administrator_locale', $locale);
+			$this->session->put('locale', $locale);
 		}
 
 		return redirect()->back();
