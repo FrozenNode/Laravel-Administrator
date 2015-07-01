@@ -414,6 +414,13 @@ class AdminController extends Controller {
 	{
 		//get the stored path of the original
 		$path = $this->request->input('path');
+		
+		// Restrict access to the document root of the project and do not allow directory traversal
+		if ( strpos($path, public_path(), 0) !== 0 || strpos($path, '..'.DIRECTORY_SEPARATOR, 0) !== FALSE )
+		{
+		    return Response::make('Invalid Path', 403);
+		}
+		
 		$data = File::get($path);
 		$file = new SFile($path);
 
