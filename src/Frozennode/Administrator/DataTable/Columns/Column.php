@@ -246,7 +246,7 @@ class Column {
 	 *
 	 * @return string
 	 */
-	public function renderOutput($value, Model $item = null)
+	public function renderOutput($value, $item = null)
 	{
 		$output = $this->getOption('output');
 		
