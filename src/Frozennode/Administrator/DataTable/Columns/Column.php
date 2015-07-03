@@ -4,6 +4,7 @@ namespace Frozennode\Administrator\DataTable\Columns;
 use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Eloquent\Model;
 
 class Column {
 
@@ -245,7 +246,7 @@ class Column {
 	 *
 	 * @return string
 	 */
-	public function renderOutput($value, $item = null)
+	public function renderOutput($value, Model $item = null)
 	{
 		$output = $this->getOption('output');
 		
