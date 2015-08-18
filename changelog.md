@@ -1,11 +1,18 @@
 ## Changelog
 
+### 5.0.2
+- Cherry Picking v4.16.6
+
 ### 5.0.1
 - Bugfix: Fixing csrf token mismatches for some requests
 
 ### 5.0.0
 - Upgraded to Laravel 5
 - New translations (az)
+
+### 4.16.6
+- Bugfix: Resetting a date/datime to null
+- Bugfix: Added model level validation errors if model update fails
 
 ### 4.16.5
 - Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or
