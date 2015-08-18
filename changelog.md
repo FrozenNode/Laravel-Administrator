@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.0.3
+- Cherry Picking v4.16.7
+
 ### 5.0.2
 - Cherry Picking v4.16.6
 
@@ -9,6 +12,9 @@
 ### 5.0.0
 - Upgraded to Laravel 5
 - New translations (az)
+
+### 4.16.7
+- Bugfix: Taking out model level validation errors if model update fails sine it was ardent only
 
 ### 4.16.6
 - Bugfix: Resetting a date/datime to null
