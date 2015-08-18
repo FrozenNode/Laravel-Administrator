@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 4.16.5
+- **Version:** 4.16.6
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -52,6 +52,10 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Recent Changelog
+
+### 4.16.6
+- Bugfix: Resetting a date/datime to null
+- Bugfix: Added model level validation errors if model update fails
 
 ### 4.16.5
 - Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or

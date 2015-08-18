@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.16.6
+- Bugfix: Resetting a date/datime to null
+- Bugfix: Added model level validation errors if model update fails
+
 ### 4.16.5
 - Bugfix: Another strange old bug where multiple search fields would do a where and instead of a where or
 
