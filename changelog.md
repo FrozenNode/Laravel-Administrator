@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.16.7
+- Bugfix: Taking out model level validation errors if model update fails sine it was ardent only
+
 ### 4.16.6
 - Bugfix: Resetting a date/datime to null
 - Bugfix: Added model level validation errors if model update fails
