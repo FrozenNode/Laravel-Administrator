@@ -138,6 +138,13 @@ class AdminController extends Controller {
 			if ($model->exists)
 			{
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
+				if (is_subclass_of($model, 'Illuminate\Database\Eloquent\Model') && !$model->errors()->isEmpty())
+				{
+				    return Response::json(array(
+				        'success' => false,
+				        'errors' => $model->errors(),
+				    ));
+				}
 			}
 
 			return response()->json(array(
