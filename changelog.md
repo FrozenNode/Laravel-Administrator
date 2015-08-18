@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.0.2
+- Cherry Picking v4.16.6
+
 ### 5.0.1
 - Bugfix: Fixing csrf token mismatches for some requests
 
