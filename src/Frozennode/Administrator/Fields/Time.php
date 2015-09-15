@@ -72,9 +72,10 @@ class Time extends Field {
 	public function fillModel(&$model, $input)
 	{
 		$time = false;
+		$field_name = $this->getOption('field_name');
 
-        if (empty($input)) {
-            $model->{$this->getOption('field_name')} = null;
+        if (empty($input) && $field_name) {
+            $model->{$field_name} = null;
             return;
 		} else if( !empty($input) && $input !== '0000-00-00') {
 			$time = new DateTime($input);
@@ -84,7 +85,7 @@ class Time extends Field {
 		if ($time !== false)
 		{
 			//fill the model with the correct date/time format
-			$model->{$this->getOption('field_name')} = $this->getDateString($time);
+			$model->{$field_name} = $this->getDateString($time);
 		}
 	}
 

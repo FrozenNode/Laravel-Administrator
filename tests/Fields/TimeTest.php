@@ -109,7 +109,7 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 	public function testFillModelBadInput()
 	{
 		$model = new \stdClass();
-		$this->field->shouldReceive('getOption')->never()
+		$this->field->shouldReceive('getOption')->once()
 					->shouldReceive('getDateString')->never();
 		$this->field->fillModel($model, null);
 		$this->assertTrue(!isset($model->field));
@@ -118,7 +118,7 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 	public function testFillModelWithEmptyString()
 	{
 		$model = new \stdClass();
-		$this->field->shouldReceive('getOption')->never()
+		$this->field->shouldReceive('getOption')->once()
 					->shouldReceive('getDateString')->never();
 		$this->field->fillModel($model, '');
 		$this->assertTrue(!isset($model->field));	}
@@ -126,7 +126,7 @@ class TimeTest extends \PHPUnit_Framework_TestCase {
 	public function testFillModelWithZeros()
 	{
 		$model = new \stdClass();
-		$this->field->shouldReceive('getOption')->never()
+		$this->field->shouldReceive('getOption')->once()
 					->shouldReceive('getDateString')->never();
 		$this->field->fillModel($model, '0000-00-00');
 		$this->assertTrue(!isset($model->field));
