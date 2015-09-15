@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 5.0.3
+- **Version:** 5.0.4
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -63,7 +63,10 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Recent Changelog
 
-### 5.0.2
+### 5.0.4
+- Testfix: fixing tests and js for gulp
+
+### 5.0.3
 - Cherry Picking v4.16.7
 
 ### 5.0.2
