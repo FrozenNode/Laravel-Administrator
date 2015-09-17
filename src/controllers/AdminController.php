@@ -81,6 +81,8 @@ class AdminController extends Controller {
 			{
 				$model = $config->updateModel($model, $fieldFactory, $actionFactory);
 			}
+			
+			$model->setVisible(array());
 
 			$response = $actionPermissions['view'] ? response()->json($model) : response()->json(array(
 				'success' => false,
