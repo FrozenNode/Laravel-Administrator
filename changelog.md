@@ -1,5 +1,15 @@
 ## Changelog
 
+### 5.0.5
+- Added: Added password field to the settings view
+- Added: Romanian Language
+- Added: Basic HasMany Implementation along with re-ordering support
+- Bugfix: Autocomplete working with default value
+- Bugfix: Adding missing session to Admin Controller
+- Bugfix: Fixed improper handling of filter value 0 for Enum/Text field
+- Docfix: Simplified the composer command in the install docs to match the packagist.org instuctions
+- Docfix: Changed the type definition for global_rows_per_page to int instead of Null|nt since Null causes divide by 0 error
+
 ### 5.0.4
 - Testfix: fixing tests and js for gulp
 
