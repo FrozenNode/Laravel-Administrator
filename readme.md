@@ -12,13 +12,13 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 ## Composer
 
-To install Administrator as a Composer package to be used with Laravel 5, simply add this to your composer.json:
+To install Administrator as a Composer package to be used with Laravel 5, simply run:
 
-```json
-"frozennode/administrator": "5.*"
+```sh
+composer require "frozennode/administrator: 5.*"
 ```
 
-..and run `composer update`.  Once it's installed, you can register the service provider in `config/app.php` in the `providers` array:
+Once it's installed, you can register the service provider in `config/app.php` in the `providers` array:
 
 ```php
 'providers' => [
