@@ -48,6 +48,17 @@
 				<!-- /ko -->
 			<!-- /ko -->
 
+            <!-- ko if: type === 'password' -->
+                <!-- ko if: editable -->
+                    <div class="characters_left" data-bind="charactersLeft: {value: $root[field_name], limit: limit}"></div>
+                    <input type="password" data-bind="attr: {disabled: $root.freezeForm, id: field_id}, value: $root[field_name],
+                                                valueUpdate: 'afterkeydown', characterLimit: limit" />
+                <!-- /ko -->
+                <!-- ko ifnot: editable -->
+                    <div class="uneditable" data-bind="text: '********'"></div>
+                <!-- /ko -->
+            <!-- /ko -->
+
 			<!-- ko if: type === 'number' -->
 				<!-- ko if: editable -->
 					<span class="symbol" data-bind="text: symbol"></span>
