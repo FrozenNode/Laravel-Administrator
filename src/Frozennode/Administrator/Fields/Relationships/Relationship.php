@@ -154,6 +154,12 @@ abstract class Relationship extends Field {
 		else if ($relationshipItems = $relationship->get())
 		{
 			$items = $relationshipItems;
+
+			// if no related items exist, add default item, if set in options
+			if (count($items) == 0 && array_key_exists('value', $options))
+			{
+				$items = $relatedModel->where($relatedModel->getKeyName(), '=', $options['value'])->get();
+			}
 		}
 
 		//map the options to the options property where array('id': [key], 'text': [nameField])
