@@ -77,7 +77,7 @@ class Enum extends Field {
 		parent::filterQuery($query, $selects);
 
 		//if there is no value, return
-		if (!$this->getOption('value'))
+		if ($this->getFilterValue($this->getOption('value'))===false)
 		{
 			return;
 		}

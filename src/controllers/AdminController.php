@@ -33,6 +33,7 @@ class AdminController extends Controller {
 	public function __construct(Request $request, Session $session)
 	{
 		$this->request = $request;
+		$this->session = $session;
 
 		if ( ! is_null($this->layout))
 		{

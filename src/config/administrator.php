@@ -117,7 +117,7 @@ return array(
 	/**
 	 * Global default rows per page
 	 *
-	 * @type NULL|int
+	 * @type int
 	 */
 	'global_rows_per_page' => 20,
 
