@@ -195,7 +195,9 @@ class Multup {
 
 			if($this->random){
 				if(is_callable($this->random_cb)){
-					$filename =  call_user_func( $this->random_cb, $original_name );
+					$filename =  call_user_func($this->random_cb, $original_name,
+                                                    $this->image[$this->input],
+                                                    $this->random_length);
 				} else {
 					$ext = File::extension($original_name);
 					$filename = $this->generate_random_filename().'.'.$ext;

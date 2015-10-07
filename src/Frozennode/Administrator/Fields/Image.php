@@ -11,6 +11,7 @@ class Image extends File {
 	 * @var array
 	 */
 	protected $imageDefaults = array(
+		'random_cb' => null,
 		'sizes' => array(),
 	);
 
@@ -20,6 +21,7 @@ class Image extends File {
 	 * @var array
 	 */
 	protected $imageRules = array(
+		'random_cb' => 'callable',
 		'sizes' => 'array',
 	);
 
@@ -35,6 +37,7 @@ class Image extends File {
 									$this->getOption('naming') === 'random')
 			->sizes($this->getOption('sizes'))
 			->set_length($this->getOption('length'))
+			->filename_callback($this->getOption('random_cb'))
 			->upload();
 
 		return $result[0];
