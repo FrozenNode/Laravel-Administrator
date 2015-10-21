@@ -648,7 +648,11 @@ class AdminController extends Controller {
 				app($config->getOptions()['form_request']);
 			} catch (HttpResponseException $e) {
 				//Parses the exceptions thrown by Illuminate\Foundation\Http\FormRequest
-				$errorsArray = json_decode($e->getResponse()->getContent());
+				$errorMessages = $e->getResponse()->getContent();
+				if (is_string ( $errorMessages )) {
+					return $errorMessages;
+				}
+				$errorsArray = json_decode($errorMessages);
 				if ($errorsArray) {
 					return implode(".", array_dot($errorsArray));
 				}
