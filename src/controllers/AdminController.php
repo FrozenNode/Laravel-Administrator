@@ -25,7 +25,7 @@ class AdminController extends Controller {
 	/**
 	 * @var string
 	 */
-	protected $requestErrors;
+	protected $formRequestErrors;
 
 	/**
 	 * @var string
@@ -41,7 +41,7 @@ class AdminController extends Controller {
 		$this->request = $request;
 		$this->session = $session;
 		
-		$this->requestErrors = $this->resolveDynamicRequestErrors();
+		$this->formRequestErrors = $this->resolveDynamicFormRequestErrors();
 
 		if ( ! is_null($this->layout))
 		{
@@ -126,10 +126,10 @@ class AdminController extends Controller {
 		$fieldFactory = app('admin_field_factory');
 		$actionFactory = app('admin_action_factory');
 		
-		if (array_key_exists('request', $config->getOptions()) && $this->requestErrors !== null) {
+		if (array_key_exists('form_request', $config->getOptions()) && $this->formRequestErrors !== null) {
 			return response()->json(array(
 				'success' => false,
-				'errors'  => $this->requestErrors,
+				'errors'  => $this->formRequestErrors,
 			));
 		}
 		
@@ -634,18 +634,18 @@ class AdminController extends Controller {
 	}
 
 	/**
-	 * POST method for any request errors
+	 * POST method to capture any form request errors
 	 */
-	protected function resolveDynamicRequestErrors()
+	protected function resolveDynamicFormRequestErrors()
 	{
 		try {
 			$config = app('itemconfig');
 		} catch (\ReflectionException $e) {
 			return null;
 		}
-		if (array_key_exists('request', $config->getOptions())) {
+		if (array_key_exists('form_request', $config->getOptions())) {
 			try {
-				app($config->getOptions()['request']);
+				app($config->getOptions()['form_request']);
 			} catch (HttpResponseException $e) {
 				//Parses the exceptions thrown by Illuminate\Foundation\Http\FormRequest
 				$errorsArray = json_decode($e->getResponse()->getContent());
