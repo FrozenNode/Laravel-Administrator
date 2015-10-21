@@ -1,5 +1,6 @@
 <?php namespace Frozennode\Administrator;
 
+use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\File;
@@ -20,6 +21,11 @@ class AdminController extends Controller {
 	 * @var \Illuminate\Session\SessionManager
 	 */
 	protected $session;
+	
+	/**
+	 * @var string
+	 */
+	protected $requestErrors;
 
 	/**
 	 * @var string
@@ -34,6 +40,8 @@ class AdminController extends Controller {
 	{
 		$this->request = $request;
 		$this->session = $session;
+		
+		$this->requestErrors = $this->resolveDynamicRequestErrors();
 
 		if ( ! is_null($this->layout))
 		{
@@ -117,6 +125,14 @@ class AdminController extends Controller {
 		$config = app('itemconfig');
 		$fieldFactory = app('admin_field_factory');
 		$actionFactory = app('admin_action_factory');
+		
+		if (array_key_exists('request', $config->getOptions()) && $this->requestErrors !== null) {
+			return response()->json(array(
+				'success' => false,
+				'errors'  => $this->requestErrors,
+			));
+		}
+		
 		$save = $config->save($this->request, $fieldFactory->getEditFields(), $actionFactory->getActionPermissions(), $id);
 
 		if (is_string($save))
@@ -617,4 +633,27 @@ class AdminController extends Controller {
 		return redirect()->back();
 	}
 
+	/**
+	 * POST method for any request errors
+	 */
+	protected function resolveDynamicRequestErrors()
+	{
+		try {
+			$config = app('itemconfig');
+		} catch (\ReflectionException $e) {
+			return null;
+		}
+		if (array_key_exists('request', $config->getOptions())) {
+			try {
+				app($config->getOptions()['request']);
+			} catch (HttpResponseException $e) {
+				//Parses the exceptions thrown by Illuminate\Foundation\Http\FormRequest
+				$errorsArray = json_decode($e->getResponse()->getContent());
+				if ($errorsArray) {
+					return implode(".", array_dot($errorsArray));
+				}
+			}
+		}
+		return null;
+	}
 }
