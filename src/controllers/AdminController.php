@@ -645,7 +645,7 @@ class AdminController extends Controller {
 		}
 		if (array_key_exists('form_request', $config->getOptions())) {
 			try {
-				app($config->getOptions()['form_request']);
+				app($config->getOption('form_request'));
 			} catch (HttpResponseException $e) {
 				//Parses the exceptions thrown by Illuminate\Foundation\Http\FormRequest
 				$errorMessages = $e->getResponse()->getContent();
