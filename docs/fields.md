@@ -118,7 +118,7 @@ The `setter` option lets you define a field as an attribute that is set on the E
 <a name="form-request-option"></a>
 ## Form Request Option
 
-The `form request` option lets you define a custom [form request](http://laravel.com/docs/validation#form-request-validation) to validate the editable fields on save. This field is optional by default.
+The `form request` option lets you define a custom [form request](http://laravel.com/docs/validation#form-request-validation) to validate the editable fields on save. The Form Request object must contain a rules array to validate. This field is optional by default.
 
 	'form_request' => 'FormRequestPath',
 
