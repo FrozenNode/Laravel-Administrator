@@ -4,6 +4,7 @@ namespace Frozennode\Administrator\DataTable\Columns;
 use Frozennode\Administrator\Validator;
 use Frozennode\Administrator\Config\ConfigInterface;
 use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Database\Eloquent\Model;
 
 class Column {
 
@@ -240,16 +241,17 @@ class Column {
 	/**
 	 * Takes a column output string and renders the column with it (replacing '(:value)' with the column's field value)
 	 *
-	 * @param string	$value
+	 * @param $value string	$value
+	 * @param \Illuminate\Database\Eloquent\Model	$item
 	 *
 	 * @return string
 	 */
-	public function renderOutput($value)
+	public function renderOutput($value, $item = null)
 	{
 		$output = $this->getOption('output');
 		
 		if (is_callable($output)) {
-			return $output($value);
+			return $output($value, $item);
 		}
 		
 		return str_replace('(:value)', $value, $output);
