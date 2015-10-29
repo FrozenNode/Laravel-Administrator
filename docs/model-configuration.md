@@ -34,6 +34,7 @@ Below is a list of all the available options. Required options are marked as *(r
 - [Action Permissions](#action-permissions)
 - [Custom Actions](#custom-actions)
 - [Global Custom Actions](#global-custom-actions)
+- [Form Request Option](#form-request-option)
 - [Validation Rules](#validation-rules)
 - [Validation Messages](#validation-messages)
 - [Sort](#sort)
@@ -293,6 +294,19 @@ When the user clicks on either button, the `action` property above is called and
 Global custom actions are buttons that can be pressed at any time on a model's page. In most ways, this works just like regular custom actions. However, instead of the model being passed into the `action` callback function, the query builder is passed in with all the filters already applied (except for the limit/offset).
 
 > For a detailed description of custom actions, see the **[actions docs](/docs/actions)**
+
+<a name="form-request-option"></a>
+### Form Request Option
+
+	/**
+	 * The form request to use for validation of the form, based on the Laravel form request class
+	 *
+	 * @type string
+	 */
+    'form_request' => 'FormRequestPath',
+
+The `form request` option lets you define a custom [form request](http://laravel.com/docs/validation#form-request-validation) to validate the editable fields on save. The Form Request object must contain a rules array to validate. This field is optional by default.
+
 
 <a name="validation-rules"></a>
 ### Validation Rules
