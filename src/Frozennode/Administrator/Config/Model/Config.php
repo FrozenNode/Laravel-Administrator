@@ -544,4 +544,27 @@ class Config extends ConfigBase implements ConfigInterface {
 			$filter($query);
 		}
 	}
+	
+	/**
+	 * Fetches the data model for a config given a post input array
+	 *
+	 * @param \Illuminate\Http\Request $input
+	 * @param array	                   $fields
+	 * @param int                      $id
+	 *
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public function getFilledDataModel(\Illuminate\Http\Request $input, array $fields, $id = 0)
+	{
+		$model = $this->getDataModel();
+
+		if ($id)
+		{
+			$model = $model->find($id);
+		}
+
+		$this->fillModel($model, $input, $fields);
+
+		return $model;
+	}
 }
