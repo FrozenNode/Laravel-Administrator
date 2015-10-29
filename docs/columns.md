@@ -142,11 +142,11 @@ Any SQL grouping function will work in the `select` statement. Much more is poss
 
 If you want your column to show more than just text, you can use the `output` option. This can either be a string or an anonymous function.
 
-If you provide an anonymous function, the only argument is the relevant column's value from the database. For instance, if you are using a [color](/docs/field-type-color) field and you want to clearly show the admin user what color a row is, you can do this:
+If you provide an anonymous function, the argumentis available are the relevant column's value from the database, and the current model. For instance, if you are using a [color](/docs/field-type-color) field and you want to clearly show the admin user what color a row is, you can do this:
 
 	'hex' => array(
 		'title' => 'Color',
-		'output' => function($value)
+		'output' => function($value, $model)
 		{
 			return '<div style="background-color: ' . $value . '; width: 200px; height: 20px; border-radius: 2px;"></div>';
 		},

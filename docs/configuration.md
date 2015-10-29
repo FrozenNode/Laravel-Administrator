@@ -8,6 +8,10 @@
 
 Once the package is installed, you can publish the config file with:
 
+### Laravel 5
+    php artisan vendor:publish --provider='Frozennode\Administrator\AdministratorServiceProvider'
+
+### Laravel 4
 	php artisan config:publish frozennode/administrator
 
 This will create the file `app/config/packages/frozennode/administrator/administrator.php` and seed it with some defaults. This [config file](http://administrator.frozennode.com/docs/configuration) is the primary way you interact with Administrator.
@@ -21,6 +25,8 @@ All of the configuration options are used, but not all of them must be supplied.
 
 Below is a list of all the available options:
 
+- [Uri](#uri)
+- [Domain](#domain)
 - [Title](#title)
 - [Model Config Path](#model-config-path)
 - [Settings Config Path](#settings-config-path)
@@ -35,6 +41,30 @@ Below is a list of all the available options:
 - [Redirect Key](#redirect-key)
 - [Global Rows Per Page](#global-rows-per-page)
 - [Locales](#locales)
+
+<a name="uri"></a>
+### Uri
+
+	/**
+	 * Package URI
+	 *
+	 * @type string
+	 */
+	'uri' => 'admin',
+
+This is the base route for the administrator package to be called on.
+
+<a name="domain"></a>
+### Domain
+
+	/**
+	 * Page domain
+	 *
+	 * @type string
+	 */
+	'domain' => '',
+
+This is the base domain for the administrator route. This can allow you to lock down the admin to just a certain domain/subdomain.
 
 <a name="title"></a>
 ### Title

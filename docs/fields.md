@@ -113,7 +113,7 @@ The `setter` option lets you define a field as an attribute that is set on the E
 		'title' => 'Name',
 		'setter' => true,
 	),
-
+	
 <a name="visible-option"></a>
 ## Visible Option
 

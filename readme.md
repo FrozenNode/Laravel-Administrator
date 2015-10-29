@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 5.0.5
+- **Version:** 5.0.6
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -62,6 +62,11 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Recent Changelog
+
+### 5.0.6
+- Added: Support for custom domains in the admin routes
+- Added: Ability to access the model from withinthe column output renderer
+- Added: Dynamic Form Request Validation
 
 ### 5.0.5
 - Added: Added password field to the settings view

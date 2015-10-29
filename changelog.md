@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.0.6
+- Added: Support for custom domains in the admin routes
+- Added: Ability to access the model from withinthe column output renderer
+- Added: Dynamic Form Request Validation
+
 ### 5.0.5
 - Added: Added password field to the settings view
 - Added: Romanian Language
