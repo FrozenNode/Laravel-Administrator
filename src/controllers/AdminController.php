@@ -41,7 +41,7 @@ class AdminController extends Controller {
 		$this->request = $request;
 		$this->session = $session;
 		
-		$this->formRequestErrors = $this->resolveDynamicFormRequestErrors();
+		$this->formRequestErrors = $this->resolveDynamicFormRequestErrors($request);
 
 		if ( ! is_null($this->layout))
 		{
@@ -635,8 +635,10 @@ class AdminController extends Controller {
 
 	/**
 	 * POST method to capture any form request errors
+	 *
+	 * @param \Illuminate\Http\Request $request
 	 */
-	protected function resolveDynamicFormRequestErrors()
+	protected function resolveDynamicFormRequestErrors(Request $request)
 	{
 		try {
 			$config = app('itemconfig');
