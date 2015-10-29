@@ -640,19 +640,24 @@ class AdminController extends Controller {
 	{
 		try {
 			$config = app('itemconfig');
+			$fieldFactory = app('admin_field_factory');
 		} catch (\ReflectionException $e) {
 			return null;
 		}
 		if (array_key_exists('form_request', $config->getOptions())) {
 			try {
-				app($config->getOption('form_request'));
+				$model = $config->getFilledDataModel($request, $fieldFactory->getEditFields(), $request->id);
+
+				$request->merge($model->toArray());
+				$formRequestClass = $config->getOption('form_request');
+				app($formRequestClass);
 			} catch (HttpResponseException $e) {
 				//Parses the exceptions thrown by Illuminate\Foundation\Http\FormRequest
 				$errorMessages = $e->getResponse()->getContent();
-				if (is_string ( $errorMessages )) {
+				$errorsArray = json_decode($errorMessages);
+				if (!$errorsArray && is_string ( $errorMessages )) {
 					return $errorMessages;
 				}
-				$errorsArray = json_decode($errorMessages);
 				if ($errorsArray) {
 					return implode(".", array_dot($errorsArray));
 				}
