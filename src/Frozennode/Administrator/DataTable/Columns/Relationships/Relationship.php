@@ -96,7 +96,7 @@ class Relationship extends Column {
 		//one element of the relationship query's wheres is always useless (it will say pivot_table.other_id is null)
 		//depending on whether or not softdeletes are enabled on the other model, this will be in either position 0
 		//or 1 of the wheres array
-		array_splice($query->wheres, (isset($relationshipModel->runSoftDelete) ? 1 : 0), 1);
+		array_splice($query->wheres, (method_exists($relationshipModel, 'getDeletedAtColumn') ? 1 : 0), 1);
 
 		//iterate over the wheres to properly alias the columns
 		foreach ($query->wheres as &$where)
