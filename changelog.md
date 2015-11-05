@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.0.7
+- Bugfix: Fixed boolean true bug 
+- Bugfix: Fixes a bug where soft deletes are not being properly detected in L5
+
 ### 5.0.6
 - Added: Support for custom domains in the admin routes
 - Added: Ability to access the model from withinthe column output renderer
