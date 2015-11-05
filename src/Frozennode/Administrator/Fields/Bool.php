@@ -38,7 +38,7 @@ class Bool extends Field {
 	 */
 	public function fillModel(&$model, $input)
 	{
-		$model->{$this->getOption('field_name')} = $input === 'true' || $input === '1' ? 1 : 0;
+		$model->{$this->getOption('field_name')} = $input === 'true' || $input === '1' || $input === true ? 1 : 0;
 	}
 
 	/**
