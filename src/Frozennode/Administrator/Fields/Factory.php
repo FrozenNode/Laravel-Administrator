@@ -25,7 +25,7 @@ class Factory {
 		'time' => 'Frozennode\\Administrator\\Fields\\Time',
 		'datetime' => 'Frozennode\\Administrator\\Fields\\Time',
 		'number' => 'Frozennode\\Administrator\\Fields\\Number',
-		'bool' => 'Frozennode\\Administrator\\Fields\\Bool',
+		'bool' => 'Frozennode\\Administrator\\Fields\\Boolean',
 		'enum' => 'Frozennode\\Administrator\\Fields\\Enum',
 		'image' => 'Frozennode\\Administrator\\Fields\\Image',
 		'file' => 'Frozennode\\Administrator\\Fields\\File',
