@@ -3,7 +3,7 @@ namespace Frozennode\Administrator\Fields;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class Bool extends Field {
+class Boolean extends Field {
 
 	/**
 	 * The value (used in filter)

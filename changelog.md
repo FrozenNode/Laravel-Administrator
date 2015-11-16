@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.0.8
+- Bugfix: Rename Bool class to Boolean to fix PHP 7 
+- Bugfix: added missing custom attribute field
+
 ### 5.0.7
 - Bugfix: Fixed boolean true bug 
 - Bugfix: Fixes a bug where soft deletes are not being properly detected in L5
