@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.0.9
+- Bugfx: Fix for datetimepicker partially being covered by top menu  
+
 ### 5.0.8
 - Bugfix: Rename Bool class to Boolean to fix PHP 7 
 - Bugfix: added missing custom attribute field

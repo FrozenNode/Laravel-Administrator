@@ -36,6 +36,15 @@ a{ text-decoration: none; }
 	}
 }
 
+/* Fix for datetimepicker partially being covered by top menu*/
+
+#ui-datepicker-div {
+  margin-top: 40px !important;
+  z-index: 999 !important;
+}
+#ui-timepicker-div dl dd {
+    margin: 0px 10px 10px 85px;
+}
 
 /* common structure */
 #wrapper {
