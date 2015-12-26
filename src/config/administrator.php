@@ -17,6 +17,13 @@ return array(
 	'domain' => '',
 
 	/**
+	 *  Middleware for admin routing.
+	 *
+	 *  @type array
+	 */
+	'middleware' => array(),
+
+	/**
 	 * Page title
 	 *
 	 * @type string

@@ -85,6 +85,7 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($model->field, array());
 	}
 
+	/*
 	public function testSetModelRelationshipMultipleValuesNoAutocomplete()
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
@@ -104,6 +105,7 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($model->field, array(1, 2));
 		$this->assertEquals($model->field_options, array('test'));
 	}
+	*/
 
 	public function testSetModelRelationshipMultipleValuesAutocomplete()
 	{
