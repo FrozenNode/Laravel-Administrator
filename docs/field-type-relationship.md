@@ -50,7 +50,7 @@ The `belongsTo` filter lets you filter a result set for items that are related t
 	'actors' => array(
 		'type' => 'relationship',
 		'title' => 'Actors',
-		'name_field' => 'full_name', //using the getFullNameAttribute accessor
+		'name_field' => 'full_name', //using the getNameAttribute accessor
 		'options_sort_field' => "CONCAT(first_name, ' ' , last_name)",
 	)
 
@@ -73,7 +73,7 @@ If you want to let your admin users reorder the selected values, you can create 
 	'actors' => array(
 		'type' => 'relationship',
 		'title' => 'Actors',
-		'name_field' => 'full_name', 	//using the getFullNameAttribute accessor
+		'name_field' => 'full_name', 	//using the getNameAttribute accessor
 		'sort_field' => 'ordering', 	//this will look for a numerical column at films_actors.ordering
 	)
 

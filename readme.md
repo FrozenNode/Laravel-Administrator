@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 5.0.9
+- **Version:** 5.0.10
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -63,8 +63,13 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 ## Recent Changelog
 
+### 5.0.10
+- Bugfix: L5.2 changed the way url() works so added url('/') instead
+- Added: Support for middleware additions to the Admin routes via the administrator config
+- Testfix: Fixed failing tests
+
 ### 5.0.9
-- Bugfx: Fix for datetimepicker partially being covered by top menu  
+- Bugfix: Fix for datetimepicker partially being covered by top menu  
 
 ### 5.0.8
 - Bugfix: Rename Bool class to Boolean to fix PHP 7 

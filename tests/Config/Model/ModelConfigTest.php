@@ -89,11 +89,11 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
 		$relatedModel1 = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
-		$relatedModel1->shouldReceive('getKeyName')->once()->andReturn('id');
+		$relatedModel1->shouldReceive('getKeyName')->andReturn('id');
 		$relatedModel1->id = 1;
 		$relatedModel1->name = 'model_1';
 		$relatedModel2 = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
-		$relatedModel2->shouldReceive('getKeyName')->once()->andReturn('id');
+		$relatedModel2->shouldReceive('getKeyName')->andReturn('id');
 		$relatedModel2->id = 2;
 		$relatedModel2->name = 'model_2';
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
@@ -109,11 +109,11 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
 		$relatedModel1 = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
-		$relatedModel1->shouldReceive('getKeyName')->once()->andReturn('id');
+		$relatedModel1->shouldReceive('getKeyName')->andReturn('id');
 		$relatedModel1->id = 1;
 		$relatedModel1->name = 'model_1';
 		$relatedModel2 = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
-		$relatedModel2->shouldReceive('getKeyName')->once()->andReturn('id');
+		$relatedModel2->shouldReceive('getKeyName')->andReturn('id');
 		$relatedModel2->id = 2;
 		$relatedModel2->name = 'model_2';
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
@@ -130,7 +130,7 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
 		$relatedModel1 = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
-		$relatedModel1->shouldReceive('getKeyName')->once()->andReturn('id');
+		$relatedModel1->shouldReceive('getKeyName')->andReturn('id');
 		$relatedModel1->id = 1;
 		$relatedModel1->name = 'model_1';
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
@@ -146,7 +146,7 @@ class ModelConfigTest extends \PHPUnit_Framework_TestCase {
 	{
 		$model = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
 		$relatedModel1 = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
-		$relatedModel1->shouldReceive('getKeyName')->once()->andReturn('id');
+		$relatedModel1->shouldReceive('getKeyName')->andReturn('id');
 		$relatedModel1->id = 1;
 		$relatedModel1->name = 'model_1';
 		$field = m::mock('Frozennode\Administrator\Fields\Field');
