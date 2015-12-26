@@ -27,6 +27,7 @@ Below is a list of all the available options:
 
 - [Uri](#uri)
 - [Domain](#domain)
+- [Middleware](#middleware)
 - [Title](#title)
 - [Model Config Path](#model-config-path)
 - [Settings Config Path](#settings-config-path)
@@ -65,6 +66,18 @@ This is the base route for the administrator package to be called on.
 	'domain' => '',
 
 This is the base domain for the administrator route. This can allow you to lock down the admin to just a certain domain/subdomain.
+
+<a name="middleware"></a>
+### Middleware
+
+	/**
+	 * Admin Routes Additional Middleware
+	 *
+	 * @type array
+	 */
+	'middleware' => '',
+
+This is the additional middlewares that you wish to run on administrator route.
 
 <a name="title"></a>
 ### Title
