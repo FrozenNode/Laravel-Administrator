@@ -2,7 +2,7 @@
 namespace Frozennode\Administrator\DataTable\Columns\Relationships;
 
 use Frozennode\Administrator\DataTable\Columns\Column;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 /**
  * The Column class helps us construct columns from models. It can be used to derive column information from a model, or it can be
