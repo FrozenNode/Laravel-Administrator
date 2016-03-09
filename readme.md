@@ -64,7 +64,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 ## Recent Changelog
 
 ### 5.0.11
-- Bugfix: Had to make the middleware additon backwards compatable
+- Bugfix: Had to make the middleware additon backwards compatible
 - Docs: Added doc updates
 
 ### 5.0.10
