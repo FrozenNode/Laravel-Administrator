@@ -99,7 +99,7 @@ class File extends Field {
 	 */
 	protected function getFilename()
 	{
-		$naming = $this->suppliedOptions['naming'];
+		$naming = $this->getOption('naming');
 
 		if (self::NAMING_KEEP === $naming) {
 			return $this->getFile()->getClientOriginalName();
@@ -119,7 +119,7 @@ class File extends Field {
 	 */
 	protected function getCustomFilename()
 	{
-		$naming = $this->suppliedOptions['naming'];
+		$naming = $this->getOption('naming');
 
 		if (!is_callable($naming)) {
 			return null;
