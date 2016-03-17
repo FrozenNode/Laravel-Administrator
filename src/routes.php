@@ -63,7 +63,7 @@ Route::group(array('domain' => config('administrator.domain'), 'prefix' => confi
 		//Settings file upload
 		Route::post('settings/{settings}/{field}/file_upload', array(
 			'as' => 'admin_settings_file_upload',
-			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
+			'uses' => 'Frozennode\Administrator\AdminController@settingsFileUpload'
 		));
 	});
 
@@ -125,7 +125,7 @@ Route::group(array('domain' => config('administrator.domain'), 'prefix' => confi
 		));
 
 		//File Uploads
-		Route::post('{model}/{field}/file_upload', array(
+		Route::post('{model}/{field}/{id?}/file_upload', array(
 			'as' => 'admin_file_upload',
 			'uses' => 'Frozennode\Administrator\AdminController@fileUpload'
 		));
