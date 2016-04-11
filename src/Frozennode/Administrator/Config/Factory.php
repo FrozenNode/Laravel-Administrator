@@ -274,7 +274,7 @@ class Factory {
 	{
 		$path = $this->type === 'settings' ? $this->options['settings_config_path'] : $this->options['model_config_path'];
 
-		return rtrim($path, '/') . '/';
+		return $path;
 	}
 
 	/**
@@ -314,18 +314,27 @@ class Factory {
 	public function fetchConfigFile($name)
 	{
 		$name = str_replace($this->getPrefix(), '', $name);
-		$path = $this->getPath() . $name . '.php';
+		$path = $this->getPath();
 
-		//check that this is a legitimate file
-		if (is_file($path))
+		if (is_string($path))
+			$path = [$path];
+
+		foreach ($path as $item)
 		{
-			//set the options var
-			$options = require $path;
+			$item = rtrim($item, '/') . '/';
+			$item = $item . $name . '.php';
 
-			//add the name in
-			$options['name'] = $name;
+			//check that this is a legitimate file
+			if (is_file($item))
+			{
+				//set the options var
+				$options = require $item;
 
-			return $options;
+				//add the name in
+				$options['name'] = $name;
+
+				return $options;
+			}
 		}
 
 		return false;
