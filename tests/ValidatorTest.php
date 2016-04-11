@@ -56,6 +56,19 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->validator->validateDirectory(null, null, null));
 	}
 
+	public function testValidateDirOrArrayOfDirsSucceeds()
+	{
+		$this->assertTrue($this->validator->validateDirOrArrayOfDirs(null, __DIR__, null));
+		$this->assertTrue($this->validator->validateDirOrArrayOfDirs(null, [__DIR__], null));
+		$this->assertTrue($this->validator->validateDirOrArrayOfDirs(null, [__DIR__,__DIR__], null));
+	}
+
+	public function testValidateDirOrArrayOfDirsFails()
+	{
+		$this->assertFalse($this->validator->validateDirOrArrayOfDirs(null, null, null));
+		$this->assertFalse($this->validator->validateDirOrArrayOfDirs(null, [], null));
+	}
+
 	public function testValidateArraySucceeds()
 	{
 		$this->assertTrue($this->validator->validateArray(null, array(), null));

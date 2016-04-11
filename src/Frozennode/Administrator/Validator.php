@@ -11,6 +11,7 @@ class Validator extends \Illuminate\Validation\Validator {
 		'not_empty' => "The :attribute option must not be empty",
 		'callable' => "The :attribute option must be a function",
 		'eloquent' => "The :attribute option must be the string name of a valid Eloquent model",
+		'dir_or_array_of_dirs' => "The :attribute option must either be a valid directory or an array of valid directories",
 	);
 
 	/**
@@ -137,6 +138,26 @@ class Validator extends \Illuminate\Validation\Validator {
 	public function validateArray($attribute, $value)
 	{
 		return is_array($value);
+	}
+
+	/**
+	 * Validates that an item is a directory or an array of directories
+	 */
+	public function validateDirOrArrayOfDirs($attribute, $value, $parameters)
+	{
+		if (!is_array($value))
+			return is_dir($value);
+
+		if (count($value) == 0)
+			return false;
+
+		foreach ($value as $item)
+		{
+			if (!is_dir($item))
+				return false;
+		}
+
+		return true;
 	}
 
 	/**
