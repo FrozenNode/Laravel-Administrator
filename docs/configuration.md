@@ -103,6 +103,20 @@ This is the title of the administrative interface displayed to the user at the t
 
 This is the directory location of your application's model config files. It's recommended to use a subdirectory of your application config called `administrator`, but you can put it anywhere you like.
 
+You may also use an array of paths, in the event that any packages you're using provide model config files for administrator panels.
+
+	/**
+	 * The path to your model config directory
+	 *
+	 * @type array
+	 */
+	'model_config_path' => [
+	    app('path') . '/config/administrator',
+	    base_path('vendor/vendorname/packagename/administrator')
+	],
+
+Be careful of naming conflicts between model files!  The array will be processed in order, and the first model file with the given name found will be used.
+
 <a name="settings-config-path"></a>
 ### Settings Config Path
 
@@ -114,6 +128,20 @@ This is the directory location of your application's model config files. It's re
 	'settings_config_path' => app('path') . '/config/administrator/settings',
 
 This is the directory location of your application's settings config files. If you want to create settings pages for your admins, you'll store each settings config file in the path above. As with the `model_config_path`, it's up to you how to organize this. The recommended approach is above, but you may just find a more sensible way to organize your config directories.
+
+You may also use an array of paths, in the event that any packages you're using provide settings config files for administrator panels.
+
+	/**
+	 * The path to your settings config directory
+	 *
+	 * @type array
+	 */
+	'settings_config_path' => [
+	    app('path') . '/config/administrator/settings',
+	    base_path('vendor/vendorname/packagename/administrator/settings')
+	],
+
+Be careful of naming conflicts between settings files!  The array will be processed in order, and the first settings file with the given name found will be used.
 
 <a name="menu"></a>
 ### Menu
