@@ -3,7 +3,7 @@
 </div>
 
 <script type="text/javascript">
-	var site_url = "<?php echo url() ?>",
+	var site_url = "<?php echo url('/') ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
 		save_url = "<?php echo route('admin_settings_save', array($config->getOption('name'))) ?>",
