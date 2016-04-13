@@ -60,7 +60,7 @@ class Config extends ConfigBase implements ConfigInterface {
 		'single' => 'required|string',
 		'model' => 'required|string|eloquent',
 		'columns' => 'required|array|not_empty',
-		'edit_fields' => 'required|array|not_empty',
+		'edit_fields' => 'array',
 		'filters' => 'array',
 		'query_filter' => 'callable',
 		'permission' => 'callable',
