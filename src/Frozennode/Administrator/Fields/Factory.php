@@ -387,11 +387,15 @@ class Factory {
 		{
 			$this->editFields = array();
 
-			//iterate over each supplied edit field
-			foreach ($this->config->getOption('edit_fields') as $name => $options)
+			$fields = $this->config->getOption('edit_fields');
+
+			if (is_array($fields))
 			{
-				$fieldObject = $this->make($name, $options, $loadRelationships);
-				$this->editFields[$fieldObject->getOption('field_name')] = $fieldObject;
+				//iterate over each supplied edit field
+				foreach ($fields as $name => $options) {
+					$fieldObject = $this->make($name, $options, $loadRelationships);
+					$this->editFields[$fieldObject->getOption('field_name')] = $fieldObject;
+				}
 			}
 		}
 

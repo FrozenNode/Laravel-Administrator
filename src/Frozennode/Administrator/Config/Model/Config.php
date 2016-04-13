@@ -25,6 +25,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * @var array
 	 */
 	protected $defaults = array(
+		'edit_fields' => array(),
 		'filters' => array(),
 		'query_filter' => null,
 		'permission' => true,
