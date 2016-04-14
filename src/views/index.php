@@ -6,11 +6,11 @@
 </div>
 
 <script type="text/javascript">
-	var site_url = "<?php echo url('/') ?>",
+	var site_url = "<?php echo '/' ?>",
 		base_url = "<?php echo $baseUrl ?>/",
 		asset_url = "<?php echo $assetUrl ?>",
-		file_url = "<?php echo route('admin_display_file', array($config->getOption('name'))) ?>",
-		rows_per_page_url = "<?php echo route('admin_rows_per_page', array($config->getOption('name'))) ?>",
+		file_url = "<?php echo route('admin_display_file', array($config->getOption('name')), false) ?>",
+		rows_per_page_url = "<?php echo route('admin_rows_per_page', array($config->getOption('name')), false) ?>",
 		route = "<?php echo $route ?>",
 		csrf = "<?php echo csrf_token() ?>",
 		language = "<?php echo config('app.locale') ?>",
