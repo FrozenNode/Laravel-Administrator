@@ -21,7 +21,7 @@ class ValidateAdmin {
 		//if this is a simple false value, send the user to the login redirect
 		if (!$response = $permission())
 		{
-			$loginUrl = url(config('administrator.login_path', 'user/login'));
+			$loginUrl = '/'.trim(config('administrator.login_path', 'user/login'), '/');
 			$redirectKey = config('administrator.login_redirect_key', 'redirect');
 			$redirectUri = $request->url();
 

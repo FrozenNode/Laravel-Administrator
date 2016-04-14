@@ -12,7 +12,7 @@ View::composer('administrator::index', function($view)
 	$actionFactory = app('admin_action_factory');
 	$dataTable = app('admin_datatable');
 	$model = $config->getDataModel();
-	$baseUrl = route('admin_dashboard');
+	$baseUrl = route('admin_dashboard', [], false);
 	$route = parse_url($baseUrl);
 
 	//add the view fields
@@ -30,7 +30,7 @@ View::composer('administrator::index', function($view)
 	$view->rows = $dataTable->getRows(app('db'), $view->filters);
 	$view->formWidth = $config->getOption('form_width');
 	$view->baseUrl = $baseUrl;
-	$view->assetUrl = url('packages/frozennode/administrator/');
+	$view->assetUrl = '/'.trim('packages/frozennode/administrator/', '/');
 	$view->route = $route['path'].'/';
 	$view->itemId = isset($view->itemId) ? $view->itemId : null;
 });
@@ -41,7 +41,7 @@ View::composer('administrator::settings', function($view)
 	$config = app('itemconfig');
 	$fieldFactory = app('admin_field_factory');
 	$actionFactory = app('admin_action_factory');
-	$baseUrl = route('admin_dashboard');
+	$baseUrl = route('admin_dashboard', [], false);
 	$route = parse_url($baseUrl);
 
 	//add the view fields
@@ -50,7 +50,7 @@ View::composer('administrator::settings', function($view)
 	$view->arrayFields = $fieldFactory->getEditFieldsArrays();
 	$view->actions = $actionFactory->getActionsOptions();
 	$view->baseUrl = $baseUrl;
-	$view->assetUrl = url('packages/frozennode/administrator/');
+	$view->assetUrl = '/'.trim('packages/frozennode/administrator/', '/');
 	$view->route = $route['path'].'/';
 });
 
