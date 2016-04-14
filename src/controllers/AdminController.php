@@ -21,7 +21,7 @@ class AdminController extends Controller {
 	 * @var \Illuminate\Session\SessionManager
 	 */
 	protected $session;
-	
+
 	/**
 	 * @var string
 	 */
@@ -40,7 +40,7 @@ class AdminController extends Controller {
 	{
 		$this->request = $request;
 		$this->session = $session;
-		
+
 		$this->formRequestErrors = $this->resolveDynamicFormRequestErrors($request);
 
 		if ( ! is_null($this->layout))
@@ -125,14 +125,14 @@ class AdminController extends Controller {
 		$config = app('itemconfig');
 		$fieldFactory = app('admin_field_factory');
 		$actionFactory = app('admin_action_factory');
-		
+
 		if (array_key_exists('form_request', $config->getOptions()) && $this->formRequestErrors !== null) {
 			return response()->json(array(
 				'success' => false,
 				'errors'  => $this->formRequestErrors,
 			));
 		}
-		
+
 		$save = $config->save($this->request, $fieldFactory->getEditFields(), $actionFactory->getActionPermissions(), $id);
 
 		if (is_string($save))
@@ -253,7 +253,7 @@ class AdminController extends Controller {
 				$headers = $result->headers->all();
 				$this->session->put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-				$response['download'] = route('admin_file_download');
+				$response['download'] = route('admin_file_download', [], false);
 			}
 			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
 			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
@@ -320,7 +320,7 @@ class AdminController extends Controller {
 				$headers = $result->headers->all();
 				$this->session->put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-				$response['download'] = route('admin_file_download');
+				$response['download'] = route('admin_file_download', [], false);
 			}
 			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
 			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))
@@ -365,11 +365,11 @@ class AdminController extends Controller {
 			}
 			else if ($config->getType() === 'model')
 			{
-				return redirect()->route('admin_index', array($config->getOption('name')));
+				return redirect()->route('admin_index', array($config->getOption('name')), false);
 			}
 			else if ($config->getType() === 'settings')
 			{
-				return redirect()->route('admin_settings', array($config->getOption('name')));
+				return redirect()->route('admin_settings', array($config->getOption('name')), false);
 			}
 		}
 	}
@@ -604,7 +604,7 @@ class AdminController extends Controller {
 				$headers = $result->headers->all();
 				$this->session->put('administrator_download_response', array('file' => $file, 'headers' => $headers));
 
-				$response['download'] = route('admin_file_download');
+				$response['download'] = route('admin_file_download', [], false);
 			}
 			//if it's a redirect, put the url into the redirect key so that javascript can transfer the user
 			else if (is_a($result, '\Illuminate\Http\RedirectResponse'))

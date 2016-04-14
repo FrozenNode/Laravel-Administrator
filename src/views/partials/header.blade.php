@@ -1,6 +1,6 @@
 <header>
 	<h1>
-		<a href="{{route('admin_dashboard')}}">{{config('administrator.title')}}</a>
+		<a href="{{route('admin_dashboard', [], false)}}">{{config('administrator.title')}}</a>
 	</h1>
 
 	<a href="#" id="menu_button"><div></div></a>
@@ -29,7 +29,7 @@
 							@foreach (config('administrator.locales') as $lang)
 								@if (config('app.locale') != $lang)
 									<li>
-										<a href="{{route('admin_switch_locale', array($lang))}}">{{$lang}}</a>
+										<a href="{{route('admin_switch_locale', array($lang), false)}}">{{$lang}}</a>
 									</li>
 								@endif
 							@endforeach
@@ -38,9 +38,9 @@
 				</li>
 			</ul>
 		@endif
-		<a href="{{url(config('administrator.back_to_site_path', '/'))}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
+		<a href="{{'/'.trim(config('administrator.back_to_site_path'), '/')}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
 		@if(config('administrator.logout_path'))
-			<a href="{{url(config('administrator.logout_path'))}}" id="logout">{{trans('administrator::administrator.logout')}}</a>
+			<a href="{{'/'.trim(config('administrator.logout_path'), '/')}}" id="logout">{{trans('administrator::administrator.logout')}}</a>
 		@endif
 	</div>
 </header>

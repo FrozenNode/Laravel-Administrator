@@ -27,7 +27,7 @@ class PostValidate {
 		//if the user is simply not allowed permission to this model, redirect them to the dashboard
 		if (!$p)
 		{
-			return redirect()->route('admin_dashboard');
+			return redirect()->route('admin_dashboard', [], false);
 		}
 
 		//get the settings data if it's a settings page
