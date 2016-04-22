@@ -68,7 +68,6 @@ class Resize{
 			$resized = array();
 
 			foreach($sizes as $size){
-
 				$this->new_width = $size[0]; //$new_width;
 				$this->new_height = $size[1]; //$new_height;
 				$this->option = $size[2]; //crop type
@@ -99,6 +98,15 @@ class Resize{
 
 		$this->width  = imagesx( $image );
 		$this->height = imagesy( $image );
+
+
+		if (!$this->new_height) {
+			$this->new_height = $this->height / $this->width * $this->new_width;
+		}
+
+		if (!$this->new_width) {
+			$this->new_width = $this->width / $this->height * $this->new_height;
+		}
 
 		// Get optimal width and height - based on $option.
 		$option_array = $this->get_dimensions( $this->new_width , $this->new_height , $this->option );
