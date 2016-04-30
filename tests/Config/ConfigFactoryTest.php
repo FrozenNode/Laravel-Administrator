@@ -100,6 +100,13 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($factory->getType(), 'settings');
 	}
 
+	public function testParseTypeRoute()
+	{
+		$factory = new Factory($this->validator, $this->validator, array());
+		$factory->parseType('route.something');
+		$this->assertEquals($factory->getType(), 'route');
+	}
+
 	public function testModelInMenu()
 	{
 		$name = 'some_model';
