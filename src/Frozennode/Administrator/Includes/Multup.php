@@ -193,13 +193,15 @@ class Multup {
 			$errors = implode('. ', $validation->messages()->all());
 		} else {
 
-			if($this->random){
+			if($this->random == "random"){
 				if(is_callable($this->random_cb)){
 					$filename =  call_user_func( $this->random_cb, $original_name );
 				} else {
 					$ext = File::extension($original_name);
 					$filename = $this->generate_random_filename().'.'.$ext;
 				}
+			} else if($this->random == "incremental"){
+				$filename = $this->generate_incremental_filename($original_name);
 			} else {
 				$filename = $original_name;
 			}
@@ -222,6 +224,25 @@ class Multup {
 		}
 
 		return compact('errors', 'path', 'filename', 'original_name', 'resizes' );
+	}
+	
+	/*
+	* Create incremental filename generation
+	*/
+	private function generate_incremental_filename($original_name,$count = "")
+	{
+		$name = pathinfo($original_name, PATHINFO_FILENAME); 
+		$ext = File::extension($original_name);
+		$counter = $count != "" ? '_'.($count-1) : "";
+
+		if(!File::isFile($this->path.$name.$counter.".".$ext)){
+
+			return $name.$counter.".".$ext;
+		}else{
+			$count = $count != "" ? $count+1 : 1;
+
+			return $this->generate_incremental_filename($original_name,$count);
+		}
 	}
 
 	/*
