@@ -138,6 +138,6 @@ class BelongsToMany extends Relationship {
 			$query->join($this->getOption('table'), $relatedModel->getTable().'.'.$relatedModel->getKeyName(), '=', $this->getOption('column2'));
 		}
 
-		$query->where($this->getOption('column'), '=', $constraint);
+		$query->where($this->getOption('table').'.'.$this->getOption('column'), '=', $constraint);
 	}
 }
