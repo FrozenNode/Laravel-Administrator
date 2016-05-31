@@ -154,7 +154,7 @@ class BelongsToManyTest extends \PHPUnit_Framework_TestCase {
 				->shouldReceive('where')->once();
 		$this->validator->shouldReceive('isJoined')->once();
 		$model = m::mock(array('getTable' => 'table', 'getKeyName' => 'id'));
-		$this->field->shouldReceive('getOption')->times(4);
+		$this->field->shouldReceive('getOption')->times(5);
 		$this->field->constrainQuery($query, $model, 'foo');
 	}
 
