@@ -64,6 +64,6 @@ class HasOneOrMany extends Relationship {
 	 */
 	public function constrainQuery(EloquentBuilder &$query, $relatedModel, $constraint)
 	{
-		$query->where($this->getOption('column'), '=', $constraint);
+		$query->where($this->getOption('table').'.'.$this->getOption('column'), '=', $constraint);
 	}
 }
