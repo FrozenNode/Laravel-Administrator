@@ -32,6 +32,8 @@ The optional `naming` option lets you define whether to `keep` the file's name o
 
 The optional `length` option lets you define size of file name in case `random` is supplied as `naming` option method.
 
+The optional `random_cb` option lets you provide a callback to generate random names for images. The callback receives three parameters : the original file name, an instance of `Symfony\Component\HttpFoundation\File\UploadedFile` and the `length` option provided. The callback must return the desired file name.
+
 The optional `size_limit` option lets you set an integer size limit counted in megabytes. This only affects the JavaScript file uploading dialog, it doesn't limit your PHP upload sizes.
 
 The optional `display_raw_value` option lets you put the raw value of the saved image source string into the image input. This is useful if you're using accessors, mutators, and [`setter fields`](/docs/fields#setter-option) to skip storing the image on your local server and instead upload it to a remote public image server.
