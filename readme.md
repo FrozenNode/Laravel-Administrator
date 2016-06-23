@@ -4,7 +4,7 @@ Administrator is an administrative interface builder for [Laravel](http://larave
 
 - **Author:** Jan Hartigan
 - **Website:** [http://frozennode.com](http://administrator.frozennode.com/)
-- **Version:** 5.0.11
+- **Version:** 5.0.12
 
 [![Build Status](https://travis-ci.org/FrozenNode/Laravel-Administrator.png?branch=master)](https://travis-ci.org/FrozenNode/Laravel-Administrator)
 
@@ -62,6 +62,11 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 
 
 ## Recent Changelog
+
+### 5.0.12
+- Bugfix: Added the table name to the constraint query
+- Bugfix: Russian translate in knockout.php
+- Bugfix: Update settings.php for `Request::url()` instead of using `url()`
 
 ### 5.0.11
 - Bugfix: Had to make the middleware additon backwards compatable
