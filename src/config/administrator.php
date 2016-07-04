@@ -47,11 +47,11 @@ return array(
 	/**
 	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
 	 * files. The same applies to settings config files, except you must prepend 'settings.' to the settings config file name. You can also add
-	 * custom pages by prepending a view path with 'page.'. By providing an array of names, you can group certain models or settings pages
+	 * custom pages by prepending a view path with 'page.'. You can also add arbitrary named routes by prepending a route with '.route'. By providing an array of names, you can group certain models or settings pages
 	 * together. Each name needs to either have a config file in your model config path, settings config path with the same name, or a path to a
 	 * fully-qualified Laravel view. So 'users' would require a 'users.php' file in your model config path, 'settings.site' would require a
-	 * 'site.php' file in your settings config path, and 'page.foo.test' would require a 'test.php' or 'test.blade.php' file in a 'foo' directory
-	 * inside your view directory.
+	 * 'site.php' file in your settings config path, 'page.foo.test' would require a 'test.php' or 'test.blade.php' file in a 'foo' directory
+	 * inside your view directory, and 'route.tools' would require a named route 'tools' configured in your routes file.
 	 *
 	 * @type array
 	 *
