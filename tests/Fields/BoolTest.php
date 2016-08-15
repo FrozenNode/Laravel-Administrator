@@ -42,7 +42,7 @@ class BoolTest extends \PHPUnit_Framework_TestCase {
 		$this->config = m::mock('Frozennode\Administrator\Config\Model\Config');
 		$this->db = m::mock('Illuminate\Database\DatabaseManager');
 		$options = array('field_name' => 'field', 'type' => 'bool');
-		$this->field = m::mock('Frozennode\Administrator\Fields\Bool', array($this->validator, $this->config, $this->db, $options))->makePartial();
+		$this->field = m::mock('Frozennode\Administrator\Fields\Boolean', array($this->validator, $this->config, $this->db, $options))->makePartial();
 	}
 
 	/**
