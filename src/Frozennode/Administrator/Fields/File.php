@@ -50,7 +50,7 @@ class File extends Field {
 		//set the upload url to the proper route
 		$model = $this->config->getDataModel();
 
-		$this->suppliedOptions['upload_url'] = $url->route(
+		$uploadUrl = $url->route(
 			$route,
 			array(
 				'model' => $this->config->getOption('name'),
@@ -58,6 +58,8 @@ class File extends Field {
 				'id'    => $model ? $model->{$model->getKeyName()} : null,
 			)
 		);
+
+        $this->suppliedOptions['upload_url'] = preg_replace('$([^:])(//)$', '\1/', $uploadUrl);
 	}
 
 	/**
