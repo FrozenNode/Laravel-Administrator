@@ -16,8 +16,8 @@ return array(
 	'saved' => 'Элемент сохранён.',
 	'deleting' => 'Удаление...',
 	'deleted' => 'Элемент удалён.',
-	'character_left' => ' символ влево',
-	'characters_left' => ' символов влево',
+	'character_left' => ' символ остался',
+	'characters_left' => ' символов осталось',
 	'no_results' => 'Результатов не найдено',
 	'select_options' => 'Выберите',
 
