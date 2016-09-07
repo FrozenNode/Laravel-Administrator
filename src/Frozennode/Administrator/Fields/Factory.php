@@ -30,6 +30,8 @@ class Factory {
 		'image' => 'Frozennode\\Administrator\\Fields\\Image',
 		'file' => 'Frozennode\\Administrator\\Fields\\File',
 		'color' => 'Frozennode\\Administrator\\Fields\\Color',
+		'email' => 'Frozennode\\Administrator\\Fields\\Email',
+		'url' => 'Frozennode\\Administrator\\Fields\\Url',
 
 		//relationships
 		'belongs_to' => 'Frozennode\\Administrator\\Fields\\Relationships\\BelongsTo',
