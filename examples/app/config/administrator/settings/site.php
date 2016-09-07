@@ -32,7 +32,7 @@ return array(
 			'title' => 'Image (200 x 150)',
 			'type' => 'image',
 			'naming' => 'random',
-			'location' => public_path(),
+			'location' => public_path().'/',
 			'size_limit' => 2,
 			'sizes' => array(
 		 		array(200, 150, 'crop', public_path() . '/resize/', 100),
