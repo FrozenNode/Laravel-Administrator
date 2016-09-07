@@ -18,7 +18,7 @@ return array(
 	'deleted' => 'Item verwijderd.',
 	'character_left' => ' letter over',
 	'characters_left' => ' letters over',
-	'no_results' => 'No results matched',
-	'select_options' => 'Select Some Options',
+	'no_results' => 'Geen resultaten gevonden',
+	'select_options' => 'Selecteer opties',
 
 );
