@@ -48,6 +48,7 @@ class Action {
 			'success' => 'Success!',
 			'error' => 'There was an error performing this action',
 		),
+		'visible' => true,
 	);
 
 	/**
@@ -60,6 +61,7 @@ class Action {
 		'confirmation' => 'string_or_callable',
 		'messages' => 'array|array_with_all_or_none:active,success,error',
 		'action' => 'required|callable',
+		'visible' => 'bool_or_callable',
 	);
 
 	/**
@@ -106,6 +108,9 @@ class Action {
 		//build the string or callable values for title and confirmation
 		$this->buildStringOrCallable($options, array('confirmation', 'title'));
 
+		//build the bool or callable values for visible
+		$this->buildBoolOrCallable($options, array('visible'));
+
 		//build the string or callable values for the messages
 		$messages = $this->validator->arrayGet($options, 'messages', array());
 		$this->buildStringOrCallable($messages, array('active', 'success', 'error'));
@@ -137,6 +142,42 @@ class Action {
 			if (is_string($suppliedValue))
 			{
 				$options[$key] = $suppliedValue;
+			}
+			//if it's callable pass it the current model and run it
+			else if (is_callable($suppliedValue))
+			{
+				$options[$key] = $suppliedValue($model);
+			}
+		}
+	}
+
+	/**
+	 * Sets up the values of all the options that can be either booleans or closures
+	 * 
+	 * @param array 	$options
+	 * @param array 	$keys
+	 * 
+	 * @return void
+	 */
+	public function buildBoolOrCallable(array &$options, array $keys)
+	{
+		$model = $this->config->getDataModel();
+
+		//iterate over the keys
+		foreach ($keys as $key)
+		{
+			//check if the key's value was supplied
+			$suppliedValue = $this->validator->arrayGet($options, $key);
+
+			//if it's a bool, simply set it
+			if (is_bool($suppliedValue))
+			{
+				$options[$key] = $suppliedValue;
+			}
+			//if it's a int check if it is either 1 or 0
+			else if (is_int($suppliedValue))
+			{
+				$options[$key] = ($suppliedValue === 0) ? false : true;
 			}
 			//if it's callable pass it the current model and run it
 			else if (is_callable($suppliedValue))

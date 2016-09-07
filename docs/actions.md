@@ -33,6 +33,16 @@ You can define custom actions in your [model](/docs/model-configuration#custom-a
 				//return a string to show a custom error
 				//return a Response::download() to initiate a file download
 				return true;
+			},
+
+			'visible' => function(&$data)
+			{
+				if (Auth::user()->canFlushCache)
+				{
+					return true;
+				}
+
+				return false;
 			}
 		),
 	),
