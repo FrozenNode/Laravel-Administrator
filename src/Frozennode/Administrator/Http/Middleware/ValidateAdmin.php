@@ -13,6 +13,12 @@ class ValidateAdmin {
 	 */
 	public function handle($request, Closure $next)
 	{
+		$locale = $request->session()->get('administrator_locale');
+
+        	if(!is_null($locale)){
+           		app()->setLocale($locale);
+        	}
+        	
 		$configFactory = app('admin_config_factory');
 
 		//get the admin check closure that should be supplied in the config

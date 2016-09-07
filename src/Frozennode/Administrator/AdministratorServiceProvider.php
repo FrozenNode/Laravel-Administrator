@@ -41,8 +41,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 			__DIR__.'/../../../public' => public_path('packages/frozennode/administrator'),
 		], 'public');
 
-		//set the locale
-		$this->setLocale();
 
 		$this->app['events']->fire('administrator.ready');
 	}
@@ -130,19 +128,6 @@ class AdministratorServiceProvider extends ServiceProvider {
 	{
 		return array('admin_validator', 'admin_config_factory', 'admin_field_factory', 'admin_datatable', 'admin_column_factory',
 			'admin_action_factory', 'admin_menu');
-	}
-
-	/**
-	 * Sets the locale if it exists in the session and also exists in the locales option
-	 *
-	 * @return void
-	 */
-	public function setLocale()
-	{
-		if ($locale = $this->app->session->get('administrator_locale'))
-		{
-			$this->app->setLocale($locale);
-		}
 	}
 
 }
