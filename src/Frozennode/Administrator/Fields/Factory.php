@@ -302,7 +302,7 @@ class Factory {
 								$this->config->getOption('name') . " is not a valid relationship method name on the supplied Eloquent model");
 
 		//check if the related method exists on the model
-		if (!method_exists($model, $field))
+		if (!method_exists($model, $field) && !is_callable(array($model, $field)))
 		{
 			throw $invalidArgument;
 		}

@@ -69,7 +69,7 @@ class BelongsTo extends Relationship {
 			}
 
 			//if the model method doesn't exist for any of the pieces along the way, exit out
-			if (!method_exists($models[$i], $rel) || !is_a($models[$i]->{$rel}(), self::BELONGS_TO))
+			if ((!method_exists($models[$i], $rel) && !is_callable(array($models[$i], $rel))) || !is_a($models[$i]->{$rel}(), self::BELONGS_TO))
 			{
 				throw new \InvalidArgumentException("The '" . $this->getOption('column_name') . "' column in your " . $this->config->getOption('name') .
 					" model configuration needs to be either a belongsTo relationship method name or a sequence of them connected with a '.'");
@@ -126,7 +126,7 @@ class BelongsTo extends Relationship {
 					$field_table . '.' . $first_relationship->getOtherKey();
 
 		$selects[] = $this->db->raw("(SELECT " . $this->getOption('select') . "
-										FROM " . $from_table." AS " . $field_table . ' ' . $joins . "
+										FROM `" . $from_table."` AS " . $field_table . ' ' . $joins . "
 										WHERE " . $where . ") AS " . $this->db->getQueryGrammar()->wrap($columnName));
 	}
 
