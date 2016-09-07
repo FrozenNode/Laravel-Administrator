@@ -69,7 +69,7 @@ Administrator is released under the MIT License. See the LICENSE file for detail
 - Bugfix: Update settings.php for `Request::url()` instead of using `url()`
 
 ### 5.0.11
-- Bugfix: Had to make the middleware additon backwards compatable
+- Bugfix: Had to make the middleware additon backwards compatible
 - Docs: Added doc updates
 
 ### 5.0.10
