@@ -125,7 +125,7 @@ class AdminController extends Controller {
 		$config = app('itemconfig');
 		$fieldFactory = app('admin_field_factory');
 		$actionFactory = app('admin_action_factory');
-		
+
 		if (array_key_exists('form_request', $config->getOptions()) && $this->formRequestErrors !== null) {
 			return response()->json(array(
 				'success' => false,
@@ -451,11 +451,41 @@ class AdminController extends Controller {
 	 *
 	 * @return JSON
 	 */
-	public function fileUpload($modelName, $fieldName)
+	public function fileUpload($modelName, $fieldName, $id = false)
 	{
-		$fieldFactory = app('admin_field_factory');
+		$config        = app('itemconfig');
+		$columnFactory = app('admin_column_factory');
+		$fieldFactory  = app('admin_field_factory');
+		$fields        = $fieldFactory->getEditFields();
+		$model         = $config->getModel($id, $fields, $columnFactory->getIncludedColumns($fields));
 
+		if ($model) {
+			$config->setDataModel($model);
+		}
+
+		return $this->executeFileUpload($fieldName);
+	}
+
+	/**
+	 * @param string $modelName
+	 * @param string $fieldName
+	 *
+	 * @return JSON
+	 */
+	public function settingsFileUpload($modelName, $fieldName)
+	{
+		return $this->executeFileUpload($fieldName);
+	}
+
+	/**
+	 * @param string $fieldName
+	 *
+	 * @return JSON
+	 */
+	protected function executeFileUpload($fieldName)
+	{
 		//get the model and the field object
+		$fieldFactory  = app('admin_field_factory');
 		$field = $fieldFactory->findField($fieldName);
 
 		return response()->JSON($field->doUpload());
