@@ -314,7 +314,7 @@ class Factory {
 	public function fetchConfigFile($name)
 	{
 		$name = str_replace($this->getPrefix(), '', $name);
-		$path = $this->getPath() . $name . '.php';
+        $path = $this->getPath() . str_replace('.','/',$name) . '.php';
 
 		//check that this is a legitimate file
 		if (is_file($path))
