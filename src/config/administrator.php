@@ -1,4 +1,5 @@
 <?php
+ini_set('xdebug.max_nesting_level', 500);
 
 return array(
 
@@ -21,7 +22,7 @@ return array(
 	 *
 	 *  @type array
 	 */
-	'middleware' => array(),
+	'middleware' => ['web'],
 
 	/**
 	 * Page title
@@ -65,7 +66,7 @@ return array(
 	 * 		'Analytics' => array('E-Commerce' => 'page.ecommerce.analytics'),
 	 *	)
 	 */
-	'menu' => array(),
+	'menu' => [],
 
 	/**
 	 * The permission option is the highest-level authentication check that lets you define a closure that should return true if the current user
@@ -112,7 +113,7 @@ return array(
 	 *
 	 * @type string
 	 */
-	'login_path' => 'auth/login',
+	'login_path' => '/login',
 
 	/**
 	 * The logout path is the path where Administrator will send the user when they click the logout link
@@ -142,5 +143,6 @@ return array(
 	 * @type array
 	 */
 	'locales' => array(),
-
 );
+
+
