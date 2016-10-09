@@ -28,7 +28,9 @@ class BelongsTo extends Relationship {
 		$relatedModel = $relationship->getRelated();
 
 		$options['table'] = $relatedModel->getTable();
-		$options['column'] = $relatedModel->getKeyName();
+
+		// Assign foreign key value to column, instead of primary key
+		$options['column'] = $relatedModel->getOtherKey();
 		$options['foreign_key'] = $relationship->getForeignKey();
 
 		$this->suppliedOptions = $options;
