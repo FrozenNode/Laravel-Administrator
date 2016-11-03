@@ -14,29 +14,48 @@ class Enum extends Field {
 		'options' => 'required|array|not_empty',
 	);
 
-	/**
-	 * Builds a few basic options
-	 */
-	public function build()
-	{
-		parent::build();
+    /**
+     * Builds a few basic options
+     */
+    public function build()
+    {
+        parent::build();
 
-		$options = $this->suppliedOptions;
+        $options            = $this->suppliedOptions;
+        $dataOptions        = $options['options'];
+        $options['options'] = array();
+        $isAssoc            = $this->isArrayAssoc($dataOptions);
 
-		$dataOptions = $options['options'];
-		$options['options'] = array();
+        //iterate over the options to create the options assoc array
+        foreach ($dataOptions as $val => $text)
+        {
+            $options['options'][] = array(
+                'id'   => $isAssoc ? $val : $text,
+                'text' => $text,
+            );
+        }
 
-		//iterate over the options to create the options assoc array
-		foreach ($dataOptions as $val => $text)
-		{
-			$options['options'][] = array(
-				'id' => is_numeric($val) ? $text : $val,
-				'text' => $text,
-			);
-		}
+        $this->suppliedOptions = $options;
+    }
 
-		$this->suppliedOptions = $options;
-	}
+    /**
+     * @param array $arr
+     * @return bool
+     */
+    private function isArrayAssoc(array $arr)
+    {
+        $expected = 0;
+
+        foreach ($arr as $key => $value) {
+            if ($key !== $expected) {
+                return true;
+            }
+
+            $expected++;
+        }
+
+        return false;
+    }
 
 	/**
 	 * Fill a model with input data
