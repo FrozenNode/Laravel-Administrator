@@ -89,7 +89,11 @@ class AdministratorServiceProvider extends ServiceProvider {
 		//set up the shared instances
 		$this->app['admin_config_factory'] = $this->app->share(function($app)
 		{
-			return new ConfigFactory($app->make('admin_validator'), LValidator::make(array(), array()), config('administrator'));
+			return new ConfigFactory(
+			    $app->make('admin_validator'),
+                LValidator::make(array(), array()),
+                $this->app,
+                config('administrator'));
 		});
 
 		$this->app['admin_field_factory'] = $this->app->share(function($app)

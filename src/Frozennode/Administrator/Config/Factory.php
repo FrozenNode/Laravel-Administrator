@@ -2,6 +2,7 @@
 namespace Frozennode\Administrator\Config;
 
 use Frozennode\Administrator\Validator;
+use Illuminate\Foundation\Application;
 use Illuminate\Validation\Validator as CustomValidator;
 use Frozennode\Administrator\Config\Settings\Config as SettingsConfig;
 use Frozennode\Administrator\Config\Model\Config as ModelConfig;
@@ -50,6 +51,11 @@ class Factory {
 	 */
 	protected $type;
 
+    /**
+     * @var Application
+     */
+    protected $app;
+
 	/**
 	 * The settings page menu prefix
 	 *
@@ -90,19 +96,21 @@ class Factory {
 	 *
 	 * @param \Frozennode\Administrator\Validator 	$validator
 	 * @param \Illuminate\Validation\Validator	 	$custom_validator
+     * @param Application                           $app,
 	 * @param array 								$options
 	 */
-	public function __construct(Validator $validator, CustomValidator $custom_validator, array $options)
+	public function __construct(Validator $validator, CustomValidator $custom_validator, Application $app, array $options)
 	{
 		//set the config, and then validate it
-		$this->options = $options;
-		$this->validator = $validator;
-		$this->customValidator = $custom_validator;
+        $this->options         = $options;
+        $this->validator       = $validator;
+        $this->customValidator = $custom_validator;
+        $this->app             = $app;
+
 		$validator->override($this->options, $this->rules);
 
 		//if the validator failed, throw an exception
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			throw new \InvalidArgumentException('There are problems with your administrator.php config: ' . implode('. ', $validator->messages()->all()));
 		}
 	}
