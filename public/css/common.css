@@ -1,0 +1,103 @@
+/* fonts */
+.verdana {
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+.arial {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.centuryGothic {
+  font-family: 'century gothic', verdana, arial, helvetica, sans-serif;
+}
+/**
+ *
+ * HTML ELEMENTS
+ *
+ */
+/* You can put your HTML reset declarations in here if you like */
+/**
+ *
+ * BORDER RADIUS
+ *
+ */
+/* clears the border radius from an element */
+.noBorderRadius {
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+}
+/**
+ *
+ * BOX SHADOWS
+ *
+ */
+/* same as above, except with spread. not sure what uses above so i may screw it up */
+.noBoxShadow {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+/**
+ *
+ * GRADIENTS
+ *
+ */
+/**
+ *
+ * TRANSITIONS
+ *
+ */
+.noTransition {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+/**
+ *
+ * REUSABLE ELEMENTS
+ *
+ */
+/* simple table */
+.simpleTable th,
+.simpleTable td,
+.simpleTable tr,
+.simpleTable tbody {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+/* disables selection */
+.noSelect {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* enables selection */
+.select {
+  -moz-user-select: auto;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+/* overflow ellipsis */
+.overflowEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* opacity */
+/* clearfix */
+.clearfix {
+  zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  content: "\0020";
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+.clearfix:after {
+  clear: both;
+}

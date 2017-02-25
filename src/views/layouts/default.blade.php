@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width">
 	<title>{{ config('administrator.title') }}</title>
 
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+
 	@foreach ($css as $url)
 		<link href="{{$url}}" media="all" type="text/css" rel="stylesheet">
 	@endforeach

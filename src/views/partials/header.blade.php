@@ -38,7 +38,7 @@
 				</li>
 			</ul>
 		@endif
-		@if(config('administrator.show_back_to_site'))
+		@if(config('administrator.back_to_site_path'))
 			<a href="{{url(config('administrator.back_to_site_path', '/'))}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
 		@endif
 		@if(config('administrator.logout_path'))
