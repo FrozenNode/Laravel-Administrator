@@ -100,6 +100,13 @@ return array(
 	 */
 	'home_page' => '',
 
+    /**
+     * Set to false if you don't want to display the back to site button on the top right.
+     *
+     * @type bool
+     */
+    'show_back_to_site' => true,
+
 	/**
 	 * The route to which the user will be taken when they click the "back to site" button
 	 *
