@@ -9,7 +9,7 @@
 <a name="introduction"></a>
 ## Introduction
 
-> **Note**: This article is just about relationship columns. For a more in-depth look at all column options, check out [the columns docs](/docs/columns)
+> **Note**: This article is just about relationship columns. For a more in-depth look at all column options, check out [the columns docs](/docs/columns.md)
 
 In any moderately complex database, a table might have columns that represent an ID on another table. Most of the time it's fairly useless to display this ID to an admin user because numbers mean more to a computer than to a human. Alternatively, a relationship may not be represented on a model's table at all, but instead on a pivot table that connects two tables, or as a column on another model's table.
 
