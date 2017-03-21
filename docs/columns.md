@@ -17,7 +17,7 @@ In each model's config file you must specify a `columns` option. This should be 
 
 * Attribute names on your model
 * [Accessors](http://laravel.com/docs/eloquent#accessors-and-mutators)
-* [Relationships](#relationship-columns) (inlcuding [nested relationships](/docs/relationship-columns#nested-relationships))
+* [Relationships](#relationship-columns) (inlcuding [nested relationships](/docs/relationship-columns.md#nested-relationships))
 
 You can control the column's header through the `title` option, the `sort_field` that will be used if you sort by that columns, and any custom output you want for that column.
 
@@ -123,7 +123,7 @@ Here the `good` key will be the column's alias, so you can name it anything you 
 <a name="relationship-columns"></a>
 ## Relationship Columns
 
-> For a more in-depth look at relationship columns, check out the [relationship columns docs](/docs/relationship-columns)
+> For a more in-depth look at relationship columns, check out the [relationship columns docs](/docs/relationship-columns.md)
 
 In any moderately complex database, a table might have columns that represent an ID on another table. Most of the time it's fairly useless to display this ID to an admin user because numbers mean more to a computer than to a human. Alternatively, a relationship may not be represented on a model's table at all, but instead on a pivot table that connects two tables, or as a column on another model's table.
 
@@ -135,14 +135,14 @@ If you want to display related columns, you can provide a `relationship` option.
 		'select' => "COUNT((:table).id)",
 	)
 
-Any SQL grouping function will work in the `select` statement. Much more is possible with the `relationship` option, so check out the [relationship columns docs](/docs/relationship-columns) for more detail.
+Any SQL grouping function will work in the `select` statement. Much more is possible with the `relationship` option, so check out the [relationship columns docs](/docs/relationship-columns.md) for more detail.
 
 <a name="custom-outputs"></a>
 ## Custom Outputs
 
 If you want your column to show more than just text, you can use the `output` option. This can either be a string or an anonymous function.
 
-If you provide an anonymous function, the argumentis available are the relevant column's value from the database, and the current model. For instance, if you are using a [color](/docs/field-type-color) field and you want to clearly show the admin user what color a row is, you can do this:
+If you provide an anonymous function, the argumentis available are the relevant column's value from the database, and the current model. For instance, if you are using a [color](/docs/field-type-color.md) field and you want to clearly show the admin user what color a row is, you can do this:
 
 	'hex' => array(
 		'title' => 'Color',
@@ -159,7 +159,7 @@ Alternatively, you can also pass a string to the `output` option and Administrat
 		'output' => '<div style="background-color: (:value); width: 200px; height: 20px; border-radius: 2px;"></div>',
 	),
 
-Or maybe you're using an [image](/docs/field-type-image) field and you want to display the image in your result set. In that case you'd do:
+Or maybe you're using an [image](/docs/field-type-image.md) field and you want to display the image in your result set. In that case you'd do:
 
 	'banner_image' => array(
 		'title' => 'Banner Image',
