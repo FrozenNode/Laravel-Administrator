@@ -53,6 +53,11 @@ class Resize{
 	*/
 	private $image_resized;
 
+    /**
+     * @var string
+     */
+	private $extension;
+
 	/*
 		Create multiple thumbs/resizes of an image
 		Path to the original
@@ -78,7 +83,15 @@ class Resize{
 					mkdir($size[3]);
 				}
 
-				$resized[] = $this->do_resize( $path.$filename, $size[3].$filename, $size[4] );
+				$filePath  = $size[3].$filename;
+				$extension = $extension = strtolower(File::extension($filePath));
+
+				if (isset($size[5])) {
+				    $extension = $size[5];
+                }
+
+
+				$resized[] = $this->do_resize($path.$filename, $size[3].$filename, $size[4], $extension);
 			}
 		}
 
@@ -90,9 +103,10 @@ class Resize{
 	 * @param  mixed   $image resource or filepath
 	 * @param  strung  $save_path where to save the resized image
 	 * @param  int (0-100) $quality
+     * @param string|null $extension
 	 * @return bool
 	 */
-	private function do_resize( $image, $save_path, $image_quality )
+	private function do_resize($image, $save_path, $image_quality, $extension)
 	{
 		$image = $this->open_image( $image );
 
@@ -129,9 +143,6 @@ class Resize{
 		if ( $this->option == 'crop' || $this->option == 'fit' ) {
 			$this->crop( $optimal_width , $optimal_height , $this->new_width , $this->new_height );
 		}
-
-		// Get extension of the output file
-		$extension = strtolower( File::extension($save_path) );
 
 		// Create and save an image based on it's extension
 		switch( $extension )

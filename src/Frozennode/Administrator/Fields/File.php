@@ -92,12 +92,7 @@ class File extends Field {
 	 */
 	protected function getFileExtension()
 	{
-		$file      = $this->getFile();
-		$extension = $this->getOption('extension');
-
-		if ($extension) {
-		    return $extension;
-        }
+        $file = $this->getFile();
 
 		return LaravelFile::extension($file->getClientOriginalName());
 	}
