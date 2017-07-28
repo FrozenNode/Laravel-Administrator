@@ -53,11 +53,6 @@ class Resize{
 	*/
 	private $image_resized;
 
-    /**
-     * @var string
-     */
-	private $extension;
-
 	/*
 		Create multiple thumbs/resizes of an image
 		Path to the original
@@ -86,10 +81,11 @@ class Resize{
 				$filePath  = $size[3].$filename;
 				$extension = $extension = strtolower(File::extension($filePath));
 
-				if (isset($size[5])) {
-				    $extension = $size[5];
+                if (isset($size[5])) {
+                    $extension = $size[5];
+                    $pathInfo  = pathinfo($filename);
+                    $filename  = $pathInfo['filename'] . '.' . $extension;
                 }
-
 
 				$resized[] = $this->do_resize($path.$filename, $size[3].$filename, $size[4], $extension);
 			}
@@ -101,7 +97,7 @@ class Resize{
 	/**
 	 * Resizes and/or crops an image
 	 * @param  mixed   $image resource or filepath
-	 * @param  strung  $save_path where to save the resized image
+	 * @param  string  $save_path where to save the resized image
 	 * @param  int (0-100) $quality
      * @param string|null $extension
 	 * @return bool
