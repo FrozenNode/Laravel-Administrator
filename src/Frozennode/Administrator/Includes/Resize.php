@@ -78,16 +78,22 @@ class Resize{
 					mkdir($size[3]);
 				}
 
-				$filePath  = $size[3].$filename;
-				$extension = $extension = strtolower(File::extension($filePath));
+                $filePath    = $size[3] . $filename;
+                $extension   = $extension = strtolower(File::extension($filePath));
+                $newFilePath = $size[3] . $filename;
 
                 if (isset($size[5])) {
-                    $extension = $size[5];
-                    $pathInfo  = pathinfo($filename);
-                    $filename  = $pathInfo['filename'] . '.' . $extension;
+                    $extension   = $size[5];
+                    $pathInfo    = pathinfo($filename);
+                    $newFilePath = $size[3] . $pathInfo['filename'] . '.' . $extension;
                 }
 
-				$resized[] = $this->do_resize($path.$filename, $size[3].$filename, $size[4], $extension);
+                $resized[] = $this->do_resize(
+                    $path.$filename,
+                    $newFilePath,
+                    $size[4],
+                    $extension
+                );
 			}
 		}
 
