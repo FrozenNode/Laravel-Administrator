@@ -80,7 +80,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	protected function registerManager()
 	{
-		$this->app['admin.manager'] = $this->app->share(function($app)
+		$this->app->singleton('admin.manager',function($app)
 		{
 			return new Manager;
 		});
@@ -91,7 +91,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	protected function registerValidator()
 	{
-		$this->app['admin.validator'] = $this->app->share(function($app)
+        $this->app->singleton('admin.validator',function($app)
 		{
 			//get the original validator class so we can set it back after creating our own
 			$originalValidator = LValidator::make([], []);
@@ -122,7 +122,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	protected function registerRouteFilters()
 	{
-		$this->app['admin.routing.filter'] = $this->app->share(function($app)
+        $this->app->singleton('admin.routing.filter',function($app)
 		{
 			return new Filter($app);
 		});
@@ -145,7 +145,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	protected function registerViewComposers()
 	{
-		$this->app['admin.view.composer'] = $this->app->share(function($app)
+        $this->app->singleton('admin.view.composer',function($app)
 		{
 			return new Composer($app);
 		});
@@ -170,22 +170,22 @@ class AdministratorServiceProvider extends ServiceProvider {
 	protected function registerFactories()
 	{
 		//set up the shared instances
-		$this->app['admin.config.factory'] = $this->app->share(function($app)
+		$this->app->singleton('admin.config.factory', function($app)
 		{
 			return new ConfigFactory(Config::get('administrator::administrator'));
 		});
 
-		$this->app['admin.field.factory'] = $this->app->share(function($app)
+		$this->app->singleton('admin.field.factory', function($app)
 		{
 			return new FieldFactory($app->make('admin.validator'), $app->make('itemconfig'), $app->make('db'));
 		});
 
-		$this->app['admin.column.factory'] = $this->app->share(function($app)
+		$this->app->singleton('admin.column.factory', function($app)
 		{
 			return new ColumnFactory($app->make('admin.validator'), $app->make('itemconfig'), $app->make('db'));
 		});
 
-		$this->app['admin.action.factory'] = $this->app->share(function($app)
+		$this->app->singleton('admin.action.factory', function($app)
 		{
 			return new ActionFactory($app->make('admin.validator'), $app->make('itemconfig'), $app->make('db'));
 		});
@@ -196,7 +196,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	protected function registerMenu()
 	{
-		$this->app['admin.menu'] = $this->app->share(function($app)
+		$this->app->singleton('admin.menu', function($app)
 		{
 			return new Menu($app->make('config'), $app->make('admin.config.factory'));
 		});
@@ -207,7 +207,7 @@ class AdministratorServiceProvider extends ServiceProvider {
 	 */
 	protected function registerGrid()
 	{
-		$this->app['admin.grid'] = $this->app->share(function($app)
+		$this->app->singleton('admin.grid', function($app)
 		{
 			$dataTable = new DataTable($app->make('itemconfig'), $app->make('admin.column.factory'), $app->make('admin.field.factory'));
 			$dataTable->setRowsPerPage($app->make('session.store'), Config::get('administrator::administrator.global.rows.per.page'));
