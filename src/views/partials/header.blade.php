@@ -1,7 +1,9 @@
 <header>
-	<h1>
-		<a href="{{route('admin_dashboard')}}">{{config('administrator.title')}}</a>
-	</h1>
+	@if (config('administrator.title'))
+		<h1>
+			<a href="{{route('admin_dashboard')}}">{{config('administrator.title')}}</a>
+		</h1>
+	@endif
 
 	<a href="#" id="menu_button"><div></div></a>
 	<a href="#" id="filter_button" class="{{$configType === 'model' ? '' : 'hidden'}}"><div></div></a>
