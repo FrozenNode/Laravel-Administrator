@@ -194,6 +194,7 @@ class DataTable {
 		$model = $this->config->getDataModel();
 
 		//then wrap the inner table and perform the count
+        $querySql = str_replace('* from', 'id from', $querySql);
 		$sql = "SELECT COUNT({$model->getKeyName()}) AS aggregate FROM ({$querySql}) AS agg";
 
 		//then perform the count query

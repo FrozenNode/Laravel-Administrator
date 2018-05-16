@@ -101,11 +101,12 @@ return array(
 	'home_page' => '',
 
 	/**
-	 * The route to which the user will be taken when they click the "back to site" button
+	 * The route to which the user will be taken when they click the "back to site" button.
+     * Set to null, if no button should be displayed.
 	 *
 	 * @type string
 	 */
-	'back_to_site_path' => '/',
+	'back_to_site_path' => null,
 
 	/**
 	 * The login path is the path where Administrator will send the user if they fail a permission check

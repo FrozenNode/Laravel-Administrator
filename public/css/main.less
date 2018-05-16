@@ -2,7 +2,7 @@
 @import "common.less";
 @import "elements.less";
 @import "settings.less";
-
+@import "colors.less";
 
 /* CSS Resets */
 html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,address,cite,code,del,dfn,em,img,ins,q,small,strong,sub,sup,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;margin:0;padding:0}article,aside,figure,figure img,figcaption,hgroup,footer,header,nav,section,video,object{display:block}a img{border:0}figure{position:relative}figure img{width:100%}
@@ -14,13 +14,14 @@ a{ text-decoration: none; }
 	Main Styling
 */
 #wrapper {
-	.oxygen;
-	font-size: 13px;
-	line-height: 18px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+	line-height: 22px;
 	color: #333333;
 
 	h2 {
-		font-size: 24px;
+        color: @color-darkgrey;
+		font-size: 18px;
 		line-height: 36px;
 	}
 
@@ -50,13 +51,11 @@ a{ text-decoration: none; }
 #wrapper {
 
 	header {
-		.verticalGradient(#5a6064, #4a4f52);
 		.boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
+		background-color: @color-darkgrey;
 		border-bottom: 1px solid #44484b;
-		text-shadow: black 0 1px 0;
 		height: 34px;
 		overflow: visible;
-		position: relative;
 		z-index: 900;
 		position: fixed;
 		top: 0;
@@ -66,17 +65,11 @@ a{ text-decoration: none; }
 		h1 {
 			float: left;
 			margin: 0;
-			border-right: 1px solid #999;
 
 			a {
 				.headerButton;
 				padding: 8px 15px 9px;
-				font-size: 19px;
-				border-right: 1px solid #555;
-
-				&:hover {
-					.verticalGradient(#444, #333);
-				}
+				font-size: 16px;
 			}
 		}
 
@@ -132,7 +125,7 @@ a{ text-decoration: none; }
 			}
 
 			ul#mobile_menu {
-				.verticalGradient(#333, #444);
+				background-color: @color-darkgrey;
 				min-width: 300px;
 				min-height: 100%;
 
@@ -161,19 +154,17 @@ a{ text-decoration: none; }
 
 		ul#menu, ul#lang_menu {
 			display: inline-block;
+            font-size: 9px;
 
 			> li {
-				display: inline-block;
-				position: relative;
-				.verticalGradient(#5a6064, #4a4f52);
+                transition: background-color 0.3s;
+                background-color: @color-darkgrey;
+                display: inline-block;
+                position: relative;
 				margin-left: -3px;
 
 				a, span {
 					.headerButtonPadding;
-				}
-
-				&.menu {
-
 				}
 
 				ul {
@@ -181,9 +172,7 @@ a{ text-decoration: none; }
 					top: 35px;
 					left: 0;
 					display: none;
-					.verticalGradient(#333, #444);
-					.boxShadow(0, 2px, 3px, #555);
-					.borderRadiusBottom(2px);
+                    background-color: @color-darkgrey;
 
 					a {
 						display: block;
@@ -206,13 +195,7 @@ a{ text-decoration: none; }
 						position: relative;
 
 						&.current {
-							.verticalGradient(#333, #444);
-						}
-
-						&:hover {
-							> ul {
-
-							}
+							background-color: @color-darkblue;
 						}
 
 						ul {
@@ -224,7 +207,7 @@ a{ text-decoration: none; }
 				}
 
 				&.current, &:hover {
-					.verticalGradient(#444, #333);
+					background-color: @color-darkblue;
 				}
 
 				&:first-child {
@@ -283,7 +266,6 @@ a{ text-decoration: none; }
 
 		h2 {
 			color: #444;
-			text-shadow: #DDD 0 1px 0;
 			margin-bottom: 15px;
 		}
 
@@ -339,7 +321,6 @@ a{ text-decoration: none; }
 					div.color_preview {
 						height: 8px;
 						margin: 0 33px 0 1px;
-						.boxShadow(0px, 1px, 2px, #aaa);
 					}
 				}
 			}
@@ -353,16 +334,11 @@ a{ text-decoration: none; }
 			position: relative;
 
 			div.results_header {
-				.verticalGradient(#efefef, #dfe1e2);
-				.boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
-				text-shadow: white 0 1px 0;
-				border: solid 1px #d4d4d4;
-				border-top-color: #e6e6e6;
-				border-bottom-color: #EEE;
-				font-size: 1.0em;
+				background-color: @color-lightgrey;
+				font-size: 14px;
 				font-weight: bold;
 				line-height: 18px;
-				color: #5e6469;
+				color: @color-darkblue;
 				position: relative;
 				z-index: 800;
 				margin-bottom: 3px;
@@ -380,8 +356,8 @@ a{ text-decoration: none; }
 					right: 9px;
 
 					a, input {
-						display: inline-block;
-						.greyButton;
+                        .greyButton;
+                        display: inline-block;
 						text-shadow: none;
 						margin-left: 10px;
 					}
@@ -396,12 +372,7 @@ a{ text-decoration: none; }
 			}
 
 			div.page_container {
-				.verticalGradient(#efefef, #dfe1e2);
-				.boxShadow(0, 1px, 2px, rgba(0, 0, 0, 0.37));
-				text-shadow: white 0 1px 0;
-				border: solid 1px #d4d4d4;
-				border-top-color: #e6e6e6;
-				border-bottom-color: #EEE;
+				background-color: @color-lightgrey;
 				font-size: 1.0em;
 				font-weight: bold;
 				line-height: 18px;
@@ -458,17 +429,7 @@ a{ text-decoration: none; }
 				border-spacing: 0;
 
 				th {
-					.verticalGradient(#efefef, #dfe1e2);
-					text-shadow: white 0 1px 0;
-					border: solid 1px #d4d4d4;
-					border-top-color: #e6e6e6;
-					border-bottom-color: #cdcdcd;
-					border-right: none;
-					-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px white inset;
-					-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px white inset;
-					-ms-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px white inset;
-					-o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px white inset;
-					box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px white inset;
+					background-color: @color-lightgrey;
 					font-weight: bold;
 					line-height: 18px;
 					color: #5e6469;
@@ -494,7 +455,7 @@ a{ text-decoration: none; }
 					}
 
 					&.sorted-asc, &.sorted-desc {
-						.verticalGradient(#e2e2e2, #d2d4d6);
+						text-decoration: underline;
 					}
 
 					&.sorted-asc {
@@ -507,10 +468,6 @@ a{ text-decoration: none; }
 						div {
 							background-position: 0 -56px;
 						}
-					}
-
-					&:last-child {
-						border-right: solid 1px #d4d4d4;
 					}
 				}
 
@@ -562,7 +519,6 @@ a{ text-decoration: none; }
 					right: 0;
 					color: #fff;
 					font-size: 35px;
-					text-shadow: #000 1px 1px 1px;
 				}
 			}
 
@@ -577,7 +533,6 @@ a{ text-decoration: none; }
 				> div {
 					color: #444;
 					font-size:28px;
-					text-shadow: #ddd 1px 1px 1px;
 				}
 			}
 
@@ -600,10 +555,9 @@ a{ text-decoration: none; }
 				position: relative;
 				padding-top: 25px;
 				padding-left: 27px;
-				background: #D9E4EC;
+				background-color: @color-lightgrey;
 				min-height: 430px;
 				width: 258px;
-				.boxShadow(-1px, 1px, 2px, rgba(0, 0, 0, 0.4));
 				margin-left: 2px;
 				margin-bottom: 2px;
 

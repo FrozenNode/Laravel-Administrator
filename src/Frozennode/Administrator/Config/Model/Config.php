@@ -6,6 +6,9 @@ use Frozennode\Administrator\Config\ConfigInterface;
 use Frozennode\Administrator\Fields\Factory as FieldFactory;
 use Frozennode\Administrator\Fields\Field as Field;
 use Frozennode\Administrator\Actions\Factory as ActionFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 
 /**
  * The Model Config class helps retrieve a model's configuration and provides a reliable pointer for these items
@@ -46,7 +49,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * An instance of the Eloquent model object for this model
 	 *
-	 * @var \Illuminate\Database\Eloquent\Model
+	 * @var Model
 	 */
 	protected $model;
 
@@ -77,7 +80,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fetches the data model for a config
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Model
 	 */
 	public function getDataModel()
 	{
@@ -93,7 +96,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Sets the data model for a config
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param Model	$model
 	 *
 	 * @return  void
 	 */
@@ -109,7 +112,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * @param array										$fields
 	 * @param array										$columns
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Model
 	 */
 	public function getModel($id = 0, array $fields, array $columns)
 	{
@@ -133,7 +136,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	 * Fills a model with the data it needs before being sent back to the user
 	 *
 	 * @param array									$fields
-	 * @param \Illuminate\Database\Eloquent\Model	$model
+	 * @param Model	$model
 	 *
 	 * @return void
 	 */
@@ -158,7 +161,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fills a model with the necessary relationship values for a field
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model		$model
+	 * @param Model		$model
 	 * @param \Frozennode\Administrator\Fields\Field	$field
 	 *
 	 * @return void
@@ -233,7 +236,7 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fills a model with the necessary relationship values
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model		$model
+	 * @param Model		$model
 	 * @param \Frozennode\Administrator\Fields\Field		$field
 	 *
 	 * @return \Illuminate\Database\Eloquent\Collection
@@ -263,11 +266,11 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Updates a model with the latest permissions, links, and fields
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model		$model
+	 * @param Model		$model
 	 * @param \Frozennode\Administrator\Fields\Factory	$fieldFactory
 	 * @param \Frozennode\Administrator\Actions\Factory	$actionFactory
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Model
 	 */
 	public function updateModel($model, FieldFactory $fieldFactory, ActionFactory $actionFactory)
 	{
@@ -293,14 +296,13 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Saves the model
 	 *
-	 * @param \Illuminate\Http\Request	$input
-	 * @param array						$fields
-	 * @param array						$actionPermissions
-	 * @param int						$id
-	 *
-	 * @return mixed	//string if error, true if success
+	 * @param Request	$input
+	 * @param Field[] $fields
+	 * @param array $actionPermissions
+	 * @param int $id
+	 * @return mixed //string if error, true if success
 	 */
-	public function save(\Illuminate\Http\Request $input, array $fields, array $actionPermissions = null, $id = 0)
+	public function save(Request $input, array $fields, array $actionPermissions = null, $id = 0)
 	{
 		$model = $this->getDataModel()->find($id);
 
@@ -337,6 +339,9 @@ class Config extends ConfigBase implements ConfigInterface {
 		//if a string was kicked back, it's an error, so return it
 		if (is_string($validation)) return $validation;
 
+		// set relation ships to model to have them available in observers
+        $this->setRelationships($input, $model, $fields);
+
 		//save the model
 		$model->save();
 
@@ -352,13 +357,13 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Prepare a model for saving given a post input array
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model	$model
-	 * @param \Illuminate\Http\Request				$input
+	 * @param Model	$model
+	 * @param Request				$input
 	 * @param array									$fields
 	 *
 	 * @return void
 	 */
-	public function fillModel(&$model, \Illuminate\Http\Request $input, array $fields)
+	public function fillModel(&$model, Request $input, array $fields)
 	{
 		//run through the edit fields to see if we need to unset relationships or uneditable fields
 		foreach ($fields as $name => $field)
@@ -451,12 +456,12 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Gets the relationship inputs
 	 *
-	 * @param \Illuminate\Http\Request				$request
+	 * @param Request				$request
 	 * @param array									$fields
 	 *
 	 * @return array
 	 */
-	protected function getRelationshipInputs(\Illuminate\Http\Request $request, array $fields)
+	protected function getRelationshipInputs(Request $request, array $fields)
 	{
 		$inputs = array();
 
@@ -493,23 +498,67 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * After a model has been saved, this is called to save the relationships
 	 *
-	 * @param \Illuminate\Http\Request				$input
-	 * @param \Illuminate\Database\Eloquent\Model	$model
-	 * @param array									$fields
+	 * @param Request $input
+	 * @param Model	$model
+	 * @param Field[] $fields
 	 *
 	 * @return void
 	 */
-	public function saveRelationships(\Illuminate\Http\Request $input, &$model, array $fields)
-	{
-		//run through the edit fields to see if we need to set relationships
-		foreach ($fields as $name => $field)
-		{
-			if ($field->getOption('external'))
-			{
-				$field->fillModel($model, $input->get($name, NULL));
-			}
-		}
-	}
+    public function saveRelationships(Request $input, &$model, array $fields)
+    {
+        //run through the edit fields to see if we need to set relationships
+        foreach ($fields as $name => $field) {
+            if ($field->getOption('external')) {
+                $field->fillModel($model, $input->get($name, NULL));
+            }
+        }
+    }
+
+    /**
+     * After a model has been saved, this is called to save the relationships
+     *
+     * @param Request $input
+     * @param Model	$model
+     * @param Field[] $fields
+     * @return void
+     */
+    private function setRelationships(Request $input, &$model, array $fields)
+    {
+        //run through the edit fields to see if we need to set relationships
+        foreach ($fields as $name => $field)
+        {
+            if ($field->getOption('external'))
+            {
+                $fieldName   = $field->getOption('field_name');
+                $fieldValues = array_filter(explode(',', $input->get($fieldName, '')));
+
+                if (!count($fieldValues)) {
+                    continue;
+                }
+
+                /**
+                 * @var Relation $relation
+                 */
+                $relation = $model->{$fieldName}();
+
+                /**
+                 * @var Model $relationModel
+                 */
+                $relationModel = $relation->getRelated();
+
+                foreach ($fieldValues as $fieldValue) {
+                    /**
+                     * @var Model $relatedObject
+                     */
+                    $relatedObject = $relationModel::find($fieldValue);
+
+                    if ($relatedObject) {
+                        $model->{$fieldName}[] = $relatedObject;
+                    }
+                }
+            }
+        }
+    }
 
 	/**
 	 * Gets a model's link if one was provided, substituting for field names with this format: (:field_name)
@@ -548,13 +597,13 @@ class Config extends ConfigBase implements ConfigInterface {
 	/**
 	 * Fetches the data model for a config given a post input array
 	 *
-	 * @param \Illuminate\Http\Request $input
+	 * @param Request $input
 	 * @param array	                   $fields
 	 * @param int                      $id
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Model
 	 */
-	public function getFilledDataModel(\Illuminate\Http\Request $input, array $fields, $id = 0)
+	public function getFilledDataModel(Request $input, array $fields, $id = 0)
 	{
 		$model = $this->getDataModel();
 

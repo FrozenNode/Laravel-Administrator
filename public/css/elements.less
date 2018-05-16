@@ -1,28 +1,3 @@
-/* Fonts */
-@font-face {
-	font-family: 'Oxygen';
-	src: url('fonts/Oxygen/oxygen-regular-webfont.eot');
-	src: url('fonts/Oxygen/oxygen-regular-webfont.eot?#iefix') format('embedded-opentype'),
-		 url('fonts/Oxygen/oxygen-regular-webfont.woff') format('woff'),
-		 url('fonts/Oxygen/oxygen-regular-webfont.ttf') format('truetype'),
-		 url('fonts/Oxygen/oxygen-regular-webfont.svg#oxygenregular') format('svg');
-	font-weight: 400;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Oxygen';
-	src: url('fonts/Oxygen/oxygen-bold-webfont.eot');
-	src: url('fonts/Oxygen/oxygen-bold-webfont.eot?#iefix') format('embedded-opentype'),
-		 url('fonts/Oxygen/oxygen-bold-webfont.woff') format('woff'),
-		 url('fonts/Oxygen/oxygen-bold-webfont.ttf') format('truetype'),
-		 url('fonts/Oxygen/oxygen-bold-webfont.svg#oxygenbold') format('svg');
-	font-weight: 700;
-	font-style: normal;
-}
-
-
-
 @highdensity: ~"only screen and (-webkit-min-device-pixel-ratio: 1.5)",
 			  ~"only screen and (min--moz-device-pixel-ratio: 1.5)",
 			  ~"only screen and (-o-min-device-pixel-ratio: 3/2)",
@@ -34,58 +9,45 @@
 @desktop:	 ~"only screen and (min-width: 950px) and (max-width: 1128px)";
 @desktopXl:  ~"only screen and (min-width: 1129px)";
 
-.oxygen {
-	font-family: 'Oxygen', sans-serif;
-}
-
-
 /* Elements */
 
 .input {
 	display: inline-block;
 	vertical-align: middle;
 	height: 18px;
-	.oxygen;
-	.insetShadow(0px, 1px, 2px, 1px, #eee);
+	font-family: 'Open Sans', sans-serif;
 	color:#333;
 	padding:4px 7px;
 	border:1px solid #cccccc;
 	font-size: 13px;
-	.borderRadius(1px);
-	.transition;
+	border-radius: 1px;
 	width: 210px;
 
 	&:focus {
 		border-color: rgba(82, 168, 236, 0.8);
-		.innerOuterShadow;
 		outline: 0;
 	}
 }
 
 .greyButton {
+	transition: background-color 0.3s;
 	padding: 7px 13px;
 	margin: 0;
 	border: none;
-	.verticalGradient(#818181, #646464);
-	.boxShadow(0, 1px, 5px, #444);
+	background-color: @color-darkgrey;
 	color: #fff;
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: normal;
 	cursor: pointer;
-	.borderRadius(2px);
-	.noSelect;
+	border-radius: 1px;
 
 	&:hover, &:focus {
-		.verticalGradient(#929292, #646464);
-	}
-
-	&:active {
-		.innerOuterShadow(0, 5px, 7px, 1px, #666, 0, 1px, 2px, #777);
+      background-color: @color-darkblue;
 	}
 }
 
 .headerButtonPadding {
-	padding: 9px 12px 8px;
+	padding: 7px 10px 6px;
 }
 
 .headerButton {
@@ -99,7 +61,6 @@
 
 .editForm {
 	color: #444;
-	text-shadow: white 0 1px 0;
 
 	a.item_link {
 		position: absolute;
@@ -242,7 +203,6 @@
 			div.color_preview {
 				height: 8px;
 				margin: 0 33px 0 1px;
-				.boxShadow(0px, 1px, 2px, #aaa);
 			}
 		}
 	}

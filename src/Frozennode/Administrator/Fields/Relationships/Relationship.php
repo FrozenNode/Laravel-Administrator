@@ -92,7 +92,7 @@ abstract class Relationship extends Field {
 	 */
 	public function setUpConstraints(&$options)
 	{
-		$constraints = $this->validator->arrayGet($options, 'constraints');
+		$constraints = $this->validator->arrayGet($options, 'constraints') ?: [];
 		$model = $this->config->getDataModel();
 
 		//set up and check the constraints

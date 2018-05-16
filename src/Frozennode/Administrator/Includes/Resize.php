@@ -68,7 +68,6 @@ class Resize{
 			$resized = array();
 
 			foreach($sizes as $size){
-
 				$this->new_width = $size[0]; //$new_width;
 				$this->new_height = $size[1]; //$new_height;
 				$this->option = $size[2]; //crop type
@@ -79,7 +78,22 @@ class Resize{
 					mkdir($size[3]);
 				}
 
-				$resized[] = $this->do_resize( $path.$filename, $size[3].$filename, $size[4] );
+                $filePath    = $size[3] . $filename;
+                $extension   = $extension = strtolower(File::extension($filePath));
+                $newFilePath = $size[3] . $filename;
+
+                if (isset($size[5])) {
+                    $extension   = $size[5];
+                    $pathInfo    = pathinfo($filename);
+                    $newFilePath = $size[3] . $pathInfo['filename'] . '.' . $extension;
+                }
+
+                $resized[] = $this->do_resize(
+                    $path.$filename,
+                    $newFilePath,
+                    $size[4],
+                    $extension
+                );
 			}
 		}
 
@@ -89,16 +103,26 @@ class Resize{
 	/**
 	 * Resizes and/or crops an image
 	 * @param  mixed   $image resource or filepath
-	 * @param  strung  $save_path where to save the resized image
+	 * @param  string  $save_path where to save the resized image
 	 * @param  int (0-100) $quality
+     * @param string|null $extension
 	 * @return bool
 	 */
-	private function do_resize( $image, $save_path, $image_quality )
+	private function do_resize($image, $save_path, $image_quality, $extension)
 	{
 		$image = $this->open_image( $image );
 
 		$this->width  = imagesx( $image );
 		$this->height = imagesy( $image );
+
+
+		if (!$this->new_height) {
+			$this->new_height = $this->height / $this->width * $this->new_width;
+		}
+
+		if (!$this->new_width) {
+			$this->new_width = $this->width / $this->height * $this->new_height;
+		}
 
 		// Get optimal width and height - based on $option.
 		$option_array = $this->get_dimensions( $this->new_width , $this->new_height , $this->option );
@@ -121,9 +145,6 @@ class Resize{
 		if ( $this->option == 'crop' || $this->option == 'fit' ) {
 			$this->crop( $optimal_width , $optimal_height , $this->new_width , $this->new_height );
 		}
-
-		// Get extension of the output file
-		$extension = strtolower( File::extension($save_path) );
 
 		// Create and save an image based on it's extension
 		switch( $extension )

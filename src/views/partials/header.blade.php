@@ -1,7 +1,9 @@
 <header>
-	<h1>
-		<a href="{{route('admin_dashboard')}}">{{config('administrator.title')}}</a>
-	</h1>
+	@if (config('administrator.title'))
+		<h1>
+			<a href="{{route('admin_dashboard')}}">{{config('administrator.title')}}</a>
+		</h1>
+	@endif
 
 	<a href="#" id="menu_button"><div></div></a>
 	<a href="#" id="filter_button" class="{{$configType === 'model' ? '' : 'hidden'}}"><div></div></a>
@@ -38,7 +40,9 @@
 				</li>
 			</ul>
 		@endif
-		<a href="{{url(config('administrator.back_to_site_path', '/'))}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
+		@if(config('administrator.back_to_site_path'))
+			<a href="{{url(config('administrator.back_to_site_path', '/'))}}" id="back_to_site">{{trans('administrator::administrator.backtosite')}}</a>
+		@endif
 		@if(config('administrator.logout_path'))
 			<a href="{{url(config('administrator.logout_path'))}}" id="logout">{{trans('administrator::administrator.logout')}}</a>
 		@endif

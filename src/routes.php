@@ -3,18 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 /**
- * Temperary solution for middleware in routes
- * TODO: remove in favor of setting the config for middleware outside of the routes file
- */
-$middleware_array = array('Frozennode\Administrator\Http\Middleware\ValidateAdmin');
-if(is_array(config('administrator.middleware'))) {
-    $middleware_array = array_merge(config('administrator.middleware'), $middleware_array);
-}
-
-/**
  * Routes
  */
-Route::group(array('domain' => config('administrator.domain'), 'prefix' => config('administrator.uri'), 'middleware' => $middleware_array), function()
+Route::group(array('domain' => config('administrator.domain'), 'prefix' => config('administrator.uri'), 'middleware' => 'Frozennode\Administrator\Http\Middleware\ValidateAdmin'), function()
 {
 	//Admin Dashboard
 	Route::get('/', array(

@@ -89,7 +89,7 @@ class Factory {
 	 *
 	 * @var array
 	 */
-	protected $editFields;
+	protected $editFields = [];
 
 	/**
 	 * The edit field objects as arrays

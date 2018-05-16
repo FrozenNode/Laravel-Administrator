@@ -3,7 +3,6 @@ namespace Frozennode\Administrator\Includes;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 //Use Admin\Libraries\Includes\Resize as Resize;
@@ -30,9 +29,9 @@ class Multup {
 	private $rules;
 
 	/*
-		randomize uploaded filename
+		uploaded filename
 	*/
-	private $random;
+	private $filename;
 
 	/*
 		path relative to /public/ that the image should be saved in
@@ -43,16 +42,6 @@ class Multup {
 		id/name of the file input to find
 	*/
 	private $input;
-
-	/*
-		How long the random filename should be
-	*/
-	private $random_length = 32;
-
-	/*
-	*	Callback function for setting your own random filename
-	*/
-	private $random_cb;
 
 	/*
 	* Sizing information for thumbs to create
@@ -76,12 +65,12 @@ class Multup {
 	 * Instantiates the Multup
 	 * @param mixed $file The file array provided by Laravel's Input::file('field_name') or a path to a file
 	 */
-	public function __construct($input, $rules, $path, $random)
+	public function __construct($input, $rules, $path, $filename)
 	{
-		$this->input  = $input;
-		$this->rules  = $rules;
-		$this->path = $path;
-		$this->random = $random;
+		$this->input    = $input;
+		$this->rules    = $rules;
+		$this->path     = $path;
+		$this->filename = $filename;
 	}
 
 	/**
@@ -90,23 +79,12 @@ class Multup {
 	 * @param  string $input name of the file to upload
 	 * @param  string $rules laravel style validation rules string
 	 * @param  string $path relative to /public/ to move the images if valid
-	 * @param  bool $random Whether or not to randomize the filename, the filename will be set to a 32 character string if true
+	 * @param  string $filename filename of the uploaded file. if null, original name is kept
 	 * @return Multup
 	 */
-	public static function open($input, $rules, $path, $random = true)
+	public static function open($input, $rules, $path, $filename = null)
 	{
-		return new Multup( $input, $rules, $path, $random );
-	}
-
-	/*
-	*	Set the length of the randomized filename
-	*   @param int $len
-	*/
-	public function set_length($len)
-	{
-		$this->random_length = $len;
-
-		return $this;
+		return new Multup( $input, $rules, $path, $filename );
 	}
 
 	/*
@@ -185,35 +163,21 @@ class Multup {
 		$errors = array();
 		$original_name = $this->image[$this->input]->getClientOriginalName();
 		$path = '';
-		$filename = '';
 		$resizes = '';
 
 		if($validation->fails()){
 			/* use the messages object for the erros */
 			$errors = implode('. ', $validation->messages()->all());
 		} else {
-
-			if($this->random){
-				if(is_callable($this->random_cb)){
-					$filename =  call_user_func( $this->random_cb, $original_name );
-				} else {
-					$ext = File::extension($original_name);
-					$filename = $this->generate_random_filename().'.'.$ext;
-				}
-			} else {
-				$filename = $original_name;
-			}
-
 			/* upload the file */
-			$save = $this->image[$this->input]->move($this->path, $filename);
-			//$save = Input::upload($this->input, $this->path, $filename);
+			$save = $this->image[$this->input]->move($this->path, $this->filename);
 
 			if($save){
-				$path = $this->path.$filename;
+				$path = $this->path.$this->filename;
 
 				if(is_array($this->image_sizes)){
 					$resizer = new Resize();
-					$resizes = $resizer->create($save, $this->path, $filename, $this->image_sizes);
+					$resizes = $resizer->create($save, $this->path, $this->filename, $this->image_sizes);
 				}
 
 			} else {
@@ -221,27 +185,13 @@ class Multup {
 			}
 		}
 
-		return compact('errors', 'path', 'filename', 'original_name', 'resizes' );
-	}
-
-	/*
-	* Default random filename generation
-	*/
-	private function generate_random_filename()
-	{
-		 return Str::random($this->random_length);
-	}
-
-	/*
-	* Default random filename generation
-	*/
-	public function filename_callback( $func )
-	{
-		if(is_callable($func)){
-			$this->random_cb = $func;
-		}
-
-		return $this;
+		return [
+			'errors'        => $errors,
+			'path'          => $path,
+			'filename'      => $this->filename,
+			'original_name' => $original_name,
+			'resizes'       => $resizes
+		];
 	}
 
 	/*

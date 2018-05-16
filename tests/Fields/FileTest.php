@@ -60,7 +60,8 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$this->validator->shouldReceive('arrayGet')->times(3)
 						->shouldReceive('getUrlInstance')->once()->andReturn($url);
 		$this->config->shouldReceive('getType')->once()
-						->shouldReceive('getOption')->once();
+						->shouldReceive('getOption')->once()
+						->shouldReceive('getDataModel')->once();
 		$this->field->build();
 	}
 
