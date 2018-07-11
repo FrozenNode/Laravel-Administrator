@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -19,6 +19,6 @@ return array(
 	'character_left' => ' carattere rimasto',
 	'characters_left' => ' caratteri rimasti',
 	'no_results' => 'Nessun risultato',
-	'select_options' => 'Effattua una selezione',
+	'select_options' => 'Effettua una selezione',
 
 );
