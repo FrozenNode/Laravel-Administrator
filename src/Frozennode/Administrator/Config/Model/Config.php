@@ -186,7 +186,9 @@ class Config extends ConfigBase implements ConfigInterface {
 			//iterate over the items
 			foreach ($relatedItems as $item)
 			{
-				$keyName = $item->getKeyName();
+				// Modified. If this is set to 'keyName', it will not get foriegn key correctly
+				$keyName = $field->getOption('column');
+				// $keyName = $item->getKeyName();
 
 				//if this is a mutliple-value type (i.e. HasMany, BelongsToMany), make sure this is an array
 				if ($multipleValues)
@@ -544,7 +546,7 @@ class Config extends ConfigBase implements ConfigInterface {
 			$filter($query);
 		}
 	}
-	
+
 	/**
 	 * Fetches the data model for a config given a post input array
 	 *

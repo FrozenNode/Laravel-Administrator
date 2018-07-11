@@ -158,13 +158,15 @@ abstract class Relationship extends Field {
 			// if no related items exist, add default item, if set in options
 			if (count($items) == 0 && array_key_exists('value', $options))
 			{
-				$items = $relatedModel->where($relatedModel->getKeyName(), '=', $options['value'])->get();
+				$items = $relatedModel->where($relationship->getOtherKey(), '=', $options['value'])->get();
 			}
 		}
 
 		//map the options to the options property where array('id': [key], 'text': [nameField])
 		$nameField = $this->validator->arrayGet($options, 'name_field', $this->defaults['name_field']);
-		$keyField = $relatedModel->getKeyName();
+
+		//fixed bug in model config when filtering by foreign key (belongsTo)
+		$keyField = $relationship->getOtherKey();
 		$options['options'] = $this->mapRelationshipOptions($items, $nameField, $keyField);
 	}
 
