@@ -208,7 +208,13 @@ class Factory {
 			//if the item is a string, try to find the config file
 			if (is_string($item) && $item === $name)
 			{
-				$config = $this->fetchConfigFile($name);
+				// Resolve config "dot"-path
+				$configName = str_replace(config_path(), '', $this->getPath());
+                $configName = trim($configName, '/').'.'.$name;
+                // Get config using Laravel's helper (to retrieve all changes that might be done to config during app runtime)
+				$config = app('config')->get($configName);
+                //add the name in
+				$config['name'] = $name;
 			}
 			//if the item is an array, recursively run this method on it
 			else if (is_array($item))
@@ -302,32 +308,5 @@ class Factory {
 		{
 			return new ModelConfig($this->validator, $this->customValidator, $options);
 		}
-	}
-
-	/**
-	 * Fetches a config file given a path
-	 *
-	 * @param string	$name
-	 *
-	 * @return mixed
-	 */
-	public function fetchConfigFile($name)
-	{
-		$name = str_replace($this->getPrefix(), '', $name);
-		$path = $this->getPath() . $name . '.php';
-
-		//check that this is a legitimate file
-		if (is_file($path))
-		{
-			//set the options var
-			$options = require $path;
-
-			//add the name in
-			$options['name'] = $name;
-
-			return $options;
-		}
-
-		return false;
 	}
 }
