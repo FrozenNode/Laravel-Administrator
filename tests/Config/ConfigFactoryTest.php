@@ -146,6 +146,18 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 		unlink($filename);
 	}
 
+	public function testFetchConfigWithArrayWorks()
+	{
+		$name = 'some_model';
+		$filename = __DIR__ . '/' . $name . '.php';
+		file_put_contents($filename, "<?php return array();");
+		$factory = m::mock('Frozennode\Administrator\Config\Factory[getPath,getPrefix]', array($this->validator, $this->validator, array()));
+		$factory->shouldReceive('getPath')->once()->andReturn([__DIR__])
+				->shouldReceive('getPrefix')->once()->andReturn('');
+		$this->assertEquals($factory->fetchConfigFile($name), array('name' => $name));
+		unlink($filename);
+	}
+
 	public function testFetchConfigFails()
 	{
 		$name = 'some_model';
@@ -155,4 +167,12 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($factory->fetchConfigFile($name), false);
 	}
 
+	public function testFetchConfigWithArrayFails()
+	{
+		$name = 'some_model';
+		$factory = m::mock('Frozennode\Administrator\Config\Factory[getPath,getPrefix]', array($this->validator, $this->validator, array()));
+		$factory->shouldReceive('getPath')->once()->andReturn([__DIR__])
+				->shouldReceive('getPrefix')->once()->andReturn('');
+		$this->assertEquals($factory->fetchConfigFile($name), false);
+	}
 }
