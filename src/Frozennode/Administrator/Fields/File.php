@@ -25,7 +25,7 @@ class File extends Field {
 	 */
 	protected $rules = array(
 		'location' => 'required|string|directory',
-		'naming' => 'in:keep,random',
+		'naming' => 'in:keep,random,incremental',
 		'length' => 'integer|min:0',
 		'mimes' => 'string',
 	);
@@ -56,7 +56,7 @@ class File extends Field {
 
 		//use the multup library to perform the upload
 		$result = Multup::open('file', 'max:' . $this->getOption('size_limit') * 1000 . $mimes, $this->getOption('location'),
-									$this->getOption('naming') === 'random')
+									$this->getOption('naming'))
 			->set_length($this->getOption('length'))
 			->upload();
 
